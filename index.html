@@ -1,0 +1,817 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Self-Insight — Yuma Tejima</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Noto+Sans+JP:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
+<style>
+:root {
+  --bg: #0f1117;
+  --surface: #1a1d27;
+  --surface2: #242836;
+  --card: #1a1d27;
+  --border: #2d3348;
+  --border-light: #3d4460;
+  --accent: #6366f1;
+  --accent2: #8b5cf6;
+  --blue: #3b82f6;
+  --green: #22c55e;
+  --red: #ef4444;
+  --yellow: #eab308;
+  --orange: #ff6b35;
+  --gold: #c9a84c;
+  --text: #e4e4e7;
+  --text-secondary: #9ca3af;
+  --text-muted: #7c8293;
+  --font-body: 'Inter', 'Noto Sans JP', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --radius-xl: 16px;
+}
+
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+html { font-size: 16px; scroll-behavior: smooth; scroll-padding-top: 110px; }
+body {
+  font-family: var(--font-body);
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+  min-height: 100vh;
+  position: relative;
+}
+body::before {
+  content: '';
+  position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+  opacity: 0.03; pointer-events: none; z-index: 9999;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+.container { max-width: 1100px; margin: 0 auto; padding: 24px; }
+
+/* === Nav === */
+.nav-bar {
+  position: sticky; top: 0; z-index: 100;
+  background: rgba(15,17,23,0.92);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+  padding: 0 24px;
+  display: flex; justify-content: center; gap: 4px;
+  overflow-x: auto; -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+.nav-bar::-webkit-scrollbar { display: none; }
+.nav-bar a {
+  color: var(--text-muted);
+  text-decoration: none;
+  font-size: 12px; font-weight: 500;
+  padding: 14px 16px;
+  white-space: nowrap;
+  transition: color 0.2s;
+  border-bottom: 2px solid transparent;
+}
+.nav-bar a:hover, .nav-bar a.active {
+  color: var(--accent);
+  border-bottom-color: var(--accent);
+}
+
+/* === Hero === */
+.hero {
+  background: linear-gradient(135deg, #1e1b4b, #312e81, #1e1b4b);
+  background-size: 200% 200%;
+  animation: heroShift 12s ease-in-out infinite;
+  border-radius: var(--radius-xl);
+  padding: 40px 32px;
+  margin-bottom: 32px;
+  border: 1px solid var(--border);
+  overflow: hidden;
+}
+@keyframes heroShift {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+.hero h1 { font-size: clamp(20px, 2.5vw, 26px); font-weight: 700; margin-bottom: 4px; }
+.hero .subtitle { color: var(--text-muted); font-size: 14px; margin-bottom: 20px; }
+.hero-chips { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
+.chip {
+  font-size: 11px; font-weight: 500;
+  padding: 4px 12px;
+  border-radius: 20px;
+  background: rgba(255,255,255,0.08);
+  color: var(--text-secondary);
+  border: 1px solid rgba(255,255,255,0.1);
+}
+.chip.highlight { background: rgba(99,102,241,0.15); color: #a5b4fc; border-color: rgba(99,102,241,0.3); }
+.hero .stats { display: flex; gap: 24px; flex-wrap: wrap; }
+.stat-card {
+  background: rgba(255,255,255,0.05);
+  border-radius: var(--radius-md);
+  padding: 12px 20px;
+  backdrop-filter: blur(10px);
+}
+.stat-card .label { font-size: 10px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
+.stat-card .value { font-size: 20px; font-weight: 700; font-family: var(--font-mono); margin-top: 2px; }
+
+/* === Sections === */
+.section { margin-bottom: 40px; }
+.section-title {
+  font-size: clamp(16px, 2vw, 22px); font-weight: 700;
+  margin-bottom: 20px; padding-left: 12px;
+  border-left: 3px solid var(--accent);
+}
+.section-desc { font-size: 13px; color: var(--text-muted); margin-bottom: 16px; }
+
+/* === Grid === */
+.grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px; }
+.grid-3 { grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); }
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 20px;
+  transition: transform 0.2s;
+}
+.card:hover { transform: translateY(-2px); }
+.card-title { font-size: 14px; font-weight: 600; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+.card-title .icon { font-size: 18px; }
+
+/* === Pillar === */
+.pillar-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+.pillar {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 16px;
+  text-align: center;
+}
+.pillar.unknown { opacity: 0.4; border-style: dashed; }
+.pillar .pillar-label { font-size: 10px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; }
+.pillar .kanji { font-size: 28px; font-weight: 700; line-height: 1.2; }
+.pillar .reading { font-size: 11px; color: var(--text-secondary); margin-top: 4px; }
+.pillar .element-badge {
+  display: inline-block;
+  font-size: 10px; font-weight: 500;
+  padding: 2px 10px;
+  border-radius: 12px;
+  margin-top: 8px;
+}
+.elem-wood { background: rgba(34,197,94,0.15); color: #4ade80; }
+.elem-fire { background: rgba(239,68,68,0.15); color: #f87171; }
+.elem-earth { background: rgba(234,179,8,0.15); color: #facc15; }
+.elem-metal { background: rgba(148,163,184,0.15); color: #94a3b8; }
+.elem-water { background: rgba(59,130,246,0.15); color: #60a5fa; }
+
+/* === Five Elements === */
+.element-bar { display: flex; gap: 8px; align-items: end; height: 100px; margin: 16px 0; }
+.element-col { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; }
+.element-fill {
+  width: 100%; border-radius: 4px 4px 0 0;
+  transition: height 0.6s ease;
+}
+.element-pct { font-size: 12px; font-weight: 600; font-family: var(--font-mono); }
+.element-name { font-size: 11px; color: var(--text-muted); }
+
+/* === SF Domains === */
+.domain-bar { margin-bottom: 12px; }
+.domain-header { display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 4px; }
+.domain-track { height: 8px; background: var(--surface2); border-radius: 4px; overflow: hidden; }
+.domain-fill { height: 100%; border-radius: 4px; transition: width 0.6s ease; }
+
+/* === Top 5 list === */
+.top5-list { list-style: none; }
+.top5-item {
+  display: flex; align-items: center; gap: 12px;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--border);
+}
+.top5-item:last-child { border-bottom: none; }
+.rank {
+  width: 28px; height: 28px;
+  display: flex; align-items: center; justify-content: center;
+  border-radius: 50%;
+  font-size: 12px; font-weight: 700; font-family: var(--font-mono);
+  background: rgba(99,102,241,0.15);
+  color: var(--accent);
+  flex-shrink: 0;
+}
+.sf-name { font-size: 14px; font-weight: 600; }
+.sf-domain { font-size: 11px; color: var(--text-muted); }
+
+/* === Cycle Chart === */
+.cycle-row {
+  display: flex; align-items: center; gap: 12px;
+  padding: 8px 12px;
+  border-radius: var(--radius-sm);
+  margin-bottom: 4px;
+  font-size: 13px;
+}
+.cycle-row.current {
+  background: rgba(99,102,241,0.12);
+  border: 1px solid rgba(99,102,241,0.3);
+}
+.cycle-year { width: 50px; font-family: var(--font-mono); font-weight: 600; font-size: 13px; }
+.cycle-palace { width: 50px; font-weight: 500; }
+.cycle-theme { flex: 1; color: var(--text-secondary); }
+.cycle-bar-wrap { width: 100px; height: 6px; background: var(--surface2); border-radius: 3px; overflow: hidden; }
+.cycle-bar-fill { height: 100%; border-radius: 3px; background: var(--accent); }
+
+/* === Insight Box === */
+.insight-box {
+  background: linear-gradient(135deg, rgba(99,102,241,0.08), rgba(139,92,246,0.06));
+  border: 1px solid rgba(99,102,241,0.2);
+  border-radius: var(--radius-md);
+  padding: 20px;
+  margin-bottom: 16px;
+}
+.insight-box .insight-title { font-size: 13px; font-weight: 600; color: #a5b4fc; margin-bottom: 8px; }
+.insight-box p { font-size: 13px; color: var(--text-secondary); line-height: 1.7; }
+
+/* === Guidance Cards === */
+.guidance-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 20px;
+  border-top: 3px solid var(--accent);
+}
+.guidance-card.health { border-top-color: var(--green); }
+.guidance-card.work { border-top-color: var(--blue); }
+.guidance-card.money { border-top-color: var(--gold); }
+.guidance-header { font-size: 14px; font-weight: 600; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+.guidance-list { list-style: none; }
+.guidance-list li {
+  font-size: 13px; color: var(--text-secondary); line-height: 1.7;
+  padding: 4px 0 4px 16px;
+  position: relative;
+}
+.guidance-list li::before {
+  content: '';
+  position: absolute; left: 0; top: 12px;
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--text-muted);
+}
+
+/* === Tag === */
+.tag {
+  display: inline-block;
+  font-size: 11px; font-weight: 500;
+  padding: 3px 10px;
+  border-radius: 12px;
+  margin: 2px;
+}
+.tag-rb { background: rgba(59,130,246,0.15); color: #60a5fa; }
+.tag-st { background: rgba(34,197,94,0.15); color: #4ade80; }
+.tag-ex { background: rgba(139,92,246,0.15); color: #c4b5fd; }
+.tag-inf { background: rgba(255,107,53,0.15); color: #ff8f6b; }
+
+/* === Footer === */
+.page-footer {
+  text-align: center;
+  padding: 32px 0;
+  font-size: 11px;
+  color: var(--text-muted);
+  border-top: 1px solid var(--border);
+  margin-top: 40px;
+}
+
+/* === Unlock Banner === */
+.unlock-banner {
+  background: rgba(234,179,8,0.08);
+  border: 1px dashed rgba(234,179,8,0.3);
+  border-radius: var(--radius-md);
+  padding: 16px 20px;
+  font-size: 12px;
+  color: var(--yellow);
+  text-align: center;
+  margin-top: 16px;
+}
+
+/* === Responsive === */
+@media (max-width: 768px) {
+  .grid { grid-template-columns: 1fr; }
+  .pillar-grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 640px) {
+  .container { padding: 12px; }
+  .hero { padding: 20px 16px; border-radius: var(--radius-md); }
+  .hero .stats { gap: 8px; }
+  .stat-card { padding: 8px 12px; }
+  .stat-card .value { font-size: 16px; }
+  .pillar-grid { grid-template-columns: repeat(2, 1fr); }
+  .pillar .kanji { font-size: 22px; }
+  .cycle-bar-wrap { width: 60px; }
+}
+</style>
+</head>
+<body>
+
+<!-- Nav -->
+<nav class="nav-bar">
+  <a href="#personality">Personality</a>
+  <a href="#four-pillars">四柱推命</a>
+  <a href="#nine-star">九星気学</a>
+  <a href="#western">西洋占星術</a>
+  <a href="#forecast">2026 Forecast</a>
+  <a href="#cross">Cross Analysis</a>
+</nav>
+
+<div class="container">
+
+<!-- Hero -->
+<section class="hero">
+  <h1>Self-Insight</h1>
+  <div class="subtitle">Yuma Tejima — パーソナル・インサイト・ダッシュボード</div>
+  <div class="hero-chips">
+    <span class="chip highlight">八白土星</span>
+    <span class="chip highlight">蠍座 ♏</span>
+    <span class="chip">AB型</span>
+    <span class="chip">乙卯年</span>
+    <span class="chip">エニアグラム 4</span>
+    <span class="chip">HSP</span>
+    <span class="chip">日主: 丁火</span>
+  </div>
+  <div class="stats">
+    <div class="stat-card">
+      <div class="label">SF #1</div>
+      <div class="value" style="color:#60a5fa;">Empathy</div>
+    </div>
+    <div class="stat-card">
+      <div class="label">2026 運勢</div>
+      <div class="value" style="color:#a5b4fc;">坤宮</div>
+    </div>
+    <div class="stat-card">
+      <div class="label">テーマ</div>
+      <div class="value" style="color:#facc15;">変化・準備</div>
+    </div>
+    <div class="stat-card">
+      <div class="label">Peak Year</div>
+      <div class="value" style="color:#4ade80;">2029</div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== PERSONALITY ==================== -->
+<section class="section" id="personality">
+  <h2 class="section-title">Personality Profile</h2>
+
+  <div class="grid">
+    <!-- SF TOP5 -->
+    <div class="card">
+      <div class="card-title"><span class="icon">&#9733;</span> CliftonStrengths TOP 5</div>
+      <ul class="top5-list">
+        <li class="top5-item">
+          <span class="rank">1</span>
+          <div><div class="sf-name">Empathy</div><div class="sf-domain"><span class="tag tag-rb">Relationship Building</span></div></div>
+        </li>
+        <li class="top5-item">
+          <span class="rank">2</span>
+          <div><div class="sf-name">Intellection</div><div class="sf-domain"><span class="tag tag-st">Strategic Thinking</span></div></div>
+        </li>
+        <li class="top5-item">
+          <span class="rank">3</span>
+          <div><div class="sf-name">Deliberative</div><div class="sf-domain"><span class="tag tag-ex">Executing</span></div></div>
+        </li>
+        <li class="top5-item">
+          <span class="rank">4</span>
+          <div><div class="sf-name">Connectedness</div><div class="sf-domain"><span class="tag tag-rb">Relationship Building</span></div></div>
+        </li>
+        <li class="top5-item">
+          <span class="rank">5</span>
+          <div><div class="sf-name">Maximizer</div><div class="sf-domain"><span class="tag tag-inf">Influencing</span></div></div>
+        </li>
+      </ul>
+      <div style="font-size:11px;color:var(--text-muted);margin-top:12px;">Lead Domain: Strategic Thinking</div>
+    </div>
+
+    <!-- Domain Distribution -->
+    <div class="card">
+      <div class="card-title"><span class="icon">&#9632;</span> ドメイン分布（TOP10内）</div>
+      <div style="margin-top:8px;">
+        <div class="domain-bar">
+          <div class="domain-header"><span>Relationship Building</span><span style="font-family:var(--font-mono);">4 / 10</span></div>
+          <div class="domain-track"><div class="domain-fill" style="width:40%;background:#3b82f6;"></div></div>
+        </div>
+        <div class="domain-bar">
+          <div class="domain-header"><span>Strategic Thinking</span><span style="font-family:var(--font-mono);">3 / 10</span></div>
+          <div class="domain-track"><div class="domain-fill" style="width:30%;background:#22c55e;"></div></div>
+        </div>
+        <div class="domain-bar">
+          <div class="domain-header"><span>Executing</span><span style="font-family:var(--font-mono);">2 / 10</span></div>
+          <div class="domain-track"><div class="domain-fill" style="width:20%;background:#8b5cf6;"></div></div>
+        </div>
+        <div class="domain-bar">
+          <div class="domain-header"><span>Influencing</span><span style="font-family:var(--font-mono);">1 / 10</span></div>
+          <div class="domain-track"><div class="domain-fill" style="width:10%;background:#ff6b35;"></div></div>
+        </div>
+      </div>
+
+      <div style="margin-top:24px;">
+        <div class="card-title" style="font-size:13px;"><span class="icon">&#9830;</span> Typology</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:4px;">
+          <div style="background:var(--surface2);border-radius:var(--radius-sm);padding:10px;">
+            <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;">Enneagram</div>
+            <div style="font-size:18px;font-weight:700;margin-top:2px;">Type 4</div>
+            <div style="font-size:11px;color:var(--text-secondary);">The Individualist</div>
+          </div>
+          <div style="background:var(--surface2);border-radius:var(--radius-sm);padding:10px;">
+            <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;">Blood Type</div>
+            <div style="font-size:18px;font-weight:700;margin-top:2px;">AB</div>
+            <div style="font-size:11px;color:var(--text-secondary);">合理×感性の二面性</div>
+          </div>
+          <div style="background:var(--surface2);border-radius:var(--radius-sm);padding:10px;">
+            <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;">HSP</div>
+            <div style="font-size:18px;font-weight:700;margin-top:2px;color:#facc15;">High</div>
+            <div style="font-size:11px;color:var(--text-secondary);">感覚処理感受性</div>
+          </div>
+          <div style="background:var(--surface2);border-radius:var(--radius-sm);padding:10px;">
+            <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;">ADHD</div>
+            <div style="font-size:18px;font-weight:700;margin-top:2px;color:#ff8f6b;">Leaning</div>
+            <div style="font-size:11px;color:var(--text-secondary);">過集中×散漫の波</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== FOUR PILLARS ==================== -->
+<section class="section" id="four-pillars">
+  <h2 class="section-title">四柱推命</h2>
+  <p class="section-desc">1975年10月28日 — 兵庫県尼崎市</p>
+
+  <div class="pillar-grid">
+    <div class="pillar">
+      <div class="pillar-label">年柱</div>
+      <div class="kanji">乙卯</div>
+      <div class="reading">きのと・う</div>
+      <span class="element-badge elem-wood">木 Wood</span>
+      <div style="font-size:11px;color:var(--text-muted);margin-top:6px;">卯 = 兎</div>
+    </div>
+    <div class="pillar">
+      <div class="pillar-label">月柱</div>
+      <div class="kanji">丙戌</div>
+      <div class="reading">ひのえ・いぬ</div>
+      <span class="element-badge elem-fire">火 Fire</span>
+      <div style="font-size:11px;color:var(--text-muted);margin-top:6px;">戌 = 犬</div>
+    </div>
+    <div class="pillar">
+      <div class="pillar-label">日柱（日主）</div>
+      <div class="kanji" style="color:#f87171;">丁未</div>
+      <div class="reading">ひのと・ひつじ</div>
+      <span class="element-badge elem-fire">火 Fire</span>
+      <div style="font-size:11px;color:var(--text-muted);margin-top:6px;">陰火 = ロウソクの炎</div>
+    </div>
+    <div class="pillar unknown">
+      <div class="pillar-label">時柱</div>
+      <div class="kanji" style="font-size:18px;color:var(--text-muted);">? ?</div>
+      <div class="reading">出生時刻不明</div>
+      <span class="element-badge" style="background:rgba(255,255,255,0.05);color:var(--text-muted);">Locked</span>
+    </div>
+  </div>
+
+  <!-- Day Master -->
+  <div class="insight-box" style="margin-top:20px;">
+    <div class="insight-title">日主: 丁火（陰火）</div>
+    <p>ロウソクの炎のように、静かで温かく人を照らす存在。強い意志を内に秘めながらも、外には柔らかさを見せる。感受性が豊かで、人の心の機微を感じ取る力がある。</p>
+  </div>
+
+  <!-- Five Elements -->
+  <div class="card" style="margin-top:16px;">
+    <div class="card-title">五行バランス（3柱）</div>
+    <div class="element-bar">
+      <div class="element-col">
+        <div class="element-pct" style="color:#4ade80;">33%</div>
+        <div class="element-fill" style="height:66px;background:linear-gradient(to top,rgba(34,197,94,0.3),rgba(34,197,94,0.6));"></div>
+        <div class="element-name">木</div>
+      </div>
+      <div class="element-col">
+        <div class="element-pct" style="color:#f87171;">33%</div>
+        <div class="element-fill" style="height:66px;background:linear-gradient(to top,rgba(239,68,68,0.3),rgba(239,68,68,0.6));"></div>
+        <div class="element-name">火</div>
+      </div>
+      <div class="element-col">
+        <div class="element-pct" style="color:#facc15;">33%</div>
+        <div class="element-fill" style="height:66px;background:linear-gradient(to top,rgba(234,179,8,0.3),rgba(234,179,8,0.6));"></div>
+        <div class="element-name">土</div>
+      </div>
+      <div class="element-col">
+        <div class="element-pct" style="color:#94a3b8;">0%</div>
+        <div class="element-fill" style="height:4px;background:rgba(148,163,184,0.15);"></div>
+        <div class="element-name">金</div>
+      </div>
+      <div class="element-col">
+        <div class="element-pct" style="color:#60a5fa;">0%</div>
+        <div class="element-fill" style="height:4px;background:rgba(59,130,246,0.15);"></div>
+        <div class="element-name">水</div>
+      </div>
+    </div>
+    <div style="font-size:12px;color:var(--text-secondary);margin-top:8px;">
+      <strong style="color:var(--yellow);">金・水が欠如</strong> — 決断力（金）と柔軟性（水）を意識的に補う行動が有効。サウナの水風呂は「水」の補完として理にかなう
+    </div>
+    <div class="unlock-banner">
+      出生時刻を入力すると時柱が追加され、五行バランスがより正確になります
+    </div>
+  </div>
+</section>
+
+<!-- ==================== NINE STAR KI ==================== -->
+<section class="section" id="nine-star">
+  <h2 class="section-title">九星気学</h2>
+
+  <div class="grid">
+    <div class="card">
+      <div class="card-title">本命星・月命星</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px;">
+        <div style="background:var(--surface2);border-radius:var(--radius-sm);padding:16px;text-align:center;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;">本命星</div>
+          <div style="font-size:24px;font-weight:700;margin-top:4px;">八白土星</div>
+          <div style="font-size:12px;color:var(--text-secondary);margin-top:4px;">山のような安定感と実行力</div>
+        </div>
+        <div style="background:var(--surface2);border-radius:var(--radius-sm);padding:16px;text-align:center;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;">月命星</div>
+          <div style="font-size:24px;font-weight:700;margin-top:4px;">六白金星</div>
+          <div style="font-size:12px;color:var(--text-secondary);margin-top:4px;">高い理想とリーダーシップ</div>
+        </div>
+      </div>
+
+      <div style="font-size:13px;color:var(--text-secondary);line-height:1.7;">
+        <strong style="color:var(--text);">八白土星</strong>は「山」の象意。どっしりと構え、変化を蓄積して大きな成果につなげる。
+        <strong style="color:var(--text);">六白金星</strong>（月命）は内面の高い志と完璧主義を表す。外側の安定感と内側の理想主義が共存。
+      </div>
+    </div>
+
+    <!-- 9-Year Cycle -->
+    <div class="card">
+      <div class="card-title">9年サイクル（八白土星）</div>
+      <div style="margin-top:8px;">
+        <div class="cycle-row">
+          <span class="cycle-year">2024</span>
+          <span class="cycle-palace">離宮</span>
+          <span class="cycle-theme">注目・離別</span>
+          <div class="cycle-bar-wrap"><div class="cycle-bar-fill" style="width:70%;background:var(--orange);"></div></div>
+        </div>
+        <div class="cycle-row">
+          <span class="cycle-year">2025</span>
+          <span class="cycle-palace">坎宮</span>
+          <span class="cycle-theme">厄・試練</span>
+          <div class="cycle-bar-wrap"><div class="cycle-bar-fill" style="width:30%;background:var(--red);"></div></div>
+        </div>
+        <div class="cycle-row current">
+          <span class="cycle-year" style="color:var(--accent);">2026</span>
+          <span class="cycle-palace" style="color:#a5b4fc;">坤宮</span>
+          <span class="cycle-theme" style="color:var(--text);">変化・準備</span>
+          <div class="cycle-bar-wrap"><div class="cycle-bar-fill" style="width:45%;background:var(--accent);"></div></div>
+        </div>
+        <div class="cycle-row">
+          <span class="cycle-year">2027</span>
+          <span class="cycle-palace">震宮</span>
+          <span class="cycle-theme">発展・始動</span>
+          <div class="cycle-bar-wrap"><div class="cycle-bar-fill" style="width:65%;background:var(--blue);"></div></div>
+        </div>
+        <div class="cycle-row">
+          <span class="cycle-year">2028</span>
+          <span class="cycle-palace">巽宮</span>
+          <span class="cycle-theme">整備・信用</span>
+          <div class="cycle-bar-wrap"><div class="cycle-bar-fill" style="width:75%;background:var(--blue);"></div></div>
+        </div>
+        <div class="cycle-row">
+          <span class="cycle-year" style="color:var(--green);">2029</span>
+          <span class="cycle-palace" style="color:var(--green);">中宮</span>
+          <span class="cycle-theme" style="color:var(--green);">絶頂・転機</span>
+          <div class="cycle-bar-wrap"><div class="cycle-bar-fill" style="width:100%;background:var(--green);"></div></div>
+        </div>
+        <div class="cycle-row">
+          <span class="cycle-year">2030</span>
+          <span class="cycle-palace">乾宮</span>
+          <span class="cycle-theme">充実・実り</span>
+          <div class="cycle-bar-wrap"><div class="cycle-bar-fill" style="width:90%;background:var(--green);"></div></div>
+        </div>
+        <div class="cycle-row">
+          <span class="cycle-year">2031</span>
+          <span class="cycle-palace">兌宮</span>
+          <span class="cycle-theme">悦び・収穫</span>
+          <div class="cycle-bar-wrap"><div class="cycle-bar-fill" style="width:80%;background:var(--green);"></div></div>
+        </div>
+        <div class="cycle-row">
+          <span class="cycle-year">2032</span>
+          <span class="cycle-palace">艮宮</span>
+          <span class="cycle-theme">停滞・自己改革</span>
+          <div class="cycle-bar-wrap"><div class="cycle-bar-fill" style="width:40%;background:var(--yellow);"></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 9-Year Line Chart -->
+  <div class="card" style="margin-top:16px;">
+    <div class="card-title">運気カーブ（2024–2032）</div>
+    <div style="height:200px;"><canvas id="cycleChart"></canvas></div>
+  </div>
+</section>
+
+<!-- ==================== WESTERN ASTROLOGY ==================== -->
+<section class="section" id="western">
+  <h2 class="section-title">西洋占星術</h2>
+  <div class="grid">
+    <div class="card">
+      <div class="card-title"><span style="font-size:20px;">♏</span> 蠍座 Scorpio</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:16px;">
+        <div style="background:var(--surface2);border-radius:var(--radius-sm);padding:10px;text-align:center;">
+          <div style="font-size:10px;color:var(--text-muted);">Element</div>
+          <div style="font-size:14px;font-weight:600;color:#60a5fa;margin-top:2px;">水 Water</div>
+        </div>
+        <div style="background:var(--surface2);border-radius:var(--radius-sm);padding:10px;text-align:center;">
+          <div style="font-size:10px;color:var(--text-muted);">Quality</div>
+          <div style="font-size:14px;font-weight:600;margin-top:2px;">Fixed</div>
+        </div>
+        <div style="background:var(--surface2);border-radius:var(--radius-sm);padding:10px;text-align:center;">
+          <div style="font-size:10px;color:var(--text-muted);">Ruler</div>
+          <div style="font-size:14px;font-weight:600;margin-top:2px;">Pluto</div>
+        </div>
+      </div>
+      <div style="font-size:13px;color:var(--text-secondary);line-height:1.7;">
+        深い洞察力と変容の力。表面的なものに興味がなく、物事の本質を見抜く。強い意志と情熱を持ち、一度決めたことには徹底的に集中する。
+      </div>
+      <div class="unlock-banner">
+        出生時刻を入力するとアセンダント・月星座・ハウスが解放されます
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">東洋×西洋 クロスリファレンス</div>
+      <div style="font-size:13px;color:var(--text-secondary);line-height:1.8;">
+        <div style="margin-bottom:12px;">
+          <strong style="color:var(--text);">興味深い一致:</strong>
+        </div>
+        <div style="padding:8px 12px;background:var(--surface2);border-radius:var(--radius-sm);margin-bottom:8px;">
+          蠍座（水）× 四柱推命（水欠如）<br>
+          <span style="font-size:12px;">太陽星座が「水」なのに四柱推命では「水」が0%。外面的な水の特質（洞察力・深さ）を持ちながら、内面的な水（柔軟性・流動性）を補う必要がある</span>
+        </div>
+        <div style="padding:8px 12px;background:var(--surface2);border-radius:var(--radius-sm);margin-bottom:8px;">
+          蠍座（Fixed）× Deliberative（SF3）<br>
+          <span style="font-size:12px;">「一度決めたら動かない」固定宮の特質が、慎重に判断する強みと共鳴。拙速な判断はしない</span>
+        </div>
+        <div style="padding:8px 12px;background:var(--surface2);border-radius:var(--radius-sm);">
+          蠍座（変容）× 八白土星（山）<br>
+          <span style="font-size:12px;">深い変容を求める蠍座と、安定の山。変化を急がず、地層のように積み重ねる変容スタイル</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== 2026 FORECAST ==================== -->
+<section class="section" id="forecast">
+  <h2 class="section-title">2026年 フォーキャスト</h2>
+
+  <div class="insight-box">
+    <div class="insight-title">2026年の位置: 坤宮（変化・準備の年）</div>
+    <p>2025年の坎宮（試練）を越え、2027年の震宮（発展・始動）に向けた地固めの年。大きな勝負は避け、2029年の絶頂（中宮）に向けた3年計画の起点にする。新規事業（Self-Insightなど）の基盤を作るのに最適な年。急がず仕込みに集中。</p>
+  </div>
+
+  <div class="grid" style="grid-template-columns:repeat(auto-fit, minmax(260px, 1fr));">
+    <div class="guidance-card health">
+      <div class="guidance-header" style="color:var(--green);">健康</div>
+      <ul class="guidance-list">
+        <li>五行の金・水欠如 → 呼吸器・腎臓系に注意</li>
+        <li>HSP + Empathy → 他人の感情を吸収しやすい。定期的なデトックスが必須</li>
+        <li>サウナ（水風呂）は「水」の補完として理にかなう。継続</li>
+        <li>坤宮年は消化器系が弱まりやすい。食事の質を意識</li>
+        <li>エネルギー充電: 1人の時間（Intellection）を死守</li>
+      </ul>
+    </div>
+    <div class="guidance-card work">
+      <div class="guidance-header" style="color:var(--blue);">仕事</div>
+      <ul class="guidance-list">
+        <li>Intellection + Deliberative → 深い分析と慎重な判断が武器</li>
+        <li>ADHD傾向 → ルーティンの自動化（既に実践中）が正解</li>
+        <li>坤宮年 → 新規プロジェクトの「仕込み」に最適。本格ローンチは2027年以降</li>
+        <li>Empathy → チームマネジメントで最大の差別化要因</li>
+        <li>Self-Insight Phase 0 を完成させ、PMF検証データを蓄積</li>
+      </ul>
+    </div>
+    <div class="guidance-card money">
+      <div class="guidance-header" style="color:var(--gold);">お金</div>
+      <ul class="guidance-list">
+        <li>Maximizer × AB型の合理性 → 最適化思考は投資に向いている</li>
+        <li>坤宮 → 大きな投機は避け、守りの年。基盤投資（インデックス）に集中</li>
+        <li>2029年（絶頂）に向けた種蒔き: 新規事業の基盤構築にコスト配分</li>
+        <li>金（Metal）欠如 → 決断力に欠ける場面あり。損切りルールを明確に</li>
+        <li>不動産: 物件探しは継続。焦って高値掴みしないこと</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== CROSS ANALYSIS ==================== -->
+<section class="section" id="cross">
+  <h2 class="section-title">Cross Analysis — 強み×運気の掛け合わせ</h2>
+
+  <div class="grid">
+    <div class="insight-box">
+      <div class="insight-title">Empathy × HSP × エニアグラム4</div>
+      <p>3つの特性が共鳴し、「人の感情を深く理解し、独自の視点で表現する力」を形成。Self-Insightサービスの核心 — ユーザーの痛みを自分事として感じられることがPMFの源泉。ただしエネルギー消耗も大きいため、境界線の設計が重要。</p>
+    </div>
+    <div class="insight-box">
+      <div class="insight-title">Intellection × ADHD × 丁火（陰火）</div>
+      <p>深い思考力はあるが、ADHDの波で集中が途切れやすい。丁火（ロウソクの炎）は風に弱い — 環境を整えれば安定して燃え続ける。対策: 自動化で雑務を排除し、思考に没頭できる環境を作る（既に実践中のClaude Code活用は正解）。</p>
+    </div>
+  </div>
+
+  <div class="grid">
+    <div class="insight-box">
+      <div class="insight-title">Deliberative × AB型 × 蠍座Fixed</div>
+      <p>3つとも「慎重・一度決めたら変えない」を指す。強み: 深い分析に基づく確実な意思決定。リスク: 行動が遅れ、チャンスを逃す場面がある。Activator（SF8位）を意識的に発動させることで補完。「7割で動く」をルール化する。</p>
+    </div>
+    <div class="insight-box">
+      <div class="insight-title">Connectedness × 八白土星 × 坤宮2026</div>
+      <p>全てを繋げて見る直感力（Connectedness）と、山のように蓄積して大きな成果を生む特質（八白土星）。2026年の坤宮は「地を耕す」年 — 点在するプロジェクト群を繋ぎ、2029年の絶頂に向けたエコシステムを設計するのに最適なタイミング。</p>
+    </div>
+  </div>
+
+  <!-- Maximizer × 3S -->
+  <div class="insight-box">
+    <div class="insight-title">Maximizer × 3S原則 × 7つの習慣</div>
+    <p>「良い→最高」の追求（Maximizer）はYumaのOSそのもの。3S（Simple, Scalable, Sustainable）でフィルターし、7つの習慣の第II領域（重要×非緊急）に集中投資する — この組み合わせが、日々の自動化・最適化パイプラインの設計思想の根幹。Self-Insightサービスの差別化要因でもある: 占いで終わらず、フレームワークで行動に落とし込む。</p>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer class="page-footer">
+  <div>Self-Insight v0.1 — Phase 0 Prototype</div>
+  <div style="margin-top:4px;">Generated 2026-03-19 | Data: CliftonStrengths, 四柱推命, 九星気学, 西洋占星術</div>
+</footer>
+
+</div><!-- /.container -->
+
+<script>
+// 9-Year Cycle Chart
+const ctx = document.getElementById('cycleChart').getContext('2d');
+new Chart(ctx, {
+  type: 'line',
+  data: {
+    labels: ['2024','2025','2026','2027','2028','2029','2030','2031','2032'],
+    datasets: [{
+      label: '運気エネルギー',
+      data: [70, 30, 45, 65, 75, 100, 90, 80, 40],
+      borderColor: '#6366f1',
+      backgroundColor: 'rgba(99,102,241,0.1)',
+      fill: true,
+      tension: 0.4,
+      pointBackgroundColor: ['#ff6b35','#ef4444','#6366f1','#3b82f6','#3b82f6','#22c55e','#22c55e','#22c55e','#eab308'],
+      pointBorderColor: ['#ff6b35','#ef4444','#6366f1','#3b82f6','#3b82f6','#22c55e','#22c55e','#22c55e','#eab308'],
+      pointRadius: [5,5,8,5,5,8,5,5,5],
+      pointHoverRadius: 8,
+    }]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: { display: false },
+      tooltip: {
+        callbacks: {
+          afterLabel: function(ctx) {
+            const themes = ['注目・離別','厄・試練','変化・準備','発展・始動','整備・信用','絶頂・転機','充実・実り','悦び・収穫','停滞・自己改革'];
+            return themes[ctx.dataIndex];
+          }
+        }
+      }
+    },
+    scales: {
+      x: {
+        grid: { color: 'rgba(255,255,255,0.05)' },
+        ticks: { color: '#7c8293', font: { family: "'JetBrains Mono', monospace", size: 11 } }
+      },
+      y: {
+        min: 0, max: 110,
+        grid: { color: 'rgba(255,255,255,0.05)' },
+        ticks: { display: false }
+      }
+    },
+    animation: { duration: 1500, easing: 'easeOutQuart' }
+  }
+});
+
+// Highlight current nav on scroll
+const sections = document.querySelectorAll('.section[id]');
+const navLinks = document.querySelectorAll('.nav-bar a');
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      navLinks.forEach(l => l.classList.remove('active'));
+      const link = document.querySelector(`.nav-bar a[href="#${e.target.id}"]`);
+      if (link) link.classList.add('active');
+    }
+  });
+}, { threshold: 0.3, rootMargin: '-100px 0px -60% 0px' });
+sections.forEach(s => observer.observe(s));
+</script>
+
+</body>
+</html>

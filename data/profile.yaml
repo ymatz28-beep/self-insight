@@ -1,0 +1,190 @@
+# Self-Insight Profile — Yuma Tejima
+# Last Updated: 2026-03-19
+
+identity:
+  name: Yuma Tejima
+  birth_date: "1975-10-28"
+  birth_time: null  # Unknown — unlocks Hour Pillar + Ascendant
+  birth_place: "兵庫県尼崎市"
+  blood_type: AB
+  age: 50  # as of 2026
+
+# === CliftonStrengths 34 ===
+strengths_finder:
+  date_taken: "2015-05-12"
+  lead_domain: Strategic Thinking
+  top5:
+    - { rank: 1, name: Empathy, domain: Relationship Building }
+    - { rank: 2, name: Intellection, domain: Strategic Thinking }
+    - { rank: 3, name: Deliberative, domain: Executing }
+    - { rank: 4, name: Connectedness, domain: Relationship Building }
+    - { rank: 5, name: Maximizer, domain: Influencing }
+  top10:
+    - { rank: 6, name: Futuristic, domain: Strategic Thinking }
+    - { rank: 7, name: Relator, domain: Relationship Building }
+    - { rank: 8, name: Activator, domain: Executing }
+    - { rank: 9, name: Individualization, domain: Relationship Building }
+    - { rank: 10, name: Learner, domain: Strategic Thinking }
+  all34:
+    - Empathy
+    - Intellection
+    - Deliberative
+    - Connectedness
+    - Maximizer
+    - Futuristic
+    - Relator
+    - Activator
+    - Individualization
+    - Learner
+    - Input
+    - Ideation
+    - Command
+    - Context
+    - Focus
+    - Developer
+    - Achiever
+    - Self-Assurance
+    - Arranger
+    - Analytical
+    - Responsibility
+    - Consistency
+    - Positivity
+    - Competition
+    - Significance
+    - Adaptability
+    - Strategic
+    - Discipline
+    - Includer
+    - Communication
+    - Belief
+    - Restorative
+    - Woo
+    - Harmony
+  domain_distribution:
+    Relationship Building: [1, 4, 7, 9, 16]   # Empathy, Connectedness, Relator, Individualization, Developer
+    Strategic Thinking: [2, 6, 10, 11, 12, 14, 20]  # Intellection, Futuristic, Learner, Input, Ideation, Context, Analytical
+    Executing: [3, 8, 15, 17, 19, 21, 22, 28]  # Deliberative, Activator, Focus, Achiever, Arranger, Responsibility, Consistency, Discipline
+    Influencing: [5, 13, 18, 24, 25, 30, 33]   # Maximizer, Command, Self-Assurance, Competition, Significance, Communication, Woo
+
+# === Personality Typology ===
+personality:
+  enneagram:
+    type: 4
+    name: "The Individualist"
+    description: "自己表現とアイデンティティの探求。深い感情と独自性"
+    growth_direction: 1  # Type 1 (健全な方向)
+    stress_direction: 2  # Type 2 (不健全な方向)
+  hsp:
+    score: high  # 自己認識
+    traits: ["感覚処理感受性が高い", "環境刺激に敏感", "深い情報処理"]
+  adhd:
+    tendency: leaning  # 自己認識
+    traits: ["過集中と散漫の波", "新しい刺激への反応性", "マルチタスク傾向"]
+  mbti: null  # 後日追加
+
+# === Four Pillars of Destiny (四柱推命) ===
+four_pillars:
+  year_pillar:
+    stem: { char: 乙, element: Wood, yin_yang: Yin, reading: きのと }
+    branch: { char: 卯, animal: Rabbit, element: Wood, reading: う }
+    full: 乙卯
+  month_pillar:
+    stem: { char: 丙, element: Fire, yin_yang: Yang, reading: ひのえ }
+    branch: { char: 戌, animal: Dog, element: Earth, reading: いぬ }
+    full: 丙戌
+  day_pillar:
+    stem: { char: 丁, element: Fire, yin_yang: Yin, reading: ひのと }
+    branch: { char: 未, animal: Goat, element: Earth, reading: ひつじ }
+    full: 丁未
+  hour_pillar: null  # 出生時刻不明
+  day_master: { char: 丁, element: Fire, yin_yang: Yin, description: "陰火 — ロウソクの炎。静かで温かく、人を照らす" }
+  five_elements_balance:
+    木: { count: 2, pct: 33, source: "乙(年干)+卯(年支)" }
+    火: { count: 2, pct: 33, source: "丙(月干)+丁(日干)" }
+    土: { count: 2, pct: 33, source: "戌(月支)+未(日支)" }
+    金: { count: 0, pct: 0, source: "なし（時柱で補完の可能性）" }
+    水: { count: 0, pct: 0, source: "なし（時柱で補完の可能性）" }
+  missing_elements: [金, 水]
+  element_insight: "金(決断力・収穫)と水(知恵・柔軟性)が欠如。意識的にこれらの要素を補う行動が有効"
+
+# === Nine Star Ki (九星気学) ===
+nine_star_ki:
+  year_star: { number: 7, name: 七赤金星, element: Metal, direction: W }
+  month_star: { number: 9, name: 九紫火星, element: Fire, direction: S }
+  day_star: { number: 5, name: 五黄土星, element: Earth, direction: C }
+  inclination: { palace: 震宮, meaning: "行動力・決断力。内面に強い推進力" }
+  best_directions: [二黒土星, 八白土星]
+  good_directions: [一白水星, 六白金星]
+  traits: "社交的で人を楽しませる力。言葉に力がある。金運に恵まれやすいが散財に注意"
+  year_cycle_2026:
+    center_star: { number: 1, name: 一白水星 }
+    position: { palace: 坤宮, direction: SW, meaning: "変化・準備" }
+    description: "地固めの年。2027年の発展に向けた基盤を作る。急がず仕込みに集中"
+  nine_year_cycle:
+    - { year: 2024, palace: 離宮, theme: "注目・離別", energy: 70 }
+    - { year: 2025, palace: 坎宮, theme: "厄・試練", energy: 30 }
+    - { year: 2026, palace: 坤宮, theme: "変化・準備", energy: 45, current: true }
+    - { year: 2027, palace: 震宮, theme: "発展・始動", energy: 65 }
+    - { year: 2028, palace: 巽宮, theme: "整備・信用", energy: 75 }
+    - { year: 2029, palace: 中宮, theme: "絶頂・転機", energy: 100 }
+    - { year: 2030, palace: 乾宮, theme: "充実・実り", energy: 90 }
+    - { year: 2031, palace: 兌宮, theme: "悦び・収穫", energy: 80 }
+    - { year: 2032, palace: 艮宮, theme: "停滞・自己改革", energy: 40 }
+
+# === Rokusei Senjutsu (六星占術) ===
+rokusei:
+  main_star: { name: 木星人, polarity: "-", reading: "もくせいじん マイナス" }
+  sub_star: { name: 金星人, polarity: "-", reading: "きんせいじん マイナス" }
+  reigou: true  # 霊合星人 — メイン星とサブ星の二重性を持つ
+  traits:
+    main: "好奇心旺盛で行動力がある。社交的で人脈が広い。自由を重んじ束縛を嫌う"
+    sub: "プライドが高く美意識がある。完璧主義的。人から尊敬されたい欲求"
+    reigou_effect: "二つの星の性質を併せ持ち、運気の振れ幅が大きい。良い時は倍、悪い時も倍"
+  twelve_year_cycle:
+    - { year: 2022, phase: 陰影,殺界: 大殺界, energy: 15 }
+    - { year: 2023, phase: 停止, 殺界: 大殺界, energy: 10 }
+    - { year: 2024, phase: 減退, 殺界: 大殺界, energy: 20 }
+    - { year: 2025, phase: 種子, 殺界: null, energy: 50 }
+    - { year: 2026, phase: 緑生, 殺界: null, energy: 65, current: true }
+    - { year: 2027, phase: 立花, 殺界: null, energy: 80 }
+    - { year: 2028, phase: 健弱, 殺界: 小殺界, energy: 35 }
+    - { year: 2029, phase: 達成, 殺界: null, energy: 90 }
+    - { year: 2030, phase: 乱気, 殺界: 中殺界, energy: 25 }
+    - { year: 2031, phase: 再会, 殺界: null, energy: 70 }
+    - { year: 2032, phase: 財成, 殺界: null, energy: 85 }
+    - { year: 2033, phase: 安定, 殺界: null, energy: 95 }
+  sub_star_cycle:  # 金星人マイナス（霊合サブ）
+    - { year: 2024, phase: 乱気, 殺界: 中殺界, energy: 30 }
+    - { year: 2025, phase: 再会, 殺界: null, energy: 85 }
+    - { year: 2026, phase: 財成, 殺界: null, energy: 90 }
+    - { year: 2027, phase: 安定, 殺界: null, energy: 80 }
+    - { year: 2028, phase: 陰影, 殺界: 大殺界, energy: 20 }
+    - { year: 2029, phase: 停止, 殺界: 大殺界, energy: 10 }
+    - { year: 2030, phase: 減退, 殺界: 大殺界, energy: 15 }
+    - { year: 2031, phase: 種子, 殺界: null, energy: 55 }
+    - { year: 2032, phase: 緑生, 殺界: null, energy: 65 }
+  reigou_combined:  # 霊合合成スコア（メイン70% + サブ30%）
+    - { year: 2024, score: 20, label: "最悪期" }
+    - { year: 2025, score: 64, label: "回復開始" }
+    - { year: 2026, score: 73, label: "好調" }
+    - { year: 2027, score: 77, label: "絶好調" }
+    - { year: 2028, score: 34, label: "要注意" }
+    - { year: 2029, score: 70, label: "矛盾期" }
+    - { year: 2030, score: 26, label: "危険期" }
+    - { year: 2031, score: 76, label: "好調" }
+    - { year: 2032, score: 83, label: "絶好調" }
+
+# === Western Astrology ===
+western_astrology:
+  sun_sign: { sign: Scorpio, symbol: "♏", element: Water, quality: Fixed }
+  ascendant: null  # 出生時刻不明
+  moon_sign: null  # 出生時刻不明（双子座付近の可能性）
+  traits: "深い洞察力、変容の力、情熱と集中。表面的なものに興味がない"
+
+# === Blood Type ===
+blood_type:
+  type: AB
+  population_pct: 10
+  traits:
+    strengths: ["合理的思考と感性の共存", "冷静な分析力", "多角的視点", "適応力"]
+    challenges: ["二面性による迷い", "感情の複雑さ", "他者から理解されにくい"]
