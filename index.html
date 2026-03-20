@@ -32,10 +32,13 @@
   --radius-md: 10px;
   --radius-lg: 14px;
   --radius-xl: 16px;
+  --gnav-height: 52px;
+  --z-nav: 100;
+  --z-subnav: 90;
 }
 
 *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-html { font-size: 16px; scroll-behavior: smooth; scroll-padding-top: 110px; }
+html { font-size: 16px; scroll-behavior: smooth; scroll-padding-top: calc(52px + 60px); }
 body {
   font-family: var(--font-body);
   background: var(--bg);
@@ -55,7 +58,7 @@ body::before {
 
 /* === Nav === */
 .nav-bar {
-  position: sticky; top: 0; z-index: 100;
+  position: sticky; top: 52px; z-index: 90;
   background: rgba(15,17,23,0.92);
   backdrop-filter: blur(12px);
   border-bottom: 1px solid var(--border);
@@ -71,12 +74,12 @@ body::before {
   font-size: 12px; font-weight: 500;
   padding: 14px 16px;
   white-space: nowrap;
-  transition: color 0.2s;
-  border-bottom: 2px solid transparent;
+  transition: color 0.2s, background 0.2s;
+  border-radius: var(--radius-sm);
 }
 .nav-bar a:hover, .nav-bar a.active {
   color: var(--accent);
-  border-bottom-color: var(--accent);
+  background: rgba(99,102,241,0.12);
 }
 
 /* === Hero === */
@@ -291,10 +294,100 @@ body::before {
   margin-top: 16px;
 }
 
+/* === Pillar Headers === */
+.pillar-header {
+  display: flex; align-items: center; gap: 12px;
+  margin-bottom: 24px; padding-bottom: 16px;
+  border-bottom: 1px solid var(--border);
+}
+.pillar-header .pillar-icon {
+  width: 40px; height: 40px; border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 20px; flex-shrink: 0;
+}
+.pillar-header h2 { font-size: clamp(16px, 2vw, 20px); font-weight: 700; margin: 0; }
+.pillar-header .pillar-sub { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+
+/* === Monthly Forecast === */
+.month-selector {
+  display: flex; gap: 4px; overflow-x: auto; -webkit-overflow-scrolling: touch;
+  scrollbar-width: none; padding: 8px 0; margin-bottom: 20px;
+}
+.month-selector::-webkit-scrollbar { display: none; }
+.month-btn {
+  flex-shrink: 0; padding: 8px 14px; border-radius: 8px;
+  background: var(--surface); border: 1px solid var(--border);
+  color: var(--text-muted); font-size: 12px; font-weight: 600;
+  cursor: pointer; transition: all 0.2s; white-space: nowrap;
+  font-family: var(--font-body);
+}
+.month-btn:hover { background: var(--surface2); color: var(--text-secondary); }
+.month-btn.active {
+  background: rgba(99,102,241,0.15); color: #a5b4fc;
+  border-color: rgba(99,102,241,0.4);
+}
+.month-btn.current {
+  box-shadow: 0 0 0 1px rgba(99,102,241,0.5);
+}
+.month-panel { display: none; }
+.month-panel.active { display: block; }
+
+.month-card-header {
+  display: flex; align-items: center; gap: 12px; margin-bottom: 16px;
+  padding-bottom: 12px; border-bottom: 1px solid var(--border);
+}
+.month-card-header .month-label {
+  font-size: 18px; font-weight: 700; font-family: var(--font-mono);
+}
+.month-card-header .month-tags { display: flex; gap: 6px; flex-wrap: wrap; }
+.month-card-header .month-tag {
+  font-size: 10px; font-weight: 500; padding: 2px 8px;
+  border-radius: 10px;
+}
+
+.domain-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 12px;
+}
+.domain-card {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--radius-md); padding: 16px;
+  border-left: 3px solid var(--accent);
+}
+.domain-card.work { border-left-color: var(--blue); }
+.domain-card.money { border-left-color: var(--gold); }
+.domain-card.health { border-left-color: var(--green); }
+.domain-card.romance { border-left-color: #f472b6; }
+
+.domain-card .domain-icon-label {
+  display: flex; align-items: center; gap: 8px; margin-bottom: 8px;
+}
+.domain-card .domain-label { font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
+.domain-card .domain-stars { font-family: var(--font-mono); font-size: 13px; letter-spacing: 1px; }
+.domain-card .domain-text { font-size: 12px; color: var(--text-secondary); line-height: 1.6; }
+
+.month-insight {
+  margin-top: 16px; padding: 12px 16px;
+  background: rgba(99,102,241,0.06); border: 1px solid rgba(99,102,241,0.15);
+  border-radius: var(--radius-sm); font-size: 12px; color: var(--text-secondary); line-height: 1.6;
+}
+
+/* === Year Timeline (mini) === */
+.year-timeline {
+  display: flex; gap: 2px; margin: 16px 0;
+}
+.year-timeline .yt-month {
+  flex: 1; height: 24px; border-radius: 3px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 9px; font-weight: 600; color: rgba(255,255,255,0.7);
+  cursor: pointer; transition: all 0.2s;
+}
+.year-timeline .yt-month:hover { transform: scaleY(1.3); }
+
 /* === Responsive === */
 @media (max-width: 768px) {
   .grid { grid-template-columns: 1fr; }
   .pillar-grid { grid-template-columns: repeat(2, 1fr); }
+  .domain-grid { grid-template-columns: 1fr; }
 }
 @media (max-width: 640px) {
   .container { padding: 12px; }
@@ -305,18 +398,60 @@ body::before {
   .pillar-grid { grid-template-columns: repeat(2, 1fr); }
   .pillar .kanji { font-size: 22px; }
   .cycle-bar-wrap { width: 60px; }
+  .domain-grid { grid-template-columns: 1fr; }
+  .month-card-header .month-label { font-size: 16px; }
+  .pillar-header .pillar-icon { width: 32px; height: 32px; font-size: 16px; }
+}
+
+/* === Global Nav === */
+.site-header{display:flex;align-items:center;justify-content:space-between;padding:0 24px;height:52px;background:rgba(22,24,31,0.85);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid rgba(255,255,255,0.08);position:sticky;top:0;z-index:100}
+.site-nav{display:flex;gap:4px}
+.site-nav a{color:#71717a;text-decoration:none;font-size:13px;font-weight:500;padding:6px 14px;border-radius:6px;transition:background .15s,color .15s;font-family:'Inter','Noto Sans JP',sans-serif}
+.site-nav a:hover,.site-nav a[aria-current="page"]{background:rgba(255,255,255,0.065);color:#f5f5f7}
+.nav-toggle{display:none}
+.nav-toggle-label{display:none;cursor:pointer;width:44px;height:44px;align-items:center;justify-content:center}
+.nav-toggle-label span,.nav-toggle-label span::before,.nav-toggle-label span::after{display:block;background:#9ca3af;height:2px;width:20px;border-radius:2px;position:relative;transition:all .3s}
+.nav-toggle-label span::before,.nav-toggle-label span::after{content:'';position:absolute}
+.nav-toggle-label span::before{top:-6px}
+.nav-toggle-label span::after{top:6px}
+@media(max-width:640px){
+  .nav-toggle-label{display:inline-flex}
+  .site-header{flex-wrap:wrap;gap:8px;padding:8px 12px;height:auto}
+  .site-nav{display:none;width:100%;flex-direction:column;gap:4px;padding-top:8px}
+  .nav-toggle:checked~.site-nav{display:flex}
+  .nav-toggle:checked+.nav-toggle-label span{background:transparent}
+  .nav-toggle:checked+.nav-toggle-label span::before{top:0;transform:rotate(45deg)}
+  .nav-toggle:checked+.nav-toggle-label span::after{top:0;transform:rotate(-45deg)}
+  .site-nav a{padding:8px 12px;font-size:12px;min-height:44px}
 }
 </style>
 </head>
 <body>
 
-<!-- Nav -->
+<!-- Global Nav -->
+<header class="site-header">
+  <input type="checkbox" id="nav-toggle" class="nav-toggle" aria-label="Toggle navigation">
+  <label for="nav-toggle" class="nav-toggle-label"><span></span></label>
+  <nav class="site-nav">
+    <a href="https://iuma-private.pages.dev/stock/portfolio.html">Stock</a>
+    <a href="https://iuma-private.pages.dev/stock/market-intel.html">Market Intel</a>
+    <a href="https://iuma-private.pages.dev/intel/">Insight</a>
+    <a href="https://iuma-private.pages.dev/wealth/dashboard.html">Wealth</a>
+    <a href="https://iuma-private.pages.dev/action/">Action</a>
+    <a href="https://ymatz28-beep.github.io/self-insight/" aria-current="page">Self-Insight</a>
+    <a href="https://iuma-private.pages.dev/health/">Health</a>
+    <a href="https://ymatz28-beep.github.io/property-report/">Property</a>
+    <a href="https://ymatz28-beep.github.io/trip-planner/">Travel</a>
+  </nav>
+</header>
+
+<!-- Section Nav -->
 <nav class="nav-bar">
+  <a href="#core-identity">Core Identity</a>
   <a href="#personality">Personality</a>
-  <a href="#four-pillars">四柱推命</a>
-  <a href="#nine-star">九星気学</a>
-  <a href="#western">西洋占星術</a>
-  <a href="#forecast">2026 Forecast</a>
+  <a href="#divination">占術プロファイル</a>
+  <a href="#forecast-2026">2026 運勢</a>
+  <a href="#monthly">月間運勢</a>
   <a href="#cross">Cross Analysis</a>
 </nav>
 
@@ -325,32 +460,84 @@ body::before {
 <!-- Hero -->
 <section class="hero">
   <h1>Self-Insight</h1>
-  <div class="subtitle">Yuma Tejima — パーソナル・インサイト・ダッシュボード</div>
+  <div class="subtitle">Yuma Tejima — AI Self-Insight Dashboard</div>
   <div class="hero-chips">
-    <span class="chip highlight">八白土星</span>
+    <span class="chip highlight">丁火 陰火</span>
+    <span class="chip highlight">七赤金星</span>
     <span class="chip highlight">蠍座 ♏</span>
+    <span class="chip">木星人(−) 霊合</span>
     <span class="chip">AB型</span>
-    <span class="chip">乙卯年</span>
-    <span class="chip">エニアグラム 4</span>
-    <span class="chip">HSP</span>
-    <span class="chip">日主: 丁火</span>
+    <span class="chip">Enneagram 4</span>
+    <span class="chip">Empathy #1</span>
   </div>
   <div class="stats">
     <div class="stat-card">
-      <div class="label">SF #1</div>
-      <div class="value" style="color:#60a5fa;">Empathy</div>
+      <div class="label">Core Identity</div>
+      <div class="value" style="color:#f87171;">丁火</div>
     </div>
     <div class="stat-card">
-      <div class="label">2026 運勢</div>
-      <div class="value" style="color:#a5b4fc;">坤宮</div>
+      <div class="label">Strongest Axis</div>
+      <div class="value" style="color:#60a5fa;">共感×洞察</div>
     </div>
     <div class="stat-card">
-      <div class="label">テーマ</div>
-      <div class="value" style="color:#facc15;">変化・準備</div>
+      <div class="label">2026 Phase</div>
+      <div class="value" style="color:#a5b4fc;">坤宮×緑生</div>
     </div>
     <div class="stat-card">
       <div class="label">Peak Year</div>
       <div class="value" style="color:#4ade80;">2029</div>
+    </div>
+  </div>
+</section>
+
+<!-- ================================================================ -->
+<!-- ★ PILLAR 1: CORE IDENTITY — Timeless "あなたはこういう人"          -->
+<!-- ================================================================ -->
+<section class="section" id="core-identity">
+  <div class="pillar-header">
+    <div class="pillar-icon" style="background:rgba(99,102,241,0.15);color:#a5b4fc;">&#9733;</div>
+    <div>
+      <h2>Core Identity — あなたはこういう人</h2>
+      <div class="pillar-sub">6つの分析体系が示す、時代を超えた人物像</div>
+    </div>
+  </div>
+
+  <div class="insight-box" style="border-color:rgba(99,102,241,0.4);background:linear-gradient(135deg,rgba(99,102,241,0.12),rgba(139,92,246,0.08));">
+    <div class="insight-title" style="font-size:15px;">統合インサイト</div>
+    <p style="line-height:1.9;font-size:14px;">
+      あなたは<strong style="color:var(--text);">静かな炎と鋭い言葉</strong>を持つ人です。四柱推命の日主「丁火」はロウソクの炎 — 周囲を温かく照らしながら、内に強い意志を秘めています。九星気学の七赤金星は「沢」の社交力と言葉の力。この二つの組み合わせが、<strong style="color:var(--text);">深い共感力（Empathy #1）で人の本質を見抜き、的確な言葉で伝える</strong>という稀有な能力を生んでいます。実際に、CliftonStrengthsでEmpathyが34資質中1位であることは、他者の感情を「理解」するのではなく「体感」するレベルの共感力を意味しています。これは1万人に1人レベルの組み合わせです。
+    </p>
+    <p style="line-height:1.9;font-size:14px;margin-top:12px;">
+      蠍座の「変容の力」、エニアグラム4の「独自性の追求」、HSPの「繊細な感覚処理」— これらすべてが<strong style="color:var(--text);">本質を見抜き、深く掘り下げ、独自の形で表現する</strong>方向を指しています。表面的なことに興味がなく、物事の核心に到達するまで止まらない。蠍座の支配星である冥王星（Pluto）は「死と再生」を司る星 — 既存の枠組みを壊して再構築する力がここから来ています。エニアグラム4の「自分だけの美学」とHSPの「微細な差異を感知する能力」が合わさることで、他者には見えない洞察を言語化する才能が生まれています。
+    </p>
+    <p style="line-height:1.9;font-size:14px;margin-top:12px;">
+      AB型の「合理性×感性」の二面性が、論理的フレームワーク（3S, MECE）と感情的共感を両立させる。木星人(−)霊合星人の二重性も同じ構造 — <strong style="color:var(--text);">相反する特質を統合する力</strong>がYumaの最大の特徴。日本人口のわずか10%しかいないAB型の「合理と感性の共存」は、データ分析とヒューマンインサイトを同時に扱うAIエージェント設計にそのまま反映されています。霊合星人は二つの星の運気を同時に受けるため振れ幅が大きいですが、その分「普通では到達できない高み」にも届く特性を持っています。
+    </p>
+    <p style="line-height:1.9;font-size:14px;margin-top:12px;">
+      <strong style="color:var(--yellow);">注意すべきポイント — 全体系が一致する弱点</strong>: 五行で<strong style="color:var(--text);">金（決断力・収穫）と水（柔軟性・知恵）が完全に欠如</strong>しており、これは優柔不断さや状況変化への対応の遅さとして現れます。HSPの繊細さとEmpathy #1の共感力は最大の強みですが、裏返すと<strong style="color:var(--text);">他者のエネルギーを吸収しすぎて消耗する</strong>リスクが常にあります。ADHD傾向による「過集中と散漫の波」は、システムや仕組みがないと一貫した実行力に欠ける原因になります。また、エニアグラム4はストレス下でType 2（自己犠牲的な奉仕者）に向かう傾向があり、本来の独自性を捨てて<strong style="color:var(--text);">他者に合わせすぎる</strong>危険性があります。これらの弱点を理解した上で、仕組み化（自動化・ルーティン・境界線設計）で補うことがYumaのOSの本質です。
+    </p>
+  </div>
+
+  <div class="grid" style="grid-template-columns:repeat(auto-fit, minmax(200px, 1fr));margin-top:16px;">
+    <div class="card" style="text-align:center;padding:16px;">
+      <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.5px;">Core Essence</div>
+      <div style="font-size:18px;font-weight:700;margin-top:8px;">丁火 × 七赤金星</div>
+      <div style="font-size:12px;color:var(--text-secondary);margin-top:4px;">静かな炎 × 言葉の力</div>
+    </div>
+    <div class="card" style="text-align:center;padding:16px;">
+      <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.5px;">Strongest Axis</div>
+      <div style="font-size:18px;font-weight:700;margin-top:8px;">共感 × 洞察</div>
+      <div style="font-size:12px;color:var(--text-secondary);margin-top:4px;">Empathy + Intellection + HSP</div>
+    </div>
+    <div class="card" style="text-align:center;padding:16px;">
+      <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.5px;">Duality</div>
+      <div style="font-size:18px;font-weight:700;margin-top:8px;">合理 × 感性</div>
+      <div style="font-size:12px;color:var(--text-secondary);margin-top:4px;">AB型 × 霊合星人 × Enneagram 4</div>
+    </div>
+    <div class="card" style="text-align:center;padding:16px;">
+      <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.5px;">Watch Out</div>
+      <div style="font-size:18px;font-weight:700;margin-top:8px;color:var(--yellow);">金・水の欠如</div>
+      <div style="font-size:12px;color:var(--text-secondary);margin-top:4px;">決断力 × 柔軟性を意識的に補う</div>
     </div>
   </div>
 </section>
@@ -363,29 +550,52 @@ body::before {
     <!-- SF TOP5 -->
     <div class="card">
       <div class="card-title"><span class="icon">&#9733;</span> CliftonStrengths TOP 5</div>
+      <div style="font-size:12px;color:var(--text-secondary);line-height:1.7;margin-bottom:16px;">
+        Gallup社が開発した34の才能テーマから、最も自然に発揮される上位5つの強み。TOP5は「意識せずとも繰り返し現れる思考・感情・行動のパターン」であり、努力で伸ばすべきスキルではなく、<strong style="color:var(--text);">生まれ持った才能の核</strong>を示します。同じTOP5の組み合わせを持つ人は3,300万人に1人 — つまり完全にユニークな強みのDNAです。
+      </div>
       <ul class="top5-list">
         <li class="top5-item">
           <span class="rank">1</span>
-          <div><div class="sf-name">Empathy</div><div class="sf-domain"><span class="tag tag-rb">Relationship Building</span></div></div>
+          <div>
+            <div class="sf-name">Empathy <span style="font-size:12px;color:var(--text-secondary);font-weight:400;">共感性</span></div>
+            <div class="sf-domain"><span class="tag tag-rb">Relationship Building</span></div>
+            <div style="font-size:12px;color:var(--text-secondary);line-height:1.6;margin-top:6px;">他者の感情を「推測」するのではなく「体感」する。言語化されていない不安や喜びを直感的に察知し、その人が本当に求めていることを理解する力。チームリーダーとしての最大の武器であり、サービス設計においてユーザーの痛みを自分事として感じられるPMFの源泉。</div>
+          </div>
         </li>
         <li class="top5-item">
           <span class="rank">2</span>
-          <div><div class="sf-name">Intellection</div><div class="sf-domain"><span class="tag tag-st">Strategic Thinking</span></div></div>
+          <div>
+            <div class="sf-name">Intellection <span style="font-size:12px;color:var(--text-secondary);font-weight:400;">内省</span></div>
+            <div class="sf-domain"><span class="tag tag-st">Strategic Thinking</span></div>
+            <div style="font-size:12px;color:var(--text-secondary);line-height:1.6;margin-top:6px;">思考することそのものが活動。1人の時間に頭の中で概念を回し、深い洞察に到達する。表面的な情報交換ではなく、哲学的な問いや構造的な分析を好む。このダッシュボード自体が、Intellectionが駆動する「自己を体系的に理解したい」という欲求の産物。</div>
+          </div>
         </li>
         <li class="top5-item">
           <span class="rank">3</span>
-          <div><div class="sf-name">Deliberative</div><div class="sf-domain"><span class="tag tag-ex">Executing</span></div></div>
+          <div>
+            <div class="sf-name">Deliberative <span style="font-size:12px;color:var(--text-secondary);font-weight:400;">慎重さ</span></div>
+            <div class="sf-domain"><span class="tag tag-ex">Executing</span></div>
+            <div style="font-size:12px;color:var(--text-secondary);line-height:1.6;margin-top:6px;">リスクを事前に感知し、慎重に選択肢を評価する。衝動的な判断を避け、深い分析に基づいて確実な意思決定をする力。投資判断や事業設計において、見えないリスクを察知する「守りの強み」。ただし行動の遅れにつながるリスクもある。</div>
+          </div>
         </li>
         <li class="top5-item">
           <span class="rank">4</span>
-          <div><div class="sf-name">Connectedness</div><div class="sf-domain"><span class="tag tag-rb">Relationship Building</span></div></div>
+          <div>
+            <div class="sf-name">Connectedness <span style="font-size:12px;color:var(--text-secondary);font-weight:400;">運命思考</span></div>
+            <div class="sf-domain"><span class="tag tag-rb">Relationship Building</span></div>
+            <div style="font-size:12px;color:var(--text-secondary);line-height:1.6;margin-top:6px;">万物のつながりを直感的に感じ取る。一見無関係に見える出来事やアイデアの間に隠れた関連性を見出す力。占術と心理学と確率論を統合する発想、複数プロジェクト間のシナジーを設計する力の源泉。偶然を必然として捉える世界観。</div>
+          </div>
         </li>
         <li class="top5-item">
           <span class="rank">5</span>
-          <div><div class="sf-name">Maximizer</div><div class="sf-domain"><span class="tag tag-inf">Influencing</span></div></div>
+          <div>
+            <div class="sf-name">Maximizer <span style="font-size:12px;color:var(--text-secondary);font-weight:400;">最上志向</span></div>
+            <div class="sf-domain"><span class="tag tag-inf">Influencing</span></div>
+            <div style="font-size:12px;color:var(--text-secondary);line-height:1.6;margin-top:6px;">「平均を良く」するのではなく「良いを最高に」引き上げる。弱みの修正より強みの極大化を追求する。3S原則（Simple, Scalable, Sustainable）の設計思想そのものがMaximizerの発露。「もっと良くできないか？」が止まらない性質は、自動化・最適化パイプラインの原動力。</div>
+          </div>
         </li>
       </ul>
-      <div style="font-size:11px;color:var(--text-muted);margin-top:12px;">Lead Domain: Strategic Thinking</div>
+      <div style="font-size:11px;color:var(--text-muted);margin-top:12px;">Lead Domain: Strategic Thinking | 受験日: 2015-05-12</div>
     </div>
 
     <!-- Domain Distribution -->
@@ -417,21 +627,25 @@ body::before {
             <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;">Enneagram</div>
             <div style="font-size:18px;font-weight:700;margin-top:2px;">Type 4</div>
             <div style="font-size:11px;color:var(--text-secondary);">The Individualist</div>
+            <div style="font-size:11px;color:var(--text-muted);line-height:1.5;margin-top:6px;">自己表現とアイデンティティの探求者。「自分だけの世界観」を持ち、平凡であることを嫌う。健全時はType 1（改革者）に向かい原則と美学を融合。ストレス時はType 2（奉仕者）に向かい、自分を犠牲にして他者に尽くしすぎる傾向。</div>
           </div>
           <div style="background:var(--surface2);border-radius:var(--radius-sm);padding:10px;">
             <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;">Blood Type</div>
             <div style="font-size:18px;font-weight:700;margin-top:2px;">AB</div>
             <div style="font-size:11px;color:var(--text-secondary);">合理×感性の二面性</div>
+            <div style="font-size:11px;color:var(--text-muted);line-height:1.5;margin-top:6px;">日本人口の10%。冷静な分析力と繊細な感性が同居。「二面性がある」と言われがちだが、実態は「状況に応じて最適なモードを切り替えている」合理的適応。</div>
           </div>
           <div style="background:var(--surface2);border-radius:var(--radius-sm);padding:10px;">
             <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;">HSP</div>
             <div style="font-size:18px;font-weight:700;margin-top:2px;color:#facc15;">High</div>
             <div style="font-size:11px;color:var(--text-secondary);">感覚処理感受性</div>
+            <div style="font-size:11px;color:var(--text-muted);line-height:1.5;margin-top:6px;">全人口の15-20%が該当するHighly Sensitive Person。環境刺激（音・光・人の感情）を深く処理する神経特性。カフェの騒音、蛍光灯の明るさ、他人の不機嫌が通常以上にエネルギーを消耗させる。その代わり、美しいもの・深い会話からは何倍もの充足を得る。</div>
           </div>
           <div style="background:var(--surface2);border-radius:var(--radius-sm);padding:10px;">
             <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;">ADHD</div>
             <div style="font-size:18px;font-weight:700;margin-top:2px;color:#ff8f6b;">Leaning</div>
             <div style="font-size:11px;color:var(--text-secondary);">過集中×散漫の波</div>
+            <div style="font-size:11px;color:var(--text-muted);line-height:1.5;margin-top:6px;">診断未確定だが自己認識として傾向あり。興味のある対象には異常な過集中を発揮する一方、ルーティン作業は続かない。新しい刺激への反応性が高く、マルチタスク傾向。自動化パイプラインで定型業務を排除する設計思想の原点。</div>
           </div>
         </div>
       </div>
@@ -439,273 +653,313 @@ body::before {
   </div>
 </section>
 
-<!-- ==================== FOUR PILLARS ==================== -->
-<section class="section" id="four-pillars">
-  <h2 class="section-title">四柱推命</h2>
-  <p class="section-desc">1975年10月28日 — 兵庫県尼崎市</p>
+<!-- ==================== DIVINATION PROFILE (Timeless) ==================== -->
+<section class="section" id="divination">
+  <h2 class="section-title">占術プロファイル</h2>
+  <p class="section-desc">四柱推命・九星気学・六星占術・西洋占星術 — 不変の本質的特性</p>
 
-  <div class="pillar-grid">
-    <div class="pillar">
-      <div class="pillar-label">年柱</div>
-      <div class="kanji">乙卯</div>
-      <div class="reading">きのと・う</div>
-      <span class="element-badge elem-wood">木 Wood</span>
-      <div style="font-size:11px;color:var(--text-muted);margin-top:6px;">卯 = 兎</div>
+  <!-- Four Pillars -->
+  <div class="card" style="margin-bottom:16px;">
+    <div class="card-title">四柱推命 — 1975年10月28日</div>
+    <div style="font-size:12px;color:var(--text-secondary);line-height:1.7;margin-bottom:16px;">
+      四柱推命は生年月日時の4つの柱から、先天的な性質・才能・人生の傾向を読み解く東洋最高峰の命術。各柱が人生の異なる側面を表します。
     </div>
-    <div class="pillar">
-      <div class="pillar-label">月柱</div>
-      <div class="kanji">丙戌</div>
-      <div class="reading">ひのえ・いぬ</div>
-      <span class="element-badge elem-fire">火 Fire</span>
-      <div style="font-size:11px;color:var(--text-muted);margin-top:6px;">戌 = 犬</div>
+    <div class="pillar-grid">
+      <div class="pillar">
+        <div class="pillar-label">年柱</div>
+        <div class="kanji">乙卯</div>
+        <div class="reading">きのと・う</div>
+        <span class="element-badge elem-wood">木 Wood</span>
+        <div style="font-size:10px;color:var(--text-muted);margin-top:6px;">社会的顔・祖先運</div>
+      </div>
+      <div class="pillar">
+        <div class="pillar-label">月柱</div>
+        <div class="kanji">丙戌</div>
+        <div class="reading">ひのえ・いぬ</div>
+        <span class="element-badge elem-fire">火 Fire</span>
+        <div style="font-size:10px;color:var(--text-muted);margin-top:6px;">仕事・キャリア</div>
+      </div>
+      <div class="pillar">
+        <div class="pillar-label">日柱（日主）</div>
+        <div class="kanji" style="color:#f87171;">丁未</div>
+        <div class="reading">ひのと・ひつじ</div>
+        <span class="element-badge elem-fire">火 Fire</span>
+        <div style="font-size:10px;color:var(--text-muted);margin-top:6px;">本質的な自己</div>
+      </div>
+      <div class="pillar unknown">
+        <div class="pillar-label">時柱</div>
+        <div class="kanji" style="font-size:18px;color:var(--text-muted);">? ?</div>
+        <div class="reading">出生時刻不明</div>
+        <span class="element-badge" style="background:rgba(255,255,255,0.05);color:var(--text-muted);">Locked</span>
+        <div style="font-size:10px;color:var(--text-muted);margin-top:6px;">晩年・子孫運</div>
+      </div>
     </div>
-    <div class="pillar">
-      <div class="pillar-label">日柱（日主）</div>
-      <div class="kanji" style="color:#f87171;">丁未</div>
-      <div class="reading">ひのと・ひつじ</div>
-      <span class="element-badge elem-fire">火 Fire</span>
-      <div style="font-size:11px;color:var(--text-muted);margin-top:6px;">陰火 = ロウソクの炎</div>
+    <div style="margin-top:16px;font-size:13px;color:var(--text-secondary);line-height:1.7;">
+      <strong style="color:var(--text);">日主: 丁火（陰火）</strong> — ロウソクの炎。静かで温かく人を照らす。強い意志を内に秘め、感受性豊かで人の心の機微を感じ取る。丙火（太陽）のような自己主張ではなく、暗闇の中で必要な人にだけ光を届ける繊細な存在。
     </div>
-    <div class="pillar unknown">
-      <div class="pillar-label">時柱</div>
-      <div class="kanji" style="font-size:18px;color:var(--text-muted);">? ?</div>
-      <div class="reading">出生時刻不明</div>
-      <span class="element-badge" style="background:rgba(255,255,255,0.05);color:var(--text-muted);">Locked</span>
+    <div style="margin-top:8px;font-size:12px;color:var(--text-secondary);line-height:1.7;">
+      <strong style="color:var(--text);">年柱（乙卯）</strong>: 草花と兎の組み合わせ。社会に対して柔軟で穏やかな印象を与えるが、木の根のようにしなやかな強さを持つ。先祖から受け継いだ「人を和ませる空気感」。<br>
+      <strong style="color:var(--text);">月柱（丙戌）</strong>: キャリアの柱に太陽の火と忠犬の組み合わせ。仕事では情熱的で忠誠心が強い。丙（太陽）は日主の丁（ロウソク）を支える強い火源 — 仕事にエネルギーの根源がある配置。<br>
+      <strong style="color:var(--text);">日柱（丁未）</strong>: 本質は陰火と未（羊・土）。温かい土壌の上で灯る炎 — 安定した基盤の上で人を照らす使命。未は「未来」の未でもあり、先見性を暗示。
     </div>
-  </div>
-
-  <!-- Day Master -->
-  <div class="insight-box" style="margin-top:20px;">
-    <div class="insight-title">日主: 丁火（陰火）</div>
-    <p>ロウソクの炎のように、静かで温かく人を照らす存在。強い意志を内に秘めながらも、外には柔らかさを見せる。感受性が豊かで、人の心の機微を感じ取る力がある。</p>
-  </div>
-
-  <!-- Five Elements -->
-  <div class="card" style="margin-top:16px;">
-    <div class="card-title">五行バランス（3柱）</div>
-    <div class="element-bar">
+    <!-- Five Elements mini -->
+    <div class="element-bar" style="height:60px;margin-top:12px;">
       <div class="element-col">
-        <div class="element-pct" style="color:#4ade80;">33%</div>
-        <div class="element-fill" style="height:66px;background:linear-gradient(to top,rgba(34,197,94,0.3),rgba(34,197,94,0.6));"></div>
+        <div class="element-pct" style="color:#4ade80;font-size:11px;">33%</div>
+        <div class="element-fill" style="height:40px;background:linear-gradient(to top,rgba(34,197,94,0.3),rgba(34,197,94,0.6));"></div>
         <div class="element-name">木</div>
       </div>
       <div class="element-col">
-        <div class="element-pct" style="color:#f87171;">33%</div>
-        <div class="element-fill" style="height:66px;background:linear-gradient(to top,rgba(239,68,68,0.3),rgba(239,68,68,0.6));"></div>
+        <div class="element-pct" style="color:#f87171;font-size:11px;">33%</div>
+        <div class="element-fill" style="height:40px;background:linear-gradient(to top,rgba(239,68,68,0.3),rgba(239,68,68,0.6));"></div>
         <div class="element-name">火</div>
       </div>
       <div class="element-col">
-        <div class="element-pct" style="color:#facc15;">33%</div>
-        <div class="element-fill" style="height:66px;background:linear-gradient(to top,rgba(234,179,8,0.3),rgba(234,179,8,0.6));"></div>
+        <div class="element-pct" style="color:#facc15;font-size:11px;">33%</div>
+        <div class="element-fill" style="height:40px;background:linear-gradient(to top,rgba(234,179,8,0.3),rgba(234,179,8,0.6));"></div>
         <div class="element-name">土</div>
       </div>
       <div class="element-col">
-        <div class="element-pct" style="color:#94a3b8;">0%</div>
-        <div class="element-fill" style="height:4px;background:rgba(148,163,184,0.15);"></div>
+        <div class="element-pct" style="color:#94a3b8;font-size:11px;">0%</div>
+        <div class="element-fill" style="height:3px;background:rgba(148,163,184,0.15);"></div>
         <div class="element-name">金</div>
       </div>
       <div class="element-col">
-        <div class="element-pct" style="color:#60a5fa;">0%</div>
-        <div class="element-fill" style="height:4px;background:rgba(59,130,246,0.15);"></div>
+        <div class="element-pct" style="color:#60a5fa;font-size:11px;">0%</div>
+        <div class="element-fill" style="height:3px;background:rgba(59,130,246,0.15);"></div>
         <div class="element-name">水</div>
       </div>
     </div>
-    <div style="font-size:12px;color:var(--text-secondary);margin-top:8px;">
-      <strong style="color:var(--yellow);">金・水が欠如</strong> — 決断力（金）と柔軟性（水）を意識的に補う行動が有効。サウナの水風呂は「水」の補完として理にかなう
-    </div>
-    <div class="unlock-banner">
-      出生時刻を入力すると時柱が追加され、五行バランスがより正確になります
+    <div style="font-size:11px;color:var(--text-secondary);margin-top:4px;">
+      <strong style="color:var(--yellow);">金・水が欠如</strong> — 決断力と柔軟性を意識的に補う
     </div>
   </div>
-</section>
-
-<!-- ==================== NINE STAR KI ==================== -->
-<section class="section" id="nine-star">
-  <h2 class="section-title">九星気学</h2>
 
   <div class="grid">
+    <!-- Nine Star Ki -->
     <div class="card">
-      <div class="card-title">本命星・月命星</div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px;">
-        <div style="background:var(--surface2);border-radius:var(--radius-sm);padding:16px;text-align:center;">
+      <div class="card-title">九星気学</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px;">
+        <div style="background:var(--surface2);border-radius:var(--radius-sm);padding:12px;text-align:center;">
           <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;">本命星</div>
-          <div style="font-size:24px;font-weight:700;margin-top:4px;">八白土星</div>
-          <div style="font-size:12px;color:var(--text-secondary);margin-top:4px;">山のような安定感と実行力</div>
+          <div style="font-size:20px;font-weight:700;margin-top:4px;">七赤金星</div>
+          <div style="font-size:11px;color:var(--text-secondary);margin-top:2px;">社交・言葉の力・金運</div>
         </div>
-        <div style="background:var(--surface2);border-radius:var(--radius-sm);padding:16px;text-align:center;">
+        <div style="background:var(--surface2);border-radius:var(--radius-sm);padding:12px;text-align:center;">
           <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;">月命星</div>
-          <div style="font-size:24px;font-weight:700;margin-top:4px;">六白金星</div>
-          <div style="font-size:12px;color:var(--text-secondary);margin-top:4px;">高い理想とリーダーシップ</div>
+          <div style="font-size:20px;font-weight:700;margin-top:4px;">九紫火星</div>
+          <div style="font-size:11px;color:var(--text-secondary);margin-top:2px;">情熱・知的好奇心</div>
         </div>
       </div>
+      <div style="font-size:12px;color:var(--text-secondary);line-height:1.7;">
+        <strong style="color:var(--text);">本命星（七赤金星）</strong>は生まれた年から算出される「社会的な自分」。「沢」の象意を持ち、社交的で人を楽しませる力と、言葉に説得力を持つ話術に恵まれています。金星の「金運」は財を呼び込む力ですが、同時に散財しやすい傾向も。方位は西（兌宮）で、収穫と悦びの方角。
+      </div>
+      <div style="font-size:12px;color:var(--text-secondary);line-height:1.7;margin-top:8px;">
+        <strong style="color:var(--text);">月命星（九紫火星）</strong>は生まれた月から算出される「内面の自分」。外から見える社交的な七赤金星の内側に、九紫火星の激しい情熱と知的好奇心が燃えています。九紫火星は「離」の象意 — 物事を明らかにする光の力。知識欲が旺盛で美意識が高く、直感が鋭い。この本命星と月命星の二層構造が、「表面は穏やかな社交家、内面は激しい探求者」というYumaの二面性を形成しています。
+      </div>
+    </div>
 
-      <div style="font-size:13px;color:var(--text-secondary);line-height:1.7;">
-        <strong style="color:var(--text);">八白土星</strong>は「山」の象意。どっしりと構え、変化を蓄積して大きな成果につなげる。
-        <strong style="color:var(--text);">六白金星</strong>（月命）は内面の高い志と完璧主義を表す。外側の安定感と内側の理想主義が共存。
+    <!-- Rokusei -->
+    <div class="card">
+      <div class="card-title">六星占術</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px;">
+        <div style="background:var(--surface2);border-radius:var(--radius-sm);padding:12px;text-align:center;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;">メイン星</div>
+          <div style="font-size:20px;font-weight:700;margin-top:4px;">木星人(−)</div>
+          <div style="font-size:11px;color:var(--text-secondary);margin-top:2px;">好奇心・自由・行動力</div>
+        </div>
+        <div style="background:var(--surface2);border-radius:var(--radius-sm);padding:12px;text-align:center;">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;">サブ星</div>
+          <div style="font-size:20px;font-weight:700;margin-top:4px;">金星人(−)</div>
+          <div style="font-size:11px;color:var(--text-secondary);margin-top:2px;">美意識・完璧主義</div>
+        </div>
+      </div>
+      <div style="font-size:12px;color:var(--text-secondary);line-height:1.7;margin-bottom:12px;">
+        <strong style="color:var(--text);">木星人(−)</strong>は好奇心旺盛で行動力がある星人。自由を重んじ束縛を嫌い、常に新しいことに挑戦したがる冒険者タイプ。社交的で人脈が広く、興味の幅も広い。(−)は偶数年生まれを示し、陰の性質（内向き・慎重）がベースにある。<br>
+        <strong style="color:var(--text);">金星人(−)</strong>はプライドが高く美意識がある星人。完璧主義的で「こだわり」が強い。人から尊敬されたい欲求が強く、自分の世界観を大切にする。
+      </div>
+      <div style="background:rgba(234,179,8,0.08);border:1px solid rgba(234,179,8,0.2);border-radius:var(--radius-sm);padding:12px;text-align:center;">
+        <div style="font-size:13px;color:var(--yellow);font-weight:600;">霊合星人</div>
+        <div style="font-size:12px;color:var(--text-secondary);margin-top:6px;line-height:1.7;text-align:left;">
+          霊合星人とは、メインの運命星に加えてサブの運命星の影響も同時に受ける特殊な存在。全人口の約16%が該当し、<strong style="color:var(--text);">運気の振れ幅が通常の2倍</strong>になります。好調期は通常の人が到達できない高みに届きますが、不調期（大殺界）は通常以上に深く影響を受けます。メイン星とサブ星が好調なら「最高の年」、片方が大殺界なら「矛盾する年」、両方が大殺界なら「最大限の注意が必要な年」。Yumaの場合、木星人の自由奔放さと金星人の完璧主義という相反する性質が同居しており、これが「こだわりの強い冒険者」というユニークな人格を生んでいます。
+        </div>
       </div>
     </div>
 
-    <!-- 9-Year Cycle -->
+    <!-- Western Astrology -->
     <div class="card">
-      <div class="card-title">9年サイクル（八白土星）</div>
-      <div style="margin-top:8px;">
-        <div class="cycle-row">
-          <span class="cycle-year">2024</span>
-          <span class="cycle-palace">離宮</span>
-          <span class="cycle-theme">注目・離別</span>
-          <div class="cycle-bar-wrap"><div class="cycle-bar-fill" style="width:70%;background:var(--orange);"></div></div>
-        </div>
-        <div class="cycle-row">
-          <span class="cycle-year">2025</span>
-          <span class="cycle-palace">坎宮</span>
-          <span class="cycle-theme">厄・試練</span>
-          <div class="cycle-bar-wrap"><div class="cycle-bar-fill" style="width:30%;background:var(--red);"></div></div>
-        </div>
-        <div class="cycle-row current">
-          <span class="cycle-year" style="color:var(--accent);">2026</span>
-          <span class="cycle-palace" style="color:#a5b4fc;">坤宮</span>
-          <span class="cycle-theme" style="color:var(--text);">変化・準備</span>
-          <div class="cycle-bar-wrap"><div class="cycle-bar-fill" style="width:45%;background:var(--accent);"></div></div>
-        </div>
-        <div class="cycle-row">
-          <span class="cycle-year">2027</span>
-          <span class="cycle-palace">震宮</span>
-          <span class="cycle-theme">発展・始動</span>
-          <div class="cycle-bar-wrap"><div class="cycle-bar-fill" style="width:65%;background:var(--blue);"></div></div>
-        </div>
-        <div class="cycle-row">
-          <span class="cycle-year">2028</span>
-          <span class="cycle-palace">巽宮</span>
-          <span class="cycle-theme">整備・信用</span>
-          <div class="cycle-bar-wrap"><div class="cycle-bar-fill" style="width:75%;background:var(--blue);"></div></div>
-        </div>
-        <div class="cycle-row">
-          <span class="cycle-year" style="color:var(--green);">2029</span>
-          <span class="cycle-palace" style="color:var(--green);">中宮</span>
-          <span class="cycle-theme" style="color:var(--green);">絶頂・転機</span>
-          <div class="cycle-bar-wrap"><div class="cycle-bar-fill" style="width:100%;background:var(--green);"></div></div>
-        </div>
-        <div class="cycle-row">
-          <span class="cycle-year">2030</span>
-          <span class="cycle-palace">乾宮</span>
-          <span class="cycle-theme">充実・実り</span>
-          <div class="cycle-bar-wrap"><div class="cycle-bar-fill" style="width:90%;background:var(--green);"></div></div>
-        </div>
-        <div class="cycle-row">
-          <span class="cycle-year">2031</span>
-          <span class="cycle-palace">兌宮</span>
-          <span class="cycle-theme">悦び・収穫</span>
-          <div class="cycle-bar-wrap"><div class="cycle-bar-fill" style="width:80%;background:var(--green);"></div></div>
-        </div>
-        <div class="cycle-row">
-          <span class="cycle-year">2032</span>
-          <span class="cycle-palace">艮宮</span>
-          <span class="cycle-theme">停滞・自己改革</span>
-          <div class="cycle-bar-wrap"><div class="cycle-bar-fill" style="width:40%;background:var(--yellow);"></div></div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- 9-Year Line Chart -->
-  <div class="card" style="margin-top:16px;">
-    <div class="card-title">運気カーブ（2024–2032）</div>
-    <div style="height:200px;"><canvas id="cycleChart"></canvas></div>
-  </div>
-</section>
-
-<!-- ==================== WESTERN ASTROLOGY ==================== -->
-<section class="section" id="western">
-  <h2 class="section-title">西洋占星術</h2>
-  <div class="grid">
-    <div class="card">
-      <div class="card-title"><span style="font-size:20px;">♏</span> 蠍座 Scorpio</div>
-      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:16px;">
-        <div style="background:var(--surface2);border-radius:var(--radius-sm);padding:10px;text-align:center;">
+      <div class="card-title"><span style="font-size:18px;">♏</span> 西洋占星術 — 蠍座 Scorpio</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:12px;">
+        <div style="background:var(--surface2);border-radius:var(--radius-sm);padding:8px;text-align:center;">
           <div style="font-size:10px;color:var(--text-muted);">Element</div>
-          <div style="font-size:14px;font-weight:600;color:#60a5fa;margin-top:2px;">水 Water</div>
+          <div style="font-size:13px;font-weight:600;color:#60a5fa;margin-top:2px;">水 Water</div>
         </div>
-        <div style="background:var(--surface2);border-radius:var(--radius-sm);padding:10px;text-align:center;">
+        <div style="background:var(--surface2);border-radius:var(--radius-sm);padding:8px;text-align:center;">
           <div style="font-size:10px;color:var(--text-muted);">Quality</div>
-          <div style="font-size:14px;font-weight:600;margin-top:2px;">Fixed</div>
+          <div style="font-size:13px;font-weight:600;margin-top:2px;">Fixed</div>
         </div>
-        <div style="background:var(--surface2);border-radius:var(--radius-sm);padding:10px;text-align:center;">
+        <div style="background:var(--surface2);border-radius:var(--radius-sm);padding:8px;text-align:center;">
           <div style="font-size:10px;color:var(--text-muted);">Ruler</div>
-          <div style="font-size:14px;font-weight:600;margin-top:2px;">Pluto</div>
+          <div style="font-size:13px;font-weight:600;margin-top:2px;">Pluto</div>
         </div>
       </div>
       <div style="font-size:13px;color:var(--text-secondary);line-height:1.7;">
         深い洞察力と変容の力。表面的なものに興味がなく、物事の本質を見抜く。強い意志と情熱を持ち、一度決めたことには徹底的に集中する。
       </div>
-      <div class="unlock-banner">
-        出生時刻を入力するとアセンダント・月星座・ハウスが解放されます
+      <div style="font-size:12px;color:var(--text-secondary);line-height:1.7;margin-top:12px;">
+        <strong style="color:var(--text);">支配星: 冥王星（Pluto）</strong> — 太陽系の最果てを周回する矮小惑星。「死と再生」「根本的な変容」を司り、蠍座に「既存の枠組みを破壊して再構築する力」を与えます。冥王星の影響下にある人は、表面的な変化では満足せず、物事の根底から作り直すことを好みます。Yumaが自動化パイプラインを「ゼロベースで再設計」することを厭わないのは、まさにこの冥王星的資質。<br>
+        <strong style="color:var(--text);">Fixed（不動宮）</strong>の性質は「一度決めたら梃子でも動かない」粘り強さ。水のエレメントと合わさることで「深い水底に沈んだ意志 — 表面からは見えないが、底流で確実に流れている」ような不屈の決意を形成します。出生時刻が判明すればアセンダント（上昇宮）と月星座が確定し、太陽・月・アセンダントの3軸で立体的な人物像が完成します。
       </div>
     </div>
 
-    <div class="card">
-      <div class="card-title">東洋×西洋 クロスリファレンス</div>
-      <div style="font-size:13px;color:var(--text-secondary);line-height:1.8;">
-        <div style="margin-bottom:12px;">
-          <strong style="color:var(--text);">興味深い一致:</strong>
-        </div>
-        <div style="padding:8px 12px;background:var(--surface2);border-radius:var(--radius-sm);margin-bottom:8px;">
-          蠍座（水）× 四柱推命（水欠如）<br>
-          <span style="font-size:12px;">太陽星座が「水」なのに四柱推命では「水」が0%。外面的な水の特質（洞察力・深さ）を持ちながら、内面的な水（柔軟性・流動性）を補う必要がある</span>
-        </div>
-        <div style="padding:8px 12px;background:var(--surface2);border-radius:var(--radius-sm);margin-bottom:8px;">
-          蠍座（Fixed）× Deliberative（SF3）<br>
-          <span style="font-size:12px;">「一度決めたら動かない」固定宮の特質が、慎重に判断する強みと共鳴。拙速な判断はしない</span>
-        </div>
-        <div style="padding:8px 12px;background:var(--surface2);border-radius:var(--radius-sm);">
-          蠍座（変容）× 八白土星（山）<br>
-          <span style="font-size:12px;">深い変容を求める蠍座と、安定の山。変化を急がず、地層のように積み重ねる変容スタイル</span>
-        </div>
+  </div>
+  <div class="unlock-banner" style="margin-top:16px;">
+    出生時刻を入力すると、時柱・アセンダント・月星座・ハウスが解放され、全占術の精度が向上します
+  </div>
+</section>
+
+<!-- ================================================================ -->
+<!-- ★ PILLAR 2: 2026年運勢 — Year-Specific Forecast                 -->
+<!-- ================================================================ -->
+<section class="section" id="forecast-2026">
+  <div class="pillar-header">
+    <div class="pillar-icon" style="background:rgba(234,179,8,0.15);color:var(--yellow);">&#9788;</div>
+    <div>
+      <h2>2026年運勢 — 坤宮 × 緑生</h2>
+      <div class="pillar-sub">過去の文脈 → 今の位置 → これからの展望</div>
+    </div>
+  </div>
+
+  <!-- Year Overview -->
+  <div class="insight-box" style="border-color:rgba(234,179,8,0.3);background:linear-gradient(135deg,rgba(234,179,8,0.08),rgba(99,102,241,0.06));">
+    <div class="insight-title" style="color:var(--yellow);">2026年の位置づけ — 過去からの文脈</div>
+    <p style="line-height:1.9;font-size:14px;">
+      <strong style="color:var(--red);">2022年（陰影 × 兌宮）</strong>: 大殺界の入口。エネルギースコア15。表面上は平穏でも、見えない力で物事が停滞し始めた年。新しいことを始めても思うように進まず、人間関係にも微妙な摩擦が生まれやすい時期だった。<br>
+      <strong style="color:var(--red);">2023年（停止 × 艮宮）</strong>: 大殺界の底。エネルギースコア10。12年サイクルで最もエネルギーが低い年。自分の意志とは無関係に物事が止まる、あるいは後退する感覚。この時期に始めたことは定着しにくい。九星気学の艮宮（停滞・自己改革）とも重なり、「立ち止まって自分を見つめ直す」ことを強制された年。<br>
+      <strong style="color:var(--red);">2024年（減退 × 離宮）</strong>: 大殺界の出口。離宮の「注目」で表に出る機会は増えるが、六星の「減退」で実力を発揮しきれないもどかしさ。霊合合成スコア20は過去最低。ただしサブ星（金星人）の乱気（中殺界）も重なっており、二重の試練。<br>
+      <strong style="color:var(--blue);">2025年（種子 × 坎宮）</strong>: 大殺界を脱し「種子」の芽吹き。坎宮は試練の宮だが、種を蒔く力は確実に戻っている。サブ星は「再会」で人脈の復活。霊合合成スコア64まで回復。<br>
+      <strong style="color:#a5b4fc;">2026年（今年: 緑生 × 坤宮）</strong>: 種子から芽が出て成長し始める「緑生」。坤宮は「大地」の宮 — 変化と準備の年。霊合合成スコア<span style="font-family:var(--font-mono);color:var(--text);">73</span>点。<strong style="color:var(--text);">攻めずに仕込む年。2029年の絶頂に向けた3年計画の起点。</strong>サブ星は「財成」（エネルギー90）で金運が極めて高い。<br>
+      <strong style="color:var(--green);">2029年</strong>: 中宮（絶頂）× 達成 — 全体系が一致する最強の年。ここに向けて基盤を構築する。
+    </p>
+  </div>
+
+  <!-- 2026 Keywords -->
+  <div class="card" style="margin-top:16px;border-top:3px solid var(--accent);">
+    <div class="card-title" style="color:#a5b4fc;">2026年のキーワード</div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin-top:8px;">
+      <div style="background:var(--surface2);border-radius:var(--radius-sm);padding:14px;">
+        <div style="font-size:16px;font-weight:700;color:var(--text);">仕込みの年</div>
+        <div style="font-size:12px;color:var(--text-secondary);line-height:1.6;margin-top:4px;">坤宮は「大地を耕す」宮。2029年の大収穫に向けて、今は種を蒔き、水をやり、土壌を整える時期。焦って刈り取ろうとしない。</div>
       </div>
+      <div style="background:var(--surface2);border-radius:var(--radius-sm);padding:14px;">
+        <div style="font-size:16px;font-weight:700;color:var(--text);">基盤構築</div>
+        <div style="font-size:12px;color:var(--text-secondary);line-height:1.6;margin-top:4px;">自動化パイプライン、資産管理、健康習慣 — 地味だが将来のすべてを支える基盤を今年中に固めきる。緑生の成長エネルギーを基盤づくりに投下する。</div>
+      </div>
+      <div style="background:var(--surface2);border-radius:var(--radius-sm);padding:14px;">
+        <div style="font-size:16px;font-weight:700;color:var(--text);">学習と吸収</div>
+        <div style="font-size:12px;color:var(--text-secondary);line-height:1.6;margin-top:4px;">九紫火星（月命星）の知的好奇心を最大活用。AI、投資、占術、心理学 — 2029年に爆発するための知識ストックを今年から意識的に積み上げる。</div>
+      </div>
+      <div style="background:var(--surface2);border-radius:var(--radius-sm);padding:14px;">
+        <div style="font-size:16px;font-weight:700;color:var(--text);">人脈の再接続</div>
+        <div style="font-size:12px;color:var(--text-secondary);line-height:1.6;margin-top:4px;">サブ星の「財成」と七赤金星の社交力を活かし、大殺界期に疎遠になった人脈を回復させる。無理に広げるより、既存の縁を深める方向で。</div>
+      </div>
+      <div style="background:var(--surface2);border-radius:var(--radius-sm);padding:14px;">
+        <div style="font-size:16px;font-weight:700;color:var(--text);">健康投資</div>
+        <div style="font-size:12px;color:var(--text-secondary);line-height:1.6;margin-top:4px;">五行の金・水欠如に対する意識的な補完。サウナ（水の補完）、呼吸法（金の補完）、HSPに配慮した環境設計を習慣化する年。</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3-Line Combined Fortune Curve -->
+  <div class="card" style="margin-top:16px;">
+    <div class="card-title">統合運気カーブ — 3体系オーバーレイ（2020-2032）</div>
+    <p class="section-desc" style="margin-bottom:8px;">九星気学（9年） × 六星占術メイン（12年） × 霊合合成（メイン70%+サブ30%）</p>
+    <div style="display:flex;gap:16px;flex-wrap:wrap;margin-bottom:12px;font-size:11px;">
+      <span><span style="display:inline-block;width:12px;height:3px;background:#6366f1;vertical-align:middle;margin-right:4px;border-radius:2px;"></span>九星気学</span>
+      <span><span style="display:inline-block;width:12px;height:3px;background:#22c55e;vertical-align:middle;margin-right:4px;border-radius:2px;"></span>六星占術（木星人−）</span>
+      <span><span style="display:inline-block;width:12px;height:3px;background:#eab308;vertical-align:middle;margin-right:4px;border-radius:2px;"></span>霊合合成</span>
+    </div>
+    <div style="height:240px;"><canvas id="combinedChart"></canvas></div>
+  </div>
+
+  <div class="insight-box" style="margin-top:16px;">
+    <div class="insight-title">3体系が一致するポイント</div>
+    <p><strong style="color:var(--green);">2029年</strong>: 九星気学「中宮（絶頂）」× 六星占術「達成」が重なる最強の年。ただし霊合サブ星は大殺界「停止」→ <strong style="color:var(--text);">大胆に攻めつつ足元は固める</strong>。<br>
+    <strong style="color:var(--red);">2028年</strong>: 九星気学は好調（巽宮）だが六星占術は小殺界「健弱」→ <strong style="color:var(--text);">健康面に注意しながら攻める</strong>。<br>
+    <strong style="color:var(--yellow);">2030年</strong>: 九星気学は高水準（乾宮）だが六星占術は中殺界「乱気」→ <strong style="color:var(--text);">判断ミスに注意。大きな新規投資は避ける</strong>。</p>
+  </div>
+
+  <!-- Year Guidance Cards -->
+  <div class="grid" style="grid-template-columns:repeat(auto-fit, minmax(260px, 1fr));margin-top:16px;">
+    <div class="guidance-card work">
+      <div class="guidance-header" style="color:var(--blue);">2026年 仕事の方針</div>
+      <ul class="guidance-list">
+        <li>坤宮年 → 新規プロジェクトの「仕込み」に最適。派手な成果より基盤づくりを優先する</li>
+        <li>Self-Insight Phase 0完成 → PMF検証データ蓄積。ユーザーフィードバックを構造化して2027年のローンチに備える</li>
+        <li>Empathy #1 → チームマネジメントで差別化。メンバーの感情を察知し、1on1の質を高めることで信頼関係を強化</li>
+        <li>Deliberative（慎重さ）を活かし、大きな意思決定は十分なデータを集めてから。ただしActivator（8位）を意識して「7割で動く」ルールも維持</li>
+        <li>2-4月は六星大殺界 → 新規プロジェクト着手は5月以降に。2-4月は既存業務の質向上・学習・仕組み化に集中する</li>
+      </ul>
+    </div>
+    <div class="guidance-card money">
+      <div class="guidance-header" style="color:var(--gold);">2026年 お金の方針</div>
+      <ul class="guidance-list">
+        <li>坤宮 → 守りの年。基盤投資（インフラ・学習・健康）に集中。一発逆転型の投資は避ける</li>
+        <li>2029年絶頂に向けた種蒔きにコスト配分。3年で回収できる投資テーマを今年選定する</li>
+        <li>金欠如 → 損切りルールを数値で明確化。感情に流されず機械的に実行する仕組みを構築</li>
+        <li>サブ星「財成」（エネルギー90）→ 蓄積運は極めて高い。「入ってくる金」より「残す金」を意識。節約・節税を徹底</li>
+        <li>七赤金星の散財傾向に注意。ボーナス月（6月・12月）は事前に支出上限を設定し、衝動的な大きな買い物を防ぐ</li>
+      </ul>
+    </div>
+    <div class="guidance-card health">
+      <div class="guidance-header" style="color:var(--green);">2026年 健康の方針</div>
+      <ul class="guidance-list">
+        <li>金・水欠如 → 呼吸器（金）と腎臓・膀胱系（水）に注意。定期検診を年2回実施する</li>
+        <li>サウナ（水風呂）= 水の補完。週2-3回のペースを継続。心身のリセットとHSPのデトックスを兼ねる</li>
+        <li>HSP → 定期デトックス・1人時間を死守。週に最低1日は「予定のない日」を確保する</li>
+        <li>8月が年間で最も注意が必要な月（六星小殺界「健弱」× 九星中凶）。夏バテ対策を7月から前倒しで準備する</li>
+        <li>ADHD傾向への対策としてルーティン化を推進。睡眠・運動・食事の時間を固定し、判断コストを削減する</li>
+      </ul>
+    </div>
+    <div class="guidance-card" style="border-top-color:#f472b6;">
+      <div class="guidance-header" style="color:#f472b6;">2026年 恋愛の方針</div>
+      <ul class="guidance-list">
+        <li>坤宮の「地を耕す」エネルギーは、既存の関係を深めるのに最適。新しい出会いより現在の縁を大切にする年</li>
+        <li>エニアグラム4の「理想の関係像」を追求しすぎない。完璧な相手を求めるよりも、目の前の人との関係に投資する</li>
+        <li>Empathy #1は魅力だが、相手のエネルギーを吸収しすぎるリスクがある。健全な境界線を意識的に設計する</li>
+        <li>7月（立花）と11月（再会）が恋愛運のベストタイミング。社交的な場に出ると良い縁がある</li>
+        <li>HSPの特性を理解してくれるパートナーが理想。「静かな時間を共有できる関係」がYumaにとっての最高のパートナーシップ</li>
+      </ul>
     </div>
   </div>
 </section>
 
-<!-- ==================== 2026 FORECAST ==================== -->
-<section class="section" id="forecast">
-  <h2 class="section-title">2026年 フォーキャスト</h2>
+<!-- ==================== MONTHLY FORTUNE BREAKDOWN ==================== -->
+<section class="section" id="monthly">
+  <h2 class="section-title">2026年 月間運勢</h2>
+  <p class="section-desc">九星気学の月宮位置 × 六星占術の月フェーズを統合し、4ドメインで分析</p>
 
-  <div class="insight-box">
-    <div class="insight-title">2026年の位置: 坤宮（変化・準備の年）</div>
-    <p>2025年の坎宮（試練）を越え、2027年の震宮（発展・始動）に向けた地固めの年。大きな勝負は避け、2029年の絶頂（中宮）に向けた3年計画の起点にする。新規事業（Self-Insightなど）の基盤を作るのに最適な年。急がず仕込みに集中。</p>
+  <!-- Year Timeline Bar -->
+  <div class="year-timeline" id="yearTimeline">
+    <div class="yt-month" data-month="0" style="background:rgba(59,130,246,0.4);">1</div>
+    <div class="yt-month" data-month="1" style="background:rgba(239,68,68,0.4);">2</div>
+    <div class="yt-month" data-month="2" style="background:rgba(239,68,68,0.5);">3</div>
+    <div class="yt-month" data-month="3" style="background:rgba(239,68,68,0.35);">4</div>
+    <div class="yt-month" data-month="4" style="background:rgba(59,130,246,0.35);">5</div>
+    <div class="yt-month" data-month="5" style="background:rgba(34,197,94,0.35);">6</div>
+    <div class="yt-month" data-month="6" style="background:rgba(34,197,94,0.5);">7</div>
+    <div class="yt-month" data-month="7" style="background:rgba(234,179,8,0.35);">8</div>
+    <div class="yt-month" data-month="8" style="background:rgba(34,197,94,0.6);">9</div>
+    <div class="yt-month" data-month="9" style="background:rgba(99,102,241,0.5);">10</div>
+    <div class="yt-month" data-month="10" style="background:rgba(99,102,241,0.6);">11</div>
+    <div class="yt-month" data-month="11" style="background:rgba(234,179,8,0.35);">12</div>
   </div>
 
-  <div class="grid" style="grid-template-columns:repeat(auto-fit, minmax(260px, 1fr));">
-    <div class="guidance-card health">
-      <div class="guidance-header" style="color:var(--green);">健康</div>
-      <ul class="guidance-list">
-        <li>五行の金・水欠如 → 呼吸器・腎臓系に注意</li>
-        <li>HSP + Empathy → 他人の感情を吸収しやすい。定期的なデトックスが必須</li>
-        <li>サウナ（水風呂）は「水」の補完として理にかなう。継続</li>
-        <li>坤宮年は消化器系が弱まりやすい。食事の質を意識</li>
-        <li>エネルギー充電: 1人の時間（Intellection）を死守</li>
-      </ul>
-    </div>
-    <div class="guidance-card work">
-      <div class="guidance-header" style="color:var(--blue);">仕事</div>
-      <ul class="guidance-list">
-        <li>Intellection + Deliberative → 深い分析と慎重な判断が武器</li>
-        <li>ADHD傾向 → ルーティンの自動化（既に実践中）が正解</li>
-        <li>坤宮年 → 新規プロジェクトの「仕込み」に最適。本格ローンチは2027年以降</li>
-        <li>Empathy → チームマネジメントで最大の差別化要因</li>
-        <li>Self-Insight Phase 0 を完成させ、PMF検証データを蓄積</li>
-      </ul>
-    </div>
-    <div class="guidance-card money">
-      <div class="guidance-header" style="color:var(--gold);">お金</div>
-      <ul class="guidance-list">
-        <li>Maximizer × AB型の合理性 → 最適化思考は投資に向いている</li>
-        <li>坤宮 → 大きな投機は避け、守りの年。基盤投資（インデックス）に集中</li>
-        <li>2029年（絶頂）に向けた種蒔き: 新規事業の基盤構築にコスト配分</li>
-        <li>金（Metal）欠如 → 決断力に欠ける場面あり。損切りルールを明確に</li>
-        <li>不動産: 物件探しは継続。焦って高値掴みしないこと</li>
-      </ul>
-    </div>
-  </div>
+  <!-- Month Selector Tabs -->
+  <div class="month-selector" id="monthSelector"></div>
+
+  <!-- Month Panels (generated by JS) -->
+  <div id="monthPanels"></div>
 </section>
 
 <!-- ==================== CROSS ANALYSIS ==================== -->
@@ -715,90 +969,313 @@ body::before {
   <div class="grid">
     <div class="insight-box">
       <div class="insight-title">Empathy × HSP × エニアグラム4</div>
-      <p>3つの特性が共鳴し、「人の感情を深く理解し、独自の視点で表現する力」を形成。Self-Insightサービスの核心 — ユーザーの痛みを自分事として感じられることがPMFの源泉。ただしエネルギー消耗も大きいため、境界線の設計が重要。</p>
+      <p>3つの特性が共鳴し、「人の感情を深く理解し、独自の視点で表現する力」を形成。Empathy（CliftonStrengths 1位）は他者の感情を「体感」するレベルの共感力。HSPの「深い情報処理」がその感覚をさらに増幅し、エニアグラム4の「独自の表現欲求」が最終出力として形にする。Self-Insightサービスの核心 — ユーザーの痛みを自分事として感じられることがPMFの源泉。</p>
+      <p style="margin-top:10px;"><strong style="color:var(--text);">実践ガイド:</strong> この強みを最大化するには「エネルギー管理」がすべて。HSP × Empathyの組み合わせは、他者のネガティブな感情も吸収してしまうため、意識的な境界線の設計が不可欠。具体的には: 1対1の深い対話（Empathyが輝く場）と、1人の内省時間（回復の場）を交互に配置する。週に2日は「社交ゼロの日」を死守する。サウナ・瞑想・自然の中での散歩が最も効果的なデトックス手段。</p>
     </div>
     <div class="insight-box">
       <div class="insight-title">Intellection × ADHD × 丁火（陰火）</div>
-      <p>深い思考力はあるが、ADHDの波で集中が途切れやすい。丁火（ロウソクの炎）は風に弱い — 環境を整えれば安定して燃え続ける。対策: 自動化で雑務を排除し、思考に没頭できる環境を作る（既に実践中のClaude Code活用は正解）。</p>
+      <p>深い思考力（Intellection 2位）はあるが、ADHDの波で集中が途切れやすい。丁火（ロウソクの炎）は風に弱い — 環境を整えれば安定して燃え続ける。3つの特性の相互作用を理解することが重要: Intellectionは「深く考え続けたい」、ADHDは「新しい刺激に飛びつきたい」、丁火は「静かな環境で安定して燃えたい」。この三者のバランスが崩れると過集中→燃え尽きのサイクルに陥る。</p>
+      <p style="margin-top:10px;"><strong style="color:var(--text);">実践ガイド:</strong> 自動化で雑務を排除し、思考に没頭できる環境を作る（Claude Code活用は正解）。「ADHDの新しい刺激への反応性」を敵ではなく武器にするには、探索の時間（新しいアイデアを追う）と深掘りの時間（1つのテーマに集中する）を明確に分離する。ポモドーロ的に「25分集中→5分探索」のサイクルが丁火の安定燃焼パターンに合う。環境ノイズ（通知・SNS・不要なメール）を物理的に遮断する仕組みが最重要。</p>
     </div>
   </div>
 
   <div class="grid">
     <div class="insight-box">
       <div class="insight-title">Deliberative × AB型 × 蠍座Fixed</div>
-      <p>3つとも「慎重・一度決めたら変えない」を指す。強み: 深い分析に基づく確実な意思決定。リスク: 行動が遅れ、チャンスを逃す場面がある。Activator（SF8位）を意識的に発動させることで補完。「7割で動く」をルール化する。</p>
+      <p>3つとも「慎重・一度決めたら変えない」を指す。Deliberative（慎重さ 3位）は意思決定前のリスク評価、AB型は合理的分析、蠍座のFixed（不動宮）は粘り強い執着。三重の慎重さは、深い分析に基づく確実な意思決定を可能にする最大の強み。一方で「分析麻痺」に陥りやすく、行動が遅れてチャンスを逃す場面がある。五行の金（決断力）の欠如がこの傾向をさらに強化している。</p>
+      <p style="margin-top:10px;"><strong style="color:var(--text);">実践ガイド:</strong> Activator（SF 8位）を意識的に発動させることで補完する。具体的なルール: 「情報が7割揃ったら決断する。10割を待たない」「分析は最大3日。それ以上は行動に移す」「小さな賭けで検証し、大きな判断は結果を見てから」。投資判断においては特に有効 — Deliberativeの慎重な分析でリスクを特定し、Activatorで実行タイミングを逃さない。蠍座のFixed特性は「一度始めたらやめない」強みにもなるため、始動さえすれば問題ない。</p>
     </div>
     <div class="insight-box">
-      <div class="insight-title">Connectedness × 八白土星 × 坤宮2026</div>
-      <p>全てを繋げて見る直感力（Connectedness）と、山のように蓄積して大きな成果を生む特質（八白土星）。2026年の坤宮は「地を耕す」年 — 点在するプロジェクト群を繋ぎ、2029年の絶頂に向けたエコシステムを設計するのに最適なタイミング。</p>
+      <div class="insight-title">Connectedness × 七赤金星 × 坤宮2026</div>
+      <p>全てを繋げて見る直感力（Connectedness 4位）と、社交力と言葉の力で人を動かす特質（七赤金星）。一見無関係に見えるプロジェクト間のシナジーを発見し、それを言語化して人を巻き込む力は、Yumaのポートフォリオ全体を統合するメタスキル。2026年の坤宮は「地を耕す」年 — 点在するプロジェクト群を繋ぎ、2029年の絶頂に向けたエコシステムを設計するのに最適なタイミング。</p>
+      <p style="margin-top:10px;"><strong style="color:var(--text);">実践ガイド:</strong> 2026年中に「全プロジェクトの相互接続マップ」を完成させる。inbox-zero → kaizen-agent → stock-analyzer → wealth-strategy の自動化チェーンを意識し、データフローの最適化を図る。七赤金星の社交力は「人を通じた情報」の獲得に使う — 11月の「再会」フェーズで、大殺界期に疎遠になった人脈を戦略的に回復させる。Connectednessの「偶然の一致を見逃さない」直感は、情報の海の中から重要なシグナルを拾う力でもある。</p>
     </div>
   </div>
 
   <!-- Maximizer × 3S -->
   <div class="insight-box">
     <div class="insight-title">Maximizer × 3S原則 × 7つの習慣</div>
-    <p>「良い→最高」の追求（Maximizer）はYumaのOSそのもの。3S（Simple, Scalable, Sustainable）でフィルターし、7つの習慣の第II領域（重要×非緊急）に集中投資する — この組み合わせが、日々の自動化・最適化パイプラインの設計思想の根幹。Self-Insightサービスの差別化要因でもある: 占いで終わらず、フレームワークで行動に落とし込む。</p>
+    <p>「良い→最高」の追求（Maximizer 5位）はYumaのOSそのもの。3S（Simple, Scalable, Sustainable）でフィルターし、7つの習慣の第II領域（重要×非緊急）に集中投資する — この組み合わせが、日々の自動化・最適化パイプラインの設計思想の根幹。Maximizerは「平均を引き上げる」のではなく「突出した強みをさらに伸ばす」ことに意味がある。Self-Insightサービスの差別化要因でもある: 占いで終わらず、フレームワークで行動に落とし込む。</p>
+    <p style="margin-top:10px;"><strong style="color:var(--text);">実践ガイド:</strong> Maximizerの「完璧を求めすぎる」リスクへの対策: 「80%で出して、フィードバックで磨く」を原則にする。3Sの「Simple」が最も重要なブレーキ — 「もっと良くしたい」衝動を「もっとシンプルにできないか？」で制御する。7つの習慣の第II領域（重要×非緊急）に毎日30分以上を確保し、長期的な価値を生むプロジェクトに投資する。Maximizerは弱みの修正ではなく強みの極大化に使うこと。ADHDのエネルギー配分も含め、「何をやらないか」の決断がMaximizerの真価を発揮する条件。</p>
   </div>
 </section>
 
 <!-- Footer -->
 <footer class="page-footer">
-  <div>Self-Insight v0.1 — Phase 0 Prototype</div>
-  <div style="margin-top:4px;">Generated 2026-03-19 | Data: CliftonStrengths, 四柱推命, 九星気学, 西洋占星術</div>
+  <div>Self-Insight v0.3 — Phase 0 Prototype</div>
+  <div style="margin-top:4px;">Generated 2026-03-20 | 四柱推命 × 九星気学 × 六星占術 × 西洋占星術 × CliftonStrengths × Enneagram</div>
 </footer>
 
 </div><!-- /.container -->
 
 <script>
-// 9-Year Cycle Chart
-const ctx = document.getElementById('cycleChart').getContext('2d');
-new Chart(ctx, {
+// === Combined Fortune Curve (3-line overlay) — 2020-2032 ===
+const ctx2 = document.getElementById('combinedChart').getContext('2d');
+new Chart(ctx2, {
   type: 'line',
   data: {
-    labels: ['2024','2025','2026','2027','2028','2029','2030','2031','2032'],
-    datasets: [{
-      label: '運気エネルギー',
-      data: [70, 30, 45, 65, 75, 100, 90, 80, 40],
-      borderColor: '#6366f1',
-      backgroundColor: 'rgba(99,102,241,0.1)',
-      fill: true,
-      tension: 0.4,
-      pointBackgroundColor: ['#ff6b35','#ef4444','#6366f1','#3b82f6','#3b82f6','#22c55e','#22c55e','#22c55e','#eab308'],
-      pointBorderColor: ['#ff6b35','#ef4444','#6366f1','#3b82f6','#3b82f6','#22c55e','#22c55e','#22c55e','#eab308'],
-      pointRadius: [5,5,8,5,5,8,5,5,5],
-      pointHoverRadius: 8,
-    }]
+    labels: ['2020','2021','2022','2023','2024','2025','2026','2027','2028','2029','2030','2031','2032'],
+    datasets: [
+      {
+        label: '九星気学',
+        data: [100, 90, 80, 40, 70, 30, 45, 65, 75, 100, 90, 80, 40],
+        borderColor: '#6366f1', fill: false, tension: 0.4, borderWidth: 2,
+        pointRadius: [5,4,4,4,4,4,7,4,4,7,4,4,4],
+        pointBackgroundColor: '#6366f1',
+      },
+      {
+        label: '六星占術（木星人−）',
+        data: [85, 95, 15, 10, 20, 50, 65, 80, 35, 90, 25, 70, 85],
+        borderColor: '#22c55e', fill: false, tension: 0.4, borderWidth: 2,
+        pointRadius: 4, pointBackgroundColor: '#22c55e',
+      },
+      {
+        label: '霊合合成',
+        data: [79, 91, 21, 34, 20, 64, 73, 77, 34, 70, 26, 76, 83],
+        borderColor: '#eab308', fill: false, tension: 0.4, borderWidth: 2,
+        borderDash: [6, 3], pointRadius: 4, pointBackgroundColor: '#eab308',
+      }
+    ]
   },
   options: {
-    responsive: true,
-    maintainAspectRatio: false,
+    responsive: true, maintainAspectRatio: false,
+    interaction: { mode: 'index', intersect: false },
     plugins: {
       legend: { display: false },
       tooltip: {
         callbacks: {
-          afterLabel: function(ctx) {
-            const themes = ['注目・離別','厄・試練','変化・準備','発展・始動','整備・信用','絶頂・転機','充実・実り','悦び・収穫','停滞・自己改革'];
-            return themes[ctx.dataIndex];
+          afterBody: function(items) {
+            const notes = {
+              '2020':'財成×中宮 — 最高の年','2021':'安定×乾宮','2022':'大殺界×兌宮',
+              '2023':'大殺界(底)×艮宮','2024':'大殺界(出口)×離宮','2025':'種子×坎宮(試練)',
+              '2026':'緑生×坤宮(準備) ← 今ここ','2027':'立花×震宮(発展)',
+              '2028':'小殺界×巽宮','2029':'達成×中宮(絶頂)','2030':'中殺界×乾宮',
+              '2031':'再会×兌宮','2032':'財成×艮宮'
+            };
+            return notes[items[0].label] || '';
           }
         }
-      }
+      },
+      // Vertical line for "now"
+      annotation: undefined
     },
     scales: {
-      x: {
-        grid: { color: 'rgba(255,255,255,0.05)' },
-        ticks: { color: '#7c8293', font: { family: "'JetBrains Mono', monospace", size: 11 } }
-      },
-      y: {
-        min: 0, max: 110,
-        grid: { color: 'rgba(255,255,255,0.05)' },
-        ticks: { display: false }
-      }
+      x: { grid:{color:'rgba(255,255,255,0.05)'}, ticks:{color:'#7c8293',font:{family:"'JetBrains Mono',monospace",size:11}} },
+      y: { min:0, max:110, grid:{color:'rgba(255,255,255,0.05)'}, ticks:{display:false} }
     },
     animation: { duration: 1500, easing: 'easeOutQuart' }
   }
 });
 
-// Highlight current nav on scroll
+// === Monthly Fortune Data ===
+// Nine Star Ki monthly energy (from 八雲院, scale 0-10, mapped to 100)
+// Rokusei monthly phase (from hosokikazuko.com)
+const monthlyData = [
+  { // 1月 January
+    month: '1月', nineStarEnergy: 70, nineStarNote: '上昇運',
+    rokuseiPhase: '安定', rokuseiType: 'good',
+    work: { stars: 4, text: '年始の勢いを活かし新プロジェクト構想を練る。六星占術「安定」の追い風が最大限のサポート。年間計画のグランドデザインをこの月に固めることで、後の実行がスムーズになる。Deliberative（慎重さ）を活かした計画策定に最適な時期。' },
+    money: { stars: 3, text: '堅実運用を継続。大きな支出は計画的に。年初の「新年だから何かしたい」衝動に注意。九星の上昇運は「投資判断の質」に使い、金額は保守的に保つ。' },
+    health: { stars: 4, text: 'エネルギー充実。運動習慣の確立に最適な月。正月太り解消を兼ねて、年間の健康ルーティンを設計する。サウナ+筋トレの週間スケジュールをこの月に確定させる。' },
+    romance: { stars: 3, text: '安定期。既存の関係を大切に深める時。新年会などの社交の場が増えるが、HSP特性でエネルギー消耗しやすいため、参加する場を厳選する。' },
+    insight: '九星気学の上昇運と六星占術「安定」が重なる好調月。新年の勢いを計画策定に活かす。ただし翌月から六星大殺界に入るため、この月のうちに重要な意思決定を済ませておくのが賢明。1月に設計したものが年間の成否を左右する重要な月。'
+  },
+  { // 2月 February
+    month: '2月', nineStarEnergy: 90, nineStarNote: '大吉・発展',
+    rokuseiPhase: '陰影', rokuseiType: 'danger',
+    work: { stars: 3, text: '九星は年内最高レベルの大吉だが六星は大殺界「陰影」入り。この矛盾をどう扱うかがポイント。九星の追い風は「既存業務の加速」に使い、新規の大きな判断は避ける。チームメンバーへのEmpathyを活かしたフォローで信頼を蓄積する好機。' },
+    money: { stars: 2, text: '大殺界期。衝動買い・大きな投資は絶対に避ける。九星の好調で「いける」と感じても、六星の警告を優先。情報収集とリサーチに徹する月。金・水欠如の影響で判断が鈍りやすい時期。' },
+    health: { stars: 3, text: '気力は高いが過信禁物。九星のエネルギーで元気に感じても、身体は大殺界の影響を受けている。無理をせず、特に睡眠の質を重視する。インフルエンザ・花粉症シーズンでもあり免疫力管理を徹底。' },
+    romance: { stars: 2, text: '大殺界「陰影」。新しい出会いより現状維持を優先。感情が不安定になりやすいため、HSP特性も相まって些細なことで傷つきやすい。バレンタイン時期の感情の波に注意。' },
+    insight: '九星は年内最高の大吉だが、六星は大殺界「陰影」。矛盾する運気をどう活かすかが鍵。九星の追い風で進めつつ、六星の警告で足元を固める。この「矛盾をマネジメントする」スキルは、10月にも同じ構造で再登場するため、ここで学んだ教訓が活きる。大殺界期の行動原則: 守りの姿勢で既存の質を上げる。'
+  },
+  { // 3月 March (CURRENT)
+    month: '3月', nineStarEnergy: 45, nineStarNote: '吉凶混合',
+    rokuseiPhase: '停止', rokuseiType: 'danger',
+    work: { stars: 2, text: '大殺界の底「停止」。新規着手は避け、既存業務の質を上げる。この月はIntellection（内省）が最も活きる時期。準備期間と割り切り、ドキュメント整備・自動化パイプラインの改善・学習に集中する。無理に成果を出そうとしない。' },
+    money: { stars: 2, text: '守りに徹する。契約・投資の意思決定は4月以降に延期推奨。確定申告の時期でもあるため、税務処理を丁寧に。節税効果の高い施策のリサーチには良い時期。お金を「使う」のではなく「整理する」月。' },
+    health: { stars: 3, text: '精神的に消耗しやすい。大殺界の底は心身のエネルギーが最も低くなる時期。サウナ・瞑想で積極的に回復を図る。HSP特性で季節の変わり目の体調変化にも敏感。花粉症対策を万全に。1人の時間を通常より多めに確保する。' },
+    romance: { stars: 2, text: '停滞期。焦らず自分磨きの時間に充てる。エニアグラム4のストレス方向（Type 2: 他者への過剰な奉仕）に注意。自分の内側を充実させることが、結果的に魅力につながる。' },
+    insight: '六星占術の大殺界「停止」が最も影響する月。九星も吉凶混合。守りに徹し、この時期にしかできない内省・学習・基盤整備に集中する。大殺界の底は辛いが、ここでの内省が5月以降の「種子」に直結する。蠍座の「死と再生」のテーマと重なり、古い自分を脱ぎ捨てて新しい自分に生まれ変わるプロセスの最中にいる。'
+  },
+  { // 4月 April
+    month: '4月', nineStarEnergy: 70, nineStarNote: '中吉・回復',
+    rokuseiPhase: '減退', rokuseiType: 'danger',
+    work: { stars: 3, text: '大殺界の出口「減退」。徐々に動き始めてOKだが、大きな決断はもう1ヶ月待つ。年度初めの組織変更やチーム編成があれば、Empathyを活かして新メンバーのオンボーディングに注力。ここでの信頼構築が下半期の成果に直結する。' },
+    money: { stars: 2, text: '回復途上だがまだ保守的な運用を継続。新年度の予算配分を検討し始める時期。大きな購入や契約は5月まで待つ。ただし情報収集・下調べは積極的に進めてよい。' },
+    health: { stars: 3, text: '体調が回復傾向。軽い運動を再開し、5月以降の本格始動に備える。新しい環境への適応でHSPのエネルギー消耗が増える可能性。意識的にリカバリータイムを確保する。桜の季節を楽しみ、自然から活力を補充する。' },
+    romance: { stars: 3, text: '大殺界の終わりが見える。自然体でいること。新しい出会いを焦って求めるよりも、春の穏やかなエネルギーの中で心身を回復させることが優先。' },
+    insight: '六星大殺界の最終月「減退」。九星は中吉で回復基調。大殺界明けの5月に向けた助走期間。この月に「大殺界期に学んだこと」を言語化し、5月以降のアクションプランに落とし込むことが重要。回復の実感が出始めるが、焦りは禁物。もう1ヶ月だけ忍耐する。'
+  },
+  { // 5月 May
+    month: '5月', nineStarEnergy: 55, nineStarNote: '小吉・転換',
+    rokuseiPhase: '種子', rokuseiType: 'good',
+    work: { stars: 4, text: '大殺界を脱し「種子」。新プロジェクト着手の絶好のタイミング。2-4月に内省・準備した成果をここで開花させる。Self-Insightの次フェーズ着手、新しい自動化パイプラインの構築など、「新しく始める」ことにエネルギーを集中。Activator（8位）を意識的に発動させて行動に移す。' },
+    money: { stars: 3, text: '新しい投資テーマのリサーチ開始。まだ大きく張らないが、「種を蒔く」ように少額でのポジション構築は好タイミング。GWの休暇を利用して年間投資計画を見直す。' },
+    health: { stars: 4, text: '活力が戻る。新しい運動・食事習慣を始める好機。大殺界期に落ちた体力を回復させ、夏に向けた体づくりを本格化。GWのリフレッシュで心身ともにリセット。' },
+    romance: { stars: 3, text: '新しい出会いの芽が出始める。「種子」の名の通り、この月に蒔いた縁は後に大きく育つ可能性。自然体で、無理に自分を演出しないことが大切。' },
+    insight: '六星占術が大殺界から「種子」に転換する待望のタイミング。新しい12年サイクルの始まり。九星の小吉と合わせて、慎重だが前向きなスタートを切れる月。2-4月の大殺界期に溜めたエネルギーと洞察を、ここから一気に実行フェーズに移す。焦りすぎず、「まず種を蒔く」ことに集中する。成果は7月以降に現れる。'
+  },
+  { // 6月 June
+    month: '6月', nineStarEnergy: 25, nineStarNote: '中凶・注意',
+    rokuseiPhase: '緑生', rokuseiType: 'good',
+    work: { stars: 3, text: '六星は成長期「緑生」だが九星は中凶で低調。地道な作業・スキルアップに最適。表に出る活動より、裏方の仕組み化・ドキュメント整備・スキル獲得に時間を使う。Intellection（内省）とDeliberative（慎重さ）が活きる月。' },
+    money: { stars: 2, text: '九星の中凶。支出管理を徹底。ボーナス月だが衝動的な大きな買い物に注意。ボーナスの使い道を事前に決めておくことで、七赤金星の散財傾向をコントロール。投資は様子見。' },
+    health: { stars: 3, text: '梅雨の影響もあり体調に波。HSP特性で気圧変化・湿度変化に敏感。頭痛・倦怠感が出やすい時期。室内でできる運動（ヨガ・ストレッチ）を中心に。サウナで自律神経を整える。' },
+    romance: { stars: 3, text: '緑生の成長力で関係が深まる可能性。ただし九星の中凶で無理は禁物。梅雨の季節感を楽しめる相手との時間を大切に。インドアデートが吉。' },
+    insight: '九星の中凶と六星の「緑生」（年運と同名）が交差する月。外向きの動きは控え、内側の成長に集中する。5月に蒔いた種が着実に育っているが、まだ芽が地上に出るには早い。水面下での成長を信じて、目に見える成果を焦らない。梅雨のじめじめとした気候もあり、HSP的にはストレスフルな月。セルフケアを優先。'
+  },
+  { // 7月 July
+    month: '7月', nineStarEnergy: 50, nineStarNote: '小吉',
+    rokuseiPhase: '立花', rokuseiType: 'great',
+    work: { stars: 4, text: '六星「立花」で開花の月。上半期の仕込みが形になり始める。5月に着手したプロジェクトが最初の成果を見せる時期。Maximizer（最上志向）を発揮して、出てきた成果の質を最高レベルまで引き上げる。外部への発信・プレゼンに好タイミング。' },
+    money: { stars: 4, text: '立花の好調期。検討していた投資の実行に良いタイミング。上半期のリサーチ結果を基に、確信を持てるテーマにポジションを構築する。ただし集中投資ではなく分散を意識。' },
+    health: { stars: 3, text: '夏の暑さに注意。水分補給と冷房管理を徹底。五行の水欠如が出やすい時期。サウナの水風呂で補完しつつ、日中の水分摂取を意識的に増やす。翌月の「健弱」に備えて体力温存も意識。' },
+    romance: { stars: 4, text: '立花の華やかさで自然と魅力が増す月。社交的な場に出ると良い出会いの可能性。七赤金星の社交力が最も輝く時期。夏祭りや花火大会など、季節のイベントが良い機会に。' },
+    insight: '六星占術の「立花」は年間でも有数の好調フェーズ。九星も小吉で安定。上半期の仕込みが花開く月。積極的に動いてよい。ただし翌月8月が年間最低調月のため、「7月中にやれることはやりきる」意識が重要。成果の刈り取りと、8月の守りに備えた体力温存のバランスを取る。'
+  },
+  { // 8月 August
+    month: '8月', nineStarEnergy: 25, nineStarNote: '中凶・低調',
+    rokuseiPhase: '健弱', rokuseiType: 'caution',
+    work: { stars: 2, text: '六星小殺界「健弱」× 九星中凶。年間で最も注意が必要な月。無理せず休暇を取る。新規プロジェクト着手・重要な意思決定は9月に回す。定型業務を淡々とこなし、自動化パイプラインに任せられるものは任せる。健康第一。' },
+    money: { stars: 2, text: '小殺界。新規投資は見送り。既存ポジションの見直しとリバランスに使う月。夏のセールに乗せられた衝動買いに注意。「何もしない」が最善の投資判断になる月。' },
+    health: { stars: 2, text: '年間で最も注意が必要な月。夏バテ × 小殺界で心身のエネルギーが最低ライン。検診推奨。特に五行で欠如している金（呼吸器）と水（腎臓）の関連症状に注意。冷房の効いた部屋と外の猛暑の温度差がHSPの自律神経に大きな負担をかける。' },
+    romance: { stars: 2, text: '低調期。リラックスして自分時間を大切に。エネルギーが低い時にパートナーとの関係で無理をしない。自分のペースを守ることが結果的に関係を守る。' },
+    insight: '九星の中凶と六星の小殺界「健弱」が重なる要注意月。年間で最もエネルギーが低い時期。健康管理を最優先し、大きな判断は避ける。「何もしないことの価値」を理解する月。ここでの無理は9月以降のパフォーマンスに直結するため、戦略的撤退として休息を取る。お盆休暇を最大限活用し、心身のリセットに充てる。'
+  },
+  { // 9月 September
+    month: '9月', nineStarEnergy: 60, nineStarNote: '中吉・回復',
+    rokuseiPhase: '達成', rokuseiType: 'great',
+    work: { stars: 5, text: '六星「達成」× 九星中吉。年間最強の仕事運。成果を出すならこの月。上半期に仕込んだプロジェクトの最終成果を刈り取る。プレゼン・提案・ローンチに最適。Maximizer × Empathyで、質の高い成果物を相手の心に刺さる形で届ける。全リソースを集中投下すべき。' },
+    money: { stars: 4, text: '達成の好調期。投資判断・収益確定に最適。上半期にリサーチしてきたテーマの実行、または利益確定のタイミング。判断力が冴えるため、ポートフォリオの構造的見直しにも向いている。' },
+    health: { stars: 4, text: '秋の涼しさで体調回復。8月の低調から一転、活力が戻る。運動強度を上げてよい月。夏に落ちた体力を回復させ、年末に向けた体づくりの再スタート。' },
+    romance: { stars: 4, text: '達成のエネルギーで自然と魅力が増す。仕事で成果を出している姿が最大の魅力。積極的に社交の場に出てよい。自信と余裕がある状態が人を惹きつける。' },
+    insight: '六星占術の「達成」は12フェーズ中でも最高レベル。九星も中吉で回復。年間のベストマンス。集中投下すべき月。8月に十分休息を取っていれば、ここで爆発的なパフォーマンスが出せる。大殺界期に溜めた知見と、上半期の仕込みが一気に実を結ぶ。「やるなら今」が全体系の結論。'
+  },
+  { // 10月 October
+    month: '10月', nineStarEnergy: 90, nineStarNote: '大吉・最盛',
+    rokuseiPhase: '乱気', rokuseiType: 'caution',
+    work: { stars: 3, text: '九星は年内最高レベルの大吉だが六星は中殺界「乱気」。2月と同じ矛盾構造。判断ミスに注意。九星のエネルギーは「実行」ではなく「検証・確認」に使う。9月の成果の品質チェック、年末に向けた計画の精度向上に充てる。新規の大きな意思決定は避ける。' },
+    money: { stars: 2, text: '中殺界「乱気」。九星の好調に乗って「今なら大丈夫」と投資したくなるが、冷静さを保つ。Deliberative（慎重さ）を最大限発揮する月。特に感情的な判断は厳禁。ポートフォリオの現状維持が最善策。' },
+    health: { stars: 3, text: '九星の活力で元気に感じるが、乱気で判断力が鈍る可能性。自分の体調を過信せず、定期的なセルフチェックを。秋の気候変動でHSPは体調の波を感じやすい。規則正しい生活リズムを維持する。' },
+    romance: { stars: 3, text: '乱気で感情が不安定になりやすい。冷静さを意識。特にエニアグラム4のストレス方向（Type 2）に引っ張られやすい月。自分の本心を見失わないこと。大きな決断（告白・別れ）は翌月以降に延期。' },
+    insight: '2月と同構造: 九星の大吉と六星の殺界が矛盾する月。九星の追い風は「検証・確認」に使い、新規の大きな意思決定は避ける。2月の経験から学んでいれば、この矛盾をより上手にマネジメントできるはず。乱気の「判断が狂いやすい」特性を理解した上で、意識的にDeliberativeモードに切り替える。11月の好調期に向けた最終準備。'
+  },
+  { // 11月 November
+    month: '11月', nineStarEnergy: 85, nineStarNote: '大吉・好調',
+    rokuseiPhase: '再会', rokuseiType: 'good',
+    work: { stars: 5, text: '九星大吉 × 六星「再会」。年末に向けた総仕上げ。人との再接続が鍵。Connectedness（運命思考）× Empathyが最も輝く月。過去に一緒に仕事をした人、疎遠になっていた取引先・同僚との再接続が予想外の成果を生む。忘年会シーズンの社交を戦略的に活用する。' },
+    money: { stars: 4, text: '好調期。来年に向けたポートフォリオ見直しに最適。年末の税金対策（損益通算・ふるさと納税の最終調整）も忘れずに。12月は九星が下がるため、金融関連の判断は11月中に済ませる。' },
+    health: { stars: 4, text: 'エネルギー充実。冬に向けた体力づくりを。インフルエンザ対策として免疫力を高める食事・サウナを継続。忘年会シーズンの飲酒は適量を意識。HSPにとって社交が増える時期はエネルギー管理が重要。' },
+    romance: { stars: 4, text: '「再会」— 旧友・過去の縁が復活する可能性。かつて気になっていた人との再会、昔の友人を通じた新しい出会いがあるかもしれない。Connectednessの「すべてはつながっている」直感を信じて、偶然の出会いを大切にする。' },
+    insight: '九星・六星の両方が好調で一致する月。9月と並ぶ年間ベスト期間。「再会」の名の通り、人との再接続がキーワード。年末に向けてネットワークを活性化する。大殺界期に疎遠になっていた人間関係の修復に最適な月。Connectedness × Empathyの強みを全開にして、2027年以降の人的資産を構築する。'
+  },
+  { // 12月 December
+    month: '12月', nineStarEnergy: 45, nineStarNote: '中凶・下降',
+    rokuseiPhase: '財成', rokuseiType: 'great',
+    work: { stars: 3, text: '六星「財成」で蓄積運。年の締めくくりに成果を整理・文書化する。来年のHANDOFFを丁寧に作る月。Intellection（内省）を活かして、1年の振り返りと翌年の方向性を言語化する。年末進行で忙しくなるが、「質」を最優先する。' },
+    money: { stars: 4, text: '「財成」は蓄積の月。年末のまとめ買い・投資整理に好適。確定申告準備の最終チェック。ふるさと納税・iDeCo・NISAの年間枠消化を確認。「財を成す」名の通り、蓄積と整理に最適。' },
+    health: { stars: 3, text: '年末の疲れに注意。忘年会シーズンの飲み過ぎに気をつける。寒暖差が激しくなる時期で、HSP特性で自律神経が乱れやすい。年末年始の休暇計画を早めに確定し、しっかりリカバリーの時間を確保する。' },
+    romance: { stars: 3, text: '蓄積期。年末の振り返りで来年の方向性を考える。クリスマスシーズンの感情的な盛り上がりに流されず、自分のペースを守る。大切な人とゆっくり過ごす時間が最良のギフト。' },
+    insight: '九星は中凶で下降するが、六星は「財成」で蓄積運が高い。派手に動く月ではないが、1年の成果を整理し蓄積するには理想的な月。2026年の総括として「仕込みの年」で何を蒔き、何が育ったかを振り返る。2027年（立花×震宮=発展）に向けて、越年の準備を万全に整える。'
+  }
+];
+
+// Generate month selector and panels
+const selectorEl = document.getElementById('monthSelector');
+const panelsEl = document.getElementById('monthPanels');
+const currentMonth = 2; // March = index 2 (0-based)
+
+function starRating(n) {
+  return '<span style="color:var(--yellow);">' + '\u2605'.repeat(n) + '</span>' +
+         '<span style="color:var(--border);">' + '\u2605'.repeat(5-n) + '</span>';
+}
+
+function phaseColor(type) {
+  if (type === 'great') return { bg: 'rgba(34,197,94,0.12)', border: 'rgba(34,197,94,0.3)', color: '#4ade80' };
+  if (type === 'good') return { bg: 'rgba(59,130,246,0.12)', border: 'rgba(59,130,246,0.3)', color: '#60a5fa' };
+  if (type === 'caution') return { bg: 'rgba(234,179,8,0.12)', border: 'rgba(234,179,8,0.3)', color: '#facc15' };
+  return { bg: 'rgba(239,68,68,0.12)', border: 'rgba(239,68,68,0.3)', color: '#f87171' };
+}
+
+monthlyData.forEach((m, i) => {
+  // Selector button
+  const btn = document.createElement('button');
+  btn.className = 'month-btn' + (i === currentMonth ? ' active current' : '');
+  btn.textContent = m.month;
+  btn.dataset.month = i;
+  btn.onclick = () => selectMonth(i);
+  selectorEl.appendChild(btn);
+
+  // Panel
+  const pc = phaseColor(m.rokuseiType);
+  const panel = document.createElement('div');
+  panel.className = 'month-panel' + (i === currentMonth ? ' active' : '');
+  panel.id = 'month-' + i;
+
+  panel.innerHTML = `
+    <div class="card">
+      <div class="month-card-header">
+        <div class="month-label">${m.month}</div>
+        <div class="month-tags">
+          <span class="month-tag" style="background:rgba(99,102,241,0.15);color:#a5b4fc;">九星: ${m.nineStarNote}</span>
+          <span class="month-tag" style="background:${pc.bg};color:${pc.color};border:1px solid ${pc.border};">六星: ${m.rokuseiPhase}</span>
+        </div>
+      </div>
+      <div class="domain-grid">
+        <div class="domain-card work">
+          <div class="domain-icon-label">
+            <div class="domain-label" style="color:var(--blue);">仕事</div>
+            <div class="domain-stars">${starRating(m.work.stars)}</div>
+          </div>
+          <div class="domain-text">${m.work.text}</div>
+        </div>
+        <div class="domain-card money">
+          <div class="domain-icon-label">
+            <div class="domain-label" style="color:var(--gold);">お金</div>
+            <div class="domain-stars">${starRating(m.money.stars)}</div>
+          </div>
+          <div class="domain-text">${m.money.text}</div>
+        </div>
+        <div class="domain-card health">
+          <div class="domain-icon-label">
+            <div class="domain-label" style="color:var(--green);">健康</div>
+            <div class="domain-stars">${starRating(m.health.stars)}</div>
+          </div>
+          <div class="domain-text">${m.health.text}</div>
+        </div>
+        <div class="domain-card romance">
+          <div class="domain-icon-label">
+            <div class="domain-label" style="color:#f472b6;">恋愛</div>
+            <div class="domain-stars">${starRating(m.romance.stars)}</div>
+          </div>
+          <div class="domain-text">${m.romance.text}</div>
+        </div>
+      </div>
+      <div class="month-insight">${m.insight}</div>
+    </div>
+  `;
+  panelsEl.appendChild(panel);
+});
+
+function selectMonth(idx) {
+  document.querySelectorAll('.month-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.month-panel').forEach(p => p.classList.remove('active'));
+  document.querySelector(`.month-btn[data-month="${idx}"]`).classList.add('active');
+  document.getElementById('month-' + idx).classList.add('active');
+  // Also highlight timeline bar
+  document.querySelectorAll('.yt-month').forEach(m => m.style.opacity = '0.5');
+  document.querySelector(`.yt-month[data-month="${idx}"]`).style.opacity = '1';
+}
+
+// Timeline bar click
+document.querySelectorAll('.yt-month').forEach(el => {
+  el.addEventListener('click', () => selectMonth(parseInt(el.dataset.month)));
+});
+// Init timeline highlights
+selectMonth(currentMonth);
+
+// === Scroll-based nav highlighting ===
 const sections = document.querySelectorAll('.section[id]');
 const navLinks = document.querySelectorAll('.nav-bar a');
 const observer = new IntersectionObserver((entries) => {
@@ -809,7 +1286,7 @@ const observer = new IntersectionObserver((entries) => {
       if (link) link.classList.add('active');
     }
   });
-}, { threshold: 0.3, rootMargin: '-100px 0px -60% 0px' });
+}, { threshold: 0.2, rootMargin: '-80px 0px -60% 0px' });
 sections.forEach(s => observer.observe(s));
 </script>
 
