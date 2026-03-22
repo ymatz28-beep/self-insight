@@ -7,6 +7,26 @@ def load_profile(path):
     with open(path, 'r') as f:
         return yaml.safe_load(f)
 
+def load_narratives(path):
+    if not path:
+        return {}
+    try:
+        with open(path, 'r') as f:
+            return yaml.safe_load(f) or {}
+    except (FileNotFoundError, yaml.YAMLError):
+        return {}
+
+def n(narratives, *keys, default=''):
+    """Safe nested key access for narratives dict."""
+    obj = narratives
+    for k in keys:
+        if not isinstance(obj, dict):
+            return default
+        obj = obj.get(k, default)
+        if obj is None:
+            return default
+    return obj if obj is not None else default
+
 def star_rating(val, max_val=5):
     full = int(val)
     return '★' * full + '☆' * (max_val - full)
@@ -16,8 +36,10 @@ def energy_bar_color(e):
     if e >= 40: return '#eab308'
     return '#ef4444'
 
-def generate_html(p, tier=2):
+def generate_html(p, tier=2, narratives=None):
     from datetime import date as _date
+    if narratives is None:
+        narratives = {}
     name = p['identity']['name']
     birth = p['identity']['birth_date']
     age = p['identity'].get('age', '')
@@ -101,15 +123,25 @@ def generate_html(p, tier=2):
 
     # CliftonStrengths section
     strengths_section = ''
+    # Build narrative lookup for CliftonStrengths by name
+    nar_top5_list = n(narratives, 'personality', 'clifton_top5', default=[]) or []
+    nar_top5_map = {item['name']: item for item in nar_top5_list if isinstance(item, dict)}
+    nar_clifton_intro = n(narratives, 'personality', 'clifton_intro', default='')
+
     if sf_top5:
         domain_colors = {'Relationship Building':'#22c55e','Strategic Thinking':'#6366f1','Executing':'#8b5cf6','Influencing':'#f59e0b'}
         sf_cards = ''
         for s in sf_top5:
             dc = domain_colors.get(s.get('domain',''), 'var(--accent)')
+            nar_s = nar_top5_map.get(s['name'], {})
+            desc_html = f'<div class="card-detail" style="margin-top:8px;font-size:12px;color:var(--text2);line-height:1.5">{nar_s["description"]}</div>' if nar_s.get('description') else ''
+            name_jp = nar_s.get('name_jp', '')
+            name_jp_html = f' <span style="font-size:13px;color:var(--text3)">({name_jp})</span>' if name_jp else ''
             sf_cards += f'''<div class="card" style="border-left:3px solid {dc}">
           <div class="card-label">#{s["rank"]}</div>
-          <div class="card-value" style="font-size:18px">{s["name"]}</div>
+          <div class="card-value" style="font-size:18px">{s["name"]}{name_jp_html}</div>
           <div class="card-sub">{s["domain"]}</div>
+          {desc_html}
         </div>'''
         # Domain distribution bars
         domain_bars = ''
@@ -121,9 +153,11 @@ def generate_html(p, tier=2):
           <div class="el-bar-bg"><div class="el-bar" style="width:{len(ranks)/34*100:.0f}%;background:{dc}"></div></div>
           <div class="el-pct">{len(ranks)}</div>
         </div>'''
+        clifton_intro_html = f'<p style="font-size:13px;color:var(--text2);margin-bottom:16px;line-height:1.6">{nar_clifton_intro}</p>' if nar_clifton_intro else ''
         strengths_section = f'''
     <section id="strengths">
       <h2 class="section-title">CliftonStrengths TOP5</h2>
+      {clifton_intro_html}
       <div class="card-grid">{sf_cards}</div>
       <div style="margin-top:20px">
         <div class="card-label" style="font-size:12px;color:var(--text3);margin-bottom:10px">ドメイン分布（34資質中）</div>
@@ -144,6 +178,15 @@ def generate_html(p, tier=2):
         adhd_label = adhd_labels.get(adhd.get('tendency', ''), adhd.get('tendency', ''))
         adhd_count = adhd.get('above_threshold_count', adhd_tendency_map.get(adhd.get('tendency', ''), 0))
 
+        # Typology narratives
+        nar_ennea = n(narratives, 'personality', 'typology', 'enneagram', default={})
+        nar_blood = n(narratives, 'personality', 'typology', 'blood_type', default={})
+        nar_hsp = n(narratives, 'personality', 'typology', 'hsp', default={})
+        nar_adhd = n(narratives, 'personality', 'typology', 'adhd', default={})
+
+        def desc_block(text):
+            return f'<div class="card-detail" style="margin-top:8px;font-size:12px;color:var(--text2);line-height:1.5">{text}</div>' if text else ''
+
         personality_section = f'''
     <section id="personality">
       <h2 class="section-title">Personality Profile</h2>
@@ -152,9 +195,10 @@ def generate_html(p, tier=2):
           <div class="card-label">エニアグラム</div>
           <div class="card-value">Type {etype}</div>
           <div class="card-sub">{ename}（Wing {ewing}）</div>
-          <div class="card-detail" style="margin-top:12px;font-size:13px;color:var(--text2)">
+          <div class="card-detail" style="margin-top:8px;font-size:13px;color:var(--text2)">
             成長方向: Type {ennea.get("growth_direction","")} / ストレス方向: Type {ennea.get("stress_direction","")}
           </div>
+          {desc_block(nar_ennea.get('description',''))}
         </div>
         <div class="card">
           <div class="card-label">HSP（感受性）</div>
@@ -163,22 +207,64 @@ def generate_html(p, tier=2):
           <div class="mini-bar" style="margin-top:10px">
             <div class="mini-bar-fill" style="width:{hsp_pct}%;background:var(--accent)"></div>
           </div>
+          {desc_block(nar_hsp.get('description',''))}
         </div>
         <div class="card">
           <div class="card-label">注意特性（ADHD傾向）</div>
           <div class="card-value">{adhd_label}</div>
           <div class="card-sub">閾値超え: {adhd_count}/6項目</div>
+          {desc_block(nar_adhd.get('description',''))}
         </div>
         <div class="card">
           <div class="card-label">血液型</div>
           <div class="card-value">{blood}型</div>
           <div class="card-sub">日本人の{bt["population_pct"]}%</div>
+          {desc_block(nar_blood.get('description',''))}
         </div>
       </div>
     </section>'''
 
     locked_section = ''
-    if tier < 3:
+    core_id = n(narratives, 'core_identity', default={})
+    ci_insight = n(narratives, 'core_identity', 'integrated_insight', default={})
+    ci_cards = n(narratives, 'core_identity', 'summary_cards', default={})
+
+    if tier >= 3:
+        p1 = ci_insight.get('paragraph_1_essence', '')
+        p2 = ci_insight.get('paragraph_2_depth', '')
+        p3 = ci_insight.get('paragraph_3_duality', '')
+        p4 = ci_insight.get('paragraph_4_watch_out', '')
+        para_html = ''
+        for para in [p1, p2, p3, p4]:
+            if para:
+                para_html += f'<p style="margin-bottom:16px;font-size:14px;line-height:1.7;color:var(--text2)">{para}</p>'
+
+        def summary_card(key, default_title='', default_sub=''):
+            c = ci_cards.get(key, {})
+            title = c.get('title', default_title)
+            subtitle = c.get('subtitle', default_sub)
+            return f'''<div class="card">
+              <div class="card-label" style="font-size:10px">{key.replace('_',' ').upper()}</div>
+              <div class="card-value" style="font-size:16px">{title}</div>
+              <div class="card-sub">{subtitle}</div>
+            </div>''' if title else ''
+
+        sum_cards_html = (
+            summary_card('core_essence') +
+            summary_card('strongest_axis') +
+            summary_card('duality') +
+            summary_card('watch_out')
+        )
+
+        locked_section = f'''
+    <section id="core-identity" style="margin:32px 0">
+      <h2 class="section-title">統合インサイト — Core Identity</h2>
+      <div class="card-grid" style="margin-bottom:20px">{sum_cards_html}</div>
+      <div class="card" style="padding:24px">
+        {para_html if para_html else '<p style="color:var(--text3)">統合インサイトを読み込み中...</p>'}
+      </div>
+    </section>'''
+    else:
         locked_section = '''
     <section id="locked" style="position:relative;margin:32px 0">
       <div style="filter:blur(6px);opacity:0.4;pointer-events:none">
@@ -189,6 +275,151 @@ def generate_html(p, tier=2):
         Tier 3（Big Five +20問）で解放
       </div>
     </section>'''
+
+    # --- Pre-build forecast/monthly/cross HTML sections ---
+
+    # Year overview
+    _year_overview = n(narratives, 'forecast_2026', 'year_overview')
+    _year_overview_html = (
+        f'<div class="card" style="margin-top:16px;padding:20px">'
+        f'<div class="card-label" style="margin-bottom:10px">年間概観</div>'
+        f'<p style="font-size:13px;color:var(--text2);line-height:1.7">{_year_overview}</p>'
+        f'</div>'
+    ) if _year_overview else ''
+
+    # Keywords
+    _kw_list = n(narratives, 'forecast_2026', 'keywords', default=[]) or []
+    _kw_cards = ''.join(
+        f'<div class="card">'
+        f'<div class="card-value" style="font-size:15px">{kw["title"]}</div>'
+        f'<div class="card-sub" style="font-size:12px;margin-top:6px;line-height:1.5">{kw.get("description","")}</div>'
+        f'</div>'
+        for kw in _kw_list if isinstance(kw, dict)
+    )
+    _keywords_html = (
+        f'<div style="margin-top:20px">'
+        f'<div class="card-label" style="font-size:12px;color:var(--text3);margin-bottom:12px">2026年 キーワード</div>'
+        f'<div class="card-grid">{_kw_cards}</div>'
+        f'</div>'
+    ) if _kw_cards else ''
+
+    # Three system alignment
+    _3sys = n(narratives, 'forecast_2026', 'three_system_alignment')
+    _3sys_html = (
+        f'<div style="margin-top:20px">'
+        f'<div class="card-label" style="font-size:12px;color:var(--text3);margin-bottom:12px">3システム整合性分析</div>'
+        f'<div class="card" style="padding:18px"><p style="font-size:13px;color:var(--text2);line-height:1.7">{_3sys}</p></div>'
+        f'</div>'
+    ) if _3sys else ''
+
+    # Guidance by domain
+    _guidance = n(narratives, 'forecast_2026', 'guidance', default={}) or {}
+    _guidance_domain_cards = ''
+    _domain_label_map = {'work': '仕事', 'money': 'お金', 'health': '健康', 'romance': '恋愛'}
+    for _domain, _items in _guidance.items():
+        if isinstance(_items, list):
+            _li = ''.join(
+                f'<li style="font-size:12px;color:var(--text2);line-height:1.6;margin-bottom:4px">{item}</li>'
+                for item in _items
+            )
+            _domain_label = _domain_label_map.get(_domain, _domain)
+            _guidance_domain_cards += (
+                f'<div class="card">'
+                f'<div class="card-label">{_domain_label}</div>'
+                f'<ul style="padding-left:16px;margin-top:6px">{_li}</ul>'
+                f'</div>'
+            )
+    _guidance_html = (
+        f'<div style="margin-top:20px">'
+        f'<div class="card-label" style="font-size:12px;color:var(--text3);margin-bottom:12px">分野別ガイダンス</div>'
+        f'<div class="card-grid">{_guidance_domain_cards}</div>'
+        f'</div>'
+    ) if _guidance_domain_cards else ''
+
+    forecast_extra_html = _year_overview_html + _keywords_html + _3sys_html + _guidance_html
+
+    # Monthly Fortune section
+    _monthly_list = n(narratives, 'monthly_2026', default=[]) or []
+    if _monthly_list:
+        _month_cards = ''
+        for m in _monthly_list:
+            if not isinstance(m, dict):
+                continue
+            _domain_blocks = ''
+            _domain_names = {'work': '仕事', 'money': 'お金', 'health': '健康', 'romance': '恋愛'}
+            for _dom in ['work', 'money', 'health', 'romance']:
+                _ddata = m.get(_dom)
+                if isinstance(_ddata, dict):
+                    _stars = '★' * int(_ddata.get('stars', 0)) + '☆' * (5 - int(_ddata.get('stars', 0)))
+                    _dname = _domain_names.get(_dom, _dom)
+                    _domain_blocks += (
+                        f'<div style="background:var(--surface2);border-radius:8px;padding:10px">'
+                        f'<div class="card-label" style="font-size:10px">{_dname}</div>'
+                        f'<div style="font-size:16px;margin:4px 0">{_stars}</div>'
+                        f'<div style="font-size:12px;color:var(--text2);line-height:1.5">{_ddata.get("text","")}</div>'
+                        f'</div>'
+                    )
+            _insight_html = (
+                f'<div style="background:rgba(99,102,241,0.08);border-left:3px solid var(--accent);'
+                f'padding:12px;border-radius:4px;font-size:12px;color:var(--text2);line-height:1.6">'
+                f'{m["insight"]}</div>'
+            ) if m.get('insight') else ''
+            _nine_note = m.get('nine_star_note', '')
+            _rok_phase = m.get('rokusei_phase', '')
+            _month_cards += (
+                f'<div class="card" style="padding:20px">'
+                f'<div style="display:flex;align-items:center;gap:12px;margin-bottom:12px">'
+                f'<div style="font-size:18px;font-weight:700;font-family:var(--mono)">{m.get("month","")}</div>'
+                f'<div style="font-size:12px;color:var(--text3)">{_nine_note}</div>'
+                f'<div style="font-size:12px;color:var(--text3)">{_rok_phase}</div>'
+                f'</div>'
+                f'<div class="card-grid" style="grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:12px">'
+                f'{_domain_blocks}'
+                f'</div>'
+                f'{_insight_html}'
+                f'</div>'
+            )
+        monthly_section_html = (
+            f'<section id="monthly">'
+            f'<h2 class="section-title">月別運勢（2026年）</h2>'
+            f'<div style="display:flex;flex-direction:column;gap:16px">{_month_cards}</div>'
+            f'</section>'
+        )
+    else:
+        monthly_section_html = ''
+
+    # Cross Analysis section
+    _cross_list = n(narratives, 'cross_analysis', default=[]) or []
+    if _cross_list:
+        _cross_cards = ''
+        for item in _cross_list:
+            if not isinstance(item, dict):
+                continue
+            _practice = (
+                f'<div style="background:rgba(34,197,94,0.06);border-left:3px solid var(--green);'
+                f'padding:12px;border-radius:4px">'
+                f'<div class="card-label" style="font-size:10px;color:var(--green);margin-bottom:6px">実践ガイド</div>'
+                f'<p style="font-size:12px;color:var(--text2);line-height:1.6">{item["practice_guide"]}</p>'
+                f'</div>'
+            ) if item.get('practice_guide') else ''
+            _cross_cards += (
+                f'<div class="card" style="padding:20px">'
+                f'<div class="card-value" style="font-size:16px;margin-bottom:12px">{item.get("title","")}</div>'
+                f'<div style="margin-bottom:12px">'
+                f'<div class="card-label" style="font-size:10px;margin-bottom:6px">分析</div>'
+                f'<p style="font-size:13px;color:var(--text2);line-height:1.6">{item.get("analysis","")}</p>'
+                f'</div>'
+                f'{_practice}'
+                f'</div>'
+            )
+        cross_section_html = (
+            f'<section id="cross-analysis">'
+            f'<h2 class="section-title">クロス分析</h2>'
+            f'<div style="display:flex;flex-direction:column;gap:16px">{_cross_cards}</div>'
+            f'</section>'
+        )
+    else:
+        cross_section_html = ''
 
     html = f'''<!DOCTYPE html>
 <html lang="ja">
@@ -285,7 +516,10 @@ footer{{text-align:center;padding:40px 0 20px;font-size:12px;color:var(--text3)}
   <a href="#rokusei">六星占術</a>
   <a href="#western">西洋占星術</a>
   {"<a href='#personality'>性格</a>" if tier >= 2 else ""}
+  {"<a href='#core-identity'>統合</a>" if tier >= 3 else ""}
   <a href="#forecast">2026運勢</a>
+  {"<a href='#monthly'>月別</a>" if n(narratives,'monthly_2026') else ""}
+  {"<a href='#cross-analysis'>クロス分析</a>" if n(narratives,'cross_analysis') else ""}
 </nav>
 
 <div class="container">
@@ -308,6 +542,7 @@ footer{{text-align:center;padding:40px 0 20px;font-size:12px;color:var(--text3)}
   <!-- Four Pillars -->
   <section id="pillars">
     <h2 class="section-title">四柱推命</h2>
+    {f'<p style="font-size:13px;color:var(--text2);margin-bottom:16px;line-height:1.6">{n(narratives,"divination","four_pillars","intro")}</p>' if n(narratives,"divination","four_pillars","intro") else ''}
     <div class="pillar-grid">
       {"".join(f"""
       <div class="pillar">
@@ -322,6 +557,8 @@ footer{{text-align:center;padding:40px 0 20px;font-size:12px;color:var(--text3)}
         <div class="card-label">日主（Day Master）</div>
         <div class="card-value">{dm["char"]}（{dm["element"]}）</div>
         <div class="card-sub">{dm["description"]}</div>
+        {f'<div class="card-detail" style="margin-top:8px;font-size:12px;color:var(--text2);line-height:1.5">{n(narratives,"divination","four_pillars","day_master")}</div>' if n(narratives,"divination","four_pillars","day_master") else ''}
+        {f'<div class="card-detail" style="margin-top:8px;font-size:12px;color:var(--text3);line-height:1.5">{n(narratives,"divination","four_pillars","pillar_details")}</div>' if n(narratives,"divination","four_pillars","pillar_details") else ''}
       </div>
     </div>
 
@@ -345,11 +582,13 @@ footer{{text-align:center;padding:40px 0 20px;font-size:12px;color:var(--text3)}
         <div class="card-label">本命星（年星）</div>
         <div class="card-value">{ys["name"]}</div>
         <div class="card-sub">{ys["element"]} / {ys["direction"]}</div>
+        {f'<div class="card-detail" style="margin-top:8px;font-size:12px;color:var(--text2);line-height:1.5">{n(narratives,"divination","nine_star_ki","honmei")}</div>' if n(narratives,"divination","nine_star_ki","honmei") else ''}
       </div>
       <div class="card">
         <div class="card-label">月命星</div>
         <div class="card-value">{ms["name"]}</div>
         <div class="card-sub">{ms["element"]} / {ms["direction"]}</div>
+        {f'<div class="card-detail" style="margin-top:8px;font-size:12px;color:var(--text2);line-height:1.5">{n(narratives,"divination","nine_star_ki","getsu")}</div>' if n(narratives,"divination","nine_star_ki","getsu") else ''}
       </div>
       {f"""<div class="card">
         <div class="card-label">2026年 宮位置</div>
@@ -370,17 +609,23 @@ footer{{text-align:center;padding:40px 0 20px;font-size:12px;color:var(--text3)}
         <div class="card-label">運命星</div>
         <div class="card-value">{rok["main_star"]["name"]}({rok["main_star"]["polarity"]})</div>
         <div class="card-sub">{rok["main_star"]["reading"]}</div>
+        {f'<div class="card-detail" style="margin-top:8px;font-size:12px;color:var(--text2);line-height:1.5">{n(narratives,"divination","rokusei","jupiter")}</div>' if n(narratives,"divination","rokusei","jupiter") else ''}
       </div>
       {f"""<div class="card">
         <div class="card-label">霊合サブ星</div>
         <div class="card-value">{rok["sub_star"]["name"]}({rok["sub_star"]["polarity"]})</div>
         <div class="card-sub">{rok["sub_star"]["reading"]}</div>
+        {f'<div class="card-detail" style="margin-top:8px;font-size:12px;color:var(--text2);line-height:1.5">{n(narratives,"divination","rokusei","venus")}</div>' if n(narratives,"divination","rokusei","venus") else ''}
       </div>""" if rok.get("reigou") and rok.get("sub_star") else ""}
       {f"""<div class="card">
         <div class="card-label">2026年</div>
         <div class="card-value">{cur12["phase"]}</div>
         <div class="card-sub">{"<span class='殺界 dai'>"+cur12["殺界"]+"</span>" if cur12.get("殺界") and "大" in str(cur12["殺界"]) else "<span class='殺界 chu'>"+cur12["殺界"]+"</span>" if cur12.get("殺界") and "中" in str(cur12["殺界"]) else "<span class='殺界 sho'>"+cur12["殺界"]+"</span>" if cur12.get("殺界") else "好調期"}（エネルギー {cur12["energy"]}）</div>
       </div>""" if cur12 else ""}
+      {f"""<div class="card">
+        <div class="card-label">霊合星人とは</div>
+        <div class="card-detail" style="font-size:12px;color:var(--text2);line-height:1.5;margin-top:4px">{n(narratives,"divination","rokusei","reigo")}</div>
+      </div>""" if rok.get("reigou") and n(narratives,"divination","rokusei","reigo") else ""}
     </div>
 
     {f"""<div class="chart-wrap">
@@ -411,10 +656,12 @@ footer{{text-align:center;padding:40px 0 20px;font-size:12px;color:var(--text3)}
         <div class="card-label">太陽星座</div>
         <div class="card-value">{west["symbol"]} {west["sign"]}</div>
         <div class="card-sub">{west["element"]} / {west["quality"]}</div>
+        {f'<div class="card-detail" style="margin-top:8px;font-size:12px;color:var(--text2);line-height:1.5">{n(narratives,"divination","western","summary")}</div>' if n(narratives,"divination","western","summary") else ''}
       </div>
       <div class="card">
         <div class="card-label">支配星</div>
         <div class="card-value">{p["western_astrology"].get("ruling_planet","")}</div>
+        {f'<div class="card-detail" style="margin-top:8px;font-size:12px;color:var(--text2);line-height:1.5">{n(narratives,"divination","western","detail")}</div>' if n(narratives,"divination","western","detail") else ''}
       </div>
     </div>
   </section>
@@ -450,7 +697,13 @@ footer{{text-align:center;padding:40px 0 20px;font-size:12px;color:var(--text3)}
         <div class="card-sub">{cur_comb["label"]}</div>
       </div>""" if cur_comb else ""}
     </div>
+
+    {forecast_extra_html}
   </section>
+
+  {monthly_section_html}
+
+  {cross_section_html}
 
   <footer>
     AI Self-Insight v0.5 — Generated {gen_date}<br>
@@ -521,15 +774,18 @@ def main():
     parser.add_argument('--profile', required=True, help='Path to profile.yaml')
     parser.add_argument('--output', required=True, help='Output HTML path')
     parser.add_argument('--tier', type=int, default=2, help='Completed tier (1, 2, or 3)')
+    parser.add_argument('--narratives', default=None, help='Path to narratives.yaml (optional)')
     args = parser.parse_args()
 
     profile = load_profile(args.profile)
-    html = generate_html(profile, tier=args.tier)
+    narratives = load_narratives(args.narratives)
+    html = generate_html(profile, tier=args.tier, narratives=narratives)
 
     os.makedirs(os.path.dirname(args.output) or '.', exist_ok=True)
     with open(args.output, 'w') as f:
         f.write(html)
-    print(f'Dashboard written to {args.output}')
+    nar_msg = f' + narratives from {args.narratives}' if args.narratives else ''
+    print(f'Dashboard written to {args.output}{nar_msg}')
 
 if __name__ == '__main__':
     main()
