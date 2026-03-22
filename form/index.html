@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Self-Insight — パーソナル・インサイト診断</title>
+<meta property="og:title" content="AI Self-Insight — パーソナル・インサイト診断">
+<meta property="og:description" content="生年月日と性格診断であなたの本質を解き明かします。占術×心理学の統合パーソナライズ分析。">
+<meta property="og:type" content="website">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+JP:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0f1117;--surface:#1a1d27;--surface2:#242837;--border:#2e3347;
+  --text:#e8e9ed;--text2:#9ca3af;--accent:#6366f1;--accent2:#818cf8;
+  --success:#34d399;--warn:#fbbf24;--error:#f87171;
+  --radius:12px;--font:Inter,'Noto Sans JP',sans-serif;
+}
+html{font-size:16px;scroll-behavior:smooth}
+body{font-family:var(--font);background:var(--bg);color:var(--text);line-height:1.6;min-height:100vh;-webkit-font-smoothing:antialiased}
+.container{max-width:640px;margin:0 auto;padding:16px 16px 80px}
+
+/* Header */
+.hero{text-align:center;padding:32px 0 24px}
+.hero h1{font-size:clamp(22px,4vw,28px);font-weight:700;background:linear-gradient(135deg,var(--accent2),var(--success));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero .sub{color:var(--text2);font-size:14px;margin-top:6px}
+.hero .time{color:var(--text2);font-size:12px;margin-top:12px;background:var(--surface);display:inline-block;padding:6px 16px;border-radius:20px}
+
+/* Disclaimer */
+.disclaimer{background:var(--surface);border-left:3px solid var(--warn);padding:14px 16px;border-radius:0 var(--radius) var(--radius) 0;margin:16px 0 24px;font-size:13px;color:var(--text2);line-height:1.7}
+.disclaimer strong{color:var(--warn);display:block;margin-bottom:4px}
+
+/* Sections */
+.tier{margin-bottom:24px}
+.tier-header{display:flex;align-items:center;gap:10px;margin-bottom:16px}
+.tier-badge{background:var(--accent);color:#fff;font-size:11px;font-weight:700;padding:3px 10px;border-radius:20px;white-space:nowrap}
+.tier-title{font-size:15px;font-weight:600;color:var(--text2)}
+
+/* Progress */
+.progress{background:var(--surface);border-radius:20px;height:6px;margin-bottom:24px;overflow:hidden}
+.progress-bar{height:100%;background:linear-gradient(90deg,var(--accent),var(--success));border-radius:20px;transition:width .5s ease}
+
+/* Form fields */
+.field{margin-bottom:20px}
+.field label{display:block;font-size:14px;font-weight:500;margin-bottom:6px}
+.field label .req{color:var(--error);margin-left:2px;font-size:12px}
+.field .hint{font-size:12px;color:var(--text2);margin-bottom:6px}
+.field input[type=text],.field input[type=date]{width:100%;background:var(--surface2);border:1px solid var(--border);color:var(--text);padding:12px 14px;border-radius:8px;font-size:15px;font-family:var(--font);outline:none;transition:border .2s}
+.field input:focus{border-color:var(--accent)}
+.field input::placeholder{color:#555}
+
+/* Radio / Checkbox groups */
+.radio-group,.check-group{display:flex;flex-wrap:wrap;gap:8px}
+.radio-group label,.check-group label{background:var(--surface2);border:1px solid var(--border);padding:10px 16px;border-radius:8px;font-size:14px;cursor:pointer;transition:all .2s;flex:1;min-width:70px;text-align:center;user-select:none}
+.radio-group input,.check-group input{display:none}
+.radio-group input:checked+span,.check-group input:checked+span{color:var(--accent2)}
+.radio-group label:has(input:checked),.check-group label:has(input:checked){border-color:var(--accent);background:rgba(99,102,241,.12)}
+
+/* Likert scale */
+.likert{margin-bottom:20px}
+.likert .q-text{font-size:14px;margin-bottom:8px;line-height:1.5}
+.likert .q-num{color:var(--accent2);font-weight:600;margin-right:4px}
+.likert-row{display:flex;gap:4px}
+.likert-row label{flex:1;text-align:center;cursor:pointer}
+.likert-row input{display:none}
+.likert-row .btn{display:block;padding:10px 0;background:var(--surface2);border:1px solid var(--border);border-radius:8px;font-size:13px;color:var(--text2);transition:all .2s}
+.likert-row label:has(input:checked) .btn{border-color:var(--accent);background:rgba(99,102,241,.15);color:var(--accent2);font-weight:600}
+.likert-labels{display:flex;justify-content:space-between;font-size:10px;color:var(--text2);margin-top:4px;padding:0 4px}
+
+/* Enneagram cards */
+.ennea-grid{display:grid;grid-template-columns:1fr;gap:8px;margin-bottom:8px}
+.ennea-card{background:var(--surface2);border:1px solid var(--border);padding:12px 14px;border-radius:8px;cursor:pointer;transition:all .2s;user-select:none}
+.ennea-card.selected{border-color:var(--accent);background:rgba(99,102,241,.1)}
+.ennea-card .num{color:var(--accent2);font-weight:700;font-size:13px}
+.ennea-card .name{font-weight:600;font-size:14px;margin:0 6px}
+.ennea-card .desc{color:var(--text2);font-size:12px;display:block;margin-top:4px}
+.ennea-hint{font-size:12px;color:var(--text2);margin-bottom:12px}
+
+/* Preview cards */
+.preview-card{background:linear-gradient(135deg,rgba(99,102,241,.08),rgba(52,211,153,.06));border:1px solid var(--border);border-radius:var(--radius);padding:20px;margin:24px 0}
+.preview-card h3{font-size:15px;font-weight:600;margin-bottom:12px;color:var(--accent2)}
+.preview-card ul{list-style:none;padding:0}
+.preview-card li{font-size:13px;color:var(--text2);padding:3px 0}
+.preview-card li::before{content:'・';color:var(--accent2);margin-right:2px}
+.preview-actions{display:flex;gap:10px;margin-top:16px}
+
+/* Buttons */
+.btn-primary{background:var(--accent);color:#fff;border:none;padding:14px 24px;border-radius:8px;font-size:15px;font-weight:600;cursor:pointer;font-family:var(--font);width:100%;transition:opacity .2s}
+.btn-primary:hover{opacity:.9}
+.btn-primary:disabled{opacity:.4;cursor:not-allowed}
+.btn-secondary{background:var(--surface2);color:var(--text);border:1px solid var(--border);padding:12px 20px;border-radius:8px;font-size:14px;font-weight:500;cursor:pointer;font-family:var(--font);flex:1;transition:all .2s}
+.btn-secondary:hover{border-color:var(--accent)}
+
+/* Hidden tiers */
+.tier-hidden{display:none}
+.tier-reveal{animation:fadeIn .5s ease}
+@keyframes fadeIn{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+
+/* Select */
+.field select{width:100%;background:var(--surface2);border:1px solid var(--border);color:var(--text);padding:12px 14px;border-radius:8px;font-size:15px;font-family:var(--font);outline:none;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%239ca3af'%3E%3Cpath d='M6 8L1 3h10z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center}
+
+/* Collapsible */
+.collapsible-toggle{background:var(--surface);border:1px solid var(--border);padding:14px 16px;border-radius:8px;font-size:14px;color:var(--text2);cursor:pointer;width:100%;text-align:left;font-family:var(--font);margin-bottom:12px;transition:all .2s}
+.collapsible-toggle:hover{border-color:var(--accent)}
+.collapsible-content{display:none;padding:0 4px}
+.collapsible-content.open{display:block;animation:fadeIn .3s ease}
+
+/* Result screen */
+.result-screen{text-align:center;padding:40px 0}
+.result-screen h2{font-size:20px;margin-bottom:12px;color:var(--success)}
+.result-screen p{color:var(--text2);font-size:14px;margin-bottom:24px}
+.result-actions{display:flex;flex-direction:column;gap:10px;max-width:300px;margin:0 auto}
+.btn-line{background:#06C755;color:#fff;border:none;padding:14px 24px;border-radius:8px;font-size:15px;font-weight:600;cursor:pointer;font-family:var(--font);width:100%;transition:opacity .2s}
+.btn-line:hover{opacity:.9}
+
+/* Section divider */
+.divider{border:none;border-top:1px solid var(--border);margin:24px 0}
+.section-label{font-size:12px;color:var(--text2);text-transform:uppercase;letter-spacing:1px;margin-bottom:12px}
+</style>
+</head>
+<body>
+<div class="container">
+
+<!-- Hero -->
+<div class="hero">
+  <h1>AI Self-Insight</h1>
+  <div class="sub">パーソナル・インサイト診断</div>
+  <div class="time">Tier 1: 2分 / 全Tier: 約12分</div>
+</div>
+
+<!-- Disclaimer -->
+<div class="disclaimer">
+  <strong>ご利用にあたって</strong>
+  ・本診断は医療行為ではありません<br>
+  ・ADHD・HSPに関する設問は傾向把握を目的としており、医学的な診断ではありません<br>
+  ・回答はプロジェクトオーナーのみが閲覧します<br>
+  ・データの削除はいつでも依頼できます
+</div>
+
+<!-- Progress -->
+<div class="progress"><div class="progress-bar" id="progressBar" style="width:10%"></div></div>
+
+<form id="insightForm" novalidate>
+
+<!-- ==================== TIER 1 ==================== -->
+<div class="tier" id="tier1">
+  <div class="tier-header">
+    <span class="tier-badge">Tier 1</span>
+    <span class="tier-title">基本情報</span>
+  </div>
+
+  <div class="field">
+    <label>表示名（ニックネーム）<span class="req">*</span></label>
+    <div class="hint">ダッシュボードに表示される名前です</div>
+    <input type="text" id="display_name" required placeholder="例: タロウ" maxlength="20">
+  </div>
+
+  <div class="field">
+    <label>生年月日<span class="req">*</span></label>
+    <div class="hint">占術計算に使用します</div>
+    <input type="date" id="birth_date" required>
+  </div>
+
+  <div class="field">
+    <label>出生時刻</label>
+    <div class="hint">わかる範囲でOK（例: 14:30, 午後3時頃）</div>
+    <input type="text" id="birth_time" placeholder="わからない場合は空欄">
+  </div>
+
+  <div class="field">
+    <label>出生地</label>
+    <div class="hint">都道府県レベルでOK</div>
+    <input type="text" id="birth_place" placeholder="例: 東京都">
+  </div>
+
+  <div class="field">
+    <label>血液型<span class="req">*</span></label>
+    <div class="radio-group" id="blood_type">
+      <label><input type="radio" name="blood_type" value="A"><span>A型</span></label>
+      <label><input type="radio" name="blood_type" value="B"><span>B型</span></label>
+      <label><input type="radio" name="blood_type" value="O"><span>O型</span></label>
+      <label><input type="radio" name="blood_type" value="AB"><span>AB型</span></label>
+    </div>
+  </div>
+
+  <div class="field">
+    <label>性別</label>
+    <div class="radio-group" id="sex">
+      <label><input type="radio" name="sex" value="male"><span>男性</span></label>
+      <label><input type="radio" name="sex" value="female"><span>女性</span></label>
+      <label><input type="radio" name="sex" value="other"><span>回答しない</span></label>
+    </div>
+  </div>
+
+  <!-- Tier 1 Preview -->
+  <div class="preview-card">
+    <h3>Tier 1 で解放される結果</h3>
+    <ul>
+      <li>四柱推命（3柱 + 五行バランス）</li>
+      <li>九星気学（本命星 + 9年運気サイクル）</li>
+      <li>六星占術（運命星 + 12年サイクル）</li>
+      <li>西洋占星術（太陽星座）</li>
+      <li>2026年運勢 + 月間4ドメイン予測</li>
+    </ul>
+    <div class="preview-actions">
+      <button type="button" class="btn-secondary" onclick="submitAtTier(1)">ここで送信</button>
+      <button type="button" class="btn-primary" onclick="showTier(2)" style="flex:1.5">Tier 2へ進む →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== TIER 2 ==================== -->
+<div class="tier tier-hidden" id="tier2">
+  <div class="tier-header">
+    <span class="tier-badge">Tier 2</span>
+    <span class="tier-title">コア性格診断（+15問・約5分）</span>
+  </div>
+
+  <!-- Enneagram -->
+  <hr class="divider">
+  <div class="section-label">エニアグラム</div>
+
+  <div class="field">
+    <label>最も自分に当てはまるタイプを3つ選んでください<span class="req">*</span></label>
+    <div class="ennea-hint">「なりたい自分」ではなく「普段の自分」に近いものを選びます</div>
+    <div class="ennea-grid" id="enneaGrid">
+      <div class="ennea-card" data-type="1" onclick="toggleEnnea(this)"><span class="num">1</span><span class="name">完璧主義者</span><span class="desc">正しくありたい。ルールと秩序を重視。間違いが気になる</span></div>
+      <div class="ennea-card" data-type="2" onclick="toggleEnnea(this)"><span class="num">2</span><span class="name">援助者</span><span class="desc">人の役に立ちたい。愛されたい。人の感情に敏感</span></div>
+      <div class="ennea-card" data-type="3" onclick="toggleEnnea(this)"><span class="num">3</span><span class="name">達成者</span><span class="desc">成功したい。目標志向。効率的で結果を出す</span></div>
+      <div class="ennea-card" data-type="4" onclick="toggleEnnea(this)"><span class="num">4</span><span class="name">個性派</span><span class="desc">自分らしくありたい。深い感情。特別でいたい</span></div>
+      <div class="ennea-card" data-type="5" onclick="toggleEnnea(this)"><span class="num">5</span><span class="name">観察者</span><span class="desc">知識を得たい。一人の時間が必要。分析的</span></div>
+      <div class="ennea-card" data-type="6" onclick="toggleEnnea(this)"><span class="num">6</span><span class="name">忠実家</span><span class="desc">安全でありたい。責任感が強い。不安を感じやすい</span></div>
+      <div class="ennea-card" data-type="7" onclick="toggleEnnea(this)"><span class="num">7</span><span class="name">楽天家</span><span class="desc">楽しみたい。好奇心旺盛。退屈が苦手</span></div>
+      <div class="ennea-card" data-type="8" onclick="toggleEnnea(this)"><span class="num">8</span><span class="name">挑戦者</span><span class="desc">強くありたい。主導権を握る。弱さを見せない</span></div>
+      <div class="ennea-card" data-type="9" onclick="toggleEnnea(this)"><span class="num">9</span><span class="name">調停者</span><span class="desc">平和でありたい。争いを避ける。周囲に合わせる</span></div>
+    </div>
+    <div class="hint" id="enneaCount">選択: 0/3</div>
+  </div>
+
+  <div class="field">
+    <label>Wing（ウイング）<span class="req">*</span></label>
+    <div class="hint">1位に選んだタイプの隣接タイプのうち、より近いほうを選んでください</div>
+    <select id="wing">
+      <option value="">-- 選択 --</option>
+      <option>1w9</option><option>1w2</option>
+      <option>2w1</option><option>2w3</option>
+      <option>3w2</option><option>3w4</option>
+      <option>4w3</option><option>4w5</option>
+      <option>5w4</option><option>5w6</option>
+      <option>6w5</option><option>6w7</option>
+      <option>7w6</option><option>7w8</option>
+      <option>8w7</option><option>8w9</option>
+      <option>9w8</option><option>9w1</option>
+    </select>
+  </div>
+
+  <div class="field">
+    <label>ストレス時の行動パターン<span class="req">*</span></label>
+    <div class="hint">強いストレスを受けたとき、最も取りやすい行動は？</div>
+    <div class="ennea-grid" id="stressGrid">
+      <div class="ennea-card" data-val="1" onclick="selectStress(this)"><span class="desc">批判的になり、自分や他人の欠点が気になる</span></div>
+      <div class="ennea-card" data-val="2" onclick="selectStress(this)"><span class="desc">人に尽くしすぎて、見返りを求めてしまう</span></div>
+      <div class="ennea-card" data-val="3" onclick="selectStress(this)"><span class="desc">成果や効率に固執し、感情を無視する</span></div>
+      <div class="ennea-card" data-val="4" onclick="selectStress(this)"><span class="desc">感情的になり、自分だけが辛いと感じる</span></div>
+      <div class="ennea-card" data-val="5" onclick="selectStress(this)"><span class="desc">引きこもり、情報収集に没頭する</span></div>
+      <div class="ennea-card" data-val="6" onclick="selectStress(this)"><span class="desc">不安が強まり、最悪のシナリオを想像する</span></div>
+      <div class="ennea-card" data-val="7" onclick="selectStress(this)"><span class="desc">気を紛らわすために予定や刺激を詰め込む</span></div>
+      <div class="ennea-card" data-val="8" onclick="selectStress(this)"><span class="desc">攻撃的になり、他人をコントロールしようとする</span></div>
+      <div class="ennea-card" data-val="9" onclick="selectStress(this)"><span class="desc">何もかもどうでもよくなり、現実逃避する</span></div>
+    </div>
+  </div>
+
+  <!-- HSP -->
+  <hr class="divider">
+  <div class="section-label">HSP（感受性）</div>
+
+  <div class="likert"><div class="q-text"><span class="q-num">Q10.</span>一度にたくさんのことが起こると、不快に感じる</div><div class="likert-row" data-q="hsp_1"></div><div class="likert-labels"><span>全く当てはまらない</span><span>よく当てはまる</span></div></div>
+  <div class="likert"><div class="q-text"><span class="q-num">Q11.</span>短い時間にやらなければならないことが多いと、混乱してしまう</div><div class="likert-row" data-q="hsp_2"></div><div class="likert-labels"><span>全く当てはまらない</span><span>よく当てはまる</span></div></div>
+  <div class="likert"><div class="q-text"><span class="q-num">Q12.</span>強い光や刺激的な匂い、ざらざらした布地、近くのサイレンなどに不快さを感じる</div><div class="likert-row" data-q="hsp_3"></div><div class="likert-labels"><span>全く当てはまらない</span><span>よく当てはまる</span></div></div>
+  <div class="likert"><div class="q-text"><span class="q-num">Q13.</span>大きな音や騒がしい状況に圧倒されることがある</div><div class="likert-row" data-q="hsp_4"></div><div class="likert-labels"><span>全く当てはまらない</span><span>よく当てはまる</span></div></div>
+  <div class="likert"><div class="q-text"><span class="q-num">Q14.</span>美術や音楽に深く感動することがある</div><div class="likert-row" data-q="hsp_5"></div><div class="likert-labels"><span>全く当てはまらない</span><span>よく当てはまる</span></div></div>
+  <div class="likert"><div class="q-text"><span class="q-num">Q15.</span>繊細な香りや味、音、芸術作品に気づき、楽しむことができる</div><div class="likert-row" data-q="hsp_6"></div><div class="likert-labels"><span>全く当てはまらない</span><span>よく当てはまる</span></div></div>
+
+  <!-- ADHD -->
+  <hr class="divider">
+  <div class="section-label">注意特性（ASRS）</div>
+  <div class="hint" style="margin-bottom:16px">以下の行動がどのくらいの頻度でありますか？</div>
+
+  <div class="likert"><div class="q-text"><span class="q-num">Q16.</span>物事の最も難しい部分が終わった後で、詰めの作業が面倒に感じる</div><div class="likert-row" data-q="adhd_1" data-scale="freq"></div><div class="likert-labels"><span>全くない</span><span>非常に頻繁</span></div></div>
+  <div class="likert"><div class="q-text"><span class="q-num">Q17.</span>計画的に進める必要があるとき、順序立てて整理するのが難しい</div><div class="likert-row" data-q="adhd_2" data-scale="freq"></div><div class="likert-labels"><span>全くない</span><span>非常に頻繁</span></div></div>
+  <div class="likert"><div class="q-text"><span class="q-num">Q18.</span>約束や用事を忘れる</div><div class="likert-row" data-q="adhd_3" data-scale="freq"></div><div class="likert-labels"><span>全くない</span><span>非常に頻繁</span></div></div>
+  <div class="likert"><div class="q-text"><span class="q-num">Q19.</span>じっくり考える必要がある課題を、先延ばしにしたり避けたりする</div><div class="likert-row" data-q="adhd_4" data-scale="freq"></div><div class="likert-labels"><span>全くない</span><span>非常に頻繁</span></div></div>
+  <div class="likert"><div class="q-text"><span class="q-num">Q20.</span>長時間座っているとき、手足をそわそわ動かしたり、もぞもぞしたりする</div><div class="likert-row" data-q="adhd_5" data-scale="freq"></div><div class="likert-labels"><span>全くない</span><span>非常に頻繁</span></div></div>
+  <div class="likert"><div class="q-text"><span class="q-num">Q21.</span>まるでモーターで動かされているように、過度に活動的だったり何かせずにはいられない</div><div class="likert-row" data-q="adhd_6" data-scale="freq"></div><div class="likert-labels"><span>全くない</span><span>非常に頻繁</span></div></div>
+
+  <!-- Tier 2 Preview -->
+  <div class="preview-card">
+    <h3>Tier 2 で追加解放される結果</h3>
+    <ul>
+      <li>エニアグラム（タイプ + Wing + 成長/ストレス方向）</li>
+      <li>HSP感受性スコア（3因子分析）</li>
+      <li>注意特性プロファイル（ADHD傾向）</li>
+      <li>占術×性格のクロス分析</li>
+    </ul>
+    <div class="preview-actions">
+      <button type="button" class="btn-secondary" onclick="submitAtTier(2)">ここで送信</button>
+      <button type="button" class="btn-primary" onclick="showTier(3)" style="flex:1.5">Tier 3へ進む →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== TIER 3 ==================== -->
+<div class="tier tier-hidden" id="tier3">
+  <div class="tier-header">
+    <span class="tier-badge">Tier 3</span>
+    <span class="tier-title">深層性格分析 — Big Five（+20問・約5分）</span>
+  </div>
+
+  <div class="likert"><div class="q-text"><span class="q-num">Q22.</span>初対面の人が集まるパーティーで、自分から話しかけるほうだ</div><div class="likert-row" data-q="bf_1"></div><div class="likert-labels"><span>全く当てはまらない</span><span>よく当てはまる</span></div></div>
+  <div class="likert"><div class="q-text"><span class="q-num">Q23.</span>人前ではあまり話さないほうだ</div><div class="likert-row" data-q="bf_2"></div><div class="likert-labels"><span>全く当てはまらない</span><span>よく当てはまる</span></div></div>
+  <div class="likert"><div class="q-text"><span class="q-num">Q24.</span>人の注目を集めるのが好きだ</div><div class="likert-row" data-q="bf_3"></div><div class="likert-labels"><span>全く当てはまらない</span><span>よく当てはまる</span></div></div>
+  <div class="likert"><div class="q-text"><span class="q-num">Q25.</span>目立たないようにしていることが多い</div><div class="likert-row" data-q="bf_4"></div><div class="likert-labels"><span>全く当てはまらない</span><span>よく当てはまる</span></div></div>
+
+  <hr class="divider">
+
+  <div class="likert"><div class="q-text"><span class="q-num">Q26.</span>他人の問題にはあまり興味がない</div><div class="likert-row" data-q="bf_5"></div><div class="likert-labels"><span>全く当てはまらない</span><span>よく当てはまる</span></div></div>
+  <div class="likert"><div class="q-text"><span class="q-num">Q27.</span>人の気持ちに共感しやすい</div><div class="likert-row" data-q="bf_6"></div><div class="likert-labels"><span>全く当てはまらない</span><span>よく当てはまる</span></div></div>
+  <div class="likert"><div class="q-text"><span class="q-num">Q28.</span>人に対してあまり関心がない</div><div class="likert-row" data-q="bf_7"></div><div class="likert-labels"><span>全く当てはまらない</span><span>よく当てはまる</span></div></div>
+  <div class="likert"><div class="q-text"><span class="q-num">Q29.</span>他人の感情にすぐ気づく</div><div class="likert-row" data-q="bf_8"></div><div class="likert-labels"><span>全く当てはまらない</span><span>よく当てはまる</span></div></div>
+
+  <hr class="divider">
+
+  <div class="likert"><div class="q-text"><span class="q-num">Q30.</span>すぐに取り掛かるほうだ</div><div class="likert-row" data-q="bf_9"></div><div class="likert-labels"><span>全く当てはまらない</span><span>よく当てはまる</span></div></div>
+  <div class="likert"><div class="q-text"><span class="q-num">Q31.</span>物を元の場所に戻すのを忘れることが多い</div><div class="likert-row" data-q="bf_10"></div><div class="likert-labels"><span>全く当てはまらない</span><span>よく当てはまる</span></div></div>
+  <div class="likert"><div class="q-text"><span class="q-num">Q32.</span>整理整頓が得意だ</div><div class="likert-row" data-q="bf_11"></div><div class="likert-labels"><span>全く当てはまらない</span><span>よく当てはまる</span></div></div>
+  <div class="likert"><div class="q-text"><span class="q-num">Q33.</span>やるべきことをサボることがある</div><div class="likert-row" data-q="bf_12"></div><div class="likert-labels"><span>全く当てはまらない</span><span>よく当てはまる</span></div></div>
+
+  <hr class="divider">
+
+  <div class="likert"><div class="q-text"><span class="q-num">Q34.</span>気分の浮き沈みが激しい</div><div class="likert-row" data-q="bf_13"></div><div class="likert-labels"><span>全く当てはまらない</span><span>よく当てはまる</span></div></div>
+  <div class="likert"><div class="q-text"><span class="q-num">Q35.</span>たいていリラックスしている</div><div class="likert-row" data-q="bf_14"></div><div class="likert-labels"><span>全く当てはまらない</span><span>よく当てはまる</span></div></div>
+  <div class="likert"><div class="q-text"><span class="q-num">Q36.</span>すぐにイライラしてしまう</div><div class="likert-row" data-q="bf_15"></div><div class="likert-labels"><span>全く当てはまらない</span><span>よく当てはまる</span></div></div>
+  <div class="likert"><div class="q-text"><span class="q-num">Q37.</span>めったに落ち込まない</div><div class="likert-row" data-q="bf_16"></div><div class="likert-labels"><span>全く当てはまらない</span><span>よく当てはまる</span></div></div>
+
+  <hr class="divider">
+
+  <div class="likert"><div class="q-text"><span class="q-num">Q38.</span>想像力が豊かだ</div><div class="likert-row" data-q="bf_17"></div><div class="likert-labels"><span>全く当てはまらない</span><span>よく当てはまる</span></div></div>
+  <div class="likert"><div class="q-text"><span class="q-num">Q39.</span>抽象的なアイデアにはあまり興味がない</div><div class="likert-row" data-q="bf_18"></div><div class="likert-labels"><span>全く当てはまらない</span><span>よく当てはまる</span></div></div>
+  <div class="likert"><div class="q-text"><span class="q-num">Q40.</span>新しいアイデアにわくわくする</div><div class="likert-row" data-q="bf_19"></div><div class="likert-labels"><span>全く当てはまらない</span><span>よく当てはまる</span></div></div>
+  <div class="likert"><div class="q-text"><span class="q-num">Q41.</span>哲学的な議論には関心がない</div><div class="likert-row" data-q="bf_20"></div><div class="likert-labels"><span>全く当てはまらない</span><span>よく当てはまる</span></div></div>
+
+  <!-- Optional existing results -->
+  <hr class="divider">
+  <button type="button" class="collapsible-toggle" onclick="toggleCollapsible(this)">
+    ▸ 既存の診断結果をお持ちの方（任意）
+  </button>
+  <div class="collapsible-content" id="existingResults">
+    <div class="field">
+      <label>CliftonStrengths TOP5</label>
+      <div class="hint">受けたことがあれば、1位から順に入力</div>
+      <input type="text" id="cs1" placeholder="1位（例: 共感性）" style="margin-bottom:6px">
+      <input type="text" id="cs2" placeholder="2位" style="margin-bottom:6px">
+      <input type="text" id="cs3" placeholder="3位" style="margin-bottom:6px">
+      <input type="text" id="cs4" placeholder="4位" style="margin-bottom:6px">
+      <input type="text" id="cs5" placeholder="5位">
+    </div>
+    <div class="field">
+      <label>MBTI</label>
+      <input type="text" id="mbti" placeholder="例: INTJ" maxlength="4" style="text-transform:uppercase">
+    </div>
+    <div class="field">
+      <label>エニアグラム（自認タイプ）</label>
+      <select id="ennea_known">
+        <option value="">-- 選択 --</option>
+        <option value="1">タイプ1（完璧主義者）</option>
+        <option value="2">タイプ2（援助者）</option>
+        <option value="3">タイプ3（達成者）</option>
+        <option value="4">タイプ4（個性派）</option>
+        <option value="5">タイプ5（観察者）</option>
+        <option value="6">タイプ6（忠実家）</option>
+        <option value="7">タイプ7（楽天家）</option>
+        <option value="8">タイプ8（挑戦者）</option>
+        <option value="9">タイプ9（調停者）</option>
+      </select>
+    </div>
+  </div>
+
+  <div style="margin-top:24px">
+    <button type="button" class="btn-primary" onclick="submitAtTier(3)">送信する</button>
+  </div>
+</div>
+
+</form>
+
+<!-- ==================== RESULT ==================== -->
+<div id="resultScreen" class="result-screen" style="display:none">
+  <h2>回答ありがとうございます！</h2>
+  <p>あなたのSelf-Insightダッシュボードは<br>準備でき次第LINEでお届けします。</p>
+  <div class="result-actions">
+    <button type="button" class="btn-primary" onclick="copyResult()">回答データをコピー</button>
+    <button type="button" class="btn-line" onclick="shareViaLine()">LINEでYumaに送信</button>
+  </div>
+  <div id="copyMsg" style="color:var(--success);font-size:13px;margin-top:8px;display:none">コピーしました！</div>
+</div>
+
+</div><!-- container -->
+
+<script>
+// === Likert scale generation ===
+document.querySelectorAll('.likert-row').forEach(row => {
+  const q = row.dataset.q;
+  const isFreq = row.dataset.scale === 'freq';
+  const min = isFreq ? 0 : 1;
+  const max = isFreq ? 4 : 5;
+  for (let i = min; i <= max; i++) {
+    const label = document.createElement('label');
+    label.innerHTML = `<input type="radio" name="${q}" value="${i}"><span class="btn">${i}</span>`;
+    row.appendChild(label);
+  }
+});
+
+// === Enneagram selection (max 3) ===
+const enneaSelected = [];
+function toggleEnnea(card) {
+  const type = parseInt(card.dataset.type);
+  const idx = enneaSelected.indexOf(type);
+  if (idx >= 0) {
+    enneaSelected.splice(idx, 1);
+    card.classList.remove('selected');
+  } else if (enneaSelected.length < 3) {
+    enneaSelected.push(type);
+    card.classList.add('selected');
+  }
+  document.getElementById('enneaCount').textContent = `選択: ${enneaSelected.length}/3`;
+}
+
+// === Stress selection (single) ===
+let stressVal = null;
+function selectStress(card) {
+  document.querySelectorAll('#stressGrid .ennea-card').forEach(c => c.classList.remove('selected'));
+  card.classList.add('selected');
+  stressVal = parseInt(card.dataset.val);
+}
+
+// === Tier reveal ===
+function showTier(n) {
+  const tier = document.getElementById('tier' + n);
+  tier.classList.remove('tier-hidden');
+  tier.classList.add('tier-reveal');
+  tier.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  const pct = n === 2 ? 40 : 70;
+  document.getElementById('progressBar').style.width = pct + '%';
+}
+
+// === Collapsible ===
+function toggleCollapsible(btn) {
+  const content = btn.nextElementSibling;
+  content.classList.toggle('open');
+  btn.textContent = content.classList.contains('open')
+    ? '▾ 既存の診断結果をお持ちの方（任意）'
+    : '▸ 既存の診断結果をお持ちの方（任意）';
+}
+
+// === Collect data ===
+function collectData(tier) {
+  const data = { tier: tier };
+
+  // Tier 1
+  data.identity = {
+    display_name: document.getElementById('display_name').value.trim(),
+    birth_date: document.getElementById('birth_date').value,
+    birth_time: document.getElementById('birth_time').value.trim() || null,
+    birth_place: document.getElementById('birth_place').value.trim() || null,
+    blood_type: document.querySelector('input[name=blood_type]:checked')?.value || null,
+    sex: document.querySelector('input[name=sex]:checked')?.value || null
+  };
+
+  if (tier >= 2) {
+    data.enneagram = {
+      top3: [...enneaSelected],
+      wing: document.getElementById('wing').value || null,
+      stress: stressVal
+    };
+    data.hsp = [];
+    for (let i = 1; i <= 6; i++) {
+      const v = document.querySelector(`input[name=hsp_${i}]:checked`)?.value;
+      data.hsp.push(v ? parseInt(v) : null);
+    }
+    data.adhd = [];
+    for (let i = 1; i <= 6; i++) {
+      const v = document.querySelector(`input[name=adhd_${i}]:checked`)?.value;
+      data.adhd.push(v ? parseInt(v) : null);
+    }
+  }
+
+  if (tier >= 3) {
+    data.big_five = [];
+    for (let i = 1; i <= 20; i++) {
+      const v = document.querySelector(`input[name=bf_${i}]:checked`)?.value;
+      data.big_five.push(v ? parseInt(v) : null);
+    }
+    const cs = [1,2,3,4,5].map(i => document.getElementById('cs'+i).value.trim()).filter(Boolean);
+    data.existing = {
+      clifton_top5: cs.length ? cs : null,
+      mbti: document.getElementById('mbti').value.trim().toUpperCase() || null,
+      enneagram_known: document.getElementById('ennea_known').value ? parseInt(document.getElementById('ennea_known').value) : null
+    };
+  }
+
+  return data;
+}
+
+// === Validation ===
+function validate(tier) {
+  const errs = [];
+  if (!document.getElementById('display_name').value.trim()) errs.push('表示名を入力してください');
+  if (!document.getElementById('birth_date').value) errs.push('生年月日を入力してください');
+  if (!document.querySelector('input[name=blood_type]:checked')) errs.push('血液型を選択してください');
+
+  if (tier >= 2) {
+    if (enneaSelected.length !== 3) errs.push('エニアグラムを3つ選択してください');
+    if (!document.getElementById('wing').value) errs.push('Wingを選択してください');
+    if (stressVal === null) errs.push('ストレスパターンを選択してください');
+    for (let i = 1; i <= 6; i++) {
+      if (!document.querySelector(`input[name=hsp_${i}]:checked`)) { errs.push('HSP設問を全て回答してください'); break; }
+    }
+    for (let i = 1; i <= 6; i++) {
+      if (!document.querySelector(`input[name=adhd_${i}]:checked`)) { errs.push('注意特性設問を全て回答してください'); break; }
+    }
+  }
+
+  if (tier >= 3) {
+    for (let i = 1; i <= 20; i++) {
+      if (!document.querySelector(`input[name=bf_${i}]:checked`)) { errs.push('Big Five設問を全て回答してください'); break; }
+    }
+  }
+
+  return errs;
+}
+
+// === Submit ===
+let resultJson = '';
+function submitAtTier(tier) {
+  const errs = validate(tier);
+  if (errs.length) {
+    alert(errs.join('\n'));
+    return;
+  }
+  const data = collectData(tier);
+  resultJson = JSON.stringify(data, null, 2);
+  document.getElementById('insightForm').style.display = 'none';
+  document.getElementById('resultScreen').style.display = 'block';
+  document.getElementById('progressBar').style.width = '100%';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// === Copy ===
+function copyResult() {
+  navigator.clipboard.writeText(resultJson).then(() => {
+    const msg = document.getElementById('copyMsg');
+    msg.style.display = 'block';
+    setTimeout(() => msg.style.display = 'none', 2000);
+  });
+}
+
+// === LINE share ===
+function shareViaLine() {
+  const text = `Self-Insight 回答データ:\n${resultJson}`;
+  const url = 'https://line.me/R/share?text=' + encodeURIComponent(text);
+  window.open(url, '_blank');
+}
+</script>
+</body>
+</html>
