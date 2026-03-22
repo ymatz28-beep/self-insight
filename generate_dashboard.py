@@ -558,7 +558,7 @@ def _charts_js(p):
     comb_data = json.dumps([comb_by_year.get(y) for y in years])
 
     return f'''<script>
-const chartOpts=(ds)=>({{type:'line',data:ds,options:{{responsive:true,plugins:{{legend:{{display:false}}}},
+const chartOpts=(ds)=>({{type:'line',data:ds,options:{{responsive:true,animation:{{duration:1500,easing:'easeOutQuart'}},plugins:{{legend:{{display:false}}}},
   scales:{{x:{{ticks:{{color:'#7c8293',font:{{family:"'JetBrains Mono',monospace",size:11}}}},grid:{{color:'rgba(255,255,255,0.05)'}}}},
     y:{{min:0,max:110,ticks:{{display:false}},grid:{{color:'rgba(255,255,255,0.05)'}}}}}}
 }}}});
@@ -577,7 +577,7 @@ new Chart(document.getElementById('chartOverlay'),{{
     {{label:'六星占術',data:{twelve_data},borderColor:'#22c55e',fill:false,tension:0.4,borderWidth:2,pointRadius:4,pointBackgroundColor:'#22c55e'}},
     {{label:'霊合合成',data:{comb_data},borderColor:'#eab308',fill:false,tension:0.4,borderWidth:2,borderDash:[6,3],pointRadius:4,pointBackgroundColor:'#eab308'}}
   ]}},
-  options:{{responsive:true,maintainAspectRatio:false,interaction:{{mode:'index',intersect:false}},
+  options:{{responsive:true,maintainAspectRatio:false,animation:{{duration:1500,easing:'easeOutQuart'}},interaction:{{mode:'index',intersect:false}},
     plugins:{{legend:{{display:false}}}},
     scales:{{x:{{ticks:{{color:'#7c8293',font:{{family:"'JetBrains Mono',monospace",size:11}}}},grid:{{color:'rgba(255,255,255,0.05)'}}}},
       y:{{min:0,max:110,ticks:{{display:false}},grid:{{color:'rgba(255,255,255,0.05)'}}}}}}
@@ -602,7 +602,8 @@ CSS = '''<style>
   --r-sm:6px;--r-md:10px;--r-lg:14px;--r-xl:16px;--gnav-height:52px}
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
 html{font-size:16px;scroll-behavior:smooth;scroll-padding-top:calc(52px + 60px)}
-body{font-family:var(--font-body);background:var(--bg);color:var(--text);line-height:1.6;min-height:100vh}
+body{font-family:var(--font-body);background:var(--bg);color:var(--text);line-height:1.6;min-height:100vh;-webkit-font-smoothing:antialiased;position:relative}
+body::before{content:'';position:fixed;top:0;left:0;width:100%;height:100%;opacity:0.03;pointer-events:none;z-index:9999;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
 .container{max-width:1100px;margin:0 auto;padding:24px}
 .site-header{display:flex;align-items:center;justify-content:space-between;padding:0 24px;height:52px;background:rgba(22,24,31,0.85);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid rgba(255,255,255,0.08);position:sticky;top:0;z-index:100}
 .site-nav{display:flex;gap:4px}
@@ -618,7 +619,8 @@ body{font-family:var(--font-body);background:var(--bg);color:var(--text);line-he
 .nav-bar::-webkit-scrollbar{display:none}
 .nav-bar a{color:var(--text-muted);text-decoration:none;font-size:12px;font-weight:500;padding:14px 16px;white-space:nowrap;transition:color .2s,background .2s;border-radius:var(--r-sm)}
 .nav-bar a:hover,.nav-bar a.active{color:var(--accent);background:rgba(99,102,241,0.12)}
-.hero{background:linear-gradient(135deg,#1e1b4b,#312e81,#1e1b4b);border-radius:var(--r-xl);padding:40px 32px;margin-bottom:32px;border:1px solid var(--border);overflow:hidden}
+.hero{background:linear-gradient(135deg,#1e1b4b,#312e81,#1e1b4b);background-size:200% 200%;animation:heroShift 12s ease-in-out infinite;border-radius:var(--r-xl);padding:40px 32px;margin-bottom:32px;border:1px solid var(--border);overflow:hidden}
+@keyframes heroShift{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
 .hero h1{font-size:clamp(20px,2.5vw,26px);font-weight:700;margin-bottom:4px}
 .hero .subtitle{color:var(--text-muted);font-size:14px;margin-bottom:20px}
 .hero-chips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:20px}
@@ -721,7 +723,7 @@ body{font-family:var(--font-body);background:var(--bg);color:var(--text);line-he
 .domain-label{font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:0.5px}
 .domain-stars{font-family:var(--font-mono);font-size:13px;letter-spacing:1px}
 .page-footer{text-align:center;padding:32px 0;font-size:11px;color:var(--text-muted);border-top:1px solid var(--border);margin-top:40px}
-@media(max-width:768px){.grid{grid-template-columns:1fr}.pillar-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:768px){.grid{grid-template-columns:1fr}.pillar-grid{grid-template-columns:repeat(2,1fr)}.domain-grid{grid-template-columns:1fr}}
 @media(max-width:640px){
   .nav-toggle-label{display:inline-flex}
   .site-header{flex-wrap:wrap;gap:8px;padding:8px 12px;height:auto}
