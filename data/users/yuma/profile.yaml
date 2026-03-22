@@ -188,3 +188,186 @@ blood_type:
   traits:
     strengths: ["合理的思考と感性の共存", "冷静な分析力", "多角的視点", "適応力"]
     challenges: ["二面性による迷い", "感情の複雑さ", "他者から理解されにくい"]
+
+# === 2026 Monthly Fortune ===
+monthly_fortune:
+- domains:
+    health: 4
+    money: 4
+    romance: 4
+    work: 4
+  month: 1
+  nine_star:
+    energy: 65
+    note: 中吉・回復
+    palace: 震宮
+  rokusei:
+    energy: 95
+    phase: 安定
+    satsukai: null
+    type: great
+- domains:
+    health: 3
+    money: 2
+    romance: 3
+    work: 3
+  month: 2
+  nine_star:
+    energy: 75
+    note: 上昇運
+    palace: 巽宮
+  rokusei:
+    energy: 15
+    phase: 陰影
+    satsukai: 大殺界
+    type: danger
+- domains:
+    health: 3
+    money: 2
+    romance: 3
+    work: 3
+  month: 3
+  nine_star:
+    energy: 100
+    note: 大吉・最盛
+    palace: 中宮
+  rokusei:
+    energy: 10
+    phase: 停止
+    satsukai: 大殺界
+    type: danger
+- domains:
+    health: 3
+    money: 2
+    romance: 3
+    work: 3
+  month: 4
+  nine_star:
+    energy: 90
+    note: 大吉・最盛
+    palace: 乾宮
+  rokusei:
+    energy: 20
+    phase: 減退
+    satsukai: 大殺界
+    type: danger
+- domains:
+    health: 4
+    money: 4
+    romance: 4
+    work: 4
+  month: 5
+  nine_star:
+    energy: 80
+    note: 大吉・好調
+    palace: 兌宮
+  rokusei:
+    energy: 50
+    phase: 種子
+    satsukai: null
+    type: good
+- domains:
+    health: 3
+    money: 3
+    romance: 3
+    work: 3
+  month: 6
+  nine_star:
+    energy: 40
+    note: 吉凶混合
+    palace: 艮宮
+  rokusei:
+    energy: 65
+    phase: 緑生
+    satsukai: null
+    type: good
+- domains:
+    health: 4
+    money: 4
+    romance: 4
+    work: 4
+  month: 7
+  nine_star:
+    energy: 70
+    note: 上昇運
+    palace: 離宮
+  rokusei:
+    energy: 80
+    phase: 立花
+    satsukai: null
+    type: great
+- domains:
+    health: 1
+    money: 1
+    romance: 2
+    work: 2
+  month: 8
+  nine_star:
+    energy: 30
+    note: 中凶・注意
+    palace: 坎宮
+  rokusei:
+    energy: 35
+    phase: 健弱
+    satsukai: 小殺界
+    type: caution
+- domains:
+    health: 4
+    money: 4
+    romance: 4
+    work: 4
+  month: 9
+  nine_star:
+    energy: 45
+    note: 吉凶混合
+    palace: 坤宮
+  rokusei:
+    energy: 90
+    phase: 達成
+    satsukai: null
+    type: great
+- domains:
+    health: 3
+    money: 2
+    romance: 3
+    work: 3
+  month: 10
+  nine_star:
+    energy: 65
+    note: 中吉・回復
+    palace: 震宮
+  rokusei:
+    energy: 25
+    phase: 乱気
+    satsukai: 中殺界
+    type: caution
+- domains:
+    health: 4
+    money: 4
+    romance: 4
+    work: 4
+  month: 11
+  nine_star:
+    energy: 75
+    note: 上昇運
+    palace: 巽宮
+  rokusei:
+    energy: 70
+    phase: 再会
+    satsukai: null
+    type: good
+- domains:
+    health: 5
+    money: 5
+    romance: 5
+    work: 5
+  month: 12
+  nine_star:
+    energy: 100
+    note: 大吉・最盛
+    palace: 中宮
+  rokusei:
+    energy: 85
+    phase: 財成
+    satsukai: null
+    type: great

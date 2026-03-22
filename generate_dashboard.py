@@ -60,6 +60,7 @@ def _section_nav(has_personality):
         links += '<a href="#personality">Personality</a>'
     links += '<a href="#divination">占術プロファイル</a>'
     links += '<a href="#forecast-2026">2026 運勢</a>'
+    links += '<a href="#monthly">月間運勢</a>'
     return f'<nav class="nav-bar">{links}</nav>'
 
 
@@ -344,6 +345,95 @@ def _forecast(p):
 </section>'''
 
 
+def _monthly(p):
+    mf = p.get('monthly_fortune', [])
+    if not mf:
+        return ''
+    current_month = _date.today().month - 1  # 0-based
+
+    # Year timeline bar
+    timeline_colors = {
+        'great': 'rgba(34,197,94,0.5)', 'good': 'rgba(59,130,246,0.4)',
+        'caution': 'rgba(234,179,8,0.4)', 'danger': 'rgba(239,68,68,0.45)',
+    }
+    timeline = ''
+    for m in mf:
+        bg = timeline_colors.get(m['rokusei']['type'], 'rgba(99,102,241,0.3)')
+        timeline += f'<div class="yt-month" data-month="{m["month"]-1}" style="background:{bg}">{m["month"]}</div>'
+
+    # Month panels
+    panels_data = json.dumps([{
+        'month': f'{m["month"]}月',
+        'nineStarNote': m['nine_star']['note'],
+        'nineStarEnergy': m['nine_star']['energy'],
+        'rokuseiPhase': m['rokusei']['phase'],
+        'rokuseiType': m['rokusei']['type'],
+        'work': m['domains']['work'],
+        'money': m['domains']['money'],
+        'health': m['domains']['health'],
+        'romance': m['domains']['romance'],
+    } for m in mf])
+
+    return f'''<section class="section" id="monthly">
+  <h2 class="section-title">2026年 月間運勢</h2>
+  <p class="section-desc">九星気学の月宮位置 × 六星占術の月フェーズを統合し、4ドメインで分析</p>
+  <div class="year-timeline" id="yearTimeline">{timeline}</div>
+  <div class="month-selector" id="monthSelector"></div>
+  <div id="monthPanels"></div>
+</section>
+<script>
+const monthlyData={panels_data};
+const currentMonth={current_month};
+function starRating(n){{return'<span style="color:var(--yellow);">'+'★'.repeat(n)+'</span><span style="color:var(--border);">'+'★'.repeat(5-n)+'</span>';}}
+function phaseColor(t){{
+  if(t==='great')return{{bg:'rgba(34,197,94,0.12)',border:'rgba(34,197,94,0.3)',color:'#4ade80'}};
+  if(t==='good')return{{bg:'rgba(59,130,246,0.12)',border:'rgba(59,130,246,0.3)',color:'#60a5fa'}};
+  if(t==='caution')return{{bg:'rgba(234,179,8,0.12)',border:'rgba(234,179,8,0.3)',color:'#facc15'}};
+  return{{bg:'rgba(239,68,68,0.12)',border:'rgba(239,68,68,0.3)',color:'#f87171'}};
+}}
+const selEl=document.getElementById('monthSelector');
+const panEl=document.getElementById('monthPanels');
+monthlyData.forEach((m,i)=>{{
+  const btn=document.createElement('button');
+  btn.className='month-btn'+(i===currentMonth?' active current':'');
+  btn.textContent=m.month;btn.dataset.month=i;btn.onclick=()=>selectMonth(i);
+  selEl.appendChild(btn);
+  const pc=phaseColor(m.rokuseiType);
+  const panel=document.createElement('div');
+  panel.className='month-panel'+(i===currentMonth?' active':'');
+  panel.id='month-'+i;
+  panel.innerHTML=`<div class="card">
+    <div class="month-card-header">
+      <div class="month-label">${{m.month}}</div>
+      <div class="month-tags">
+        <span class="month-tag" style="background:rgba(99,102,241,0.15);color:#a5b4fc">九星: ${{m.nineStarNote}}</span>
+        <span class="month-tag" style="background:${{pc.bg}};color:${{pc.color}};border:1px solid ${{pc.border}}">六星: ${{m.rokuseiPhase}}</span>
+      </div>
+    </div>
+    <div class="domain-grid">
+      <div class="domain-card work"><div class="domain-icon-label"><div class="domain-label" style="color:var(--blue)">仕事</div><div class="domain-stars">${{starRating(m.work)}}</div></div></div>
+      <div class="domain-card money"><div class="domain-icon-label"><div class="domain-label" style="color:var(--gold)">お金</div><div class="domain-stars">${{starRating(m.money)}}</div></div></div>
+      <div class="domain-card health"><div class="domain-icon-label"><div class="domain-label" style="color:var(--green)">健康</div><div class="domain-stars">${{starRating(m.health)}}</div></div></div>
+      <div class="domain-card romance"><div class="domain-icon-label"><div class="domain-label" style="color:#f472b6">恋愛</div><div class="domain-stars">${{starRating(m.romance)}}</div></div></div>
+    </div>
+  </div>`;
+  panEl.appendChild(panel);
+}});
+function selectMonth(idx){{
+  document.querySelectorAll('.month-btn').forEach(b=>b.classList.remove('active'));
+  document.querySelectorAll('.month-panel').forEach(p=>p.classList.remove('active'));
+  document.querySelector(`.month-btn[data-month="${{idx}}"]`).classList.add('active');
+  document.getElementById('month-'+idx).classList.add('active');
+  document.querySelectorAll('.yt-month').forEach(m=>m.style.opacity='0.5');
+  document.querySelector(`.yt-month[data-month="${{idx}}"]`).style.opacity='1';
+}}
+document.querySelectorAll('.yt-month').forEach(el=>{{
+  el.addEventListener('click',()=>selectMonth(parseInt(el.dataset.month)));
+}});
+selectMonth(currentMonth);
+</script>'''
+
+
 def _footer(tier):
     gen_date = _date.today().isoformat()
     systems = '四柱推命 × 九星気学 × 六星占術 × 西洋占星術'
@@ -515,6 +605,31 @@ body{font-family:var(--font-body);background:var(--bg);color:var(--text);line-he
 .sho{background:rgba(234,179,8,0.1);color:var(--yellow)}
 .chart-wrap{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-md);padding:16px;margin:16px 0}
 .unlock-banner{background:rgba(234,179,8,0.08);border:1px dashed rgba(234,179,8,0.3);border-radius:var(--r-md);padding:16px 20px;font-size:12px;color:var(--yellow);text-align:center;margin-top:16px}
+.section-desc{font-size:13px;color:var(--text-muted);margin-bottom:16px}
+.year-timeline{display:flex;gap:2px;margin:16px 0}
+.yt-month{flex:1;height:24px;border-radius:3px;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:600;color:rgba(255,255,255,0.7);cursor:pointer;transition:all .2s}
+.yt-month:hover{transform:scaleY(1.3)}
+.month-selector{display:flex;gap:4px;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;padding:8px 0;margin-bottom:20px}
+.month-selector::-webkit-scrollbar{display:none}
+.month-btn{flex-shrink:0;padding:8px 14px;border-radius:8px;background:var(--surface);border:1px solid var(--border);color:var(--text-muted);font-size:12px;font-weight:600;cursor:pointer;transition:all .2s;white-space:nowrap;font-family:var(--font-body)}
+.month-btn:hover{background:var(--surface2);color:var(--text-secondary)}
+.month-btn.active{background:rgba(99,102,241,0.15);color:#a5b4fc;border-color:rgba(99,102,241,0.4)}
+.month-btn.current{box-shadow:0 0 0 1px rgba(99,102,241,0.5)}
+.month-panel{display:none}
+.month-panel.active{display:block}
+.month-card-header{display:flex;align-items:center;gap:12px;margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid var(--border)}
+.month-label{font-size:18px;font-weight:700;font-family:var(--font-mono)}
+.month-tags{display:flex;gap:6px;flex-wrap:wrap}
+.month-tag{font-size:10px;font-weight:500;padding:2px 8px;border-radius:10px}
+.domain-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.domain-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-md);padding:16px;border-left:3px solid var(--accent)}
+.domain-card.work{border-left-color:var(--blue)}
+.domain-card.money{border-left-color:var(--gold)}
+.domain-card.health{border-left-color:var(--green)}
+.domain-card.romance{border-left-color:#f472b6}
+.domain-icon-label{display:flex;align-items:center;gap:8px}
+.domain-label{font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:0.5px}
+.domain-stars{font-family:var(--font-mono);font-size:13px;letter-spacing:1px}
 .page-footer{text-align:center;padding:32px 0;font-size:11px;color:var(--text-muted);border-top:1px solid var(--border);margin-top:40px}
 @media(max-width:768px){.grid{grid-template-columns:1fr}.pillar-grid{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:640px){
@@ -557,6 +672,7 @@ def generate_html(p, tier=2):
 {_personality(p, tier)}
 {_divination(p)}
 {_forecast(p)}
+{_monthly(p)}
 {_footer(tier)}
 </div>
 {_charts_js(p)}
