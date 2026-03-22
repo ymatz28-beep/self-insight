@@ -17,11 +17,13 @@ def energy_bar_color(e):
     return '#ef4444'
 
 def generate_html(p, tier=2):
+    from datetime import date as _date
     name = p['identity']['name']
     birth = p['identity']['birth_date']
     age = p['identity'].get('age', '')
     blood = p['blood_type']['type']
     sex_label = {'male': '男性', 'female': '女性'}.get(p['identity'].get('sex', ''), '')
+    gen_date = _date.today().isoformat()
 
     # Four Pillars
     fp = p['four_pillars']
@@ -48,6 +50,11 @@ def generate_html(p, tier=2):
     # Blood type
     bt = p['blood_type']
 
+    # CliftonStrengths
+    sf = p.get('strengths_finder', {})
+    sf_top5 = sf.get('top5', [])
+    sf_domains = sf.get('domain_distribution', {})
+
     # Personality (Tier 2)
     pers = p.get('personality', {})
     ennea = pers.get('enneagram', {})
@@ -57,17 +64,22 @@ def generate_html(p, tier=2):
     # Enneagram type names
     ennea_names = {1:'完璧主義者',2:'援助者',3:'達成者',4:'個性派',5:'観察者',6:'忠実家',7:'楽天家',8:'挑戦者',9:'調停者'}
 
-    # HSP label
+    # HSP label mapping (supports both string and numeric)
     hsp_labels = {'low':'低感受性','medium':'中程度','high':'高感受性'}
+    hsp_score_map = {'low': 8, 'medium': 18, 'high': 25}
 
     # ADHD label
     adhd_labels = {'minimal':'低傾向','leaning':'やや傾向あり','significant':'傾向あり'}
+    adhd_tendency_map = {'minimal': 1, 'leaning': 3, 'significant': 5}
 
     # Current year cycle
     cur9 = next((c for c in cycle9 if c.get('current')), None)
     cur12 = next((c for c in cycle12 if c.get('current')), None)
     cur_sub = next((c for c in sub_cycle if c.get('current')), None) if sub_cycle else None
     cur_comb = next((c for c in combined if c.get('year') == 2026), None)
+
+    # Build sub_cycle lookup by year for table alignment
+    sub_by_year = {c['year']: c for c in sub_cycle} if sub_cycle else {}
 
     # Element bar data
     el_data = []
@@ -87,16 +99,50 @@ def generate_html(p, tier=2):
     comb_labels = [str(c['year']) for c in combined]
     comb_data = [c['score'] for c in combined]
 
+    # CliftonStrengths section
+    strengths_section = ''
+    if sf_top5:
+        domain_colors = {'Relationship Building':'#22c55e','Strategic Thinking':'#6366f1','Executing':'#8b5cf6','Influencing':'#f59e0b'}
+        sf_cards = ''
+        for s in sf_top5:
+            dc = domain_colors.get(s.get('domain',''), 'var(--accent)')
+            sf_cards += f'''<div class="card" style="border-left:3px solid {dc}">
+          <div class="card-label">#{s["rank"]}</div>
+          <div class="card-value" style="font-size:18px">{s["name"]}</div>
+          <div class="card-sub">{s["domain"]}</div>
+        </div>'''
+        # Domain distribution bars
+        domain_bars = ''
+        for dname, ranks in sf_domains.items():
+            dc = domain_colors.get(dname, 'var(--accent)')
+            top10_count = sum(1 for r in ranks if r <= 10)
+            domain_bars += f'''<div class="el-row">
+          <div style="width:120px;font-size:12px;color:var(--text2)">{dname}</div>
+          <div class="el-bar-bg"><div class="el-bar" style="width:{len(ranks)/34*100:.0f}%;background:{dc}"></div></div>
+          <div class="el-pct">{len(ranks)}</div>
+        </div>'''
+        strengths_section = f'''
+    <section id="strengths">
+      <h2 class="section-title">CliftonStrengths TOP5</h2>
+      <div class="card-grid">{sf_cards}</div>
+      <div style="margin-top:20px">
+        <div class="card-label" style="font-size:12px;color:var(--text3);margin-bottom:10px">ドメイン分布（34資質中）</div>
+        {domain_bars}
+      </div>
+    </section>'''
+
     personality_section = ''
     if tier >= 2 and ennea:
         etype = ennea.get('type', '?')
         ename = ennea_names.get(etype, '')
         ewing = ennea.get('wing', '')
-        hsp_score_label = hsp_labels.get(hsp.get('score', ''), '')
-        hsp_total = hsp.get('total', 0)
+        hsp_score_label = hsp_labels.get(hsp.get('score', ''), hsp.get('score', ''))
+        # Support both numeric and string HSP scores
+        hsp_total = hsp.get('total', hsp_score_map.get(hsp.get('score', ''), 0))
         hsp_max = hsp.get('max', 30)
-        adhd_label = adhd_labels.get(adhd.get('tendency', ''), '')
-        adhd_count = adhd.get('above_threshold_count', 0)
+        hsp_pct = int(hsp_total / hsp_max * 100) if hsp_max > 0 else 0
+        adhd_label = adhd_labels.get(adhd.get('tendency', ''), adhd.get('tendency', ''))
+        adhd_count = adhd.get('above_threshold_count', adhd_tendency_map.get(adhd.get('tendency', ''), 0))
 
         personality_section = f'''
     <section id="personality">
@@ -115,7 +161,7 @@ def generate_html(p, tier=2):
           <div class="card-value">{hsp_score_label}</div>
           <div class="card-sub">スコア: {hsp_total}/{hsp_max}</div>
           <div class="mini-bar" style="margin-top:10px">
-            <div class="mini-bar-fill" style="width:{int(hsp_total/hsp_max*100)}%;background:var(--accent)"></div>
+            <div class="mini-bar-fill" style="width:{hsp_pct}%;background:var(--accent)"></div>
           </div>
         </div>
         <div class="card">
@@ -233,6 +279,7 @@ footer{{text-align:center;padding:40px 0 20px;font-size:12px;color:var(--text3)}
 <body>
 
 <nav class="nav">
+  {"<a href='#strengths'>Strengths</a>" if sf_top5 else ""}
   <a href="#pillars">四柱推命</a>
   <a href="#ninestar">九星気学</a>
   <a href="#rokusei">六星占術</a>
@@ -255,6 +302,8 @@ footer{{text-align:center;padding:40px 0 20px;font-size:12px;color:var(--text3)}
       {f'<div class="chip"><b>Type {ennea.get("type","")}</b> {ennea_names.get(ennea.get("type",""),"")}</div>' if tier >= 2 and ennea else ''}
     </div>
   </div>
+
+  {strengths_section}
 
   <!-- Four Pillars -->
   <section id="pillars">
@@ -345,7 +394,7 @@ footer{{text-align:center;padding:40px 0 20px;font-size:12px;color:var(--text3)}
         {"".join(f"""<tr class="{'current' if c.get('current') else ''}">
           <td>{c['year']}</td>
           <td>{c['phase']}</td>
-          {f"<td>{sub_cycle[i]['phase'] if i < len(sub_cycle) else '-'}</td>" if rok.get("reigou") else ""}
+          {f"<td>{sub_by_year[c['year']]['phase'] if c['year'] in sub_by_year else '—'}</td>" if rok.get("reigou") else ""}
           <td>{f"<span class='殺界 dai'>{c['殺界']}</span>" if c.get('殺界') and '大' in str(c['殺界']) else f"<span class='殺界 chu'>{c['殺界']}</span>" if c.get('殺界') and '中' in str(c['殺界']) else f"<span class='殺界 sho'>{c['殺界']}</span>" if c.get('殺界') else '—'}</td>
           <td><span style="color:{energy_bar_color(c['energy'])}">{c['energy']}</span></td>
         </tr>""" for i, c in enumerate(cycle12))}
@@ -404,7 +453,7 @@ footer{{text-align:center;padding:40px 0 20px;font-size:12px;color:var(--text3)}
   </section>
 
   <footer>
-    AI Self-Insight v0.5 — Generated {p.get("identity",{}).get("birth_date","")}<br>
+    AI Self-Insight v0.5 — Generated {gen_date}<br>
     Powered by 四柱推命 × 九星気学 × 六星占術 × 西洋占星術 {"× エニアグラム × HSP × ADHD" if tier >= 2 else ""}
   </footer>
 
@@ -424,7 +473,7 @@ new Chart(document.getElementById('chart9'), {{
       fill: true,
       tension: 0.3,
       pointRadius: 5,
-      pointBackgroundColor: {['"#6366f1"' if str(c['year'])!='2026' else '"#22c55e"' for c in cycle9]}
+      pointBackgroundColor: [{','.join("'#22c55e'" if c.get('current') else "'#6366f1'" for c in cycle9)}]
     }}]
   }},
   options: {{
@@ -450,7 +499,7 @@ new Chart(document.getElementById('chart9'), {{
       fill: true,
       tension: 0.3,
       pointRadius: 5,
-      pointBackgroundColor: {['"#8b5cf6"' if str(c['year'])!='2026' else '"#22c55e"' for c in combined]}
+      pointBackgroundColor: [{','.join("'#22c55e'" if c.get('year')==2026 else "'#8b5cf6'" for c in combined)}]
     }}]
   }},
   options: {{

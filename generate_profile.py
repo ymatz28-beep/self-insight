@@ -803,6 +803,169 @@ def calc_big_five(answers):
 
 
 # ============================================================
+# Monthly Fortune (月運計算)
+# ============================================================
+
+# Note mapping for nine star energy levels
+NINE_STAR_NOTE_MAP = [
+    (90, "大吉・最盛"),
+    (80, "大吉・好調"),
+    (70, "上昇運"),
+    (60, "中吉・回復"),
+    (50, "小吉・転換"),
+    (40, "吉凶混合"),
+    (25, "中凶・注意"),
+    (0, "大凶"),
+]
+
+# Rokusei phase type mapping
+ROKUSEI_PHASE_TYPE = {
+    "立花": "great", "達成": "great", "安定": "great", "財成": "great",
+    "種子": "good", "緑生": "good", "再会": "good",
+    "健弱": "caution", "乱気": "caution",
+    "陰影": "danger", "停止": "danger", "減退": "danger",
+}
+
+
+def _nine_star_note(energy):
+    """Map nine star energy to descriptive note."""
+    for threshold, note in NINE_STAR_NOTE_MAP:
+        if energy >= threshold:
+            return note
+    return "大凶"
+
+
+def _year_star_group(star_number):
+    """Determine which month-star group a year star belongs to."""
+    if star_number in (1, 4, 7):
+        return "A"
+    elif star_number in (2, 5, 8):
+        return "B"
+    else:
+        return "C"
+
+
+def _domain_stars(combined, rokusei_phase, rokusei_satsukai):
+    """Calculate domain star ratings (1-5) from combined energy."""
+    # Work stars: direct mapping from combined
+    if combined >= 81:
+        work = 5
+    elif combined >= 61:
+        work = 4
+    elif combined >= 41:
+        work = 3
+    elif combined >= 21:
+        work = 2
+    else:
+        work = 1
+
+    # Money stars: slightly lower when rokusei has 殺界
+    money = work
+    if rokusei_satsukai:
+        money = max(1, money - 1)
+
+    # Health stars: lower when rokusei phase is 健弱 or combined is low
+    health = work
+    if rokusei_phase == "健弱":
+        health = max(1, health - 1)
+    if combined < 30:
+        health = max(1, health - 1)
+
+    # Romance stars: similar to work but slightly offset
+    if combined >= 85:
+        romance = 5
+    elif combined >= 65:
+        romance = 4
+    elif combined >= 45:
+        romance = 3
+    elif combined >= 25:
+        romance = 2
+    else:
+        romance = 1
+
+    return {"work": work, "money": money, "health": health, "romance": romance}
+
+
+def calc_monthly_fortune(person_year_star, rokusei_data, forecast_year):
+    """
+    Calculate monthly fortune for each month (1-12) of the forecast year.
+
+    Args:
+        person_year_star: The person's nine star ki year star number (1-9)
+        rokusei_data: The rokusei calculation result (contains twelve_year_cycle)
+        forecast_year: The year to forecast
+
+    Returns:
+        List of 12 monthly fortune dicts
+    """
+    # Determine forecast year's center star
+    forecast_center_star = calc_nine_star_year(forecast_year, 6, 1)
+    # Previous year's center star (for January)
+    prev_center_star = calc_nine_star_year(forecast_year - 1, 6, 1)
+
+    # Year star groups for monthly star lookup
+    forecast_group = _year_star_group(forecast_center_star)
+    prev_group = _year_star_group(prev_center_star)
+
+    # Find yearly phase index from twelve_year_cycle
+    yearly_phase_index = 0
+    twelve_year_cycle = rokusei_data.get("twelve_year_cycle", [])
+    for entry in twelve_year_cycle:
+        if entry.get("current"):
+            phase_name = entry["phase"]
+            yearly_phase_index = ROKUSEI_PHASES.index(phase_name)
+            break
+
+    monthly_fortune = []
+
+    for month_number in range(1, 13):
+        # --- Nine Star Ki monthly palace ---
+        if month_number == 1:
+            # January is before risshun, use previous year's center star
+            month_idx = 11  # Jan = index 11
+            group = prev_group
+            center_star = prev_center_star
+        else:
+            month_idx = (month_number - 2) % 12  # Feb=0, Mar=1, ..., Dec=10
+            group = forecast_group
+            center_star = forecast_center_star
+
+        monthly_center_star = MONTH_STAR_TABLE[group][month_idx]
+        palace_num = _calc_palace_position(person_year_star, monthly_center_star)
+        nine_star_energy = PALACE_ENERGY[palace_num]
+        nine_star_note = _nine_star_note(nine_star_energy)
+
+        # --- Rokusei monthly phase ---
+        rokusei_monthly_idx = (yearly_phase_index + 6 + month_number) % 12
+        rokusei_phase = ROKUSEI_PHASES[rokusei_monthly_idx]
+        rokusei_satsukai = ROKUSEI_PHASE_SATSUKAI.get(rokusei_phase)
+        rokusei_energy = ROKUSEI_PHASE_ENERGY[rokusei_phase]
+        rokusei_type = ROKUSEI_PHASE_TYPE[rokusei_phase]
+
+        # --- Domain star ratings ---
+        combined = (nine_star_energy + rokusei_energy) / 2
+        domains = _domain_stars(combined, rokusei_phase, rokusei_satsukai)
+
+        monthly_fortune.append({
+            "month": month_number,
+            "nine_star": {
+                "palace": PALACE_NAMES[palace_num],
+                "energy": nine_star_energy,
+                "note": nine_star_note,
+            },
+            "rokusei": {
+                "phase": rokusei_phase,
+                "satsukai": rokusei_satsukai,
+                "energy": rokusei_energy,
+                "type": rokusei_type,
+            },
+            "domains": domains,
+        })
+
+    return monthly_fortune
+
+
+# ============================================================
 # Profile Assembly
 # ============================================================
 
@@ -867,6 +1030,9 @@ def generate_profile(name, birth_date, blood_type,
     western = calc_western_astrology(month, day)
     bt = calc_blood_type(blood_type)
 
+    person_year_star = nine_star["year_star"]["number"]
+    monthly_fortune = calc_monthly_fortune(person_year_star, rokusei, forecast_year)
+
     return {
         "identity": identity,
         "personality": personality,
@@ -875,6 +1041,7 @@ def generate_profile(name, birth_date, blood_type,
         "rokusei": rokusei,
         "western_astrology": western,
         "blood_type": bt,
+        "monthly_fortune": monthly_fortune,
     }
 
 

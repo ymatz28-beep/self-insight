@@ -1,0 +1,303 @@
+# Self-Insight Profile — 周平
+# Generated: 2026-03-22
+
+identity:
+  name: 周平
+  birth_date: '1995-08-04'
+  birth_time: null
+  birth_place: 長野県
+  blood_type: A
+  age: 30
+  sex: male
+personality:
+  enneagram:
+    type: 2
+    name: The Helper
+    description: 人への奉仕と愛情。他者のニーズを察知する
+    wing: 6
+    growth_direction: 4
+    stress_direction: 8
+  hsp:
+    score: high
+    total: 22
+    max: 30
+    subscales:
+      sensory: 7
+      emotional: 7
+      social: 8
+  adhd:
+    tendency: significant
+    above_threshold_count: 4
+    total_items: 6
+  mbti: null
+four_pillars:
+  year_pillar:
+    stem:
+      char: 乙
+      element: Wood
+      yin_yang: Yin
+      reading: きのと
+    branch:
+      char: 亥
+      animal: Pig
+      element: Water
+      reading: い
+    full: 乙亥
+  month_pillar:
+    stem:
+      char: 甲
+      element: Wood
+      yin_yang: Yang
+      reading: きのえ
+    branch:
+      char: 申
+      animal: Monkey
+      element: Metal
+      reading: さる
+    full: 甲申
+  day_pillar:
+    stem:
+      char: 丁
+      element: Fire
+      yin_yang: Yin
+      reading: ひのと
+    branch:
+      char: 卯
+      animal: Rabbit
+      element: Wood
+      reading: う
+    full: 丁卯
+  hour_pillar: null
+  day_master:
+    char: 丁
+    element: Fire
+    yin_yang: Yin
+    description: 陰火 — ロウソクの炎。静かで温かく、人を照らす
+  five_elements_balance:
+    木:
+      count: 3
+      pct: 50
+      source: 乙(年干)+甲(月干)+卯(日支)
+    火:
+      count: 1
+      pct: 17
+      source: 丁(日干)
+    土:
+      count: 0
+      pct: 0
+      source: なし（時柱で補完の可能性）
+    金:
+      count: 1
+      pct: 17
+      source: 申(月支)
+    水:
+      count: 1
+      pct: 17
+      source: 亥(年支)
+  missing_elements:
+  - 土
+  element_insight: 土(安定・信頼)が欠如。意識的にこれらの要素を補う行動が有効
+nine_star_ki:
+  year_star:
+    number: 5
+    name: 五黄土星
+    element: Earth
+    direction: C
+  month_star:
+    number: 5
+    name: 五黄土星
+    element: Earth
+    direction: C
+  year_cycle:
+    center_star:
+      number: 1
+      name: 一白水星
+    position:
+      palace: 離宮
+      direction: S
+      meaning: 注目・離別
+  nine_year_cycle:
+  - year: 2024
+    palace: 兌宮
+    theme: 悦び・収穫
+    energy: 80
+  - year: 2025
+    palace: 艮宮
+    theme: 停滞・自己改革
+    energy: 40
+  - year: 2026
+    palace: 離宮
+    theme: 注目・離別
+    energy: 70
+    current: true
+  - year: 2027
+    palace: 坎宮
+    theme: 厄・試練
+    energy: 30
+  - year: 2028
+    palace: 坤宮
+    theme: 変化・準備
+    energy: 45
+  - year: 2029
+    palace: 震宮
+    theme: 発展・始動
+    energy: 65
+  - year: 2030
+    palace: 巽宮
+    theme: 整備・信用
+    energy: 75
+  - year: 2031
+    palace: 中宮
+    theme: 絶頂・転機
+    energy: 100
+  - year: 2032
+    palace: 乾宮
+    theme: 充実・実り
+    energy: 90
+rokusei:
+  main_star:
+    name: 土星人
+    polarity: '-'
+    reading: どせいじん マイナス
+  reigou: true
+  sub_star:
+    name: 天王星人
+    polarity: '-'
+    reading: てんのうせいじん マイナス
+  twelve_year_cycle:
+  - year: 2024
+    phase: 乱気
+    殺界: 中殺界
+    energy: 25
+  - year: 2025
+    phase: 再会
+    殺界: null
+    energy: 70
+  - year: 2026
+    phase: 財成
+    殺界: null
+    energy: 85
+    current: true
+  - year: 2027
+    phase: 安定
+    殺界: null
+    energy: 95
+  - year: 2028
+    phase: 陰影
+    殺界: 大殺界
+    energy: 15
+  - year: 2029
+    phase: 停止
+    殺界: 大殺界
+    energy: 10
+  - year: 2030
+    phase: 減退
+    殺界: 大殺界
+    energy: 20
+  - year: 2031
+    phase: 種子
+    殺界: null
+    energy: 50
+  - year: 2032
+    phase: 緑生
+    殺界: null
+    energy: 65
+  - year: 2033
+    phase: 立花
+    殺界: null
+    energy: 80
+  sub_star_cycle:
+  - year: 2024
+    phase: 財成
+    殺界: null
+    energy: 85
+  - year: 2025
+    phase: 安定
+    殺界: null
+    energy: 95
+  - year: 2026
+    phase: 陰影
+    殺界: 大殺界
+    energy: 15
+    current: true
+  - year: 2027
+    phase: 停止
+    殺界: 大殺界
+    energy: 10
+  - year: 2028
+    phase: 減退
+    殺界: 大殺界
+    energy: 20
+  - year: 2029
+    phase: 種子
+    殺界: null
+    energy: 50
+  - year: 2030
+    phase: 緑生
+    殺界: null
+    energy: 65
+  - year: 2031
+    phase: 立花
+    殺界: null
+    energy: 80
+  - year: 2032
+    phase: 健弱
+    殺界: 小殺界
+    energy: 35
+  - year: 2033
+    phase: 達成
+    殺界: null
+    energy: 90
+  reigou_combined:
+  - year: 2024
+    score: 43
+    label: 矛盾期
+  - year: 2025
+    score: 78
+    label: 絶好調
+  - year: 2026
+    score: 64
+    label: 矛盾期
+  - year: 2027
+    score: 70
+    label: 矛盾期
+  - year: 2028
+    score: 16
+    label: 最悪期
+  - year: 2029
+    score: 22
+    label: 危険期
+  - year: 2030
+    score: 34
+    label: 危険期
+  - year: 2031
+    score: 59
+    label: 回復開始
+  - year: 2032
+    score: 56
+    label: 回復開始
+  - year: 2033
+    score: 83
+    label: 絶好調
+western_astrology:
+  sun_sign:
+    sign: Leo
+    symbol: ♌
+    element: Fire
+    quality: Fixed
+  ruling_planet: Sun
+  ascendant: null
+  moon_sign: null
+blood_type:
+  type: A
+  population_pct: 40
+  traits:
+    strengths:
+    - 真面目で責任感が強い
+    - 計画性がある
+    - 協調性が高い
+    - 几帳面
+    challenges:
+    - 心配性
+    - 融通が利かない
+    - ストレスを溜めやすい
