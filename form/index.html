@@ -240,18 +240,27 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);line-height:
 
   <div class="field">
     <label>Wing（ウイング）<span class="req">*</span></label>
-    <div class="hint">1位に選んだタイプの隣接タイプのうち、より近いほうを選んでください</div>
+    <div class="hint">上で1位に選んだタイプには、両隣の番号からの影響があります。<br>例: 1位が「4. 個性派」なら、3（達成者）寄りか 5（観察者）寄りかを選びます。<br>どちらの傾向がより自分に近いですか？</div>
     <select id="wing">
       <option value="">-- 選択 --</option>
-      <option>1w9</option><option>1w2</option>
-      <option>2w1</option><option>2w3</option>
-      <option>3w2</option><option>3w4</option>
-      <option>4w3</option><option>4w5</option>
-      <option>5w4</option><option>5w6</option>
-      <option>6w5</option><option>6w7</option>
-      <option>7w6</option><option>7w8</option>
-      <option>8w7</option><option>8w9</option>
-      <option>9w8</option><option>9w1</option>
+      <option value="1w9">1 → 9寄り（穏やかで理想主義的）</option>
+      <option value="1w2">1 → 2寄り（人を助けたい気持ちが強い）</option>
+      <option value="2w1">2 → 1寄り（正義感が強く献身的）</option>
+      <option value="2w3">2 → 3寄り（社交的で成果を意識する）</option>
+      <option value="3w2">3 → 2寄り（人との関係を重視する）</option>
+      <option value="3w4">3 → 4寄り（内面的な深みがある）</option>
+      <option value="4w3">4 → 3寄り（表現力があり行動的）</option>
+      <option value="4w5">4 → 5寄り（内向的で探究心が強い）</option>
+      <option value="5w4">5 → 4寄り（独創的で感受性が強い）</option>
+      <option value="5w6">5 → 6寄り（慎重で分析的）</option>
+      <option value="6w5">6 → 5寄り（知識で不安に対処する）</option>
+      <option value="6w7">6 → 7寄り（楽観的で社交的）</option>
+      <option value="7w6">7 → 6寄り（責任感があり忠実）</option>
+      <option value="7w8">7 → 8寄り（大胆で決断力がある）</option>
+      <option value="8w7">8 → 7寄り（楽しみと挑戦を求める）</option>
+      <option value="8w9">8 → 9寄り（穏やかで包容力がある）</option>
+      <option value="9w8">9 → 8寄り（自己主張ができる）</option>
+      <option value="9w1">9 → 1寄り（理想と規律を持つ）</option>
     </select>
   </div>
 
