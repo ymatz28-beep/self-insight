@@ -1,7 +1,7 @@
 # Self-Insight — HANDOFF
 
 ## Last Updated
-2026-03-22 (session #12 — ダッシュボード書き換え+ナラティブ抽出試行→API障害で中断)
+2026-03-22 (session #14 — generate_dashboard.py読み取り中にAPI 502障害→/clearで終了。変更なし)
 
 ## Project Overview
 複数の占術（四柱推命・九星気学・六星占術・西洋占星術・干支）+ 心理学ツール（エニアグラム・HSP/ADHD特性・独自SF/MBTI代替）を統合した、徹底的にパーソナライズされた自己理解ダッシュボードサービス。有料SaaS展開を目指す。
@@ -165,22 +165,22 @@
   - ダッシュボードHTML（index.html 1296行）レビュー: CSS/構造+Personality Profile+占術プロファイル+月間運勢データ（2-6月の4ドメイン詳細テキスト+九星×六星統合インサイト）確認
   - form/index.html (v3) + generate_dashboard.py (v2) の編集あり（ファイルバックアップ記録）
   - API障害が長時間継続: 502×複数回 → ConnectionRefused/FailedToOpenSocket×10回リトライ上限×3サイクル以上。ユーザー「続けて」「止まってる？」「続き」で再試行するも全て失敗。最終的に/clearで終了
+- [x] **session #12 未コミット変更のコミット+push**（2026-03-22 session #12→cf2240b）
+  - generate_profile.py(+167行), generate_dashboard.py(+69行), index.html(+1行), test_calculations.py(+214行), data/users/shuhei/profile.yaml, data/users/yuma/profile.yaml, docs/form_questions.md, .gitignore 計+1752行
 
 ## In Progress
 - [ ] **generate_dashboard.py書き換え**: index.htmlのフル品質をプログラマティック生成に移行。Agent Bがタイムアウト(52分)で未完了。535行のまま（487→535は session #10の小規模変更）
 - [ ] **narratives.yaml作成**: index.htmlからナラティブテキスト（統合インサイト/CliftonStrengths/占術解説等）を構造化YAML化。計画のみで未着手（`data/users/yuma/` に `profile.yaml` のみ存在）
-- [ ] **generate_profile.py月間運勢計算**: 964→1130行に拡張済み（+167行差分、未コミット）。月間運勢計算ロジック追加
 
 ## Next Actions
-1. **未コミット変更のコミット+push**: generate_profile.py(+167行)、generate_dashboard.py(+69行)、index.html(+1行)の差分をコミット
-2. **narratives.yaml作成**: index.htmlから全ナラティブテキスト抽出 → `data/users/yuma/narratives.yaml` に構造化保存。ダッシュボードジェネレータがロードして使う設計
-3. **generate_dashboard.py強化**: 現535行をindex.html（1296行相当）のフル品質に段階的強化。セクション単位のEdit分割方式で実施（フルリライトはタイムアウトするため禁止）
-4. **パイプラインE2Eテスト**: `generate_profile.py → profile.yaml → generate_dashboard.py → HTML` の一気通貫動作確認
-5. **月運データの精度向上**: 九星気学の月別宮位置を正確に計算（OSSライブラリ or 暦テーブル）
-6. **ユニットテスト**: 占術計算の正確性検証（test_calculations.py 存在するが未確認）
-7. **独自診断フレームワーク設計**: MBTI/SF/エニアグラムの代替となる独自性格診断の設計
-8. **入力ページ設計**: 生年月日→血液型→性格診断→結果出力のUXフロー
-9. **改善アイデア: ナラティブ自動生成**: 新規ユーザー向けに、profile.yamlからLLM APIでナラティブテキストを自動生成するパイプライン追加（Yumaはindex.htmlから抽出、他ユーザーは自動生成）
+1. **narratives.yaml作成**: index.htmlから全ナラティブテキスト抽出 → `data/users/yuma/narratives.yaml` に構造化保存。ダッシュボードジェネレータがロードして使う設計
+2. **generate_dashboard.py強化**: 現535行をindex.html（1296行相当）のフル品質に段階的強化。セクション単位のEdit分割方式で実施（フルリライトはタイムアウトするため禁止）
+3. **パイプラインE2Eテスト**: `generate_profile.py → profile.yaml → generate_dashboard.py → HTML` の一気通貫動作確認
+4. **月運データの精度向上**: 九星気学の月別宮位置を正確に計算（OSSライブラリ or 暦テーブル）
+5. **ユニットテスト**: 占術計算の正確性検証（test_calculations.py +214行追加済み、実行確認未了）
+6. **独自診断フレームワーク設計**: MBTI/SF/エニアグラムの代替となる独自性格診断の設計
+7. **入力ページ設計**: 生年月日→血液型→性格診断→結果出力のUXフロー
+8. **改善アイデア: ナラティブ自動生成**: 新規ユーザー向けに、profile.yamlからLLM APIでナラティブテキストを自動生成するパイプライン追加（Yumaはindex.htmlから抽出、他ユーザーは自動生成）
 
 ## Key Decisions
 - 2ピラー構造: Timeless Identity + Year Forecast
@@ -217,4 +217,6 @@
 | 9 | 2026-03-21 | **Public→Private nav隔離監査**: kaizen-agentから全Public HTML（trip-planner 5件+property-report 7件）走査、Private URL混入ゼロを確認。renderer.py scope設計の正常動作を実証 |
 | 10 | 2026-03-22 | Phase 1パイプライン基盤構築(generate_profile.py 964行+generate_dashboard.py 487行+form/index.html)+ダッシュボードHTML全体レビュー → API障害(502/ConnectionRefused/FailedToOpenSocket)が3時間以上継続、10回リトライ上限×3サイクル到達。/clearで終了 |
 | 11 | 2026-03-22 | ステータス確認のみ。Phase 0→1移行中で止まっていることを確認。別セッションで対応中とのこと。コード変更なし |
-| 12 | 2026-03-22 | generate_profile.py月間運勢計算追加(964→1130行)+generate_dashboard.py小規模拡張(487→535行)。Agent Bダッシュボード書き換えタイムアウト(52分)。narratives.yaml計画策定→API 502障害(08:44-10:17)でユーザー中断。全変更未コミット |
+| 12 | 2026-03-22 | generate_profile.py月間運勢計算追加(964→1130行)+generate_dashboard.py小規模拡張(487→535行)。Agent Bダッシュボード書き換えタイムアウト(52分)。narratives.yaml計画策定→API 502障害(08:44-10:17)でユーザー中断。全変更コミット済み(cf2240b) |
+| 13 | 2026-03-22 | index.html月間運勢データ(8-12月)+JS描画コード読み取り中にAPI障害→/clearで終了。コード変更なし |
+| 14 | 2026-03-22 | generate_dashboard.py(536行)読み取り中にAPI 502障害→「別セッションと重複してないよね？」確認後/clearで終了。コード変更なし |
