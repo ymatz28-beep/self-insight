@@ -61,6 +61,7 @@ def _section_nav(has_personality):
     links += '<a href="#divination">占術プロファイル</a>'
     links += '<a href="#forecast-2026">2026 運勢</a>'
     links += '<a href="#monthly">月間運勢</a>'
+    links += '<a href="#cross">Cross Analysis</a>'
     return f'<nav class="nav-bar">{links}</nav>'
 
 
@@ -434,6 +435,92 @@ selectMonth(currentMonth);
 </script>'''
 
 
+def _cross_analysis(p):
+    """Cross Analysis — 強み×運気の掛け合わせ insight boxes."""
+    sf_top5 = p.get('strengths_finder', {}).get('top5', [])
+    pers = p.get('personality', {})
+    ennea = pers.get('enneagram', {})
+    hsp = pers.get('hsp', {})
+    adhd = pers.get('adhd', {})
+    dm = p['four_pillars']['day_master']
+    ys = p['nine_star_ki']['year_star']
+    west = p['western_astrology']['sun_sign']
+    bt = p['blood_type']
+    rok = p['rokusei']
+
+    # Build insight boxes from profile data
+    boxes = []
+
+    # 1. Empathy × HSP × Enneagram
+    if sf_top5 and ennea and hsp:
+        etype = ennea.get('type', '')
+        hsp_score = hsp.get('score', '')
+        boxes.append({
+            'title': f'Empathy × HSP × エニアグラム{etype}',
+            'text': f'CliftonStrengths 1位の共感性と{HSP_LABELS.get(hsp_score, hsp_score)}の感受性、'
+                    f'エニアグラムType {etype}の独自性追求が共鳴。'
+                    f'「人の感情を深く理解し、独自の視点で表現する力」を形成する。'
+                    f'この組み合わせはサービス設計においてユーザーの痛みを自分事として感じられるPMFの源泉。',
+        })
+
+    # 2. Intellection × ADHD × Day Master
+    if len(sf_top5) >= 2 and adhd:
+        adhd_label = ADHD_LABELS.get(adhd.get('tendency', ''), '')
+        boxes.append({
+            'title': f'Intellection × ADHD × {dm["char"]}火（陰火）',
+            'text': f'深い思考力（Intellection 2位）× {adhd_label}のADHD傾向 × '
+                    f'{dm["char"]}火（ロウソクの炎）。'
+                    f'環境を整えれば安定して燃え続けるが、刺激に弱い。'
+                    f'自動化で雑務を排除し、思考に没頭できる環境を作ることが最重要。',
+        })
+
+    # 3. Deliberative × Blood Type × Western
+    if len(sf_top5) >= 3:
+        boxes.append({
+            'title': f'Deliberative × {bt["type"]}型 × {west["sign"]} {west["quality"]}',
+            'text': f'慎重さ（3位）× {bt["type"]}型の合理的分析 × '
+                    f'{west["sign"]}の{west["quality"]}（不動宮）。'
+                    f'三重の慎重さは深い分析に基づく確実な意思決定を可能にする。'
+                    f'一方で「分析麻痺」に陥りやすく、行動が遅れるリスクもある。',
+        })
+
+    # 4. Connectedness × Nine Star × Current Year
+    cur9 = next((c for c in p['nine_star_ki'].get('nine_year_cycle', []) if c.get('current')), None)
+    if len(sf_top5) >= 4 and cur9:
+        boxes.append({
+            'title': f'Connectedness × {ys["name"]} × {cur9["palace"]}2026',
+            'text': f'全てを繋げて見る直感力（4位）× {ys["name"]}の社交力と言葉の力。'
+                    f'2026年の{cur9["palace"]}は「{cur9["theme"]}」の年 — '
+                    f'点在するプロジェクト群を繋ぎ、エコシステムを設計するのに最適なタイミング。',
+        })
+
+    # 5. Maximizer × Systems
+    if len(sf_top5) >= 5:
+        boxes.append({
+            'title': 'Maximizer × 3S原則 × 7つの習慣',
+            'text': '「良い→最高」の追求（5位）がOSそのもの。'
+                    '3S（Simple, Scalable, Sustainable）でフィルターし、'
+                    '第II領域（重要×非緊急）に集中投資する。'
+                    '「もっと良くできないか？」が止まらない性質は自動化・最適化の原動力。',
+        })
+
+    if not boxes:
+        return ''
+
+    # Build HTML
+    grid_items = ''
+    for b in boxes:
+        grid_items += f'''<div class="insight-box">
+      <div class="insight-title">{b["title"]}</div>
+      <p>{b["text"]}</p>
+    </div>'''
+
+    return f'''<section class="section" id="cross">
+  <h2 class="section-title">Cross Analysis — 強み×運気の掛け合わせ</h2>
+  <div class="grid">{grid_items}</div>
+</section>'''
+
+
 def _footer(tier):
     gen_date = _date.today().isoformat()
     systems = '四柱推命 × 九星気学 × 六星占術 × 西洋占星術'
@@ -605,6 +692,9 @@ body{font-family:var(--font-body);background:var(--bg);color:var(--text);line-he
 .sho{background:rgba(234,179,8,0.1);color:var(--yellow)}
 .chart-wrap{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-md);padding:16px;margin:16px 0}
 .unlock-banner{background:rgba(234,179,8,0.08);border:1px dashed rgba(234,179,8,0.3);border-radius:var(--r-md);padding:16px 20px;font-size:12px;color:var(--yellow);text-align:center;margin-top:16px}
+.insight-box{background:linear-gradient(135deg,rgba(99,102,241,0.08),rgba(139,92,246,0.06));border:1px solid rgba(99,102,241,0.2);border-radius:var(--r-md);padding:20px;margin-bottom:16px}
+.insight-box .insight-title{font-size:13px;font-weight:600;color:#a5b4fc;margin-bottom:8px}
+.insight-box p{font-size:13px;color:var(--text-secondary);line-height:1.7}
 .section-desc{font-size:13px;color:var(--text-muted);margin-bottom:16px}
 .year-timeline{display:flex;gap:2px;margin:16px 0}
 .yt-month{flex:1;height:24px;border-radius:3px;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:600;color:rgba(255,255,255,0.7);cursor:pointer;transition:all .2s}
@@ -673,6 +763,7 @@ def generate_html(p, tier=2):
 {_divination(p)}
 {_forecast(p)}
 {_monthly(p)}
+{_cross_analysis(p)}
 {_footer(tier)}
 </div>
 {_charts_js(p)}
