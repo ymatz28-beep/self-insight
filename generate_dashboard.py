@@ -903,11 +903,6 @@ def _core_identity(p):
         watch_sub = ''
 
     return f'''<section class="section" id="core-identity">
-  <div class="pillar-header">
-    <div class="pillar-icon" style="background:rgba(99,102,241,0.15);color:#a5b4fc">&#9733;</div>
-    <div><h2>あなたの本質</h2>
-      <div class="pillar-sub">6つの分析体系が示す、時代を超えたあなたの人物像</div></div>
-  </div>
   {_section_quote('core_identity')}
   {insight_html}
   <div class="grid grid-4" style="margin-top:16px">
@@ -930,7 +925,6 @@ def _core_identity(p):
 def _personality_locked():
     """Show locked skeleton + CTA for users without personality data."""
     return '''<section class="section" id="personality">
-  <h2 class="section-title">内なる才能の設計図</h2>
   <div class="personality-locked">
     <div class="locked-skeleton">
       <div class="locked-row"></div>
@@ -1044,7 +1038,6 @@ def _personality(p, tier):
     </div></div>'''
 
     return f'''<section class="section" id="personality">
-  <h2 class="section-title">内なる才能の設計図</h2>
   {_section_quote('personality')}
   {personality_summary}
   {sf_html}
@@ -1332,9 +1325,7 @@ def _divination(p):
     rarity_html = _rarity_badges(p)
 
     return f'''<section class="section" id="divination">
-  <h2 class="section-title">星が語ること</h2>
   {_section_quote('divination')}
-  <p class="section-desc">四柱推命・九星気学・六星占術・西洋占星術 — あなたの不変の本質的特性</p>
   {rarity_html}
 
   <div class="accordion-header open" onclick="toggleAccordion(this)"><h3 class="sub-title" style="border-top:none;padding-top:0;margin:0">四柱推命</h3></div>
@@ -1450,11 +1441,6 @@ def _forecast(p):
     </div>'''
 
     return f'''<section class="section" id="forecast-2026">
-  <div class="pillar-header">
-    <div class="pillar-icon" style="background:rgba(234,179,8,0.15);color:#facc15">&#9733;</div>
-    <div><h2>2026年 — いま、あなたはどこにいるか</h2>
-      <div class="pillar-sub">九星気学 × 六星占術 × 西洋占星術が示す年間の流れ</div></div>
-  </div>
   {_section_quote('forecast')}
   {year_theme}
   {cards}
@@ -1790,7 +1776,6 @@ def _monthly(p):
     } for m in mf], ensure_ascii=False)
 
     return f'''<section class="section" id="monthly">
-  <p class="section-desc">九星気学 × 六星占術 × 西洋占星術を統合し、4ドメインで月間運勢を分析</p>
   <div class="year-timeline" id="yearTimeline">{timeline}</div>
   <div class="month-selector" id="monthSelector"></div>
   <div id="monthPanels"></div>
@@ -1954,7 +1939,6 @@ def _cross_analysis(p):
     </div>'''
 
     return f'''<section class="section" id="cross">
-  <h2 class="section-title">才能 × 運命 — 交差点のインサイト</h2>
   {_section_quote('cross')}
   <div class="grid">{grid_items}</div>
 </section>'''
@@ -2060,7 +2044,6 @@ body::before{content:'';position:fixed;top:0;left:0;width:100%;height:100%;opaci
 .hub-card.expanded .hub-card-arrow{color:var(--accent)}
 .hub-card-content{max-height:0;overflow:hidden;transition:max-height .5s ease,padding .3s;padding:0 24px}
 .hub-card.expanded .hub-card-content{max-height:none;padding:0 24px 24px}
-.hub-card-content>section>.pillar-header:first-child,.hub-card-content>section>.section-title:first-child,.hub-card-content>div>.pillar-header:first-child{display:none}
 .chip{font-size:11px;font-weight:500;padding:4px 12px;border-radius:20px;background:rgba(255,255,255,0.08);color:var(--text-secondary);border:1px solid rgba(255,255,255,0.1)}
 .chip.hl{background:rgba(99,102,241,0.15);color:#a5b4fc;border-color:rgba(99,102,241,0.3)}
 .stats{display:flex;gap:24px;flex-wrap:wrap;justify-content:center}

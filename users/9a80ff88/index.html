@@ -61,7 +61,6 @@ body::before{content:'';position:fixed;top:0;left:0;width:100%;height:100%;opaci
 .hub-card.expanded .hub-card-arrow{color:var(--accent)}
 .hub-card-content{max-height:0;overflow:hidden;transition:max-height .5s ease,padding .3s;padding:0 24px}
 .hub-card.expanded .hub-card-content{max-height:none;padding:0 24px 24px}
-.hub-card-content>section>.pillar-header:first-child,.hub-card-content>section>.section-title:first-child,.hub-card-content>div>.pillar-header:first-child{display:none}
 .chip{font-size:11px;font-weight:500;padding:4px 12px;border-radius:20px;background:rgba(255,255,255,0.08);color:var(--text-secondary);border:1px solid rgba(255,255,255,0.1)}
 .chip.hl{background:rgba(99,102,241,0.15);color:#a5b4fc;border-color:rgba(99,102,241,0.3)}
 .stats{display:flex;gap:24px;flex-wrap:wrap;justify-content:center}
@@ -282,11 +281,6 @@ body::before{content:'';position:fixed;top:0;left:0;width:100%;height:100%;opaci
   </div>
   <div class="hub-card-content">
     <section class="section" id="core-identity">
-  <div class="pillar-header">
-    <div class="pillar-icon" style="background:rgba(99,102,241,0.15);color:#a5b4fc">&#9733;</div>
-    <div><h2>あなたの本質</h2>
-      <div class="pillar-sub">6つの分析体系が示す、時代を超えたあなたの人物像</div></div>
-  </div>
   <div class="section-quote">"あなたを一言で表すなら—"</div>
   <div class="insight-box" style="border-color:rgba(99,102,241,0.4);background:linear-gradient(135deg,rgba(99,102,241,0.12),rgba(139,92,246,0.08));">
     <div class="insight-title" style="font-size:15px;">統合インサイト</div>
@@ -343,7 +337,6 @@ body::before{content:'';position:fixed;top:0;left:0;width:100%;height:100%;opaci
   </div>
   <div class="hub-card-content">
     <section class="section" id="personality">
-  <h2 class="section-title">内なる才能の設計図</h2>
   <div class="section-quote">"才能は、使い方を知ったとき初めて力になる"</div>
   
   
@@ -360,9 +353,7 @@ body::before{content:'';position:fixed;top:0;left:0;width:100%;height:100%;opaci
   </div>
   <div class="hub-card-content">
     <section class="section" id="divination">
-  <h2 class="section-title">星が語ること</h2>
   <div class="section-quote">"2,000年の叡智が、あなたの星を読み解く"</div>
-  <p class="section-desc">四柱推命・九星気学・六星占術・西洋占星術 — あなたの不変の本質的特性</p>
   <div class="rarity-badges" style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px"><div class="rarity-badge">霊合星人は全人口の約10%。二つの星の影響を受ける稀少な存在です</div><div class="rarity-badge">日主「丁」（陰火）は十干の一つ。同じ本質を持つ人は約10%</div><div class="rarity-badge">五行「土」の欠如は、その分他の要素が強い証。個性の源泉</div></div>
 
   <div class="accordion-header open" onclick="toggleAccordion(this)"><h3 class="sub-title" style="border-top:none;padding-top:0;margin:0">四柱推命</h3></div>
@@ -491,11 +482,6 @@ body::before{content:'';position:fixed;top:0;left:0;width:100%;height:100%;opaci
   </div>
   <div class="hub-card-content">
     <section class="section" id="forecast-2026">
-  <div class="pillar-header">
-    <div class="pillar-icon" style="background:rgba(234,179,8,0.15);color:#facc15">&#9733;</div>
-    <div><h2>2026年 — いま、あなたはどこにいるか</h2>
-      <div class="pillar-sub">九星気学 × 六星占術 × 西洋占星術が示す年間の流れ</div></div>
-  </div>
   <div class="section-quote">"未来は決まっていない。しかし、流れは見える"</div>
   <div class="year-theme-banner">
     <div class="year-theme-label">2026年のテーマ</div>
@@ -539,7 +525,6 @@ body::before{content:'';position:fixed;top:0;left:0;width:100%;height:100%;opaci
   </div>
   <div class="hub-card-content">
     <section class="section" id="monthly">
-  <p class="section-desc">九星気学 × 六星占術 × 西洋占星術を統合し、4ドメインで月間運勢を分析</p>
   <div class="year-timeline" id="yearTimeline"><div class="yt-month" data-month="0" style="background:rgba(34,197,94,0.5)">1</div><div class="yt-month" data-month="1" style="background:rgba(234,179,8,0.4)">2</div><div class="yt-month" data-month="2" style="background:rgba(34,197,94,0.5)">3</div><div class="yt-month" data-month="3" style="background:rgba(234,179,8,0.4)">4</div><div class="yt-month" data-month="4" style="background:rgba(59,130,246,0.4)">5</div><div class="yt-month" data-month="5" style="background:rgba(34,197,94,0.5)">6</div><div class="yt-month" data-month="6" style="background:rgba(34,197,94,0.5)">7</div><div class="yt-month" data-month="7" style="background:rgba(239,68,68,0.45)">8</div><div class="yt-month" data-month="8" style="background:rgba(239,68,68,0.45)">9</div><div class="yt-month" data-month="9" style="background:rgba(239,68,68,0.45)">10</div><div class="yt-month" data-month="10" style="background:rgba(59,130,246,0.4)">11</div><div class="yt-month" data-month="11" style="background:rgba(59,130,246,0.4)">12</div></div>
   <div class="month-selector" id="monthSelector"></div>
   <div id="monthPanels"></div>
