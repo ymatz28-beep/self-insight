@@ -301,3 +301,213 @@ blood_type:
     - 心配性
     - 融通が利かない
     - ストレスを溜めやすい
+
+# === Interpretations (AI-generated narrative) ===
+interpretations:
+  integrated_insight:
+    - "あなたは<strong>人を照らす炎と、深い共感で支える力</strong>を持つ人です。四柱推命の日主「丁火」はロウソクの炎 — 周囲を温かく照らしながら、内に強い意志を秘めています。九星気学の五黄土星は九星の中心に位置する「帝王星」。この組み合わせが、<strong>強い求心力と献身的な愛情（エニアグラム2）で人を引きつけ、自然とリーダーシップを発揮する</strong>という稀有な能力を生んでいます。"
+    - "獅子座の「王者の輝き」、エニアグラム2の「他者への奉仕」、HSPの「繊細な感覚処理」— これらが<strong>人の心を察知し、的確に支え、存在感で場を照らす</strong>方向を指しています。獅子座の支配星である太陽は「自己表現と生命力」を司る星 — 周囲を元気づけるエネルギーがここから来ています。エニアグラム2（ウイング6）の「安全を確保した上で人に尽くす」特性が、単なる自己犠牲ではなく戦略的な貢献を可能にしています。"
+    - "A型の「真面目さ×計画性」が、土星人(−)の安定志向と共鳴する。天王星人(−)霊合のサブ影響が加わることで、<strong>堅実さの中に革新性を秘める</strong>という独自のバランスが生まれています。日本人口の40%を占めるA型の「協調性と几帳面さ」は、チームの中で信頼を積み上げる基盤。霊合星人として二つの星の影響を同時に受けるため、堅実な土星人と革新的な天王星人の間で揺れることもありますが、その振れ幅が多面的な魅力を生んでいます。"
+    - "<strong style=\"color:var(--yellow);\">注意すべきポイント — 全体系が一致する弱点</strong>: 五行で<strong>土（安定・信頼の基盤）が完全に欠如</strong>しており、地に足がつかない不安定さや、自分の居場所への不安として現れることがあります。HSPの繊細さとエニアグラム2の共感力は最大の強みですが、裏返すと<strong>他者のために自分を犠牲にしすぎて燃え尽きる</strong>リスクが常にあります。ADHD傾向が顕著（4/6項目該当）で、興味の移り変わりが激しく継続性に課題。エニアグラム2はストレス下でType 8（支配的・攻撃的）に向かう傾向があり、普段の穏やかさとのギャップが周囲を驚かせることがあります。"
+  strengths_ja: {}
+  personality:
+    enneagram: "人への奉仕と愛情の人。他者のニーズを言われる前に察知し、献身的に支える。ウイング6（忠実家）の影響で、信頼できる人間関係の構築を重視。健全時はType 4（個性派）に向かい、自分自身の感情やニーズにも目を向けられる。ストレス時はType 8（挑戦者）に向かい、攻撃的・支配的になる傾向。"
+    blood_type: "日本人口の40%。真面目で責任感が強く、計画性に優れる。協調性が高くチームプレイヤーとして信頼される。一方で心配性でストレスを溜めやすく、融通が利かない面も。「こうあるべき」という理想が高いため、自分にも他者にも厳しくなりがち。"
+    hsp: "高感受性（22/30点）。感覚処理・感情処理・社会的感受性のすべてが高水準。人の感情の変化を敏感に察知し、場の空気を読む力が非常に強い。しかしその分、ネガティブな環境からの影響も大きく受ける。社会的感受性（8/7/7）が最も高く、人間関係の微妙な変化にとくに敏感。"
+    adhd: "6項目中4項目該当（顕著な傾向）。興味のある対象への過集中と、そうでない作業への散漫さのギャップが大きい。新しいことへの飛びつきやすさ、マルチタスク傾向、時間管理の困難さが特徴。仕組み化とルーティン設計で補うことが効果的。"
+  four_pillars:
+    overview: "四柱推命は生年月日時の4つの柱から、先天的な性質・才能・人生の傾向を読み解く東洋最高峰の命術。各柱が人生の異なる側面を表します。"
+    year: "陰の草花（乙）と亥（猪・水）の組み合わせ。社会に対して柔軟で控えめな印象を与えるが、内面に水のような深い知恵と直感力を秘める。先祖から受け継いだ「穏やかに、しかし止まらない推進力」。"
+    month: "大木（甲）と申（猿・金）の組み合わせ。キャリアの柱に真っすぐな大木の誠実さと、猿の器用さ・知恵が同居。仕事では正道を歩みつつも機転が利く。甲木は日主の丁火を燃やす薪 — 仕事が情熱の燃料になる配置。"
+    day: "本質は陰火（丁）と卯（兎・木）。兎の穏やかさと木のエネルギーに支えられた炎 — 木が火を生む「相生」の関係で、エネルギーが尽きない構造。直感力が鋭く、人の心を照らす使命を持つ。"
+    day_master_detail: "ロウソクの炎。静かで温かく人を照らす。強い意志を内に秘め、感受性豊かで人の心の機微を感じ取る。丙火（太陽）のような自己主張ではなく、暗闇の中で必要な人にだけ光を届ける繊細な存在。五行で木が50%と最も多く、日主の丁火に絶えず薪を供給する構造 — エネルギッシュだが燃え尽きリスクにも注意。"
+  nine_star_ki:
+    year: "五黄土星は九星の中央に位置する「帝王星」。九星の中で最も強い求心力を持ち、周囲を自然と引きつけるカリスマ性があります。土の性質は「受容と安定」— すべてを受け入れる大地の力。リーダーシップは命令型ではなく、中心に座って全体を統合する「座長型」。ただし、その強さゆえに独善的になるリスクも。"
+    month: "月命星も五黄土星という珍しい二重の五黄。外面（本命星）も内面（月命星）も同じ「帝王の星」。表裏がなく、見た目の印象と内面が一致している。一貫した存在感があり、ブレない芯の強さが特徴。ただし、二重の五黄は頑固さも二倍 — 柔軟性を意識的に補う必要がある。"
+  rokusei:
+    main: "土星人(−)は安定志向で堅実な星人。着実に物事を積み上げていくタイプで、急な変化を好まない。忍耐力があり、長期的な視点で物事を進められる。(−)は偶数年生まれを示し、陰の性質（慎重・内省的）がベースにある。"
+    sub: "天王星人(−)は独創的で自由を愛する星人。既存の枠に収まらない発想力と、変化を恐れない冒険心を持つ。周囲からは「変わっている」と見られることもあるが、その独自の視点が革新を生む。"
+    reigou: "霊合星人として、土星人の堅実さと天王星人の革新性という相反する性質を同時に持つ。全人口の約16%が該当し、運気の振れ幅が通常の2倍。2026年はメイン星（土星人）が財成で好調だが、サブ星（天王星人）が陰影で大殺界入り — 矛盾する運気が同時進行する。表面的には好調に見えても、内面で不安定さを感じやすい年。2028年からはメイン星も大殺界に入るため、2026-2027年は重要な準備期間。"
+
+# === 2026 Monthly Fortune ===
+monthly_fortune:
+- domains:
+    health: 3
+    money: 3
+    romance: 3
+    work: 3
+  month: 1
+  nine_star:
+    energy: 30
+    note: 中凶・注意
+    palace: 坎宮
+  rokusei:
+    energy: 80
+    phase: 立花
+    satsukai: null
+    type: great
+- domains:
+    health: 1
+    money: 1
+    romance: 2
+    work: 2
+  month: 2
+  nine_star:
+    energy: 45
+    note: 吉凶混合
+    palace: 坤宮
+  rokusei:
+    energy: 35
+    phase: 健弱
+    satsukai: 小殺界
+    type: caution
+- domains:
+    health: 4
+    money: 4
+    romance: 4
+    work: 4
+  month: 3
+  nine_star:
+    energy: 65
+    note: 中吉・回復
+    palace: 震宮
+  rokusei:
+    energy: 90
+    phase: 達成
+    satsukai: null
+    type: great
+- domains:
+    health: 3
+    money: 2
+    romance: 3
+    work: 3
+  month: 4
+  nine_star:
+    energy: 75
+    note: 上昇運
+    palace: 巽宮
+  rokusei:
+    energy: 25
+    phase: 乱気
+    satsukai: 中殺界
+    type: caution
+- domains:
+    health: 5
+    money: 5
+    romance: 5
+    work: 5
+  month: 5
+  nine_star:
+    energy: 100
+    note: 大吉・最盛
+    palace: 中宮
+  rokusei:
+    energy: 70
+    phase: 再会
+    satsukai: null
+    type: good
+- domains:
+    health: 5
+    money: 5
+    romance: 5
+    work: 5
+  month: 6
+  nine_star:
+    energy: 90
+    note: 大吉・最盛
+    palace: 乾宮
+  rokusei:
+    energy: 85
+    phase: 財成
+    satsukai: null
+    type: great
+- domains:
+    health: 5
+    money: 5
+    romance: 5
+    work: 5
+  month: 7
+  nine_star:
+    energy: 80
+    note: 大吉・好調
+    palace: 兌宮
+  rokusei:
+    energy: 95
+    phase: 安定
+    satsukai: null
+    type: great
+- domains:
+    health: 1
+    money: 1
+    romance: 2
+    work: 2
+  month: 8
+  nine_star:
+    energy: 40
+    note: 吉凶混合
+    palace: 艮宮
+  rokusei:
+    energy: 15
+    phase: 陰影
+    satsukai: 大殺界
+    type: danger
+- domains:
+    health: 2
+    money: 1
+    romance: 2
+    work: 2
+  month: 9
+  nine_star:
+    energy: 70
+    note: 上昇運
+    palace: 離宮
+  rokusei:
+    energy: 10
+    phase: 停止
+    satsukai: 大殺界
+    type: danger
+- domains:
+    health: 1
+    money: 1
+    romance: 2
+    work: 2
+  month: 10
+  nine_star:
+    energy: 30
+    note: 中凶・注意
+    palace: 坎宮
+  rokusei:
+    energy: 20
+    phase: 減退
+    satsukai: 大殺界
+    type: danger
+- domains:
+    health: 3
+    money: 3
+    romance: 3
+    work: 3
+  month: 11
+  nine_star:
+    energy: 45
+    note: 吉凶混合
+    palace: 坤宮
+  rokusei:
+    energy: 50
+    phase: 種子
+    satsukai: null
+    type: good
+- domains:
+    health: 4
+    money: 4
+    romance: 4
+    work: 4
+  month: 12
+  nine_star:
+    energy: 65
+    note: 中吉・回復
+    palace: 震宮
+  rokusei:
+    energy: 65
+    phase: 緑生
+    satsukai: null
+    type: good

@@ -646,11 +646,11 @@ const chartOpts=(ds)=>({{type:'line',data:ds,options:{{responsive:true,animation
 }}}});
 new Chart(document.getElementById('chart9'),chartOpts({{
   labels:{chart9_labels},
-  datasets:[{{label:'九星気学',data:{chart9_data},borderColor:'#6366f1',backgroundColor:'rgba(99,102,241,0.1)',fill:true,tension:0.3,pointRadius:5,pointBackgroundColor:{chart9_colors}}}]
+  datasets:[{{label:'九星気学',data:{chart9_data},borderColor:'#6366f1',fill:false,tension:0.3,pointRadius:5,pointBackgroundColor:{chart9_colors}}}]
 }}));
 {f"""new Chart(document.getElementById('chartComb'),chartOpts({{
   labels:{comb_labels},
-  datasets:[{{label:'霊合統合',data:{comb_scores},borderColor:'#8b5cf6',backgroundColor:'rgba(139,92,246,0.1)',fill:true,tension:0.3,pointRadius:5,pointBackgroundColor:{comb_colors}}}]
+  datasets:[{{label:'霊合統合',data:{comb_scores},borderColor:'#8b5cf6',fill:false,tension:0.3,pointRadius:5,pointBackgroundColor:{comb_colors}}}]
 }}));""" if combined else ""}
 new Chart(document.getElementById('chartOverlay'),{{
   type:'line',
