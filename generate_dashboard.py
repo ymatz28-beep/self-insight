@@ -62,6 +62,67 @@ GNAV_LINKS = [
 ]
 
 
+def _get_archetype(p):
+    """Generate archetype name from profile data."""
+    dm = p['four_pillars']['day_master']
+    sf_top5 = p.get('strengths_finder', {}).get('top5', [])
+
+    # Map day master element to archetype prefix
+    dm_archetypes = {
+        '丁': 'Silent Flame', '丙': 'Radiant Sun',
+        '甲': 'Ancient Oak', '乙': 'Wild Flower',
+        '戊': 'Mountain', '己': 'Fertile Earth',
+        '庚': 'Steel Edge', '辛': 'Hidden Gem',
+        '壬': 'Deep Current', '癸': 'Morning Dew',
+    }
+
+    # Map top SF to archetype suffix
+    sf_suffixes = {
+        'Empathy': 'の共鳴者', 'Intellection': 'の探求者',
+        'Deliberative': 'の賢者', 'Connectedness': 'の紡ぎ手',
+        'Maximizer': 'の錬金術師', 'Futuristic': 'の予言者',
+        'Relator': 'の絆の人', 'Activator': 'の点火者',
+        'Command': 'の指揮官', 'Learner': 'の学究者',
+        'Strategic': 'の戦略家', 'Achiever': 'の達成者',
+        'Positivity': 'の太陽', 'Adaptability': 'の水の人',
+    }
+
+    prefix_en = dm_archetypes.get(dm.get('char', ''), 'The Seeker')
+    prefix_ja_map = {
+        'Silent Flame': '静かな炎', 'Radiant Sun': '輝く太陽',
+        'Ancient Oak': '古の大樹', 'Wild Flower': '野の花',
+        'Mountain': '不動の山', 'Fertile Earth': '豊穣の大地',
+        'Steel Edge': '鋼の刃', 'Hidden Gem': '隠された宝石',
+        'Deep Current': '深い流れ', 'Morning Dew': '朝露',
+    }
+    prefix_ja = prefix_ja_map.get(prefix_en, '探求者')
+
+    if sf_top5:
+        suffix = sf_suffixes.get(sf_top5[0]['name'], 'の探求者')
+    else:
+        suffix = 'の求道者'
+
+    archetype_ja = f'{prefix_ja}{suffix}'
+    return {'en': f'The {prefix_en}', 'ja': archetype_ja}
+
+
+def _get_archetype_tagline(p):
+    """Generate tagline from profile data."""
+    interp = p.get('interpretations', {})
+    hero = interp.get('hero', {})
+    tagline = hero.get('tagline', '')
+    if tagline:
+        return tagline
+
+    # Fallback tagline from profile traits
+    dm = p['four_pillars']['day_master']
+    sf_top5 = p.get('strengths_finder', {}).get('top5', [])
+    if sf_top5:
+        top_ja = SF_JA.get(sf_top5[0]['name'], sf_top5[0]['name'])
+        return f'深い{top_ja}で、本質を見抜く人'
+    return '静かに燃える、唯一の存在'
+
+
 def _gnav():
     links = '\n    '.join(
         f'<a href="{url}"{" aria-current=page" if label=="Self-Insight" else ""}>{label}</a>'
@@ -88,42 +149,92 @@ def _section_nav(has_personality):
 
 def _hero(p, tier):
     ident = p['identity']
-    interp = p.get('interpretations', {})
-    hero = interp.get('hero', {})
     rok = p['rokusei']
 
-    # Tagline
-    tagline = hero.get('tagline', '')
-    tagline_html = f'<div class="hero-tagline">「{tagline}」</div>' if tagline else ''
+    # Archetype
+    archetype = _get_archetype(p)
+    tagline = _get_archetype_tagline(p)
 
-    # Trait chips — human-readable with source labels
-    traits = hero.get('traits', [])
-    chips = ''
-    for t in traits:
-        chips += (f'<div class="hero-trait">'
-                  f'<div class="hero-trait-keyword">{t["keyword"]}</div>'
-                  f'<div class="hero-trait-detail">{t["detail"]}</div>'
-                  f'<div class="hero-trait-source">{t["source"]}</div>'
-                  f'</div>')
-
-    # Stat card — plain language
+    # Stat card — 2026 score
     cur_comb = next((c for c in rok.get('reigou_combined', []) if c.get('year') == 2026), None)
     stats = ''
     if cur_comb:
         score = cur_comb['score']
         label = cur_comb.get('label', '')
         stats = (f'<div class="stat-card">'
-                 f'<div class="label">2026年 総合運勢</div>'
-                 f'<div class="value" style="color:{energy_color(score)}">{label}</div>'
-                 f'<div class="stat-sub">{score} / 100</div>'
+                 f'<div class="label">2026年</div>'
+                 f'<div class="value" style="color:{energy_color(score)}">{label} {score}</div>'
                  f'</div>')
+    else:
+        # Fallback: use nine star cycle
+        nsk = p.get('nine_star_ki', {})
+        cur9 = next((c for c in nsk.get('nine_year_cycle', []) if c.get('current')), None)
+        if cur9:
+            stats = (f'<div class="stat-card">'
+                     f'<div class="label">2026年</div>'
+                     f'<div class="value" style="color:{energy_color(cur9["energy"])}">{cur9["palace"]}</div>'
+                     f'</div>')
+
+    # Hub card summaries
+    dm = p['four_pillars']['day_master']
+    ys = p['nine_star_ki']['year_star']
+    essence_sub = _get_essence_sub(dm, ys)
+    mf = p.get('monthly_fortune', [])
+    current_month_num = _date.today().month
+    cur_month = next((m for m in mf if m['month'] == current_month_num), None)
+
+    # Hub card 1: Core Identity
+    hub1_summary = f'{dm["char"]}火 × {ys["name"]} — {essence_sub}' if essence_sub else f'{dm["char"]}火 × {ys["name"]}'
+
+    # Hub card 2: Monthly fortune
+    hub2_summary = ''
+    if cur_month:
+        domains = cur_month['domains']
+        avg_stars = sum(domains.values()) / len(domains)
+        if avg_stars >= 4:
+            hub2_summary = f'{current_month_num}月 — 追い風。積極的に動ける'
+        elif avg_stars >= 3:
+            hub2_summary = f'{current_month_num}月 — 安定。地固めと準備の月'
+        elif avg_stars >= 2:
+            hub2_summary = f'{current_month_num}月 — 慎重に。守りを固める'
+        else:
+            hub2_summary = f'{current_month_num}月 — 充電。回復を優先する'
+    else:
+        hub2_summary = '月間運気データを読み込み中'
+
+    # Hub card 3: Action
+    sf_top5 = p.get('strengths_finder', {}).get('top5', [])
+    if sf_top5:
+        top_ja = SF_JA.get(sf_top5[0]['name'], sf_top5[0]['name'])
+        hub3_summary = f'{sf_top5[0]["name"]}（{top_ja}）を活かす'
+    else:
+        hub3_summary = '自分の本質を活かす行動指針'
 
     return f'''<section class="hero">
-  <h1>Self-Insight</h1>
-  <div class="subtitle">{ident["name"]} — AI自己分析ダッシュボード</div>
-  {tagline_html}
-  <div class="hero-traits">{chips}</div>
-  <div class="stats">{stats}</div>
+  <div class="hero-particles"></div>
+  <div class="hero-content">
+    <div class="archetype-en">{archetype["en"]}</div>
+    <h1 class="archetype-name">{archetype["ja"]}</h1>
+    <div class="hero-tagline">{tagline}</div>
+    <div class="stats">{stats}</div>
+    <div class="hub-cards-grid">
+      <div class="hub-card-mini" onclick="document.getElementById('core-identity').scrollIntoView({{behavior:'smooth'}});var c=document.querySelector('#core-identity').closest('.hub-card');if(c&&!c.classList.contains('expanded'))c.classList.add('expanded');">
+        <div class="hub-card-mini-icon" style="background:rgba(99,102,241,0.15);color:#a5b4fc">&#9733;</div>
+        <div><div class="hub-card-mini-title">あなたの本質</div>
+        <div class="hub-card-mini-summary">{hub1_summary}</div></div>
+      </div>
+      <div class="hub-card-mini" onclick="document.getElementById('this-month').scrollIntoView({{behavior:'smooth'}});var c=document.querySelector('#this-month').closest('.hub-card');if(c&&!c.classList.contains('expanded'))c.classList.add('expanded');">
+        <div class="hub-card-mini-icon" style="background:rgba(234,179,8,0.15);color:#facc15">&#9670;</div>
+        <div><div class="hub-card-mini-title">今月の運気</div>
+        <div class="hub-card-mini-summary">{hub2_summary}</div></div>
+      </div>
+      <div class="hub-card-mini" onclick="document.getElementById('blueprint').scrollIntoView({{behavior:'smooth'}});var c=document.querySelector('#blueprint').closest('.hub-card');if(c&&!c.classList.contains('expanded'))c.classList.add('expanded');">
+        <div class="hub-card-mini-icon" style="background:rgba(139,92,246,0.15);color:#c4b5fd">&#9829;</div>
+        <div><div class="hub-card-mini-title">今日のアクション</div>
+        <div class="hub-card-mini-summary">{hub3_summary}</div></div>
+      </div>
+    </div>
+  </div>
 </section>'''
 
 
@@ -599,8 +710,8 @@ def _action_blueprint(p):
       <div class="blueprint-desc">{item['desc']}</div>
     </div>'''
 
-    return f'''<div class="blueprint-section">
-  <div class="blueprint-header">この特性を活かすには</div>
+    return f'''<div class="blueprint-section" id="blueprint">
+  <div class="blueprint-header">明日からできること</div>
   <div class="blueprint-grid">{cards_html}</div>
 </div>'''
 
@@ -690,7 +801,7 @@ def _core_identity(p):
     return f'''<section class="section" id="core-identity">
   <div class="pillar-header">
     <div class="pillar-icon" style="background:rgba(99,102,241,0.15);color:#a5b4fc">&#9733;</div>
-    <div><h2>Core Identity（自己本質）— あなたはこういう人</h2>
+    <div><h2>あなたの本質</h2>
       <div class="pillar-sub">6つの分析体系が示す、時代を超えたあなたの人物像</div></div>
   </div>
   {_section_quote('core_identity')}
@@ -788,7 +899,7 @@ def _personality(p, tier):
     </div></div>'''
 
     return f'''<section class="section" id="personality">
-  <h2 class="section-title">Personality Profile（性格プロファイル）</h2>
+  <h2 class="section-title">才能と性格の地図</h2>
   {_section_quote('personality')}
   {sf_html}
 </section>'''
@@ -1004,7 +1115,7 @@ def _divination(p):
     rarity_html = _rarity_badges(p)
 
     return f'''<section class="section" id="divination">
-  <h2 class="section-title">占術プロファイル</h2>
+  <h2 class="section-title">星が語ること</h2>
   {_section_quote('divination')}
   <p class="section-desc">四柱推命・九星気学・六星占術・西洋占星術 — あなたの不変の本質的特性</p>
   {rarity_html}
@@ -1094,7 +1205,7 @@ def _forecast(p):
     return f'''<section class="section" id="forecast-2026">
   <div class="pillar-header">
     <div class="pillar-icon" style="background:rgba(234,179,8,0.15);color:#facc15">&#9733;</div>
-    <div><h2>2026年 運勢フォーキャスト</h2>
+    <div><h2>2026年 — いま、あなたはどこにいるか</h2>
       <div class="pillar-sub">九星気学 × 六星占術が示す年間の流れ</div></div>
   </div>
   {_section_quote('forecast')}
@@ -1390,7 +1501,7 @@ def _monthly(p):
     } for m in mf], ensure_ascii=False)
 
     return f'''<section class="section" id="monthly">
-  <h2 class="section-title">2026年 月間運勢</h2>
+  <h2 class="section-title">月の流れ</h2>
   {_section_quote('monthly')}
   <p class="section-desc">九星気学の月宮位置 × 六星占術の月フェーズを統合し、4ドメインで分析</p>
   <div class="year-timeline" id="yearTimeline">{timeline}</div>
@@ -1554,7 +1665,7 @@ def _cross_analysis(p):
     </div>'''
 
     return f'''<section class="section" id="cross">
-  <h2 class="section-title">Cross Analysis（クロス分析）— 強み×運気の掛け合わせ</h2>
+  <h2 class="section-title">才能 × 運命 — 交差点のインサイト</h2>
   {_section_quote('cross')}
   <div class="grid">{grid_items}</div>
 </section>'''
@@ -1562,12 +1673,9 @@ def _cross_analysis(p):
 
 def _footer(tier):
     gen_date = _date.today().isoformat()
-    systems = '四柱推命 × 九星気学 × 六星占術 × 西洋占星術'
-    if tier >= 2:
-        systems += ' × CliftonStrengths（強み診断）× Enneagram（エニアグラム）'
     return f'''<footer class="page-footer">
-  <div>Self-Insight v0.5 — Phase 0→1</div>
-  <div style="margin-top:4px">Generated {gen_date} | {systems}</div>
+  <div>Self-Insight — Powered by AI × 東洋占術 × 心理学</div>
+  <div style="margin-top:4px;font-size:10px">Generated {gen_date}</div>
 </footer>'''
 
 
@@ -1602,13 +1710,6 @@ new Chart(document.getElementById('chartOverlay'),{{
       y:{{min:0,max:110,ticks:{{display:false}},grid:{{color:'rgba(255,255,255,0.05)'}}}}}}
   }}
 }});
-const sections=document.querySelectorAll('.section[id]');
-const navLinks=document.querySelectorAll('.nav-bar a');
-const observer=new IntersectionObserver((entries)=>{{
-  entries.forEach(e=>{{if(e.isIntersecting){{navLinks.forEach(l=>l.classList.remove('active'));
-    const link=document.querySelector(`.nav-bar a[href="#${{e.target.id}}"]`);if(link)link.classList.add('active');}}}});
-}},{{threshold:0.2,rootMargin:'-80px 0px -60% 0px'}});
-sections.forEach(s=>observer.observe(s));
 const fadeObserver=new IntersectionObserver((entries)=>{{entries.forEach(e=>{{if(e.isIntersecting){{e.target.classList.add('visible');fadeObserver.unobserve(e.target);}}}});}},{{threshold:0.1,rootMargin:'0px 0px -40px 0px'}});
 document.querySelectorAll('.section').forEach(s=>fadeObserver.observe(s));
 function toggleAccordion(el){{el.classList.toggle('open');const body=el.nextElementSibling;if(body)body.classList.toggle('open');}}
@@ -1623,7 +1724,7 @@ CSS = '''<style>
   --font-body:'Inter','Noto Sans JP',sans-serif;--font-mono:'JetBrains Mono',monospace;
   --r-sm:6px;--r-md:10px;--r-lg:14px;--r-xl:16px;--gnav-height:52px}
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
-html{font-size:16px;scroll-behavior:smooth;scroll-padding-top:calc(52px + 60px)}
+html{font-size:16px;scroll-behavior:smooth;scroll-padding-top:60px}
 body{font-family:var(--font-body);background:var(--bg);color:var(--text);line-height:1.6;min-height:100vh;-webkit-font-smoothing:antialiased;position:relative}
 body::before{content:'';position:fixed;top:0;left:0;width:100%;height:100%;opacity:0.03;pointer-events:none;z-index:9999;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
 .container{max-width:1100px;margin:0 auto;padding:24px}
@@ -1641,26 +1742,43 @@ body::before{content:'';position:fixed;top:0;left:0;width:100%;height:100%;opaci
 .nav-bar::-webkit-scrollbar{display:none}
 .nav-bar a{color:var(--text-muted);text-decoration:none;font-size:12px;font-weight:500;padding:14px 16px;white-space:nowrap;transition:color .2s,background .2s;border-radius:var(--r-sm)}
 .nav-bar a:hover,.nav-bar a.active{color:var(--accent);background:rgba(99,102,241,0.12)}
-.hero{background:linear-gradient(135deg,#1e1b4b,#312e81,#1e1b4b);background-size:200% 200%;animation:heroShift 12s ease-in-out infinite;border-radius:var(--r-xl);padding:40px 32px;margin-bottom:32px;border:1px solid var(--border);overflow:hidden}
+.hero{background:linear-gradient(135deg,#1e1b4b,#312e81,#1e1b4b);background-size:200% 200%;animation:heroShift 12s ease-in-out infinite;border-radius:var(--r-xl);padding:48px 32px;margin-bottom:32px;border:1px solid var(--border);overflow:hidden;position:relative;text-align:center}
 @keyframes heroShift{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
-.hero h1{font-size:clamp(20px,2.5vw,26px);font-weight:700;margin-bottom:4px}
-.hero .subtitle{color:var(--text-muted);font-size:14px;margin-bottom:20px}
-.hero-tagline{font-size:clamp(15px,2vw,18px);font-weight:600;color:#e0e7ff;margin-bottom:24px;line-height:1.6}
-.hero-traits{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin-bottom:24px}
-.hero-trait{background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:var(--r-md);padding:14px 16px;transition:transform .2s}
-.hero-trait:hover{transform:translateY(-2px)}
-.hero-trait-keyword{font-size:14px;font-weight:600;color:#e0e7ff;margin-bottom:4px}
-.hero-trait-detail{font-size:12px;color:var(--text-secondary);line-height:1.5;margin-bottom:6px}
-.hero-trait-source{font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.5px}
+.hero-content{position:relative;z-index:2}
+.hero-particles{position:absolute;top:0;left:0;width:100%;height:100%;overflow:hidden;z-index:1}
+.hero-particles::before,.hero-particles::after{content:'';position:absolute;border-radius:50%;animation:float 8s infinite ease-in-out}
+.hero-particles::before{width:3px;height:3px;background:rgba(165,180,252,0.3);top:20%;left:15%;animation-delay:0s;box-shadow:180px 40px 0 rgba(165,180,252,0.15),320px -20px 0 rgba(196,181,253,0.12),450px 60px 0 1px rgba(99,102,241,0.1)}
+.hero-particles::after{width:2px;height:2px;background:rgba(196,181,253,0.25);top:60%;left:75%;animation-delay:3s;box-shadow:-200px -30px 0 rgba(99,102,241,0.15),-100px 20px 0 1px rgba(165,180,252,0.1)}
+@keyframes float{0%,100%{transform:translateY(0) scale(1);opacity:0.3}50%{transform:translateY(-30px) scale(1.5);opacity:0.8}}
+.archetype-en{font-size:13px;font-weight:500;color:rgba(165,180,252,0.7);text-transform:uppercase;letter-spacing:3px;margin-bottom:8px}
+.archetype-name{font-size:clamp(24px,4vw,32px);font-weight:700;color:#e0e7ff;margin-bottom:8px;text-shadow:0 0 40px rgba(99,102,241,0.4),0 0 80px rgba(99,102,241,0.15);line-height:1.3}
+.hero-tagline{font-size:clamp(14px,2vw,16px);font-style:italic;color:rgba(224,231,255,0.7);margin-bottom:28px;line-height:1.6}
+.hub-cards-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-top:24px;text-align:left}
+.hub-card-mini{display:flex;align-items:center;gap:12px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:var(--r-md);padding:14px 16px;cursor:pointer;transition:transform .2s,background .2s}
+.hub-card-mini:hover{transform:translateY(-2px);background:rgba(255,255,255,0.09)}
+.hub-card-mini-icon{width:36px;height:36px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
+.hub-card-mini-title{font-size:13px;font-weight:600;color:#e0e7ff}
+.hub-card-mini-summary{font-size:11px;color:rgba(224,231,255,0.5);margin-top:2px;line-height:1.4}
 .stat-sub{font-size:12px;color:var(--text-secondary);margin-top:2px;font-family:var(--font-mono)}
+.hub-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);margin-bottom:16px;overflow:hidden;transition:all .3s}
+.hub-card-preview{display:flex;align-items:center;gap:16px;padding:20px 24px;cursor:pointer;transition:background .2s}
+.hub-card-preview:hover{background:rgba(255,255,255,0.02)}
+.hub-card-icon{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.hub-card-title{font-size:16px;font-weight:600}
+.hub-card-summary{font-size:13px;color:var(--text-secondary);margin-top:2px}
+.hub-card-arrow{font-size:14px;color:var(--text-muted);transition:transform .3s;margin-left:auto}
+.hub-card.expanded .hub-card-arrow{transform:rotate(90deg)}
+.hub-card-content{max-height:0;overflow:hidden;transition:max-height .5s ease,padding .3s;padding:0 24px}
+.hub-card.expanded .hub-card-content{max-height:none;padding:0 24px 24px}
 .chip{font-size:11px;font-weight:500;padding:4px 12px;border-radius:20px;background:rgba(255,255,255,0.08);color:var(--text-secondary);border:1px solid rgba(255,255,255,0.1)}
 .chip.hl{background:rgba(99,102,241,0.15);color:#a5b4fc;border-color:rgba(99,102,241,0.3)}
-.stats{display:flex;gap:24px;flex-wrap:wrap}
+.stats{display:flex;gap:24px;flex-wrap:wrap;justify-content:center}
 .stat-card{background:rgba(255,255,255,0.05);border-radius:var(--r-md);padding:12px 20px;backdrop-filter:blur(10px)}
 .stat-card .label{font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.5px}
 .stat-card .value{font-size:20px;font-weight:700;font-family:var(--font-mono);margin-top:2px}
 .section{margin-bottom:40px;opacity:0;transform:translateY(20px);transition:opacity 0.6s ease,transform 0.6s ease}
 .section.visible{opacity:1;transform:translateY(0)}
+.hub-card-content .section{margin-bottom:0;opacity:1;transform:none;transition:none}
 .section-title{font-size:clamp(16px,2vw,22px);font-weight:700;margin-bottom:20px;padding-left:12px;border-left:3px solid var(--accent)}
 .sub-title{font-size:15px;font-weight:600;color:var(--text-secondary);margin:24px 0 12px;padding-top:16px;border-top:1px solid var(--border)}
 .pillar-header{display:flex;align-items:center;gap:12px;margin-bottom:24px;padding-bottom:16px;border-bottom:1px solid var(--border)}
@@ -1797,7 +1915,7 @@ body::before{content:'';position:fixed;top:0;left:0;width:100%;height:100%;opaci
 .collapse-toggle:hover{background:rgba(99,102,241,0.2)}
 .top5-item[style*=cursor]{transition:background .15s}
 .top5-item[style*=cursor]:hover{background:rgba(255,255,255,0.03);border-radius:var(--r-sm)}
-@media(max-width:768px){.grid{grid-template-columns:1fr}.pillar-grid{grid-template-columns:repeat(2,1fr)}.domain-grid{grid-template-columns:1fr}.guidance-actions-grid{grid-template-columns:1fr}.blueprint-grid{grid-template-columns:1fr}}
+@media(max-width:768px){.grid{grid-template-columns:1fr}.pillar-grid{grid-template-columns:repeat(2,1fr)}.domain-grid{grid-template-columns:1fr}.guidance-actions-grid{grid-template-columns:1fr}.blueprint-grid{grid-template-columns:1fr}.hub-cards-grid{grid-template-columns:1fr}}
 @media(max-width:640px){
   .nav-toggle-label{display:inline-flex}
   .site-header{flex-wrap:wrap;gap:8px;padding:8px 12px;height:auto}
@@ -1808,9 +1926,10 @@ body::before{content:'';position:fixed;top:0;left:0;width:100%;height:100%;opaci
   .nav-toggle:checked+.nav-toggle-label span::after{top:0;transform:rotate(-45deg)}
   .site-nav a{padding:8px 12px;font-size:12px;min-height:44px}
   .container{padding:12px}
-  .hero{padding:20px 16px;border-radius:var(--r-md)}
-  .hero-traits{grid-template-columns:repeat(2,1fr);gap:8px}
-  .hero-trait{padding:10px 12px}
+  .hero{padding:28px 16px;border-radius:var(--r-md)}
+  .hub-card-preview{padding:16px}
+  .hub-card-content{padding:0 16px}
+  .hub-card.expanded .hub-card-content{padding:0 16px 16px}
   .stats{gap:8px}.stat-card{padding:8px 12px}
   .stat-card .value{font-size:16px}
   .pillar .kanji{font-size:22px}
@@ -1818,15 +1937,115 @@ body::before{content:'';position:fixed;top:0;left:0;width:100%;height:100%;opaci
 </style>'''
 
 
-def generate_html(p, tier=2, show_gnav=True):
+def _hub_card(section_id, icon, icon_bg, icon_color, title, summary, content, expanded=False):
+    """Wrap a section in a collapsible hub card."""
+    exp_cls = ' expanded' if expanded else ''
+    return f'''<div class="hub-card{exp_cls}" id="{section_id}-card">
+  <div class="hub-card-preview" onclick="this.parentElement.classList.toggle('expanded')">
+    <div class="hub-card-icon" style="background:{icon_bg};color:{icon_color}">{icon}</div>
+    <div>
+      <div class="hub-card-title">{title}</div>
+      <div class="hub-card-summary">{summary}</div>
+    </div>
+    <div class="hub-card-arrow">&#9656;</div>
+  </div>
+  <div class="hub-card-content">
+    {content}
+  </div>
+</div>'''
+
+
+def generate_html(p, tier=2, show_gnav=False):
     name = p['identity']['name']
+    archetype = _get_archetype(p)
     gnav_html = _gnav() if show_gnav else ''
+
+    # Generate all sections
+    dm = p['four_pillars']['day_master']
+    ys = p['nine_star_ki']['year_star']
+    essence_sub = _get_essence_sub(dm, ys)
+
+    core_id_content = _core_identity(p)
+    core_summary = f'{dm["char"]}火 × {ys["name"]} — {essence_sub}' if essence_sub else f'{dm["char"]}火 × {ys["name"]}'
+
+    this_month_content = _this_month_guidance(p)
+    mf = p.get('monthly_fortune', [])
+    current_month_num = _date.today().month
+    cur_month = next((m for m in mf if m['month'] == current_month_num), None)
+    if cur_month:
+        domains = cur_month['domains']
+        avg = sum(domains.values()) / len(domains)
+        tones = {4: '追い風の月', 3: '安定の月', 2: '慎重の月'}
+        month_tone = tones.get(int(avg), '充電の月') if avg >= 2 else '充電の月'
+        month_summary = f'{current_month_num}月 — {month_tone}'
+    else:
+        month_summary = '月間運気データなし'
+
+    blueprint_content = _action_blueprint(p)
+    sf_top5 = p.get('strengths_finder', {}).get('top5', [])
+    if sf_top5:
+        top_ja = SF_JA.get(sf_top5[0]['name'], sf_top5[0]['name'])
+        bp_summary = f'{sf_top5[0]["name"]}（{top_ja}）を武器にする'
+    else:
+        bp_summary = '自分の本質を活かす行動指針'
+
+    personality_content = _personality(p, tier)
+    divination_content = _divination(p)
+    forecast_content = _forecast(p)
+    monthly_content = _monthly(p)
+    cross_content = _cross_analysis(p)
+
+    # Wrap sections in hub cards
+    hub_sections = ''
+
+    # This Month Guidance — first card (most actionable)
+    if this_month_content:
+        hub_sections += _hub_card('this-month', '&#9670;', 'rgba(234,179,8,0.12)', '#facc15',
+                                  f'{current_month_num}月のあなたへ', month_summary, this_month_content)
+
+    # Core Identity
+    hub_sections += _hub_card('core-identity', '&#9733;', 'rgba(99,102,241,0.12)', '#a5b4fc',
+                              'あなたの本質', core_summary, core_id_content)
+
+    # Action Blueprint
+    if blueprint_content:
+        hub_sections += _hub_card('blueprint', '&#9829;', 'rgba(139,92,246,0.12)', '#c4b5fd',
+                                  '明日からできること', bp_summary, blueprint_content)
+
+    # Personality
+    if personality_content:
+        hub_sections += _hub_card('personality', '&#9632;', 'rgba(59,130,246,0.12)', '#60a5fa',
+                                  '才能と性格の地図', 'CliftonStrengths × エニアグラム × 感受性分析',
+                                  personality_content)
+
+    # Divination
+    hub_sections += _hub_card('divination', '&#9679;', 'rgba(139,92,246,0.12)', '#c4b5fd',
+                              '星が語ること', '四柱推命 × 九星気学 × 六星占術 × 西洋占星術',
+                              divination_content)
+
+    # Forecast
+    hub_sections += _hub_card('forecast-2026', '&#9650;', 'rgba(234,179,8,0.12)', '#facc15',
+                              '2026年 — いま、あなたはどこにいるか', '九星気学 × 六星占術が示す年間の流れ',
+                              forecast_content)
+
+    # Monthly
+    if monthly_content:
+        hub_sections += _hub_card('monthly', '&#9671;', 'rgba(59,130,246,0.12)', '#60a5fa',
+                                  '月の流れ', '12ヶ月の運気リズムを俯瞰する',
+                                  monthly_content)
+
+    # Cross Analysis
+    if cross_content:
+        hub_sections += _hub_card('cross', '&#10022;', 'rgba(99,102,241,0.12)', '#a5b4fc',
+                                  '才能 × 運命 — 交差点のインサイト', '強み × 運気の掛け合わせが生むシナジー',
+                                  cross_content)
+
     return f'''<!DOCTYPE html>
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Self-Insight — {name}</title>
+<title>{archetype["ja"]} — {name}</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Noto+Sans+JP:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
@@ -1834,16 +2053,9 @@ def generate_html(p, tier=2, show_gnav=True):
 </head>
 <body>
 {gnav_html}
-{_section_nav(tier >= 2)}
 <div class="container">
 {_hero(p, tier)}
-{_core_identity(p)}
-{_action_blueprint(p)}
-{_personality(p, tier)}
-{_divination(p)}
-{_forecast(p)}
-{_monthly(p)}
-{_cross_analysis(p)}
+{hub_sections}
 {_footer(tier)}
 </div>
 {_charts_js(p)}
@@ -1856,11 +2068,11 @@ def main():
     parser.add_argument('--profile', required=True, help='Path to profile.yaml')
     parser.add_argument('--output', required=True, help='Output HTML path')
     parser.add_argument('--tier', type=int, default=2, help='Completed tier (1, 2, or 3)')
-    parser.add_argument('--no-gnav', action='store_true', help='Hide iUMA private navigation (for client dashboards)')
+    parser.add_argument('--gnav', action='store_true', help='Show iUMA private navigation (for personal use)')
     args = parser.parse_args()
 
     profile = load_yaml(args.profile)
-    html = generate_html(profile, tier=args.tier, show_gnav=not args.no_gnav)
+    html = generate_html(profile, tier=args.tier, show_gnav=args.gnav)
 
     os.makedirs(os.path.dirname(args.output) or '.', exist_ok=True)
     with open(args.output, 'w') as f:
