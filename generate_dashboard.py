@@ -2191,7 +2191,7 @@ def generate_html(p, tier=2, show_gnav=False):
     # Monthly — guidance is shown inline via JS buildGuidanceHtml() for the current month tab
     if monthly_content:
         hub_sections += _hub_card('monthly', '&#9671;', 'rgba(59,130,246,0.12)', '#60a5fa',
-                                  '月の流れ', month_summary,
+                                  '月間運勢フォーキャスト', month_summary,
                                   monthly_content)
 
     # Cross Analysis
