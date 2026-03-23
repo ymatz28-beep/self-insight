@@ -223,7 +223,7 @@ def _hero(p, tier):
         <div><div class="hub-card-mini-title">あなたの本質</div>
         <div class="hub-card-mini-summary">{hub1_summary}</div></div>
       </div>
-      <div class="hub-card-mini" onclick="document.getElementById('this-month').scrollIntoView({{behavior:'smooth'}});var c=document.querySelector('#this-month').closest('.hub-card');if(c&&!c.classList.contains('expanded'))c.classList.add('expanded');">
+      <div class="hub-card-mini" onclick="document.getElementById('monthly').scrollIntoView({{behavior:'smooth'}});var c=document.querySelector('#monthly').closest('.hub-card');if(c&&!c.classList.contains('expanded'))c.classList.add('expanded');">
         <div class="hub-card-mini-icon" style="background:rgba(234,179,8,0.15);color:#facc15">&#9670;</div>
         <div><div class="hub-card-mini-title">今月の運気</div>
         <div class="hub-card-mini-summary">{hub2_summary}</div></div>
@@ -2167,12 +2167,7 @@ def generate_html(p, tier=2, show_gnav=False):
     # Wrap sections in hub cards
     hub_sections = ''
 
-    # This Month Guidance — first card (most actionable)
-    if this_month_content:
-        hub_sections += _hub_card('this-month', '&#9670;', 'rgba(234,179,8,0.12)', '#facc15',
-                                  f'{current_month_num}月のあなたへ', month_summary, this_month_content)
-
-    # Core Identity
+    # Core Identity — FIRST (most important, permanent self)
     hub_sections += _hub_card('core-identity', '&#9733;', 'rgba(99,102,241,0.12)', '#a5b4fc',
                               'あなたの本質', core_summary, core_id_content)
 
@@ -2197,11 +2192,15 @@ def generate_html(p, tier=2, show_gnav=False):
                               '2026年 — いま、あなたはどこにいるか', '九星気学 × 六星占術が示す年間の流れ',
                               forecast_content)
 
-    # Monthly
+    # Monthly (includes this month's guidance inline)
     if monthly_content:
+        monthly_combined = ''
+        if this_month_content:
+            monthly_combined += this_month_content
+        monthly_combined += monthly_content
         hub_sections += _hub_card('monthly', '&#9671;', 'rgba(59,130,246,0.12)', '#60a5fa',
-                                  '月の流れ', '12ヶ月の運気リズムを俯瞰する',
-                                  monthly_content)
+                                  '月の流れ', month_summary,
+                                  monthly_combined)
 
     # Cross Analysis
     if cross_content:
