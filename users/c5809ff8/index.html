@@ -56,8 +56,8 @@ body::before{content:'';position:fixed;top:0;left:0;width:100%;height:100%;opaci
 .hub-card-icon{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
 .hub-card-title{font-size:16px;font-weight:600}
 .hub-card-summary{font-size:13px;color:var(--text-secondary);margin-top:2px}
-.hub-card-arrow{font-size:14px;color:var(--text-muted);transition:transform .3s;margin-left:auto}
-.hub-card.expanded .hub-card-arrow{transform:rotate(90deg)}
+.hub-card-arrow{font-size:20px;font-weight:300;color:var(--text-muted);margin-left:auto;font-family:var(--font-body)}
+.hub-card.expanded .hub-card-arrow{color:var(--accent)}
 .hub-card-content{max-height:0;overflow:hidden;transition:max-height .5s ease,padding .3s;padding:0 24px}
 .hub-card.expanded .hub-card-content{max-height:none;padding:0 24px 24px}
 .chip{font-size:11px;font-weight:500;padding:4px 12px;border-radius:20px;background:rgba(255,255,255,0.08);color:var(--text-secondary);border:1px solid rgba(255,255,255,0.1)}
@@ -284,13 +284,13 @@ body::before{content:'';position:fixed;top:0;left:0;width:100%;height:100%;opaci
   </div>
 </section>
 <div class="hub-card" id="core-identity-card">
-  <div class="hub-card-preview" onclick="this.parentElement.classList.toggle('expanded')">
+  <div class="hub-card-preview" onclick="var c=this.parentElement;c.classList.toggle('expanded');this.querySelector('.hub-card-arrow').textContent=c.classList.contains('expanded')?'−':'+'">
     <div class="hub-card-icon" style="background:rgba(99,102,241,0.12);color:#a5b4fc">&#9733;</div>
     <div>
       <div class="hub-card-title">あなたの本質</div>
       <div class="hub-card-summary">丁火 × 七赤金星 — 静かな炎 × 言葉の力</div>
     </div>
-    <div class="hub-card-arrow">&#9656;</div>
+    <div class="hub-card-arrow">+</div>
   </div>
   <div class="hub-card-content">
     <section class="section" id="core-identity">
@@ -323,13 +323,13 @@ body::before{content:'';position:fixed;top:0;left:0;width:100%;height:100%;opaci
 </section>
   </div>
 </div><div class="hub-card" id="blueprint-card">
-  <div class="hub-card-preview" onclick="this.parentElement.classList.toggle('expanded')">
+  <div class="hub-card-preview" onclick="var c=this.parentElement;c.classList.toggle('expanded');this.querySelector('.hub-card-arrow').textContent=c.classList.contains('expanded')?'−':'+'">
     <div class="hub-card-icon" style="background:rgba(139,92,246,0.12);color:#c4b5fd">&#9829;</div>
     <div>
       <div class="hub-card-title">明日からできること</div>
       <div class="hub-card-summary">Empathy（共感性）を武器にする</div>
     </div>
-    <div class="hub-card-arrow">&#9656;</div>
+    <div class="hub-card-arrow">+</div>
   </div>
   <div class="hub-card-content">
     <div class="blueprint-section" id="blueprint">
@@ -349,13 +349,13 @@ body::before{content:'';position:fixed;top:0;left:0;width:100%;height:100%;opaci
 </div>
   </div>
 </div><div class="hub-card" id="personality-card">
-  <div class="hub-card-preview" onclick="this.parentElement.classList.toggle('expanded')">
+  <div class="hub-card-preview" onclick="var c=this.parentElement;c.classList.toggle('expanded');this.querySelector('.hub-card-arrow').textContent=c.classList.contains('expanded')?'−':'+'">
     <div class="hub-card-icon" style="background:rgba(59,130,246,0.12);color:#60a5fa">&#9632;</div>
     <div>
       <div class="hub-card-title">内なる才能の設計図</div>
       <div class="hub-card-summary">強み × 性格タイプ × 感受性</div>
     </div>
-    <div class="hub-card-arrow">&#9656;</div>
+    <div class="hub-card-arrow">+</div>
   </div>
   <div class="hub-card-content">
     <section class="section" id="personality">
@@ -414,13 +414,13 @@ body::before{content:'';position:fixed;top:0;left:0;width:100%;height:100%;opaci
 </section>
   </div>
 </div><div class="hub-card" id="divination-card">
-  <div class="hub-card-preview" onclick="this.parentElement.classList.toggle('expanded')">
+  <div class="hub-card-preview" onclick="var c=this.parentElement;c.classList.toggle('expanded');this.querySelector('.hub-card-arrow').textContent=c.classList.contains('expanded')?'−':'+'">
     <div class="hub-card-icon" style="background:rgba(139,92,246,0.12);color:#c4b5fd">&#9679;</div>
     <div>
       <div class="hub-card-title">星が語ること</div>
       <div class="hub-card-summary">四柱推命 × 九星気学 × 六星占術 × 西洋占星術</div>
     </div>
-    <div class="hub-card-arrow">&#9656;</div>
+    <div class="hub-card-arrow">+</div>
   </div>
   <div class="hub-card-content">
     <section class="section" id="divination">
@@ -508,19 +508,19 @@ body::before{content:'';position:fixed;top:0;left:0;width:100%;height:100%;opaci
       <div class="card-value">Pluto</div>
       <div class='typo-desc' style='margin-top:8px'>最も純粋な蠍座の性質。変容・再生・深層心理への探究</div></div></div><div style="font-size:12px;color:var(--text-secondary);line-height:1.7;margin-top:12px">不動宮（Fixed）— 一度決めたら変えない意志の強さ。安定と持続力。変化への抵抗もある</div><div class="insight-box" style="margin-top:12px;border-color:rgba(139,92,246,0.3);background:linear-gradient(135deg,rgba(139,92,246,0.08),rgba(99,102,241,0.04))">
       <div class="insight-title" style="color:#c4b5fd">2026年 Scorpioの運勢</div>
-      <p style="line-height:1.9;font-size:14px">冥王星が水瓶座に完全移行した2026年は、蠍座にとって「変容の仕上げ」の年。これまで手放してきた古い構造の跡地に、新しい基盤を築く時期。特に人間関係と仕事の枠組みにおいて、より本質的な選択ができるようになる</p></div><div style="margin-top:20px"><div class="insight-title" style="color:#c4b5fd;margin-bottom:12px">2026年 惑星トランジット</div><div class="grid grid-2"><div class="card" style="border-left:3px solid #4ade80">
-        <div class="card-label">木星</div>
-        <div class="card-value" style="font-size:16px">&#9651; 蟹座（Trine）</div>
+      <p style="line-height:1.9;font-size:14px">冥王星が水瓶座に完全移行した2026年は、蠍座にとって「変容の仕上げ」の年。これまで手放してきた古い構造の跡地に、新しい基盤を築く時期。特に人間関係と仕事の枠組みにおいて、より本質的な選択ができるようになる</p></div><div style="margin-top:20px"><div class="insight-title" style="color:#c4b5fd;margin-bottom:8px">2026年 惑星の影響</div><div style="font-size:12px;color:var(--text-muted);margin-bottom:12px;line-height:1.6">木星・土星・冥王星・天王星が今年あなたの太陽星座にどんな影響を与えるか。緑は追い風、黄色は調整期、赤は試練（成長のチャンス）。</div><div class="grid grid-2"><div class="card" style="border-left:3px solid #4ade80">
+        <div class="card-label">木星 in 蟹座</div>
+        <div class="card-value" style="font-size:16px;color:#4ade80">追い風</div>
         <div class="typo-desc" style="margin-top:6px;font-size:12px">木星が蟹座でトライン — 感情的な成長と内面の豊かさが拡大。直感的な判断が冴える年</div></div><div class="card" style="border-left:3px solid #facc15">
-        <div class="card-label">土星</div>
-        <div class="card-value" style="font-size:16px">&#8767; 牡羊座（Quincunx）</div>
+        <div class="card-label">土星 in 牡羊座</div>
+        <div class="card-value" style="font-size:16px;color:#facc15">調整</div>
         <div class="typo-desc" style="margin-top:6px;font-size:12px">土星が牡羊座でクインカンクス — 行動と慎重さのバランス調整。新しい責任との折り合い</div></div><div class="card" style="border-left:3px solid #f87171">
-        <div class="card-label">冥王星</div>
-        <div class="card-value" style="font-size:16px">&#9633; 水瓶座（Square）</div>
+        <div class="card-label">冥王星 in 水瓶座</div>
+        <div class="card-value" style="font-size:16px;color:#f87171">試練</div>
         <div class="typo-desc" style="margin-top:6px;font-size:12px">冥王星が水瓶座でスクエア — 変容の最終段階。古い構造からの完全な脱却を促される</div></div><div class="card" style="border-left:3px solid #f87171">
-        <div class="card-label">天王星</div>
-        <div class="card-value" style="font-size:16px">&#9675; 双子座（Opposition）</div>
-        <div class="typo-desc" style="margin-top:6px;font-size:12px">天王星が双子座でオポジション — 予期せぬ変化と覚醒。コミュニケーションの革新</div></div></div></div><div style="margin-top:20px"><div class="insight-title" style="color:#fb923c;margin-bottom:12px">&#9888; 2026年 水星逆行カレンダー</div><div class="grid grid-3"><div class="card" style="border-left:3px solid rgba(251,146,60,0.5)">
+        <div class="card-label">天王星 in 双子座</div>
+        <div class="card-value" style="font-size:16px;color:#f87171">対峙</div>
+        <div class="typo-desc" style="margin-top:6px;font-size:12px">天王星が双子座でオポジション — 予期せぬ変化と覚醒。コミュニケーションの革新</div></div></div></div><div style="margin-top:20px"><div class="insight-title" style="color:#fb923c;margin-bottom:8px">&#9888; 2026年 水星逆行</div><div style="font-size:12px;color:var(--text-muted);margin-bottom:12px;line-height:1.6">水星逆行中はコミュニケーションの行き違い、契約トラブル、電子機器の不具合が起きやすい時期。重要な契約や大きな買い物はこの期間を避けるのが無難。</div><div class="grid grid-3"><div class="card" style="border-left:3px solid rgba(251,146,60,0.5)">
         <div class="card-label">第1回</div>
         <div class="card-value" style="font-size:14px">2/26-3/20</div>
         <div class="card-sub">魚座（Pisces）</div>
@@ -545,13 +545,13 @@ body::before{content:'';position:fixed;top:0;left:0;width:100%;height:100%;opaci
 </section>
   </div>
 </div><div class="hub-card" id="forecast-2026-card">
-  <div class="hub-card-preview" onclick="this.parentElement.classList.toggle('expanded')">
+  <div class="hub-card-preview" onclick="var c=this.parentElement;c.classList.toggle('expanded');this.querySelector('.hub-card-arrow').textContent=c.classList.contains('expanded')?'−':'+'">
     <div class="hub-card-icon" style="background:rgba(234,179,8,0.12);color:#facc15">&#9650;</div>
     <div>
       <div class="hub-card-title">2026年 — いま、あなたはどこにいるか</div>
       <div class="hub-card-summary">九星気学 × 六星占術が示す年間の流れ</div>
     </div>
-    <div class="hub-card-arrow">&#9656;</div>
+    <div class="hub-card-arrow">+</div>
   </div>
   <div class="hub-card-content">
     <section class="section" id="forecast-2026">
@@ -592,13 +592,13 @@ body::before{content:'';position:fixed;top:0;left:0;width:100%;height:100%;opaci
 </section>
   </div>
 </div><div class="hub-card" id="monthly-card">
-  <div class="hub-card-preview" onclick="this.parentElement.classList.toggle('expanded')">
+  <div class="hub-card-preview" onclick="var c=this.parentElement;c.classList.toggle('expanded');this.querySelector('.hub-card-arrow').textContent=c.classList.contains('expanded')?'−':'+'">
     <div class="hub-card-icon" style="background:rgba(59,130,246,0.12);color:#60a5fa">&#9671;</div>
     <div>
       <div class="hub-card-title">月間運勢フォーキャスト</div>
       <div class="hub-card-summary">3月 — 慎重の月</div>
     </div>
-    <div class="hub-card-arrow">&#9656;</div>
+    <div class="hub-card-arrow">+</div>
   </div>
   <div class="hub-card-content">
     <section class="section" id="monthly">
@@ -683,13 +683,13 @@ selectMonth(currentMonth);
 </script>
   </div>
 </div><div class="hub-card" id="cross-card">
-  <div class="hub-card-preview" onclick="this.parentElement.classList.toggle('expanded')">
+  <div class="hub-card-preview" onclick="var c=this.parentElement;c.classList.toggle('expanded');this.querySelector('.hub-card-arrow').textContent=c.classList.contains('expanded')?'−':'+'">
     <div class="hub-card-icon" style="background:rgba(99,102,241,0.12);color:#a5b4fc">&#10022;</div>
     <div>
       <div class="hub-card-title">才能 × 運命 — 交差点のインサイト</div>
       <div class="hub-card-summary">強み × 運気の掛け合わせが生むシナジー</div>
     </div>
-    <div class="hub-card-arrow">&#9656;</div>
+    <div class="hub-card-arrow">+</div>
   </div>
   <div class="hub-card-content">
     <section class="section" id="cross">

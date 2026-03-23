@@ -1035,7 +1035,8 @@ def _western_detail(p):
             'Square': '&#9633;', 'Opposition': '&#9675;', 'Quincunx': '&#8767;',
             'Conjunction': '&#9673;',
         }
-        transit_html = '<div style="margin-top:20px"><div class="insight-title" style="color:#c4b5fd;margin-bottom:12px">2026年 惑星トランジット</div>'
+        transit_html = '<div style="margin-top:20px"><div class="insight-title" style="color:#c4b5fd;margin-bottom:8px">2026年 惑星の影響</div>'
+        transit_html += '<div style="font-size:12px;color:var(--text-muted);margin-bottom:12px;line-height:1.6">木星・土星・冥王星・天王星が今年あなたの太陽星座にどんな影響を与えるか。緑は追い風、黄色は調整期、赤は試練（成長のチャンス）。</div>'
         transit_html += '<div class="grid grid-2">'
         planet_ja = {'jupiter': '木星', 'saturn': '土星', 'pluto': '冥王星', 'uranus': '天王星'}
         sign_ja = {
@@ -1052,9 +1053,10 @@ def _western_detail(p):
             icon = aspect_icons.get(aspect, '&#9679;')
             sign = t.get('sign', '')
             sign_display = sign_ja.get(sign, sign)
+            aspect_ja = {'Trine':'追い風','Sextile':'好機','Semisextile':'微調整','Square':'試練','Opposition':'対峙','Quincunx':'調整','Conjunction':'合流'}.get(aspect, aspect)
             transit_html += f'''<div class="card" style="border-left:3px solid {color}">
-        <div class="card-label">{planet_ja.get(planet_key, planet_key)}</div>
-        <div class="card-value" style="font-size:16px">{icon} {sign_display}（{aspect}）</div>
+        <div class="card-label">{planet_ja.get(planet_key, planet_key)} in {sign_display}</div>
+        <div class="card-value" style="font-size:16px;color:{color}">{aspect_ja}</div>
         <div class="typo-desc" style="margin-top:6px;font-size:12px">{t.get("influence", "")}</div></div>'''
         transit_html += '</div></div>'
         desc_parts += transit_html
@@ -1062,7 +1064,8 @@ def _western_detail(p):
     # --- Mercury Retrograde Timeline ---
     mercury_retro = wa.get('mercury_retrograde_2026', [])
     if mercury_retro:
-        retro_html = '<div style="margin-top:20px"><div class="insight-title" style="color:#fb923c;margin-bottom:12px">&#9888; 2026年 水星逆行カレンダー</div>'
+        retro_html = '<div style="margin-top:20px"><div class="insight-title" style="color:#fb923c;margin-bottom:8px">&#9888; 2026年 水星逆行</div>'
+        retro_html += '<div style="font-size:12px;color:var(--text-muted);margin-bottom:12px;line-height:1.6">水星逆行中はコミュニケーションの行き違い、契約トラブル、電子機器の不具合が起きやすい時期。重要な契約や大きな買い物はこの期間を避けるのが無難。</div>'
         retro_html += '<div class="grid grid-3">'
         for i, retro in enumerate(mercury_retro):
             sign = retro.get('sign', '')
@@ -1974,8 +1977,8 @@ body::before{content:'';position:fixed;top:0;left:0;width:100%;height:100%;opaci
 .hub-card-icon{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
 .hub-card-title{font-size:16px;font-weight:600}
 .hub-card-summary{font-size:13px;color:var(--text-secondary);margin-top:2px}
-.hub-card-arrow{font-size:14px;color:var(--text-muted);transition:transform .3s;margin-left:auto}
-.hub-card.expanded .hub-card-arrow{transform:rotate(90deg)}
+.hub-card-arrow{font-size:20px;font-weight:300;color:var(--text-muted);margin-left:auto;font-family:var(--font-body)}
+.hub-card.expanded .hub-card-arrow{color:var(--accent)}
 .hub-card-content{max-height:0;overflow:hidden;transition:max-height .5s ease,padding .3s;padding:0 24px}
 .hub-card.expanded .hub-card-content{max-height:none;padding:0 24px 24px}
 .chip{font-size:11px;font-weight:500;padding:4px 12px;border-radius:20px;background:rgba(255,255,255,0.08);color:var(--text-secondary);border:1px solid rgba(255,255,255,0.1)}
@@ -2162,13 +2165,13 @@ def _hub_card(section_id, icon, icon_bg, icon_color, title, summary, content, ex
     """Wrap a section in a collapsible hub card."""
     exp_cls = ' expanded' if expanded else ''
     return f'''<div class="hub-card{exp_cls}" id="{section_id}-card">
-  <div class="hub-card-preview" onclick="this.parentElement.classList.toggle('expanded')">
+  <div class="hub-card-preview" onclick="var c=this.parentElement;c.classList.toggle('expanded');this.querySelector('.hub-card-arrow').textContent=c.classList.contains('expanded')?'−':'+'">
     <div class="hub-card-icon" style="background:{icon_bg};color:{icon_color}">{icon}</div>
     <div>
       <div class="hub-card-title">{title}</div>
       <div class="hub-card-summary">{summary}</div>
     </div>
-    <div class="hub-card-arrow">&#9656;</div>
+    <div class="hub-card-arrow">+</div>
   </div>
   <div class="hub-card-content">
     {content}
