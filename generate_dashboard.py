@@ -371,13 +371,11 @@ def _divination(p):
   <h3 class="sub-title">九星気学</h3>
   {nsk_cards}
   {nsk_desc_html}
-  <div class="chart-wrap"><canvas id="chart9" height="200"></canvas></div>
 
   <h3 class="sub-title">六星占術</h3>
   {rok_cards}
   {rok_desc_html}
   {reigou_box}
-  {"<div class='chart-wrap'><canvas id='chartComb' height='200'></canvas></div>" if rok.get('reigou_combined') else ""}
   <div style="margin-top:12px">{table}</div>
 
   <h3 class="sub-title">西洋占星術</h3>
@@ -399,6 +397,7 @@ def _forecast(p):
     cur12 = next((c for c in rok.get('twelve_year_cycle', []) if c.get('current')), None)
     cur_sub = next((c for c in rok.get('sub_star_cycle', []) if c.get('current')), None)
     cur_comb = next((c for c in rok.get('reigou_combined', []) if c.get('year') == 2026), None)
+    has_reigou = rok.get('reigou', False)
 
     cards = '<div class="grid grid-4">'
     if cur9:
@@ -417,6 +416,25 @@ def _forecast(p):
       <div class="card-sub">{cur_comb["label"]}</div></div>'''
     cards += '</div>'
 
+    # Chart legend: explain each line
+    legend_items = [
+        ('#6366f1', '九星気学', '9年周期。本命星の宮遷移による運気の波。社会的な運勢の流れを示す'),
+        ('#22c55e', '六星占術', '12年周期。大殺界を含む運命星の巡り。個人的な運気のバイオリズム'),
+    ]
+    if has_reigou:
+        legend_items.append(('#eab308', '霊合合成', 'メイン星70% + サブ星30%の加重平均。霊合星人の実効的な運気スコア'))
+
+    legend_html = '<div class="chart-legend">'
+    for color, label, desc in legend_items:
+        legend_html += f'''<div class="chart-legend-item">
+      <span class="chart-legend-line" style="background:{color}"></span>
+      <div><span class="chart-legend-label">{label}</span>
+      <span class="chart-legend-desc">{desc}</span></div></div>'''
+    legend_html += '</div>'
+
+    # Integrated forecast insight
+    insight = _forecast_insight(cur9, cur12, cur_sub, cur_comb, has_reigou, nsk, rok)
+
     return f'''<section class="section" id="forecast-2026">
   <div class="pillar-header">
     <div class="pillar-icon" style="background:rgba(234,179,8,0.15);color:#facc15">&#9733;</div>
@@ -425,7 +443,69 @@ def _forecast(p):
   </div>
   {cards}
   <div class="chart-wrap"><canvas id="chartOverlay" height="280"></canvas></div>
+  {legend_html}
+  {insight}
 </section>'''
+
+
+def _forecast_insight(cur9, cur12, cur_sub, cur_comb, has_reigou, nsk, rok):
+    """Generate integrated forecast narrative from multiple systems."""
+    parts = []
+
+    # Nine Star Ki reading
+    if cur9:
+        parts.append(f'九星気学では<strong>{cur9["palace"]}</strong>（{cur9["theme"]}）に位置し、エネルギーは<strong>{cur9["energy"]}</strong>。')
+
+    # Rokusei reading
+    if cur12:
+        satsukai = cur12.get('殺界')
+        if satsukai:
+            parts.append(f'六星占術のメイン星は<strong>{cur12["phase"]}</strong>（{satsukai}）で要注意期。')
+        else:
+            parts.append(f'六星占術のメイン星は<strong>{cur12["phase"]}</strong>（Energy {cur12["energy"]}）で好調期。')
+
+    if has_reigou and cur_sub:
+        sub_satsukai = cur_sub.get('殺界')
+        if sub_satsukai:
+            parts.append(f'一方、霊合サブ星は<strong>{cur_sub["phase"]}</strong>（{sub_satsukai}）で逆風。')
+        else:
+            parts.append(f'霊合サブ星も<strong>{cur_sub["phase"]}</strong>（Energy {cur_sub["energy"]}）で順調。')
+
+    # Synthesis
+    if cur_comb and has_reigou:
+        score = cur_comb['score']
+        label = cur_comb['label']
+        if score >= 70:
+            synthesis = f'統合スコア<strong>{score}</strong>（{label}）— 複数の体系が好調を示しており、<strong>攻めの年</strong>。新しい挑戦や投資に適したタイミング。'
+        elif score >= 50:
+            synthesis = f'統合スコア<strong>{score}</strong>（{label}）— 体系間で評価が分かれており、<strong>慎重な前進</strong>が最適解。大きな決断は十分な分析の上で。'
+        elif score >= 30:
+            synthesis = f'統合スコア<strong>{score}</strong>（{label}）— 複数の体系で注意信号が出ており、<strong>守りを固める年</strong>。基盤の強化と内面の充実に集中。'
+        else:
+            synthesis = f'統合スコア<strong>{score}</strong>（{label}）— 全体系で低エネルギー期。<strong>無理をせず回復に専念</strong>する時期。大きな変更は避けるのが吉。'
+        parts.append(synthesis)
+    elif cur9 and cur12:
+        avg = (cur9['energy'] + cur12['energy']) // 2
+        if avg >= 60:
+            parts.append(f'両体系の平均エネルギーは<strong>{avg}</strong>。全体的に好調で、<strong>積極的に動ける年</strong>。')
+        else:
+            parts.append(f'両体系の平均エネルギーは<strong>{avg}</strong>。<strong>地固めと準備</strong>に適した年。')
+
+    # Peak year
+    cycle9 = nsk.get('nine_year_cycle', [])
+    combined = rok.get('reigou_combined', [])
+    if combined:
+        peak = max(combined, key=lambda c: c['score'])
+        parts.append(f'次のピークは<strong>{peak["year"]}年</strong>（統合スコア{peak["score"]}）。そこへ向けた布石を今から打つ。')
+    elif cycle9:
+        peak = max(cycle9, key=lambda c: c['energy'])
+        parts.append(f'九星気学のピークは<strong>{peak["year"]}年</strong>（{peak["palace"]}、Energy {peak["energy"]}）。')
+
+    body = ''.join(parts)
+    return f'''<div class="insight-box" style="margin-top:16px;border-color:rgba(234,179,8,0.3);background:linear-gradient(135deg,rgba(234,179,8,0.08),rgba(250,204,21,0.04))">
+    <div class="insight-title" style="color:var(--yellow)">統合フォーキャスト</div>
+    <p style="line-height:1.9;font-size:14px">{body}</p>
+  </div>'''
 
 
 def _monthly(p):
@@ -621,15 +701,7 @@ def _charts_js(p):
     combined = rok.get('reigou_combined', [])
     cycle12 = rok.get('twelve_year_cycle', [])
 
-    chart9_labels = json.dumps([str(c['year']) for c in cycle9])
-    chart9_data = json.dumps([c['energy'] for c in cycle9])
-    chart9_colors = json.dumps(['#22c55e' if c.get('current') else '#6366f1' for c in cycle9])
-
-    comb_labels = json.dumps([str(c['year']) for c in combined])
-    comb_scores = json.dumps([c['score'] for c in combined])
-    comb_colors = json.dumps(['#22c55e' if c.get('year') == 2026 else '#8b5cf6' for c in combined])
-
-    # 3-line overlay data
+    # Overlay data — single chart with all lines
     nine_by_year = {c['year']: c['energy'] for c in cycle9}
     twelve_by_year = {c['year']: c['energy'] for c in cycle12}
     comb_by_year = {c['year']: c['score'] for c in combined}
@@ -640,18 +712,6 @@ def _charts_js(p):
     comb_data = json.dumps([comb_by_year.get(y) for y in years])
 
     return f'''<script>
-const chartOpts=(ds)=>({{type:'line',data:ds,options:{{responsive:true,animation:{{duration:1500,easing:'easeOutQuart'}},plugins:{{legend:{{display:false}}}},
-  scales:{{x:{{ticks:{{color:'#7c8293',font:{{family:"'JetBrains Mono',monospace",size:11}}}},grid:{{color:'rgba(255,255,255,0.05)'}}}},
-    y:{{min:0,max:110,ticks:{{display:false}},grid:{{color:'rgba(255,255,255,0.05)'}}}}}}
-}}}});
-new Chart(document.getElementById('chart9'),chartOpts({{
-  labels:{chart9_labels},
-  datasets:[{{label:'九星気学',data:{chart9_data},borderColor:'#6366f1',fill:false,tension:0.3,pointRadius:5,pointBackgroundColor:{chart9_colors}}}]
-}}));
-{f"""new Chart(document.getElementById('chartComb'),chartOpts({{
-  labels:{comb_labels},
-  datasets:[{{label:'霊合統合',data:{comb_scores},borderColor:'#8b5cf6',fill:false,tension:0.3,pointRadius:5,pointBackgroundColor:{comb_colors}}}]
-}}));""" if combined else ""}
 new Chart(document.getElementById('chartOverlay'),{{
   type:'line',
   data:{{labels:{overlay_labels},datasets:[
@@ -805,6 +865,11 @@ body::before{content:'';position:fixed;top:0;left:0;width:100%;height:100%;opaci
 .domain-icon-label{display:flex;align-items:center;gap:8px}
 .domain-label{font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:0.5px}
 .domain-stars{font-family:var(--font-mono);font-size:13px;letter-spacing:1px}
+.chart-legend{display:flex;flex-direction:column;gap:10px;margin-top:12px;padding:16px;background:var(--surface);border:1px solid var(--border);border-radius:var(--r-md)}
+.chart-legend-item{display:flex;align-items:flex-start;gap:10px}
+.chart-legend-line{display:inline-block;width:24px;height:3px;border-radius:2px;margin-top:7px;flex-shrink:0}
+.chart-legend-label{font-size:13px;font-weight:600;margin-right:6px}
+.chart-legend-desc{font-size:12px;color:var(--text-secondary)}
 .page-footer{text-align:center;padding:32px 0;font-size:11px;color:var(--text-muted);border-top:1px solid var(--border);margin-top:40px}
 @media(max-width:768px){.grid{grid-template-columns:1fr}.pillar-grid{grid-template-columns:repeat(2,1fr)}.domain-grid{grid-template-columns:1fr}}
 @media(max-width:640px){
