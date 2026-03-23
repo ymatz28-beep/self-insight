@@ -112,6 +112,18 @@ def _core_identity(p):
     dm = p['four_pillars']['day_master']
     ys = p['nine_star_ki']['year_star']
     missing = p['four_pillars'].get('missing_elements', [])
+    interp = p.get('interpretations', {})
+
+    # Integrated insight box
+    insight_paras = interp.get('integrated_insight', [])
+    insight_html = ''
+    if insight_paras:
+        ps = ''.join(f'<p style="line-height:1.9;font-size:14px;{" margin-top:12px;" if i else ""}">{para}</p>'
+                     for i, para in enumerate(insight_paras))
+        insight_html = f'''<div class="insight-box" style="border-color:rgba(99,102,241,0.4);background:linear-gradient(135deg,rgba(99,102,241,0.12),rgba(139,92,246,0.08));">
+    <div class="insight-title" style="font-size:15px;">統合インサイト</div>
+    {ps}
+  </div>'''
 
     return f'''<section class="section" id="core-identity">
   <div class="pillar-header">
@@ -119,7 +131,8 @@ def _core_identity(p):
     <div><h2>Core Identity — あなたはこういう人</h2>
       <div class="pillar-sub">6つの分析体系が示す、時代を超えた人物像</div></div>
   </div>
-  <div class="grid grid-4">
+  {insight_html}
+  <div class="grid grid-4" style="margin-top:16px">
     <div class="card tc"><div class="card-label">Core Essence</div>
       <div class="card-value">{dm["char"]}火 × {ys["name"]}</div>
       <div class="card-sub">静かな炎 × 言葉の力</div></div>
@@ -151,14 +164,23 @@ def _personality(p, tier):
                      'Executing':'#8b5cf6','Influencing':'#ff6b35'}
     tag_cls = {'Relationship Building':'tag-rb','Strategic Thinking':'tag-st',
                'Executing':'tag-ex','Influencing':'tag-inf'}
+    interp = p.get('interpretations', {})
+    sf_descs = interp.get('strengths', {})
+    sf_ja = interp.get('strengths_ja', {})
+    pers_descs = interp.get('personality', {})
+
     sf_html = ''
     if sf_top5:
         items = ''
         for s in sf_top5:
             tc = tag_cls.get(s.get('domain',''), 'tag-rb')
+            ja_name = sf_ja.get(s['name'], '')
+            ja_span = f' <span style="font-size:12px;color:var(--text-secondary);font-weight:400">{ja_name}</span>' if ja_name else ''
+            desc = sf_descs.get(s['name'], '')
+            desc_html = f'<div style="font-size:12px;color:var(--text-secondary);line-height:1.6;margin-top:6px">{desc}</div>' if desc else ''
             items += f'''<li class="top5-item"><span class="rank">{s["rank"]}</span>
-          <div><div class="sf-name">{s["name"]}</div>
-          <div class="sf-domain"><span class="tag {tc}">{s["domain"]}</span></div></div></li>'''
+          <div><div class="sf-name">{s["name"]}{ja_span}</div>
+          <div class="sf-domain"><span class="tag {tc}">{s["domain"]}</span></div>{desc_html}</div></li>'''
         dom_bars = ''
         sf_domains = sf.get('domain_distribution', {})
         for dname, ranks in sf_domains.items():
@@ -185,13 +207,17 @@ def _personality(p, tier):
         <div class="card-title" style="font-size:13px"><span class="icon">&#9830;</span> Typology</div>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:4px">
           <div class="typo-cell"><div class="typo-label">Enneagram</div>
-            <div class="typo-value">Type {etype}</div><div class="typo-sub">{ename}</div></div>
+            <div class="typo-value">Type {etype}</div><div class="typo-sub">{ename}</div>
+            {"<div class='typo-desc'>"+pers_descs['enneagram']+"</div>" if pers_descs.get('enneagram') else ""}</div>
           <div class="typo-cell"><div class="typo-label">Blood Type</div>
-            <div class="typo-value">{bt["type"]}</div><div class="typo-sub">日本人口の{bt["population_pct"]}%</div></div>
+            <div class="typo-value">{bt["type"]}</div><div class="typo-sub">日本人口の{bt["population_pct"]}%</div>
+            {"<div class='typo-desc'>"+pers_descs['blood_type']+"</div>" if pers_descs.get('blood_type') else ""}</div>
           <div class="typo-cell"><div class="typo-label">HSP</div>
-            <div class="typo-value" style="color:#facc15">{hsp_label}</div><div class="typo-sub">感覚処理感受性</div></div>
+            <div class="typo-value" style="color:#facc15">{hsp_label}</div><div class="typo-sub">感覚処理感受性</div>
+            {"<div class='typo-desc'>"+pers_descs['hsp']+"</div>" if pers_descs.get('hsp') else ""}</div>
           <div class="typo-cell"><div class="typo-label">ADHD</div>
-            <div class="typo-value" style="color:#ff8f6b">{adhd_label}</div><div class="typo-sub">過集中×散漫の波</div></div>
+            <div class="typo-value" style="color:#ff8f6b">{adhd_label}</div><div class="typo-sub">過集中×散漫の波</div>
+            {"<div class='typo-desc'>"+pers_descs['adhd']+"</div>" if pers_descs.get('adhd') else ""}</div>
         </div></div>
     </div></div>'''
 
@@ -212,7 +238,14 @@ def _divination(p):
     rok = p['rokusei']
     west = p['western_astrology']['sun_sign']
 
+    interp = p.get('interpretations', {})
+    fp_interp = interp.get('four_pillars', {})
+    nsk_interp = interp.get('nine_star_ki', {})
+    rok_interp = interp.get('rokusei', {})
+
     pillar_labels = ['年柱', '月柱', '日柱']
+    pillar_roles = ['社会的顔・祖先運', '仕事・キャリア', '本質的な自己']
+    pillar_keys = ['year', 'month', 'day']
     elem_cls = {'Wood':'elem-wood','Fire':'elem-fire','Earth':'elem-earth','Metal':'elem-metal','Water':'elem-water'}
     pcards = ''
     for i, pl in enumerate(pillars):
@@ -220,8 +253,9 @@ def _divination(p):
         pcards += f'''<div class="pillar"><div class="pillar-label">{pillar_labels[i]}</div>
       <div class="kanji">{pl["full"]}</div>
       <div class="reading">{pl["stem"]["reading"]}・{pl["branch"]["reading"]}</div>
-      <div class="element-badge {ec}">{pl["stem"]["element"]}</div></div>'''
-    pcards += '<div class="pillar unknown"><div class="pillar-label">時柱</div><div class="kanji">？？</div><div class="reading">出生時刻不明</div></div>'
+      <div class="element-badge {ec}">{pl["stem"]["element"]}</div>
+      <div style="font-size:10px;color:var(--text-muted);margin-top:6px">{pillar_roles[i]}</div></div>'''
+    pcards += '<div class="pillar unknown"><div class="pillar-label">時柱</div><div class="kanji">？？</div><div class="reading">出生時刻不明</div><div class="element-badge" style="background:rgba(255,255,255,0.05);color:var(--text-muted)">Locked</div><div style="font-size:10px;color:var(--text-muted);margin-top:6px">晩年・子孫運</div></div>'
 
     el_bars = ''
     el_colors = {'木':'#4ade80','火':'#f87171','土':'#facc15','金':'#94a3b8','水':'#60a5fa'}
@@ -279,22 +313,70 @@ def _divination(p):
     sub_th = '<th>サブ</th>' if has_sub else ''
     table = f'<table class="cycle-table"><thead><tr><th>年</th><th>メイン</th>{sub_th}<th>殺界</th><th>Energy</th></tr></thead><tbody>{rows}</tbody></table>'
 
+    # Four Pillars interpretation text
+    fp_overview = fp_interp.get('overview', '')
+    fp_overview_html = f'<div style="font-size:12px;color:var(--text-secondary);line-height:1.7;margin-bottom:16px">{fp_overview}</div>' if fp_overview else ''
+    dm_detail = fp_interp.get('day_master_detail', dm['description'])
+    pillar_descs = ''
+    for key, label in [('year', '年柱'), ('month', '月柱'), ('day', '日柱')]:
+        desc = fp_interp.get(key, '')
+        if desc:
+            full = fp[f'{key}_pillar']['full']
+            pillar_descs += f'<strong style="color:var(--text)">{label}（{full}）</strong>: {desc}<br>'
+    pillar_descs_html = f'<div style="margin-top:8px;font-size:12px;color:var(--text-secondary);line-height:1.7">{pillar_descs}</div>' if pillar_descs else ''
+
+    # Nine Star Ki interpretation
+    nsk_year_desc = nsk_interp.get('year', '')
+    nsk_month_desc = nsk_interp.get('month', '')
+    nsk_desc_html = ''
+    if nsk_year_desc or nsk_month_desc:
+        parts = ''
+        if nsk_year_desc:
+            parts += f'<div style="font-size:12px;color:var(--text-secondary);line-height:1.7">{nsk_year_desc}</div>'
+        if nsk_month_desc:
+            parts += f'<div style="font-size:12px;color:var(--text-secondary);line-height:1.7;margin-top:8px">{nsk_month_desc}</div>'
+        nsk_desc_html = f'<div class="card" style="margin-top:12px">{parts}</div>'
+
+    # Rokusei interpretation
+    rok_main_desc = rok_interp.get('main', '')
+    rok_sub_desc = rok_interp.get('sub', '')
+    rok_reigou_desc = rok_interp.get('reigou', '')
+    rok_desc_html = ''
+    if rok_main_desc or rok_sub_desc:
+        parts = ''
+        if rok_main_desc:
+            parts += f'<strong style="color:var(--text)">{rok["main_star"]["name"]}({rok["main_star"]["polarity"]})</strong>: {rok_main_desc}<br>'
+        if rok_sub_desc:
+            parts += f'<strong style="color:var(--text)">{rok["sub_star"]["name"]}({rok["sub_star"]["polarity"]})</strong>: {rok_sub_desc}'
+        rok_desc_html = f'<div style="font-size:12px;color:var(--text-secondary);line-height:1.7;margin-bottom:12px">{parts}</div>'
+    reigou_box = ''
+    if rok.get('reigou') and rok_reigou_desc:
+        reigou_box = f'''<div style="background:rgba(234,179,8,0.08);border:1px solid rgba(234,179,8,0.2);border-radius:var(--radius-sm);padding:12px;text-align:center;margin-top:12px">
+      <div style="font-size:13px;color:var(--yellow);font-weight:600">霊合星人</div>
+      <div style="font-size:12px;color:var(--text-secondary);margin-top:6px;line-height:1.7;text-align:left">{rok_reigou_desc}</div></div>'''
+
     return f'''<section class="section" id="divination">
   <h2 class="section-title">占術プロファイル</h2>
+  <p class="section-desc">四柱推命・九星気学・六星占術・西洋占星術 — 不変の本質的特性</p>
 
   <h3 class="sub-title">四柱推命</h3>
+  {fp_overview_html}
   <div class="pillar-grid">{pcards}</div>
-  <div class="card" style="margin-top:12px"><div class="card-label">日主（Day Master）</div>
-    <div class="card-value">{dm["char"]}（{dm["element"]}）</div><div class="card-sub">{dm["description"]}</div></div>
-  <div class="element-bar">{el_bars}</div>
+  <div style="margin-top:16px;font-size:13px;color:var(--text-secondary);line-height:1.7">
+    <strong style="color:var(--text)">日主: {dm["char"]}火（{dm["yin_yang"]}火）</strong> — {dm_detail}</div>
+  {pillar_descs_html}
+  <div class="element-bar" style="margin-top:12px">{el_bars}</div>
   {missing_html}
 
   <h3 class="sub-title">九星気学</h3>
   {nsk_cards}
+  {nsk_desc_html}
   <div class="chart-wrap"><canvas id="chart9" height="200"></canvas></div>
 
   <h3 class="sub-title">六星占術</h3>
   {rok_cards}
+  {rok_desc_html}
+  {reigou_box}
   {"<div class='chart-wrap'><canvas id='chartComb' height='200'></canvas></div>" if rok.get('reigou_combined') else ""}
   <div style="margin-top:12px">{table}</div>
 
@@ -684,6 +766,7 @@ body::before{content:'';position:fixed;top:0;left:0;width:100%;height:100%;opaci
 .typo-label{font-size:10px;color:var(--text-muted);text-transform:uppercase}
 .typo-value{font-size:18px;font-weight:700;margin-top:2px}
 .typo-sub{font-size:11px;color:var(--text-secondary)}
+.typo-desc{font-size:11px;color:var(--text-muted);line-height:1.5;margin-top:6px}
 .cycle-table{width:100%;border-collapse:collapse;font-size:13px}
 .cycle-table th{text-align:left;padding:8px 10px;color:var(--text-muted);font-weight:500;border-bottom:1px solid var(--border)}
 .cycle-table td{padding:8px 10px;border-bottom:1px solid rgba(45,51,72,0.5)}
