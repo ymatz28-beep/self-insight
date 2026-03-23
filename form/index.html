@@ -296,12 +296,12 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);line-height:
   <div class="section-label">注意特性（ASRS）</div>
   <div class="hint" style="margin-bottom:16px">以下の行動がどのくらいの頻度でありますか？</div>
 
-  <div class="likert"><div class="q-text"><span class="q-num">Q16.</span>物事の最も難しい部分が終わった後で、詰めの作業が面倒に感じる</div><div class="likert-row" data-q="adhd_1" data-scale="freq"></div><div class="likert-labels"><span>全くない</span><span>非常に頻繁</span></div></div>
-  <div class="likert"><div class="q-text"><span class="q-num">Q17.</span>計画的に進める必要があるとき、順序立てて整理するのが難しい</div><div class="likert-row" data-q="adhd_2" data-scale="freq"></div><div class="likert-labels"><span>全くない</span><span>非常に頻繁</span></div></div>
-  <div class="likert"><div class="q-text"><span class="q-num">Q18.</span>約束や用事を忘れる</div><div class="likert-row" data-q="adhd_3" data-scale="freq"></div><div class="likert-labels"><span>全くない</span><span>非常に頻繁</span></div></div>
-  <div class="likert"><div class="q-text"><span class="q-num">Q19.</span>じっくり考える必要がある課題を、先延ばしにしたり避けたりする</div><div class="likert-row" data-q="adhd_4" data-scale="freq"></div><div class="likert-labels"><span>全くない</span><span>非常に頻繁</span></div></div>
-  <div class="likert"><div class="q-text"><span class="q-num">Q20.</span>長時間座っているとき、手足をそわそわ動かしたり、もぞもぞしたりする</div><div class="likert-row" data-q="adhd_5" data-scale="freq"></div><div class="likert-labels"><span>全くない</span><span>非常に頻繁</span></div></div>
-  <div class="likert"><div class="q-text"><span class="q-num">Q21.</span>まるでモーターで動かされているように、過度に活動的だったり何かせずにはいられない</div><div class="likert-row" data-q="adhd_6" data-scale="freq"></div><div class="likert-labels"><span>全くない</span><span>非常に頻繁</span></div></div>
+  <div class="likert"><div class="q-text"><span class="q-num">Q16.</span>物事の最も難しい部分が終わった後で、詰めの作業が面倒に感じる</div><div class="likert-row" data-q="adhd_1"></div><div class="likert-labels"><span>全く当てはまらない</span><span>よく当てはまる</span></div></div>
+  <div class="likert"><div class="q-text"><span class="q-num">Q17.</span>計画的に進める必要があるとき、順序立てて整理するのが難しい</div><div class="likert-row" data-q="adhd_2"></div><div class="likert-labels"><span>全く当てはまらない</span><span>よく当てはまる</span></div></div>
+  <div class="likert"><div class="q-text"><span class="q-num">Q18.</span>約束や用事を忘れる</div><div class="likert-row" data-q="adhd_3"></div><div class="likert-labels"><span>全く当てはまらない</span><span>よく当てはまる</span></div></div>
+  <div class="likert"><div class="q-text"><span class="q-num">Q19.</span>じっくり考える必要がある課題を、先延ばしにしたり避けたりする</div><div class="likert-row" data-q="adhd_4"></div><div class="likert-labels"><span>全く当てはまらない</span><span>よく当てはまる</span></div></div>
+  <div class="likert"><div class="q-text"><span class="q-num">Q20.</span>長時間座っているとき、手足をそわそわ動かしたり、もぞもぞしたりする</div><div class="likert-row" data-q="adhd_5"></div><div class="likert-labels"><span>全く当てはまらない</span><span>よく当てはまる</span></div></div>
+  <div class="likert"><div class="q-text"><span class="q-num">Q21.</span>まるでモーターで動かされているように、過度に活動的だったり何かせずにはいられない</div><div class="likert-row" data-q="adhd_6"></div><div class="likert-labels"><span>全く当てはまらない</span><span>よく当てはまる</span></div></div>
 
   <!-- Tier 2 Preview -->
   <div class="preview-card">
@@ -419,10 +419,8 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);line-height:
 // === Likert scale generation ===
 document.querySelectorAll('.likert-row').forEach(row => {
   const q = row.dataset.q;
-  const isFreq = row.dataset.scale === 'freq';
-  const min = isFreq ? 0 : 1;
-  const max = isFreq ? 4 : 5;
-  for (let i = min; i <= max; i++) {
+  // All scales unified to 1-5 display. ADHD internally converts to 0-4 at collection.
+  for (let i = 1; i <= 5; i++) {
     const label = document.createElement('label');
     label.innerHTML = `<input type="radio" name="${q}" value="${i}"><span class="btn">${i}</span>`;
     row.appendChild(label);
@@ -499,7 +497,7 @@ function collectData(tier) {
     data.adhd = [];
     for (let i = 1; i <= 6; i++) {
       const v = document.querySelector(`input[name=adhd_${i}]:checked`)?.value;
-      data.adhd.push(v ? parseInt(v) : null);
+      data.adhd.push(v ? parseInt(v) - 1 : null); // UI 1-5 → internal 0-4 (ASRS-6 original scale)
     }
   }
 
