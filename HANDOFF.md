@@ -245,13 +245,12 @@
 - [ ] **generate_dashboard.py / generate_profile.py 構造分割**: constancy警告（両ファイル500行超過）への対応。generate_dashboard.py 2,084行、generate_profile.py 1,130行
 
 ## Next Actions
-1. **ファイル分割**: generate_dashboard.py（2,084行）をセクション生成モジュールに分割（constancy threshold: 500行）
-2. **Google Apps Script デプロイ**: `scripts/apps-script.gs`をGoogle Sheetsに設定し、`form/index.html`のSUBMIT_URLに反映。E2Eパイプライン（process_submission.py）の本番接続テスト
-3. **SIPS実装**: Self-Insight Personality System — Big Five 40問→16 Archetypes+24 Strengths導出ロジック、HSP/ADHD統合、アーキタイプ/強みテーマ名称設計
-4. **月運データの精度向上**: 九星気学の月別宮位置を正確に計算（OSSライブラリ or 暦テーブル）
-5. **ユニットテスト**: 占術計算の正確性検証（test_calculations.py +214行追加済み、実行確認未了）
-6. **未追跡ドキュメントのコミット**: `docs/competitive-research.md`、`docs/subscription-model.md`（共にgit未追跡）
-7. **💡改善アイデア: βテスターフィードバック収集設計**: Hub Architecture導入で大幅UX変更あり。友人5人テスト前に、アーキタイプ名・折りたたみUI・感情的セクション名の評価ポイントを整理
+1. **renderer.js本番品質化**（最重要）: generate_dashboard.pyレベルのリッチUI（アーキタイプ名、折りたたみカード、Chart.js運気チャート、リッチナラティブ、ドメインカラー、レアリティバッジ）をrenderer.jsに移植。完成すればPython版パイプライン不要に
+2. **Google Apps Script デプロイ**: `scripts/apps-script.gs`をGoogle Sheetsに設定 → `form/index.html`のSUBMIT_URLに反映 → LINE通知（結果URL含む）
+3. **短縮URL設計**: `form/#r=base64...`（長い）→ `/results/{uuid}`（短い）への移行。バックエンドストレージ必要
+4. **SIPS実装**: Big Five 40問→16 Archetypes+24 Strengths導出ロジック、アーキタイプ/強みテーマ名称設計
+5. **engine.js検証**: Yumaプロファイルで計算結果をPython版と照合（差異がないか）
+6. **ファイル分割**: generate_dashboard.py（2,084行）/ generate_profile.py（1,130行）のモジュール分割（constancy threshold超過）
 
 ## Key Decisions
 - 2ピラー構造: Timeless Identity + Year Forecast
@@ -269,6 +268,8 @@
 - **フォームバックエンド**: Google Apps Script Web App → Google Sheets蓄積。`scripts/apps-script.gs` + `scripts/process_submission.py`（E2Eテスト済み）。LINE/clipboardはfallback
 - **クライアントサイド即時表示**: `form/engine.js`（全計算ロジックJS移植）+ `form/renderer.js`（ダッシュボード描画）。フォーム送信後にサーバー不要で即時結果表示
 - **管理者ページ**: `form/admin.html` — Google Sheetsの回答一覧表示、UUID/Tier/ステータス管理、URLコピー機能
+- **結果URL永続化**: フォーム送信後にURLハッシュ（`#r=base64data`）に結果データを埋め込み。リロード/ブックマーク/共有対応。ローンチ時は`/results/{uuid}`に移行予定
+- **レンダラー統一方針（session #21で確定）**: renderer.js（JS）をgenerate_dashboard.py（Python）レベルに品質向上し、最終的にPython版を廃止。即時表示=本番品質=永続URLの一気通貫を実現。Yumaは友人と同じ結果URLで確認する（admin.htmlは結果確認用ではなく管理台帳）
 - **日本語化方針**: 全英語用語に日本語訳を併記 + 専門用語グロサリー。非専門家でも理解できるUI
 - **Likertスケール統一**: 全スケール1-5表示（ADHDは内部0-4で計算、表示時に1-5変換）
 - **アクション提案構成**: 「今月のガイダンス」（月間運勢後）+ 「年間テーマ」+ 「行動ブループリント」の3層
