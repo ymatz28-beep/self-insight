@@ -76,7 +76,8 @@ def _gnav():
 
 
 def _section_nav(has_personality):
-    links = '<a href="#core-identity">Core Identity（自己本質）</a>'
+    links = '<a href="#this-month">今月のあなたへ</a>'
+    links += '<a href="#core-identity">Core Identity（自己本質）</a>'
     if has_personality:
         links += '<a href="#personality">Personality（性格特性）</a>'
     links += '<a href="#divination">占術プロファイル</a>'
@@ -127,6 +128,484 @@ def _hero(p, tier):
 </section>'''
 
 
+def _get_essence_sub(dm, ys):
+    """Generate Core Essence sub-description from day master + year star."""
+    dm_subs = {
+        '丁': '静かな炎',
+        '丙': '太陽の輝き',
+        '甲': '大木の力',
+        '乙': '草花のしなやかさ',
+        '戊': '大地の安定',
+        '己': '大地の柔軟さ',
+        '庚': '鋼の意志',
+        '辛': '宝石の繊細さ',
+        '壬': '大河の流れ',
+        '癸': '雨露の慈しみ',
+    }
+    ys_subs = {
+        '七赤金星': '言葉の力',
+        '五黄土星': '中央の統率力',
+        '一白水星': '知恵と柔軟性',
+        '二黒土星': '献身と安定',
+        '三碧木星': '行動と成長',
+        '四緑木星': '信用と調和',
+        '六白金星': '権威と正義',
+        '八白土星': '改革と蓄積',
+        '九紫火星': '華やかさと直感',
+    }
+    dm_sub = dm_subs.get(dm.get('char', ''), '')
+    ys_sub = ys_subs.get(ys.get('name', ''), '')
+    if dm_sub and ys_sub:
+        return f'{dm_sub} × {ys_sub}'
+    return dm_sub or ys_sub or ''
+
+
+def _get_duality_value(bt, ennea, rok):
+    """Generate duality value from blood type + personality."""
+    bt_traits = {
+        'AB': '合理 × 感性',
+        'A': '誠実 × 繊細',
+        'B': '自由 × 情熱',
+        'O': '大胆 × 包容',
+    }
+    return bt_traits.get(bt.get('type', ''), '独自の二面性')
+
+
+def _get_missing_sub(missing):
+    """Generate sub-description for missing elements."""
+    elem_meanings = {
+        '金': '決断力・収穫',
+        '水': '柔軟性・知恵',
+        '木': '成長力・発展',
+        '火': '情熱・行動力',
+        '土': '安定・信頼',
+    }
+    parts = []
+    for m in missing[:2]:
+        meaning = elem_meanings.get(str(m), '')
+        if meaning:
+            parts.append(meaning)
+    if parts:
+        return f'{" × ".join(parts)}を意識的に補う'
+    return ''
+
+
+def _this_month_guidance(p):
+    """Generate 'This Month's Guidance' — the #1 value section right after Hero."""
+    mf = p.get('monthly_fortune', [])
+    current_month_num = _date.today().month
+    cur_month = next((m for m in mf if m['month'] == current_month_num), None)
+    if not cur_month:
+        return ''
+
+    interp = p.get('interpretations', {})
+    hero = interp.get('hero', {})
+    tagline = hero.get('tagline', '')
+    dm = p['four_pillars']['day_master']
+    ys = p['nine_star_ki']['year_star']
+    rok = p['rokusei']
+    west = p['western_astrology']['sun_sign']
+    sf_top5 = p.get('strengths_finder', {}).get('top5', [])
+    ennea = p.get('personality', {}).get('enneagram', {})
+    missing = p['four_pillars'].get('missing_elements', [])
+
+    # Determine overall month energy
+    domains = cur_month['domains']
+    avg_stars = sum(domains.values()) / len(domains)
+    nine_energy = cur_month['nine_star']['energy']
+    rok_phase = cur_month['rokusei']['phase']
+    rok_type = cur_month['rokusei']['type']
+
+    # Month narrative — personalized by connecting traits to fortune
+    month_label = f'{current_month_num}月'
+
+    # Build narrative pieces
+    if avg_stars >= 4:
+        energy_tone = '追い風'
+        energy_desc = 'エネルギーが高く、積極的に動ける月'
+        energy_icon_bg = 'rgba(34,197,94,0.15)'
+        energy_icon_color = '#4ade80'
+        energy_icon = '&#9650;'  # up triangle
+    elif avg_stars >= 3:
+        energy_tone = '安定'
+        energy_desc = '地固めと準備に適した月'
+        energy_icon_bg = 'rgba(59,130,246,0.15)'
+        energy_icon_color = '#60a5fa'
+        energy_icon = '&#9654;'  # right triangle
+    elif avg_stars >= 2:
+        energy_tone = '慎重'
+        energy_desc = '守りを固め、無理をしない月'
+        energy_icon_bg = 'rgba(234,179,8,0.15)'
+        energy_icon_color = '#facc15'
+        energy_icon = '&#9660;'  # down triangle
+    else:
+        energy_tone = '充電'
+        energy_desc = '休息と回復を最優先にする月'
+        energy_icon_bg = 'rgba(239,68,68,0.15)'
+        energy_icon_color = '#f87171'
+        energy_icon = '&#9724;'  # square
+
+    # Generate personalized action items based on profile + fortune
+    actions = _generate_monthly_actions(p, cur_month, avg_stars)
+    actions_html = ''
+    for a in actions:
+        actions_html += f'''<div class="guidance-action">
+          <div class="guidance-action-icon" style="background:{a['icon_bg']};color:{a['icon_color']}">{a['icon']}</div>
+          <div>
+            <div class="guidance-action-title">{a['title']}</div>
+            <div class="guidance-action-desc">{a['desc']}</div>
+          </div>
+        </div>'''
+
+    # Watch out
+    watch_items = _generate_monthly_watchouts(p, cur_month, avg_stars)
+    watch_html = ''
+    if watch_items:
+        watch_html = '<div class="guidance-watch"><div class="guidance-watch-title">気をつけること</div>'
+        for w in watch_items:
+            watch_html += f'<div class="guidance-watch-item">{w}</div>'
+        watch_html += '</div>'
+
+    # Nine Star + Rokusei tags
+    nine_note = cur_month['nine_star']['note']
+    pc = _phase_color_py(rok_type)
+
+    return f'''<section class="section" id="this-month">
+  <div class="pillar-header">
+    <div class="pillar-icon" style="background:{energy_icon_bg};color:{energy_icon_color}">{energy_icon}</div>
+    <div><h2>{month_label}のあなたへ</h2>
+      <div class="pillar-sub">{energy_desc}</div></div>
+  </div>
+  <div class="guidance-summary">
+    <div class="guidance-overview">
+      <div class="guidance-energy-badge" style="background:{energy_icon_bg};color:{energy_icon_color};border:1px solid {energy_icon_color}">{energy_tone}</div>
+      <div class="guidance-tags">
+        <span class="month-tag" style="background:rgba(99,102,241,0.15);color:#a5b4fc">九星: {nine_note}</span>
+        <span class="month-tag" style="background:{pc['bg']};color:{pc['color']};border:1px solid {pc['border']}">六星: {rok_phase}</span>
+      </div>
+    </div>
+    <div class="guidance-narrative">{_generate_monthly_narrative(p, cur_month, avg_stars, energy_tone)}</div>
+    <div class="guidance-actions-grid">
+      <div class="guidance-actions-section">
+        <div class="guidance-section-label">今月やるべきこと</div>
+        {actions_html}
+      </div>
+      {watch_html}
+    </div>
+  </div>
+</section>'''
+
+
+def _phase_color_py(rtype):
+    """Return phase color dict for Python-side rendering."""
+    if rtype == 'great':
+        return {'bg': 'rgba(34,197,94,0.12)', 'border': 'rgba(34,197,94,0.3)', 'color': '#4ade80'}
+    if rtype == 'good':
+        return {'bg': 'rgba(59,130,246,0.12)', 'border': 'rgba(59,130,246,0.3)', 'color': '#60a5fa'}
+    if rtype == 'caution':
+        return {'bg': 'rgba(234,179,8,0.12)', 'border': 'rgba(234,179,8,0.3)', 'color': '#facc15'}
+    return {'bg': 'rgba(239,68,68,0.12)', 'border': 'rgba(239,68,68,0.3)', 'color': '#f87171'}
+
+
+def _generate_monthly_narrative(p, cur_month, avg_stars, energy_tone):
+    """Generate a personalized narrative for the current month."""
+    dm = p['four_pillars']['day_master']
+    ys = p['nine_star_ki']['year_star']
+    west = p['western_astrology']['sun_sign']
+    sf_top5 = p.get('strengths_finder', {}).get('top5', [])
+    missing = p['four_pillars'].get('missing_elements', [])
+    ennea = p.get('personality', {}).get('enneagram', {})
+    rok_phase = cur_month['rokusei']['phase']
+    nine_note = cur_month['nine_star']['note']
+    month_num = cur_month['month']
+
+    top_strength = sf_top5[0]['name'] if sf_top5 else ''
+    top_ja = SF_JA.get(top_strength, '')
+
+    parts = []
+
+    # Opening — connect personality to month
+    if avg_stars >= 4:
+        parts.append(f'{month_num}月は、あなたの持ち味が最も活きる月です。')
+        if top_strength:
+            parts.append(f'{top_strength}（{top_ja}）を全開にして、新しいことに積極的に挑戦してください。')
+        parts.append(f'九星気学では「{nine_note}」、六星占術では「{rok_phase}」— 複数の体系が後押ししています。')
+    elif avg_stars >= 3:
+        parts.append(f'{month_num}月は、地道な積み上げが後に大きく効いてくる月です。')
+        if top_strength:
+            parts.append(f'{top_strength}（{top_ja}）を活かしつつ、着実に一歩ずつ前進する意識を。')
+        parts.append(f'九星気学と六星占術で体系間に差があるため、バランス感覚が鍵になります。')
+    elif avg_stars >= 2:
+        parts.append(f'{month_num}月は、守りを固めて内面を充実させる月です。')
+        parts.append(f'大きな決断は避け、情報収集と計画立案に集中してください。')
+        if missing:
+            missing_str = '・'.join(str(m) for m in missing)
+            parts.append(f'五行で欠如している「{missing_str}」の要素を意識的に補うのが特に有効なタイミングです。')
+    else:
+        parts.append(f'{month_num}月は、無理をせず回復に専念する月です。')
+        parts.append(f'この時期に充電したエネルギーが、次の好調期で花開きます。')
+        if ennea:
+            etype = ennea.get('type', '')
+            stress = ennea.get('stress_direction', '')
+            if stress:
+                parts.append(f'エニアグラムType {etype}はストレス下でType {stress}に退行しやすいので、意識的にリラックスの時間を確保してください。')
+
+    return ''.join(parts)
+
+
+def _generate_monthly_actions(p, cur_month, avg_stars):
+    """Generate 3 actionable items based on profile + current month fortune."""
+    sf_top5 = p.get('strengths_finder', {}).get('top5', [])
+    ennea = p.get('personality', {}).get('enneagram', {})
+    dm = p['four_pillars']['day_master']
+    domains = cur_month['domains']
+    actions = []
+
+    # Best domain this month
+    best_domain = max(domains, key=domains.get)
+    domain_ja = {'work': '仕事', 'money': 'お金', 'health': '健康', 'romance': '人間関係'}
+    domain_icons = {
+        'work': ('&#9733;', 'rgba(59,130,246,0.15)', '#60a5fa'),
+        'money': ('&#9830;', 'rgba(201,168,76,0.15)', '#c9a84c'),
+        'health': ('&#9829;', 'rgba(34,197,94,0.15)', '#4ade80'),
+        'romance': ('&#9827;', 'rgba(244,114,182,0.15)', '#f472b6'),
+    }
+
+    # Action 1: Leverage best domain
+    icon_data = domain_icons.get(best_domain, ('&#9733;', 'rgba(99,102,241,0.15)', '#a5b4fc'))
+    if avg_stars >= 3:
+        actions.append({
+            'title': f'{domain_ja.get(best_domain, best_domain)}に注力する',
+            'desc': _domain_action_desc(best_domain, domains[best_domain], True),
+            'icon': icon_data[0], 'icon_bg': icon_data[1], 'icon_color': icon_data[2],
+        })
+    else:
+        actions.append({
+            'title': f'{domain_ja.get(best_domain, best_domain)}を守る',
+            'desc': _domain_action_desc(best_domain, domains[best_domain], False),
+            'icon': icon_data[0], 'icon_bg': icon_data[1], 'icon_color': icon_data[2],
+        })
+
+    # Action 2: Strength-based action
+    if sf_top5:
+        top = sf_top5[0]
+        top_ja = SF_JA.get(top['name'], '')
+        if avg_stars >= 3:
+            actions.append({
+                'title': f'{top["name"]}（{top_ja}）を武器にする',
+                'desc': _strength_action(top['name'], True),
+                'icon': '&#9733;', 'icon_bg': 'rgba(99,102,241,0.15)', 'icon_color': '#a5b4fc',
+            })
+        else:
+            actions.append({
+                'title': f'{top["name"]}（{top_ja}）で自分を守る',
+                'desc': _strength_action(top['name'], False),
+                'icon': '&#9733;', 'icon_bg': 'rgba(99,102,241,0.15)', 'icon_color': '#a5b4fc',
+            })
+
+    # Action 3: Element/spiritual action
+    hsp = p.get('personality', {}).get('hsp', {})
+    if hsp.get('score') == 'high' or hsp.get('total', 0) >= 18:
+        if avg_stars <= 2:
+            actions.append({
+                'title': '繊細さのケアを最優先に',
+                'desc': 'エネルギーが低い月は、繊細な感覚が過敏になりがち。ネガティブな刺激を避け、自然の中で過ごす時間や、一人で内省する時間を意識的に確保する',
+                'icon': '&#9826;', 'icon_bg': 'rgba(139,92,246,0.15)', 'icon_color': '#c4b5fd',
+            })
+        else:
+            actions.append({
+                'title': '繊細さを創造性に変換する',
+                'desc': '好調期の繊細さは、美しいものや深い体験から何倍もの充足を引き出す。アート・音楽・深い会話を意識的に取り入れて、感性を栄養にする',
+                'icon': '&#9826;', 'icon_bg': 'rgba(139,92,246,0.15)', 'icon_color': '#c4b5fd',
+            })
+    else:
+        missing = p['four_pillars'].get('missing_elements', [])
+        if missing:
+            elem_actions = {
+                '金': ('決断力を意識的に鍛える', '考えすぎる前に「小さく試す」を実践。完璧を待たず、70点で動き出す訓練を'),
+                '水': ('柔軟性を意識する', '予定通りにいかない時こそ成長のチャンス。「別のルートもある」と自分に言い聞かせる'),
+                '木': ('成長のエネルギーを補う', '新しい学びや挑戦を一つ始める。木のように上へ伸びる意識を持つ'),
+                '火': ('情熱を燃やす場を作る', '心が躍ることに時間を使う。義務感だけの行動を減らし、ワクワクを優先する'),
+                '土': ('安定の基盤を作る', 'ルーティンを一つ定着させる。毎日同じ時間に同じことをする習慣が土の力を補う'),
+            }
+            first_missing = str(missing[0])
+            ea = elem_actions.get(first_missing, ('バランスを整える', '欠けている要素を意識的に生活に取り入れる'))
+            actions.append({
+                'title': ea[0],
+                'desc': ea[1],
+                'icon': '&#9670;', 'icon_bg': 'rgba(234,179,8,0.15)', 'icon_color': '#facc15',
+            })
+
+    return actions[:3]
+
+
+def _domain_action_desc(domain, stars, is_offensive):
+    """Generate domain-specific action description."""
+    if domain == 'work':
+        if is_offensive:
+            return '仕事運が好調。新しいプロジェクトの提案や、後回しにしていた重要タスクに着手するベストタイミング'
+        return '仕事は現状維持がベスト。新規案件は控え、既存の仕事を丁寧に仕上げることに集中する'
+    if domain == 'money':
+        if is_offensive:
+            return '金運が高い月。投資判断や価格交渉に適している。ただし衝動買いには注意'
+        return '金運は守り。大きな出費は避け、計画的な支出管理を。固定費の見直しに良いタイミング'
+    if domain == 'health':
+        if is_offensive:
+            return '体調が安定。新しい運動習慣を始めたり、健康投資に踏み切るのに最適'
+        return '体調を崩しやすい月。睡眠の質を最優先に。無理なスケジュールは組まない'
+    # romance
+    if is_offensive:
+        return '人間関係が良好。新しい出会いにオープンに、既存の関係も深まるタイミング'
+    return '対人関係で誤解が生じやすい。丁寧なコミュニケーションを心がけ、衝突は避ける'
+
+
+def _strength_action(strength_name, is_offensive):
+    """Generate strength-specific action for the month."""
+    offensive_map = {
+        'Empathy': '共感力を使って、チームメンバーや周囲の人が本当に求めていることを察知し、先回りで動く。サービス設計やフィードバック収集に最適',
+        'Intellection': '深い思考に没頭できる時間をブロックする。重要なテーマについて、ノートに書きながら考えを整理する',
+        'Deliberative': '重要な意思決定に取り組むベストタイミング。慎重さを武器に、リスクを見極めた上で前進する',
+        'Connectedness': '異なるプロジェクトや人脈の「つながり」を意識する。一見無関係なものの間にシナジーを見出す',
+        'Maximizer': '既にうまくいっていることを「さらに良く」する。弱みの修正より、強みの極大化に集中する',
+    }
+    defensive_map = {
+        'Empathy': '他者の感情を吸収しすぎないよう、意識的に境界線を引く。「感じ取っても、背負わない」を練習する',
+        'Intellection': '考えすぎて動けなくならないよう注意。思考は30分で区切り、小さなアクションに変換する',
+        'Deliberative': '慎重さが行動の先延ばしにならないよう意識する。「完璧な答えより、今できる最善」で動く',
+        'Connectedness': '全体を見すぎて疲れてしまわないよう、今週やることだけに焦点を絞る',
+        'Maximizer': '「もっと良くできる」の追求を一旦止めて、現状の「十分良い」を認める練習をする',
+    }
+    if is_offensive:
+        return offensive_map.get(strength_name, f'{strength_name}を最大限に活用して、新しい挑戦に取り組む')
+    return defensive_map.get(strength_name, f'{strength_name}が裏目に出ないよう、バランスを意識する')
+
+
+def _generate_monthly_watchouts(p, cur_month, avg_stars):
+    """Generate watch-out items based on profile weaknesses + fortune."""
+    items = []
+    missing = p['four_pillars'].get('missing_elements', [])
+    ennea = p.get('personality', {}).get('enneagram', {})
+    rok_type = cur_month['rokusei']['type']
+    sf_top5 = p.get('strengths_finder', {}).get('top5', [])
+
+    # Rokusei danger
+    if rok_type in ('danger', 'caution'):
+        satsukai = cur_month['rokusei'].get('satsukai')
+        if satsukai:
+            items.append(f'六星占術で{satsukai}に入っています。大きな契約・転職・引越しなど人生の重大決断は可能な限り避ける')
+        else:
+            items.append('六星占術で注意期。衝動的な判断は避け、一晩寝かせてから決める')
+
+    # Missing elements warning
+    if missing and avg_stars <= 3:
+        missing_warnings = {
+            '金': '「決断できない」状態に陥りやすい月。迷ったら信頼できる人に相談して背中を押してもらう',
+            '水': '柔軟性が低下しやすい月。予定変更にイライラしたら深呼吸。「流れに身を任せる」ことも戦略',
+            '土': '地に足がつかない感覚がある月。毎朝のルーティンを崩さないことが安定の鍵',
+            '木': '成長が停滞する感覚がある月。小さな学びを一つ始めるだけでエネルギーが回復する',
+            '火': 'モチベーションが上がりにくい月。「なぜやるのか」原点に立ち返ると情熱が再点火する',
+        }
+        for m in missing[:2]:
+            warn = missing_warnings.get(str(m))
+            if warn:
+                items.append(warn)
+
+    # Enneagram stress
+    if avg_stars <= 2 and ennea:
+        stress = ennea.get('stress_direction')
+        stress_msgs = {
+            1: '完璧主義に陥りすぎないよう注意。「まあいいか」を意識的に唱える',
+            2: '自己犠牲モードに入りやすい。「自分のニーズも大切にしていい」と意識する',
+            4: '感情の波に飲まれやすい時期。客観的な視点を保つ工夫を',
+            5: '殻にこもりすぎないよう注意。信頼できる人との対話を意識的に入れる',
+            7: '楽しいことに逃避しやすい。不快でも向き合うべきことから目をそらさない',
+            8: '攻撃的になりやすい。反射的に言葉を返す前に3秒待つ',
+        }
+        msg = stress_msgs.get(stress)
+        if msg:
+            items.append(msg)
+
+    return items[:3]
+
+
+def _action_blueprint(p):
+    """Generate actionable takeaways section connecting Core Identity to daily life."""
+    sf_top5 = p.get('strengths_finder', {}).get('top5', [])
+    ennea = p.get('personality', {}).get('enneagram', {})
+    missing = p['four_pillars'].get('missing_elements', [])
+    dm = p['four_pillars']['day_master']
+    hsp = p.get('personality', {}).get('hsp', {})
+    adhd = p.get('personality', {}).get('adhd', {})
+    west = p['western_astrology']['sun_sign']
+
+    items = []
+
+    # 1. Energy management based on Day Master + HSP + ADHD
+    if hsp.get('score') == 'high' or hsp.get('total', 0) >= 18:
+        items.append({
+            'label': 'エネルギー管理',
+            'title': '繊細さ × 過集中 — 「没頭」と「回復」のリズムを設計する',
+            'desc': '繊細な感受性は最大の武器であると同時に、消耗の原因にもなる。90分集中→15分完全回復のサイクルを基本リズムに。ネガティブな環境からは物理的に距離を取る仕組みを作る',
+        })
+    else:
+        items.append({
+            'label': 'エネルギー管理',
+            'title': f'{dm["char"]}火の炎を安定させる — 環境設計が鍵',
+            'desc': f'{dm["char"]}火（ロウソクの炎）は環境次第で安定も不安定もする。集中できる環境を意識的に選び、エネルギーの無駄遣いを避ける仕組みを作る',
+        })
+
+    # 2. Weakness compensation
+    if missing:
+        elem_comp = {
+            '金': ('決断力の補完', '「70点で動く」ルールを設定する。完璧な答えを待つのではなく、仮説→実行→修正のサイクルを高速で回す。タイマーで考える時間を制限するのも有効'),
+            '水': ('柔軟性の補完', '計画通りにいかない状況を「学びのチャンス」と再定義する。月に一度、いつもと違う行動パターンを試す習慣を作る'),
+            '木': ('成長力の補完', '月に一つ新しいスキルや知識を学ぶ習慣。小さくても継続的な成長が、欠けた木の力を補う'),
+            '火': ('情熱の補完', '「なぜ自分がこれをやるのか」を定期的に言語化する。目的を明確にすることで内なる火を維持する'),
+            '土': ('安定基盤の補完', 'ルーティンを少なくとも3つ持つ。毎日同じ時間に起き、同じ順序で朝の準備をするだけで土の力が補完される'),
+        }
+        first_missing = str(missing[0])
+        comp = elem_comp.get(first_missing, ('バランスの補完', '欠けている要素を意識的に日常に取り入れる'))
+        items.append({
+            'label': '弱点の構造的カバー',
+            'title': comp[0],
+            'desc': comp[1],
+        })
+
+    # 3. Strength optimization
+    if sf_top5:
+        top = sf_top5[0]
+        top_ja = SF_JA.get(top['name'], '')
+        opt_map = {
+            'Empathy': ('共感力の最適活用', '共感力は「他者を理解する」だけでなく「他者が何を求めているか先読みする」戦略的スキル。サービス設計・チームマネジメント・交渉において、相手の言葉にならないニーズを読む武器として使う。ただし境界線は必須 — 「感じ取っても、背負わない」を原則に'),
+            'Intellection': ('思考力の最適活用', '一人で深く考える時間を「生産的な仕事」として確保する。周囲には「考える時間」の必要性を説明し、カレンダーにブロック。思考の成果はメモや図で言語化し、価値を可視化する'),
+            'Deliberative': ('慎重さの最適活用', 'リスク分析力を「守り」だけでなく「攻めの意思決定」に使う。「慎重に分析した結果、今が動くべきタイミング」と判断できれば、それは最も確実な攻め'),
+            'Connectedness': ('つながりの力の最適活用', '異なる分野・プロジェクト・人物の間に隠された接点を見つけ出す力を戦略的に使う。月に一度「一見無関係な2つのことを結びつける」思考実験を行う'),
+            'Maximizer': ('最上志向の最適活用', '「良い→最高」の追求を、最もインパクトのある領域に集中する。全てを完璧にしようとせず、20%の努力で80%の成果が出る領域を見極める'),
+        }
+        opt = opt_map.get(top['name'], (f'{top["name"]}の最適活用', f'{top["name"]}（{top_ja}）を日常の意思決定と行動に組み込み、最大限に活用する'))
+        items.append({
+            'label': '最大の武器',
+            'title': opt[0],
+            'desc': opt[1],
+        })
+
+    if not items:
+        return ''
+
+    cards_html = ''
+    for item in items:
+        cards_html += f'''<div class="blueprint-card">
+      <div class="blueprint-label">{item['label']}</div>
+      <div class="blueprint-title">{item['title']}</div>
+      <div class="blueprint-desc">{item['desc']}</div>
+    </div>'''
+
+    return f'''<div class="blueprint-section">
+  <div class="blueprint-header">この特性を活かすには</div>
+  <div class="blueprint-grid">{cards_html}</div>
+</div>'''
+
+
 def _core_identity(p):
     dm = p['four_pillars']['day_master']
     ys = p['nine_star_ki']['year_star']
@@ -144,6 +623,45 @@ def _core_identity(p):
     {ps}
   </div>'''
 
+    # Dynamic summary cards
+    dm_desc = dm.get('description', '')
+    # Core Essence
+    yin_yang_ja = {'Yin':'陰','Yang':'陽'}.get(dm.get('yin_yang',''), '')
+    elem_ja = {'Fire':'火','Wood':'木','Earth':'土','Metal':'金','Water':'水'}.get(dm.get('element',''), '')
+    essence_value = f'{dm["char"]}{elem_ja} × {ys["name"]}'
+    essence_sub = _get_essence_sub(dm, ys)
+
+    # Strongest Axis
+    sf_top5 = p.get('strengths_finder', {}).get('top5', [])
+    if sf_top5 and len(sf_top5) >= 2:
+        t1_ja = SF_JA.get(sf_top5[0]['name'], sf_top5[0]['name'])
+        t2_ja = SF_JA.get(sf_top5[1]['name'], sf_top5[1]['name'])
+        axis_value = f'{t1_ja} × {t2_ja}'
+        axis_sub = f'{sf_top5[0]["name"]}（{t1_ja}）+ {sf_top5[1]["name"]}（{t2_ja}）'
+    else:
+        axis_value = '—'
+        axis_sub = ''
+
+    # Duality
+    bt = p['blood_type']
+    ennea = p.get('personality', {}).get('enneagram', {})
+    rok = p['rokusei']
+    etype = ennea.get('type', '?')
+    if rok.get('reigou'):
+        dual_sub = f'{bt["type"]}型 × 霊合星人 × エニアグラム {etype}'
+    else:
+        dual_sub = f'{bt["type"]}型 × エニアグラム {etype}'
+    dual_value = _get_duality_value(bt, ennea, rok)
+
+    # Watch Out
+    if missing:
+        missing_str = "・".join(str(m) for m in missing)
+        watch_value = f'{missing_str}の欠如'
+        watch_sub = _get_missing_sub(missing)
+    else:
+        watch_value = '—'
+        watch_sub = ''
+
     return f'''<section class="section" id="core-identity">
   <div class="pillar-header">
     <div class="pillar-icon" style="background:rgba(99,102,241,0.15);color:#a5b4fc">&#9733;</div>
@@ -153,17 +671,17 @@ def _core_identity(p):
   {insight_html}
   <div class="grid grid-4" style="margin-top:16px">
     <div class="card tc"><div class="card-label">Core Essence（本質）</div>
-      <div class="card-value">{dm["char"]}火 × {ys["name"]}</div>
-      <div class="card-sub">静かな炎 × 言葉の力</div></div>
+      <div class="card-value">{essence_value}</div>
+      <div class="card-sub">{essence_sub}</div></div>
     <div class="card tc"><div class="card-label">Strongest Axis（最強の軸）</div>
-      <div class="card-value">共感 × 洞察</div>
-      <div class="card-sub">Empathy（共感性）+ Intellection（内省）+ 繊細さ</div></div>
+      <div class="card-value">{axis_value}</div>
+      <div class="card-sub">{axis_sub}</div></div>
     <div class="card tc"><div class="card-label">Duality（二面性）</div>
-      <div class="card-value">合理 × 感性</div>
-      <div class="card-sub">AB型 × 霊合星人 × エニアグラム 4</div></div>
+      <div class="card-value">{dual_value}</div>
+      <div class="card-sub">{dual_sub}</div></div>
     <div class="card tc"><div class="card-label">Watch Out（注意点）</div>
-      <div class="card-value" style="color:var(--yellow)">{("・".join(str(m) for m in missing)) if missing else "—"}の欠如</div>
-      <div class="card-sub">決断力 × 柔軟性を意識的に補う</div></div>
+      <div class="card-value" style="color:var(--yellow)">{watch_value}</div>
+      <div class="card-sub">{watch_sub}</div></div>
   </div>
 </section>'''
 
@@ -490,17 +1008,61 @@ def _forecast(p):
     # Integrated forecast insight
     insight = _forecast_insight(cur9, cur12, cur_sub, cur_comb, has_reigou, nsk, rok)
 
+    # Year theme one-liner
+    year_theme = _year_theme(cur_comb, cur9, cur12, has_reigou, p)
+
     return f'''<section class="section" id="forecast-2026">
   <div class="pillar-header">
     <div class="pillar-icon" style="background:rgba(234,179,8,0.15);color:#facc15">&#9733;</div>
     <div><h2>2026年 運勢フォーキャスト</h2>
       <div class="pillar-sub">九星気学 × 六星占術が示す年間の流れ</div></div>
   </div>
+  {year_theme}
   {cards}
   <div class="chart-wrap"><canvas id="chartOverlay" height="280"></canvas></div>
   {legend_html}
   {insight}
 </section>'''
+
+
+def _year_theme(cur_comb, cur9, cur12, has_reigou, p):
+    """Generate a one-line year theme banner."""
+    dm = p['four_pillars']['day_master']
+    west = p['western_astrology']
+    forecast_west = west.get('forecast_2026', '')
+
+    if cur_comb and has_reigou:
+        score = cur_comb['score']
+        if score >= 70:
+            theme = '攻めの年 — 種を蒔き、未来の収穫を設計する'
+            color = '#4ade80'
+        elif score >= 50:
+            theme = '布石の年 — 足場を固め、次の飛躍を準備する'
+            color = '#60a5fa'
+        elif score >= 30:
+            theme = '守りの年 — 基盤を強化し、内面を充実させる'
+            color = '#facc15'
+        else:
+            theme = '充電の年 — 回復に専念し、嵐が過ぎるのを待つ'
+            color = '#f87171'
+    elif cur9:
+        if cur9['energy'] >= 70:
+            theme = '攻めの年 — 積極的にチャンスを掴みにいく'
+            color = '#4ade80'
+        elif cur9['energy'] >= 40:
+            theme = '布石の年 — 準備と基盤づくりに集中する'
+            color = '#60a5fa'
+        else:
+            theme = '耐える年 — 守りを固め、次の好機を待つ'
+            color = '#facc15'
+    else:
+        theme = '変化の年 — 新しい流れを受け入れる'
+        color = '#a5b4fc'
+
+    return f'''<div class="year-theme-banner">
+    <div class="year-theme-label">2026年のテーマ</div>
+    <div class="year-theme-text" style="color:{color}">{theme}</div>
+  </div>'''
 
 
 def _forecast_insight(cur9, cur12, cur_sub, cur_comb, has_reigou, nsk, rok):
@@ -599,6 +1161,43 @@ def _domain_msg(domain, stars, phase):
     return DOMAIN_MSGS.get(domain, {}).get(stars, '')
 
 
+def _monthly_advice(p, month_data):
+    """Generate personalized advice text for a specific month."""
+    domains = month_data['domains']
+    avg = sum(domains.values()) / len(domains)
+    rok_type = month_data['rokusei']['type']
+    rok_phase = month_data['rokusei']['phase']
+    nine_note = month_data['nine_star']['note']
+    month_num = month_data['month']
+    sf_top5 = p.get('strengths_finder', {}).get('top5', [])
+    missing = p['four_pillars'].get('missing_elements', [])
+
+    parts = []
+
+    if avg >= 4:
+        parts.append(f'全体的にエネルギーが高い月。')
+        best = max(domains, key=domains.get)
+        domain_ja = {'work': '仕事', 'money': '金運', 'health': '健康', 'romance': '人間関係'}
+        parts.append(f'特に{domain_ja.get(best, best)}が好調なので、ここに集中投資するのが吉。')
+        if sf_top5:
+            top_ja = SF_JA.get(sf_top5[0]['name'], '')
+            parts.append(f'{sf_top5[0]["name"]}（{top_ja}）を積極的に使って攻めてください。')
+    elif avg >= 3:
+        parts.append(f'安定した月。大きな波はないが、地道な努力が蓄積される時期。')
+        parts.append(f'今月の積み重ねが、次の好調期の成果につながります。')
+    elif avg >= 2:
+        parts.append(f'エネルギーが低下しやすい月。')
+        if rok_type in ('danger', 'caution'):
+            parts.append(f'六星占術で「{rok_phase}」のため、大きな決断は控えるのが賢明。')
+        if missing:
+            parts.append(f'欠如要素の影響が出やすいので、意識的にケアを。')
+    else:
+        parts.append(f'充電を最優先にする月。無理は禁物。')
+        parts.append(f'この時期の休息が、後の回復力を左右します。')
+
+    return ''.join(parts) if parts else ''
+
+
 def _monthly(p):
     mf = p.get('monthly_fortune', [])
     if not mf:
@@ -615,7 +1214,7 @@ def _monthly(p):
         bg = timeline_colors.get(m['rokusei']['type'], 'rgba(99,102,241,0.3)')
         timeline += f'<div class="yt-month" data-month="{m["month"]-1}" style="background:{bg}">{m["month"]}</div>'
 
-    # Month panels with domain messages
+    # Month panels with domain messages + personalized advice
     panels_data = json.dumps([{
         'month': f'{m["month"]}月',
         'nineStarNote': m['nine_star']['note'],
@@ -630,6 +1229,7 @@ def _monthly(p):
         'moneyMsg': _domain_msg('money', m['domains']['money'], m['rokusei']['phase']),
         'healthMsg': _domain_msg('health', m['domains']['health'], m['rokusei']['phase']),
         'romanceMsg': _domain_msg('romance', m['domains']['romance'], m['rokusei']['phase']),
+        'advice': _monthly_advice(p, m),
     } for m in mf])
 
     return f'''<section class="section" id="monthly">
@@ -668,6 +1268,7 @@ monthlyData.forEach((m,i)=>{{
         <span class="month-tag" style="background:${{pc.bg}};color:${{pc.color}};border:1px solid ${{pc.border}}">六星: ${{m.rokuseiPhase}}</span>
       </div>
     </div>
+    ${{m.advice ? '<div class="month-advice">' + m.advice + '</div>' : ''}}
     <div class="domain-grid">
       <div class="domain-card work"><div class="domain-icon-label"><div class="domain-label" style="color:var(--blue)">仕事</div><div class="domain-stars">${{starRating(m.work)}}</div></div><div class="domain-msg">${{m.workMsg}}</div></div>
       <div class="domain-card money"><div class="domain-icon-label"><div class="domain-label" style="color:var(--gold)">お金</div><div class="domain-stars">${{starRating(m.money)}}</div></div><div class="domain-msg">${{m.moneyMsg}}</div></div>
@@ -976,7 +1577,33 @@ body::before{content:'';position:fixed;top:0;left:0;width:100%;height:100%;opaci
 .chart-legend-label{font-size:13px;font-weight:600;margin-right:6px}
 .chart-legend-desc{font-size:12px;color:var(--text-secondary)}
 .page-footer{text-align:center;padding:32px 0;font-size:11px;color:var(--text-muted);border-top:1px solid var(--border);margin-top:40px}
-@media(max-width:768px){.grid{grid-template-columns:1fr}.pillar-grid{grid-template-columns:repeat(2,1fr)}.domain-grid{grid-template-columns:1fr}}
+.guidance-summary{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);padding:24px;margin-bottom:8px}
+.guidance-overview{display:flex;align-items:center;gap:12px;margin-bottom:16px;flex-wrap:wrap}
+.guidance-energy-badge{display:inline-block;font-size:14px;font-weight:700;padding:6px 16px;border-radius:20px}
+.guidance-tags{display:flex;gap:6px;flex-wrap:wrap}
+.guidance-narrative{font-size:14px;color:var(--text);line-height:1.8;margin-bottom:20px;padding-bottom:16px;border-bottom:1px solid var(--border)}
+.guidance-actions-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.guidance-actions-section{display:flex;flex-direction:column;gap:12px}
+.guidance-section-label{font-size:11px;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:4px}
+.guidance-action{display:flex;gap:12px;align-items:flex-start}
+.guidance-action-icon{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
+.guidance-action-title{font-size:13px;font-weight:600;color:var(--text);margin-bottom:2px}
+.guidance-action-desc{font-size:12px;color:var(--text-secondary);line-height:1.6}
+.guidance-watch{display:flex;flex-direction:column;gap:8px}
+.guidance-watch-title{font-size:11px;font-weight:600;color:var(--yellow);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:4px}
+.guidance-watch-item{font-size:12px;color:var(--text-secondary);line-height:1.6;padding-left:12px;border-left:2px solid rgba(234,179,8,0.3)}
+.year-theme-banner{background:linear-gradient(135deg,rgba(234,179,8,0.06),rgba(139,92,246,0.04));border:1px solid rgba(234,179,8,0.15);border-radius:var(--r-md);padding:20px 24px;margin-bottom:20px;text-align:center}
+.year-theme-label{font-size:11px;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px}
+.year-theme-text{font-size:clamp(16px,2.5vw,22px);font-weight:700;line-height:1.4}
+.blueprint-section{margin-top:24px;margin-bottom:8px}
+.blueprint-header{font-size:14px;font-weight:600;color:var(--text-secondary);margin-bottom:12px;padding-left:12px;border-left:3px solid var(--accent2)}
+.blueprint-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:12px}
+.blueprint-card{background:linear-gradient(135deg,rgba(139,92,246,0.06),rgba(99,102,241,0.04));border:1px solid rgba(139,92,246,0.15);border-radius:var(--r-md);padding:16px 20px}
+.blueprint-label{font-size:10px;font-weight:600;color:var(--accent2);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:6px}
+.blueprint-title{font-size:14px;font-weight:600;color:var(--text);margin-bottom:8px;line-height:1.4}
+.blueprint-desc{font-size:12px;color:var(--text-secondary);line-height:1.7}
+.month-advice{font-size:13px;color:var(--text-secondary);line-height:1.7;padding:12px 16px;background:linear-gradient(135deg,rgba(99,102,241,0.06),rgba(139,92,246,0.04));border:1px solid rgba(99,102,241,0.12);border-radius:var(--r-sm);margin-bottom:16px}
+@media(max-width:768px){.grid{grid-template-columns:1fr}.pillar-grid{grid-template-columns:repeat(2,1fr)}.domain-grid{grid-template-columns:1fr}.guidance-actions-grid{grid-template-columns:1fr}.blueprint-grid{grid-template-columns:1fr}}
 @media(max-width:640px){
   .nav-toggle-label{display:inline-flex}
   .site-header{flex-wrap:wrap;gap:8px;padding:8px 12px;height:auto}
@@ -1015,7 +1642,9 @@ def generate_html(p, tier=2):
 {_section_nav(tier >= 2)}
 <div class="container">
 {_hero(p, tier)}
+{_this_month_guidance(p)}
 {_core_identity(p)}
+{_action_blueprint(p)}
 {_personality(p, tier)}
 {_divination(p)}
 {_forecast(p)}
