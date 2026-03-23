@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Self-Insight — Yuma Tejima</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Noto+Sans+JP:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
+<style>
+:root{--bg:#0f1117;--surface:#1a1d27;--surface2:#242836;--border:#2d3348;--border-light:#3d4460;
+  --accent:#6366f1;--accent2:#8b5cf6;--blue:#3b82f6;--green:#22c55e;--red:#ef4444;--yellow:#eab308;--gold:#c9a84c;
+  --text:#e4e4e7;--text-secondary:#9ca3af;--text-muted:#7c8293;
+  --font-body:'Inter','Noto Sans JP',sans-serif;--font-mono:'JetBrains Mono',monospace;
+  --r-sm:6px;--r-md:10px;--r-lg:14px;--r-xl:16px;--gnav-height:52px}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+html{font-size:16px;scroll-behavior:smooth;scroll-padding-top:calc(52px + 60px)}
+body{font-family:var(--font-body);background:var(--bg);color:var(--text);line-height:1.6;min-height:100vh;-webkit-font-smoothing:antialiased;position:relative}
+body::before{content:'';position:fixed;top:0;left:0;width:100%;height:100%;opacity:0.03;pointer-events:none;z-index:9999;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+.container{max-width:1100px;margin:0 auto;padding:24px}
+.site-header{display:flex;align-items:center;justify-content:space-between;padding:0 24px;height:52px;background:rgba(22,24,31,0.85);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid rgba(255,255,255,0.08);position:sticky;top:0;z-index:100}
+.site-nav{display:flex;gap:4px}
+.site-nav a{color:#71717a;text-decoration:none;font-size:13px;font-weight:500;padding:6px 14px;border-radius:6px;transition:background .15s,color .15s;font-family:var(--font-body)}
+.site-nav a:hover,.site-nav a[aria-current=page]{background:rgba(255,255,255,0.065);color:#f5f5f7}
+.nav-toggle{display:none}
+.nav-toggle-label{display:none;cursor:pointer;width:44px;height:44px;align-items:center;justify-content:center}
+.nav-toggle-label span,.nav-toggle-label span::before,.nav-toggle-label span::after{display:block;background:#9ca3af;height:2px;width:20px;border-radius:2px;position:relative;transition:all .3s}
+.nav-toggle-label span::before,.nav-toggle-label span::after{content:'';position:absolute}
+.nav-toggle-label span::before{top:-6px}
+.nav-toggle-label span::after{top:6px}
+.nav-bar{position:sticky;top:52px;z-index:90;background:rgba(15,17,23,0.92);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:0 24px;display:flex;justify-content:center;gap:4px;overflow-x:auto;scrollbar-width:none}
+.nav-bar::-webkit-scrollbar{display:none}
+.nav-bar a{color:var(--text-muted);text-decoration:none;font-size:12px;font-weight:500;padding:14px 16px;white-space:nowrap;transition:color .2s,background .2s;border-radius:var(--r-sm)}
+.nav-bar a:hover,.nav-bar a.active{color:var(--accent);background:rgba(99,102,241,0.12)}
+.hero{background:linear-gradient(135deg,#1e1b4b,#312e81,#1e1b4b);background-size:200% 200%;animation:heroShift 12s ease-in-out infinite;border-radius:var(--r-xl);padding:40px 32px;margin-bottom:32px;border:1px solid var(--border);overflow:hidden}
+@keyframes heroShift{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
+.hero h1{font-size:clamp(20px,2.5vw,26px);font-weight:700;margin-bottom:4px}
+.hero .subtitle{color:var(--text-muted);font-size:14px;margin-bottom:20px}
+.hero-chips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:20px}
+.chip{font-size:11px;font-weight:500;padding:4px 12px;border-radius:20px;background:rgba(255,255,255,0.08);color:var(--text-secondary);border:1px solid rgba(255,255,255,0.1)}
+.chip.hl{background:rgba(99,102,241,0.15);color:#a5b4fc;border-color:rgba(99,102,241,0.3)}
+.stats{display:flex;gap:24px;flex-wrap:wrap}
+.stat-card{background:rgba(255,255,255,0.05);border-radius:var(--r-md);padding:12px 20px;backdrop-filter:blur(10px)}
+.stat-card .label{font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.5px}
+.stat-card .value{font-size:20px;font-weight:700;font-family:var(--font-mono);margin-top:2px}
+.section{margin-bottom:40px}
+.section-title{font-size:clamp(16px,2vw,22px);font-weight:700;margin-bottom:20px;padding-left:12px;border-left:3px solid var(--accent)}
+.sub-title{font-size:15px;font-weight:600;color:var(--text-secondary);margin:24px 0 12px;padding-top:16px;border-top:1px solid var(--border)}
+.pillar-header{display:flex;align-items:center;gap:12px;margin-bottom:24px;padding-bottom:16px;border-bottom:1px solid var(--border)}
+.pillar-header .pillar-icon{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
+.pillar-header h2{font-size:clamp(16px,2vw,20px);font-weight:700;margin:0}
+.pillar-header .pillar-sub{font-size:12px;color:var(--text-muted);margin-top:2px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px}
+.grid-3{grid-template-columns:repeat(auto-fit,minmax(200px,1fr))}
+.grid-4{grid-template-columns:repeat(auto-fit,minmax(200px,1fr))}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-md);padding:20px;transition:transform .2s}
+.card:hover{transform:translateY(-2px)}
+.card-title{font-size:14px;font-weight:600;margin-bottom:12px;display:flex;align-items:center;gap:8px}
+.card-title .icon{font-size:18px}
+.card-label{font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:4px}
+.card-value{font-size:22px;font-weight:700;font-family:var(--font-mono)}
+.card-sub{font-size:12px;color:var(--text-secondary);margin-top:4px}
+.tc{text-align:center;padding:16px}
+.pillar-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.pillar{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-md);padding:16px;text-align:center}
+.pillar.unknown{opacity:0.4;border-style:dashed}
+.pillar .pillar-label{font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:8px}
+.pillar .kanji{font-size:28px;font-weight:700;line-height:1.2}
+.pillar .reading{font-size:11px;color:var(--text-secondary);margin-top:4px}
+.element-badge{display:inline-block;font-size:10px;font-weight:500;padding:2px 10px;border-radius:12px;margin-top:8px}
+.elem-wood{background:rgba(34,197,94,0.15);color:#4ade80}
+.elem-fire{background:rgba(239,68,68,0.15);color:#f87171}
+.elem-earth{background:rgba(234,179,8,0.15);color:#facc15}
+.elem-metal{background:rgba(148,163,184,0.15);color:#94a3b8}
+.elem-water{background:rgba(59,130,246,0.15);color:#60a5fa}
+.element-bar{display:flex;gap:8px;align-items:end;height:100px;margin:16px 0}
+.element-col{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px}
+.element-fill{width:100%;border-radius:4px 4px 0 0;transition:height .6s ease}
+.element-pct{font-size:12px;font-weight:600;font-family:var(--font-mono)}
+.element-name{font-size:11px;color:var(--text-muted)}
+.domain-bar{margin-bottom:12px}
+.domain-header{display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px}
+.domain-track{height:8px;background:var(--surface2);border-radius:4px;overflow:hidden}
+.domain-fill{height:100%;border-radius:4px;transition:width .6s ease}
+.top5-list{list-style:none}
+.top5-item{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--border)}
+.top5-item:last-child{border-bottom:none}
+.rank{width:28px;height:28px;display:flex;align-items:center;justify-content:center;border-radius:50%;font-size:12px;font-weight:700;font-family:var(--font-mono);background:rgba(99,102,241,0.15);color:var(--accent);flex-shrink:0}
+.sf-name{font-size:14px;font-weight:600}
+.sf-domain{font-size:11px;color:var(--text-muted)}
+.tag{display:inline-block;font-size:11px;font-weight:500;padding:3px 10px;border-radius:12px;margin:2px}
+.tag-rb{background:rgba(59,130,246,0.15);color:#60a5fa}
+.tag-st{background:rgba(34,197,94,0.15);color:#4ade80}
+.tag-ex{background:rgba(139,92,246,0.15);color:#c4b5fd}
+.tag-inf{background:rgba(255,107,53,0.15);color:#ff8f6b}
+.typo-cell{background:var(--surface2);border-radius:var(--r-sm);padding:10px}
+.typo-label{font-size:10px;color:var(--text-muted);text-transform:uppercase}
+.typo-value{font-size:18px;font-weight:700;margin-top:2px}
+.typo-sub{font-size:11px;color:var(--text-secondary)}
+.typo-desc{font-size:11px;color:var(--text-muted);line-height:1.5;margin-top:6px}
+.cycle-table{width:100%;border-collapse:collapse;font-size:13px}
+.cycle-table th{text-align:left;padding:8px 10px;color:var(--text-muted);font-weight:500;border-bottom:1px solid var(--border)}
+.cycle-table td{padding:8px 10px;border-bottom:1px solid rgba(45,51,72,0.5)}
+.cycle-table tr.current{background:rgba(99,102,241,0.12);border:1px solid rgba(99,102,241,0.3)}
+.satsukai{font-size:11px;padding:2px 8px;border-radius:10px;font-weight:600}
+.dai{background:rgba(239,68,68,0.15);color:var(--red)}
+.chu{background:rgba(234,179,8,0.15);color:var(--yellow)}
+.sho{background:rgba(234,179,8,0.1);color:var(--yellow)}
+.chart-wrap{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-md);padding:16px;margin:16px 0}
+.unlock-banner{background:rgba(234,179,8,0.08);border:1px dashed rgba(234,179,8,0.3);border-radius:var(--r-md);padding:16px 20px;font-size:12px;color:var(--yellow);text-align:center;margin-top:16px}
+.insight-box{background:linear-gradient(135deg,rgba(99,102,241,0.08),rgba(139,92,246,0.06));border:1px solid rgba(99,102,241,0.2);border-radius:var(--r-md);padding:20px;margin-bottom:16px}
+.insight-box .insight-title{font-size:13px;font-weight:600;color:#a5b4fc;margin-bottom:8px}
+.insight-box p{font-size:13px;color:var(--text-secondary);line-height:1.7}
+.section-desc{font-size:13px;color:var(--text-muted);margin-bottom:16px}
+.year-timeline{display:flex;gap:2px;margin:16px 0}
+.yt-month{flex:1;height:24px;border-radius:3px;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:600;color:rgba(255,255,255,0.7);cursor:pointer;transition:all .2s}
+.yt-month:hover{transform:scaleY(1.3)}
+.month-selector{display:flex;gap:4px;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;padding:8px 0;margin-bottom:20px}
+.month-selector::-webkit-scrollbar{display:none}
+.month-btn{flex-shrink:0;padding:8px 14px;border-radius:8px;background:var(--surface);border:1px solid var(--border);color:var(--text-muted);font-size:12px;font-weight:600;cursor:pointer;transition:all .2s;white-space:nowrap;font-family:var(--font-body)}
+.month-btn:hover{background:var(--surface2);color:var(--text-secondary)}
+.month-btn.active{background:rgba(99,102,241,0.15);color:#a5b4fc;border-color:rgba(99,102,241,0.4)}
+.month-btn.current{box-shadow:0 0 0 1px rgba(99,102,241,0.5)}
+.month-panel{display:none}
+.month-panel.active{display:block}
+.month-card-header{display:flex;align-items:center;gap:12px;margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid var(--border)}
+.month-label{font-size:18px;font-weight:700;font-family:var(--font-mono)}
+.month-tags{display:flex;gap:6px;flex-wrap:wrap}
+.month-tag{font-size:10px;font-weight:500;padding:2px 8px;border-radius:10px}
+.domain-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.domain-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-md);padding:16px;border-left:3px solid var(--accent)}
+.domain-card.work{border-left-color:var(--blue)}
+.domain-card.money{border-left-color:var(--gold)}
+.domain-card.health{border-left-color:var(--green)}
+.domain-card.romance{border-left-color:#f472b6}
+.domain-icon-label{display:flex;align-items:center;gap:8px}
+.domain-label{font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:0.5px}
+.domain-stars{font-family:var(--font-mono);font-size:13px;letter-spacing:1px}
+.domain-msg{font-size:11px;color:var(--text-secondary);line-height:1.5;margin-top:6px}
+.chart-legend{display:flex;flex-direction:column;gap:10px;margin-top:12px;padding:16px;background:var(--surface);border:1px solid var(--border);border-radius:var(--r-md)}
+.chart-legend-item{display:flex;align-items:flex-start;gap:10px}
+.chart-legend-line{display:inline-block;width:24px;height:3px;border-radius:2px;margin-top:7px;flex-shrink:0}
+.chart-legend-label{font-size:13px;font-weight:600;margin-right:6px}
+.chart-legend-desc{font-size:12px;color:var(--text-secondary)}
+.page-footer{text-align:center;padding:32px 0;font-size:11px;color:var(--text-muted);border-top:1px solid var(--border);margin-top:40px}
+@media(max-width:768px){.grid{grid-template-columns:1fr}.pillar-grid{grid-template-columns:repeat(2,1fr)}.domain-grid{grid-template-columns:1fr}}
+@media(max-width:640px){
+  .nav-toggle-label{display:inline-flex}
+  .site-header{flex-wrap:wrap;gap:8px;padding:8px 12px;height:auto}
+  .site-nav{display:none;width:100%;flex-direction:column;gap:4px;padding-top:8px}
+  .nav-toggle:checked~.site-nav{display:flex}
+  .nav-toggle:checked+.nav-toggle-label span{background:transparent}
+  .nav-toggle:checked+.nav-toggle-label span::before{top:0;transform:rotate(45deg)}
+  .nav-toggle:checked+.nav-toggle-label span::after{top:0;transform:rotate(-45deg)}
+  .site-nav a{padding:8px 12px;font-size:12px;min-height:44px}
+  .container{padding:12px}
+  .hero{padding:20px 16px;border-radius:var(--r-md)}
+  .stats{gap:8px}.stat-card{padding:8px 12px}
+  .stat-card .value{font-size:16px}
+  .pillar .kanji{font-size:22px}
+}
+</style>
+</head>
+<body>
+<header class="site-header">
+  <input type="checkbox" id="nav-toggle" class="nav-toggle" aria-label="Toggle navigation">
+  <label for="nav-toggle" class="nav-toggle-label"><span></span></label>
+  <nav class="site-nav">
+    <a href="https://iuma-private.pages.dev/stock/portfolio.html">Stock</a>
+    <a href="https://iuma-private.pages.dev/stock/market-intel.html">Market Intel</a>
+    <a href="https://iuma-private.pages.dev/intel/">Insight</a>
+    <a href="https://iuma-private.pages.dev/wealth/dashboard.html">Wealth</a>
+    <a href="https://iuma-private.pages.dev/action/">Action</a>
+    <a href="https://ymatz28-beep.github.io/self-insight/" aria-current=page>Self-Insight</a>
+    <a href="https://iuma-private.pages.dev/health/">Health</a>
+    <a href="https://ymatz28-beep.github.io/property-report/">Property</a>
+    <a href="https://ymatz28-beep.github.io/trip-planner/">Travel</a>
+    <a href="https://iuma-private.pages.dev/newsletter/">Newsletter</a>
+  </nav>
+</header>
+<nav class="nav-bar"><a href="#core-identity">Core Identity</a><a href="#personality">Personality</a><a href="#divination">占術プロファイル</a><a href="#forecast-2026">2026 運勢</a><a href="#monthly">月間運勢</a><a href="#cross">Cross Analysis</a></nav>
+<div class="container">
+<section class="hero">
+  <h1>Self-Insight</h1>
+  <div class="subtitle">Yuma Tejima — AI Self-Insight Dashboard</div>
+  <div class="hero-chips"><span class="chip hl">丁火 陰火</span><span class="chip hl">七赤金星</span><span class="chip hl">♏ Scorpio</span><span class="chip">木星人(-)霊合</span><span class="chip">AB型</span><span class="chip">Enneagram 4</span><span class="chip">Empathy #1</span></div>
+  <div class="stats"><div class="stat-card"><div class="label">Core Identity</div><div class="value" style="color:#f87171">丁火</div></div><div class="stat-card"><div class="label">2026 Phase</div><div class="value" style="color:#a5b4fc">坤宮×緑生</div></div><div class="stat-card"><div class="label">Combined Score</div><div class="value" style="color:#4ade80">73</div></div></div>
+</section>
+<section class="section" id="core-identity">
+  <div class="pillar-header">
+    <div class="pillar-icon" style="background:rgba(99,102,241,0.15);color:#a5b4fc">&#9733;</div>
+    <div><h2>Core Identity — あなたはこういう人</h2>
+      <div class="pillar-sub">6つの分析体系が示す、時代を超えた人物像</div></div>
+  </div>
+  <div class="insight-box" style="border-color:rgba(99,102,241,0.4);background:linear-gradient(135deg,rgba(99,102,241,0.12),rgba(139,92,246,0.08));">
+    <div class="insight-title" style="font-size:15px;">統合インサイト</div>
+    <p style="line-height:1.9;font-size:14px;">あなたの本質は<strong>「静かな炎で人を照らし、言葉で変容を導く人」</strong>です。四柱推命の日主「丁火」（ロウソクの炎）× 九星気学の七赤金星（沢の言葉力）× 蠍座（冥王星が司る変容と再生）。この三角形が示すのは、<strong>他者の感情を体感レベルで感じ取り（Empathy #1）、思考の深淵で本質を掘り当て（Intellection #2）、それを言葉の力で世界に届ける</strong>という稀有な才能の組み合わせです。蠍座の水のエレメントは感情の深さと変容力を与え、不動宮（Fixed）の性質は「一度決めたら貫く」執念を示します。</p><p style="line-height:1.9;font-size:14px; margin-top:12px;">AB型（日本人口の10%）の合理性×感性の二面性は、あなたの思考回路そのもの。データとフレームワーク（3S, MECE）で構造化しながら、同時に感情の機微も逃さない。この「冷静な分析者」と「感受性の高い直感者」の共存は、蠍座の「表面と深層」の二重構造、木星人(−)×金星人(−)の霊合星人としての二重性、そしてエニアグラム4の「合理と美の統合」と完全に共鳴しています。<strong>相反する特質を矛盾なく統合する力</strong>が、Yumaの最大の特徴です。</p><p style="line-height:1.9;font-size:14px; margin-top:12px;">あなたの感覚は、一般より明らかに深く繊細です。環境や人の感情を微細なレベルで察知し、通常は気づかない情報を拾い上げる。蠍座の深い洞察力、七赤金星の社交的アンテナ、Empathyの体感的共感がすべて同じ方向を指している。一方で、<strong>興味が点火されると異常な集中力を発揮し、一つのテーマに何時間も没頭する</strong>。この過集中モードとConnectedness（運命思考 #4）の「全てを繋げて見る力」が組み合わさると、他者には到達できない深さの洞察が生まれます。ただし、興味が移ると別のテーマへ瞬時に飛ぶ — これは弱みではなく、<strong>複数プロジェクトを並行で深掘りし、意外なシナジーを見出す「拡散的探究力」</strong>の源泉です。</p><p style="line-height:1.9;font-size:14px; margin-top:12px;"><strong style="color:var(--yellow);">注意すべきポイント — 全体系が一致する弱点</strong>: 五行で<strong>金（決断力・収穫）と水（柔軟性・知恵）が完全に欠如</strong>。蠍座の執着気質 × Deliberative（慎重さ #3）× AB型の分析癖が重なり、<strong>「完璧な答えが出るまで動けない」分析麻痺</strong>に陥りやすい。感覚の繊細さとEmpathy #1は最大の武器ですが、他者のネガティブなエネルギーを吸収しすぎて<strong>自分の境界線が溶ける</strong>リスクが常にある。エニアグラム4はストレス下でType 2に退行し、独自性を捨てて自己犠牲に走る。<strong>仕組み化（自動化・ルーティン・境界線設計）で弱みを構造的にカバーする</strong>ことがYuma OSの本質です。</p>
+  </div>
+  <div class="grid grid-4" style="margin-top:16px">
+    <div class="card tc"><div class="card-label">Core Essence</div>
+      <div class="card-value">丁火 × 七赤金星</div>
+      <div class="card-sub">静かな炎 × 言葉の力</div></div>
+    <div class="card tc"><div class="card-label">Strongest Axis</div>
+      <div class="card-value">共感 × 洞察</div>
+      <div class="card-sub">Empathy + Intellection + 繊細さ</div></div>
+    <div class="card tc"><div class="card-label">Duality</div>
+      <div class="card-value">合理 × 感性</div>
+      <div class="card-sub">AB型 × 霊合星人 × Enneagram 4</div></div>
+    <div class="card tc"><div class="card-label">Watch Out</div>
+      <div class="card-value" style="color:var(--yellow)">金・水の欠如</div>
+      <div class="card-sub">決断力 × 柔軟性を意識的に補う</div></div>
+  </div>
+</section>
+<section class="section" id="personality">
+  <h2 class="section-title">Personality Profile</h2>
+  <div class="grid"><div class="card">
+      <div class="card-title"><span class="icon">&#9733;</span> CliftonStrengths TOP 5</div>
+      <ul class="top5-list"><li class="top5-item"><span class="rank">1</span>
+          <div><div class="sf-name">Empathy <span style="font-size:12px;color:var(--text-secondary);font-weight:400">共感性</span></div>
+          <div class="sf-domain"><span class="tag tag-rb">Relationship Building</span></div><div style="font-size:12px;color:var(--text-secondary);line-height:1.6;margin-top:6px">他者の感情を「推測」するのではなく「体感」する。言語化されていない不安や喜びを直感的に察知し、その人が本当に求めていることを理解する力。チームリーダーとしての最大の武器であり、サービス設計においてユーザーの痛みを自分事として感じられるPMFの源泉。</div></div></li><li class="top5-item"><span class="rank">2</span>
+          <div><div class="sf-name">Intellection <span style="font-size:12px;color:var(--text-secondary);font-weight:400">内省</span></div>
+          <div class="sf-domain"><span class="tag tag-st">Strategic Thinking</span></div><div style="font-size:12px;color:var(--text-secondary);line-height:1.6;margin-top:6px">思考することそのものが活動。1人の時間に頭の中で概念を回し、深い洞察に到達する。表面的な情報交換ではなく、哲学的な問いや構造的な分析を好む。このダッシュボード自体が、Intellectionが駆動する「自己を体系的に理解したい」という欲求の産物。</div></div></li><li class="top5-item"><span class="rank">3</span>
+          <div><div class="sf-name">Deliberative <span style="font-size:12px;color:var(--text-secondary);font-weight:400">慎重さ</span></div>
+          <div class="sf-domain"><span class="tag tag-ex">Executing</span></div><div style="font-size:12px;color:var(--text-secondary);line-height:1.6;margin-top:6px">リスクを事前に感知し、慎重に選択肢を評価する。衝動的な判断を避け、深い分析に基づいて確実な意思決定をする力。投資判断や事業設計において、見えないリスクを察知する「守りの強み」。ただし行動の遅れにつながるリスクもある。</div></div></li><li class="top5-item"><span class="rank">4</span>
+          <div><div class="sf-name">Connectedness <span style="font-size:12px;color:var(--text-secondary);font-weight:400">運命思考</span></div>
+          <div class="sf-domain"><span class="tag tag-rb">Relationship Building</span></div><div style="font-size:12px;color:var(--text-secondary);line-height:1.6;margin-top:6px">万物のつながりを直感的に感じ取る。一見無関係に見える出来事やアイデアの間に隠れた関連性を見出す力。占術と心理学と確率論を統合する発想、複数プロジェクト間のシナジーを設計する力の源泉。偶然を必然として捉える世界観。</div></div></li><li class="top5-item"><span class="rank">5</span>
+          <div><div class="sf-name">Maximizer <span style="font-size:12px;color:var(--text-secondary);font-weight:400">最上志向</span></div>
+          <div class="sf-domain"><span class="tag tag-inf">Influencing</span></div><div style="font-size:12px;color:var(--text-secondary);line-height:1.6;margin-top:6px">「平均を良く」するのではなく「良いを最高に」引き上げる。弱みの修正より強みの極大化を追求する。3S原則（Simple, Scalable, Sustainable）の設計思想そのものがMaximizerの発露。「もっと良くできないか？」が止まらない性質。</div></div></li></ul>
+      <div style="font-size:11px;color:var(--text-muted);margin-top:12px">Lead Domain: Strategic Thinking | 受験日: 2015-05-12</div>
+    </div>
+    <div class="card">
+      <div class="card-title"><span class="icon">&#9632;</span> ドメイン分布（TOP10内）</div>
+      <div style="margin-top:8px"><div class="domain-bar">
+          <div class="domain-header"><span>Relationship Building</span><span style="font-family:var(--font-mono)">4 / 10</span></div>
+          <div class="domain-track"><div class="domain-fill" style="width:40%;background:#3b82f6"></div></div></div><div class="domain-bar">
+          <div class="domain-header"><span>Strategic Thinking</span><span style="font-family:var(--font-mono)">3 / 10</span></div>
+          <div class="domain-track"><div class="domain-fill" style="width:30%;background:#22c55e"></div></div></div><div class="domain-bar">
+          <div class="domain-header"><span>Executing</span><span style="font-family:var(--font-mono)">2 / 10</span></div>
+          <div class="domain-track"><div class="domain-fill" style="width:20%;background:#8b5cf6"></div></div></div><div class="domain-bar">
+          <div class="domain-header"><span>Influencing</span><span style="font-family:var(--font-mono)">1 / 10</span></div>
+          <div class="domain-track"><div class="domain-fill" style="width:10%;background:#ff6b35"></div></div></div></div>
+      <div style="margin-top:24px">
+        <div class="card-title" style="font-size:13px"><span class="icon">&#9830;</span> Typology</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:4px">
+          <div class="typo-cell"><div class="typo-label">Enneagram</div>
+            <div class="typo-value">Type 4</div><div class="typo-sub">個性派</div>
+            <div class='typo-desc'>自己表現とアイデンティティの探求者。「自分だけの世界観」を持ち、平凡であることを嫌う。健全時はType 1（改革者）に向かい原則と美学を融合。ストレス時はType 2（奉仕者）に向かい、自分を犠牲にして他者に尽くしすぎる傾向。</div></div>
+          <div class="typo-cell"><div class="typo-label">Blood Type</div>
+            <div class="typo-value">AB</div><div class="typo-sub">日本人口の10%</div>
+            <div class='typo-desc'>冷静な分析力と繊細な感性が同居。「二面性がある」と言われがちだが、実態は「状況に応じて最適なモードを切り替えている」合理的適応。</div></div>
+          <div class="typo-cell"><div class="typo-label">感覚感受性</div>
+            <div class="typo-value" style="color:#facc15">繊細</div><div class="typo-sub">環境・感情への感度</div>
+            <div class='typo-desc'>環境や人の感情を微細なレベルで処理する繊細さ。蠍座の深い洞察力、Empathy #1の体感的共感と相乗効果を発揮し、通常は見逃す情報を拾い上げる。美しいもの・深い会話からは何倍もの充足を得る一方、ネガティブな刺激からの回復にも時間がかかる。</div></div>
+          <div class="typo-cell"><div class="typo-label">集中パターン</div>
+            <div class="typo-value" style="color:#ff8f6b">やや多動</div><div class="typo-sub">過集中×拡散の波</div>
+            <div class='typo-desc'>興味が点火されると驚異的な集中力を発揮し、何時間も一つのテーマに没頭する。Intellection #2の思考力と組み合わさり、深い洞察を生む原動力。一方で興味の対象が移ると瞬時に切り替わるため、仕組み化（自動化・ルーティン設計）で定型業務を排除することが有効。</div></div>
+        </div></div>
+    </div></div>
+</section>
+<section class="section" id="divination">
+  <h2 class="section-title">占術プロファイル</h2>
+  <p class="section-desc">四柱推命・九星気学・六星占術・西洋占星術 — 不変の本質的特性</p>
+
+  <h3 class="sub-title">四柱推命</h3>
+  <div style="font-size:12px;color:var(--text-secondary);line-height:1.7;margin-bottom:16px">四柱推命は生年月日時の4つの柱から、先天的な性質・才能・人生の傾向を読み解く東洋最高峰の命術。各柱が人生の異なる側面を表します。</div>
+  <div class="pillar-grid"><div class="pillar"><div class="pillar-label">年柱</div>
+      <div class="kanji">乙卯</div>
+      <div class="reading">きのと・う</div>
+      <div class="element-badge elem-wood">Wood</div>
+      <div style="font-size:10px;color:var(--text-muted);margin-top:6px">社会的顔・祖先運</div></div><div class="pillar"><div class="pillar-label">月柱</div>
+      <div class="kanji">丙戌</div>
+      <div class="reading">ひのえ・いぬ</div>
+      <div class="element-badge elem-fire">Fire</div>
+      <div style="font-size:10px;color:var(--text-muted);margin-top:6px">仕事・キャリア</div></div><div class="pillar"><div class="pillar-label">日柱</div>
+      <div class="kanji">丁未</div>
+      <div class="reading">ひのと・ひつじ</div>
+      <div class="element-badge elem-fire">Fire</div>
+      <div style="font-size:10px;color:var(--text-muted);margin-top:6px">本質的な自己</div></div><div class="pillar unknown"><div class="pillar-label">時柱</div><div class="kanji">？？</div><div class="reading">出生時刻不明</div><div class="element-badge" style="background:rgba(255,255,255,0.05);color:var(--text-muted)">Locked</div><div style="font-size:10px;color:var(--text-muted);margin-top:6px">晩年・子孫運</div></div></div>
+  <div style="margin-top:16px;font-size:13px;color:var(--text-secondary);line-height:1.7">
+    <strong style="color:var(--text)">日主: 丁火（Yin火）</strong> — ロウソクの炎。静かで温かく人を照らす。強い意志を内に秘め、感受性豊かで人の心の機微を感じ取る。丙火（太陽）のような自己主張ではなく、暗闇の中で必要な人にだけ光を届ける繊細な存在。</div>
+  <div style="margin-top:8px;font-size:12px;color:var(--text-secondary);line-height:1.7"><strong style="color:var(--text)">年柱（乙卯）</strong>: 草花と兎の組み合わせ。社会に対して柔軟で穏やかな印象を与えるが、木の根のようにしなやかな強さを持つ。先祖から受け継いだ「人を和ませる空気感」。<br><strong style="color:var(--text)">月柱（丙戌）</strong>: キャリアの柱に太陽の火と忠犬の組み合わせ。仕事では情熱的で忠誠心が強い。丙（太陽）は日主の丁（ロウソク）を支える強い火源 — 仕事にエネルギーの根源がある配置。<br><strong style="color:var(--text)">日柱（丁未）</strong>: 本質は陰火と未（羊・土）。温かい土壌の上で灯る炎 — 安定した基盤の上で人を照らす使命。未は「未来」の未でもあり、先見性を暗示。<br></div>
+  <div class="element-bar" style="margin-top:12px"><div class="element-col">
+      <div class="element-pct" style="color:#4ade80">33%</div>
+      <div class="element-fill" style="height:33%;background:#4ade80"></div>
+      <div class="element-name">木</div></div><div class="element-col">
+      <div class="element-pct" style="color:#f87171">33%</div>
+      <div class="element-fill" style="height:33%;background:#f87171"></div>
+      <div class="element-name">火</div></div><div class="element-col">
+      <div class="element-pct" style="color:#facc15">33%</div>
+      <div class="element-fill" style="height:33%;background:#facc15"></div>
+      <div class="element-name">土</div></div><div class="element-col">
+      <div class="element-pct" style="color:#94a3b8">0%</div>
+      <div class="element-fill" style="height:2%;background:#94a3b8"></div>
+      <div class="element-name">金</div></div><div class="element-col">
+      <div class="element-pct" style="color:#60a5fa">0%</div>
+      <div class="element-fill" style="height:2%;background:#60a5fa"></div>
+      <div class="element-name">水</div></div></div>
+  <div style="font-size:12px;color:var(--yellow);margin-top:8px">欠如: 金・水 — 金(決断力・収穫)と水(知恵・柔軟性)が欠如。意識的にこれらの要素を補う行動が有効</div>
+
+  <h3 class="sub-title">九星気学</h3>
+  <div class="grid grid-3">
+    <div class="card"><div class="card-label">本命星（年星）</div>
+      <div class="card-value">七赤金星</div><div class="card-sub">Metal / W</div></div>
+    <div class="card"><div class="card-label">月命星</div>
+      <div class="card-value">九紫火星</div><div class="card-sub">Fire / S</div></div><div class="card"><div class="card-label">2026年 宮位置</div>
+      <div class="card-value">坤宮</div><div class="card-sub">変化・準備（Energy 45）</div></div></div>
+  <div class="card" style="margin-top:12px"><div style="font-size:12px;color:var(--text-secondary);line-height:1.7">本命星（七赤金星）は生まれた年から算出される「社会的な自分」。「沢」の象意を持ち、社交的で人を楽しませる力と、言葉に説得力を持つ話術に恵まれています。金星の「金運」は財を呼び込む力ですが、同時に散財しやすい傾向も。方位は西（兌宮）で、収穫と悦びの方角。</div><div style="font-size:12px;color:var(--text-secondary);line-height:1.7;margin-top:8px">月命星（九紫火星）は生まれた月から算出される「内面の自分」。外から見える社交的な七赤金星の内側に、九紫火星の激しい情熱と知的好奇心が燃えています。九紫火星は「離」の象意 — 物事を明らかにする光の力。知識欲が旺盛で美意識が高く、直感が鋭い。この本命星と月命星の二層構造が、「表面は穏やかな社交家、内面は激しい探求者」というYumaの二面性を形成しています。</div></div>
+
+  <h3 class="sub-title">六星占術</h3>
+  <div class="grid grid-3">
+    <div class="card"><div class="card-label">運命星</div>
+      <div class="card-value">木星人(-)</div>
+      <div class="card-sub">もくせいじん マイナス</div></div><div class="card"><div class="card-label">霊合サブ星</div>
+      <div class="card-value">金星人(-)</div>
+      <div class="card-sub">きんせいじん マイナス</div></div><div class="card"><div class="card-label">2026年</div>
+      <div class="card-value">緑生</div>
+      <div class="card-sub">好調期（Energy 65）</div></div></div>
+  <div style="font-size:12px;color:var(--text-secondary);line-height:1.7;margin-bottom:12px"><strong style="color:var(--text)">木星人(-)</strong>: 好奇心旺盛で行動力がある星人。自由を重んじ束縛を嫌い、常に新しいことに挑戦したがる冒険者タイプ。社交的で人脈が広く、興味の幅も広い。(−)は偶数年生まれを示し、陰の性質（内向き・慎重）がベースにある。<br><strong style="color:var(--text)">金星人(-)</strong>: プライドが高く美意識がある星人。完璧主義的で「こだわり」が強い。人から尊敬されたい欲求が強く、自分の世界観を大切にする。</div>
+  <div style="background:rgba(234,179,8,0.08);border:1px solid rgba(234,179,8,0.2);border-radius:var(--radius-sm);padding:12px;text-align:center;margin-top:12px">
+      <div style="font-size:13px;color:var(--yellow);font-weight:600">霊合星人</div>
+      <div style="font-size:12px;color:var(--text-secondary);margin-top:6px;line-height:1.7;text-align:left">霊合星人とは、メインの運命星に加えてサブの運命星の影響も同時に受ける特殊な存在。全人口の約16%が該当し、運気の振れ幅が通常の2倍になります。好調期は通常の人が到達できない高みに届きますが、不調期（大殺界）は通常以上に深く影響を受けます。メイン星とサブ星が好調なら「最高の年」、片方が大殺界なら「矛盾する年」、両方が大殺界なら「最大限の注意が必要な年」。</div></div>
+  <div style="margin-top:12px"><table class="cycle-table"><thead><tr><th>年</th><th>メイン</th><th>サブ</th><th>殺界</th><th>Energy</th></tr></thead><tbody><tr><td>2022</td><td>陰影</td><td>—</td><td><span class="satsukai dai">大殺界</span></td><td><span style="color:#f87171">15</span></td></tr><tr><td>2023</td><td>停止</td><td>—</td><td><span class="satsukai dai">大殺界</span></td><td><span style="color:#f87171">10</span></td></tr><tr><td>2024</td><td>減退</td><td>乱気</td><td><span class="satsukai dai">大殺界</span></td><td><span style="color:#f87171">20</span></td></tr><tr><td>2025</td><td>種子</td><td>再会</td><td>—</td><td><span style="color:#facc15">50</span></td></tr><tr class="current"><td>2026</td><td>緑生</td><td>財成</td><td>—</td><td><span style="color:#facc15">65</span></td></tr><tr><td>2027</td><td>立花</td><td>安定</td><td>—</td><td><span style="color:#4ade80">80</span></td></tr><tr><td>2028</td><td>健弱</td><td>陰影</td><td><span class="satsukai sho">小殺界</span></td><td><span style="color:#f87171">35</span></td></tr><tr><td>2029</td><td>達成</td><td>停止</td><td>—</td><td><span style="color:#4ade80">90</span></td></tr><tr><td>2030</td><td>乱気</td><td>減退</td><td><span class="satsukai chu">中殺界</span></td><td><span style="color:#f87171">25</span></td></tr><tr><td>2031</td><td>再会</td><td>種子</td><td>—</td><td><span style="color:#4ade80">70</span></td></tr><tr><td>2032</td><td>財成</td><td>緑生</td><td>—</td><td><span style="color:#4ade80">85</span></td></tr><tr><td>2033</td><td>安定</td><td>—</td><td>—</td><td><span style="color:#4ade80">95</span></td></tr></tbody></table></div>
+
+  <h3 class="sub-title">西洋占星術</h3>
+  <div class="grid grid-3">
+    <div class="card"><div class="card-label">太陽星座</div>
+      <div class="card-value">♏ Scorpio</div>
+      <div class="card-sub">Water / Fixed</div>
+      <div class='typo-desc' style='margin-top:8px'>深い洞察力、変容の力、情熱と集中。表面的なものに興味がない</div></div>
+    <div class="card"><div class="card-label">支配星</div>
+      <div class="card-value">Pluto</div>
+      <div class='typo-desc' style='margin-top:8px'>水のエレメント — 感情の深さ、直感力、共感力。表面ではなく深層で物事を捉える</div></div><div class="card"><div class="card-label">デカン（第1区）</div>
+      <div class="card-value">Pluto</div>
+      <div class='typo-desc' style='margin-top:8px'>最も純粋な蠍座の性質。変容・再生・深層心理への探究</div></div></div><div style="font-size:12px;color:var(--text-secondary);line-height:1.7;margin-top:12px">不動宮（Fixed）— 一度決めたら変えない意志の強さ。安定と持続力。変化への抵抗もある</div><div class="insight-box" style="margin-top:12px;border-color:rgba(139,92,246,0.3);background:linear-gradient(135deg,rgba(139,92,246,0.08),rgba(99,102,241,0.04))">
+      <div class="insight-title" style="color:#c4b5fd">2026年 Scorpioの運勢</div>
+      <p style="line-height:1.9;font-size:14px">冥王星が水瓶座に完全移行した2026年は、蠍座にとって「変容の仕上げ」の年。これまで手放してきた古い構造の跡地に、新しい基盤を築く時期。特に人間関係と仕事の枠組みにおいて、より本質的な選択ができるようになる</p></div>
+  <div class="unlock-banner">出生時刻を追加すると、時柱・アセンダント・月星座が解放されます</div>
+</section>
+<section class="section" id="forecast-2026">
+  <div class="pillar-header">
+    <div class="pillar-icon" style="background:rgba(234,179,8,0.15);color:#facc15">&#9733;</div>
+    <div><h2>2026年 運勢フォーキャスト</h2>
+      <div class="pillar-sub">九星気学 × 六星占術が示す年間の流れ</div></div>
+  </div>
+  <div class="grid grid-4"><div class="card tc"><div class="card-label">九星気学</div>
+      <div class="card-value">坤宮</div><div class="card-sub">変化・準備</div></div><div class="card tc"><div class="card-label">六星占術（メイン）</div>
+      <div class="card-value">緑生</div><div class="card-sub">Energy 65</div></div><div class="card tc"><div class="card-label">霊合統合スコア</div>
+      <div class="card-value" style="color:#4ade80">73</div>
+      <div class="card-sub">好調</div></div></div>
+  <div class="chart-wrap"><canvas id="chartOverlay" height="280"></canvas></div>
+  <div class="chart-legend"><div class="chart-legend-item">
+      <span class="chart-legend-line" style="background:#6366f1"></span>
+      <div><span class="chart-legend-label">九星気学</span>
+      <span class="chart-legend-desc">9年周期。本命星の宮遷移による運気の波。社会的な運勢の流れを示す</span></div></div><div class="chart-legend-item">
+      <span class="chart-legend-line" style="background:#22c55e"></span>
+      <div><span class="chart-legend-label">六星占術</span>
+      <span class="chart-legend-desc">12年周期。大殺界を含む運命星の巡り。個人的な運気のバイオリズム</span></div></div><div class="chart-legend-item">
+      <span class="chart-legend-line" style="background:#eab308"></span>
+      <div><span class="chart-legend-label">霊合合成</span>
+      <span class="chart-legend-desc">メイン星70% + サブ星30%の加重平均。霊合星人の実効的な運気スコア</span></div></div></div>
+  <div class="insight-box" style="margin-top:16px;border-color:rgba(234,179,8,0.3);background:linear-gradient(135deg,rgba(234,179,8,0.08),rgba(250,204,21,0.04))">
+    <div class="insight-title" style="color:var(--yellow)">統合フォーキャスト</div>
+    <p style="line-height:1.9;font-size:14px">九星気学では<strong>坤宮</strong>（変化・準備）に位置し、エネルギーは<strong>45</strong>。六星占術のメイン星は<strong>緑生</strong>（Energy 65）で好調期。統合スコア<strong>73</strong>（好調）— 複数の体系が好調を示しており、<strong>攻めの年</strong>。新しい挑戦や投資に適したタイミング。次のピークは<strong>2032年</strong>（統合スコア83）。そこへ向けた布石を今から打つ。</p>
+  </div>
+</section>
+<section class="section" id="monthly">
+  <h2 class="section-title">2026年 月間運勢</h2>
+  <p class="section-desc">九星気学の月宮位置 × 六星占術の月フェーズを統合し、4ドメインで分析</p>
+  <div class="year-timeline" id="yearTimeline"><div class="yt-month" data-month="0" style="background:rgba(34,197,94,0.5)">1</div><div class="yt-month" data-month="1" style="background:rgba(239,68,68,0.45)">2</div><div class="yt-month" data-month="2" style="background:rgba(239,68,68,0.45)">3</div><div class="yt-month" data-month="3" style="background:rgba(239,68,68,0.45)">4</div><div class="yt-month" data-month="4" style="background:rgba(59,130,246,0.4)">5</div><div class="yt-month" data-month="5" style="background:rgba(59,130,246,0.4)">6</div><div class="yt-month" data-month="6" style="background:rgba(34,197,94,0.5)">7</div><div class="yt-month" data-month="7" style="background:rgba(234,179,8,0.4)">8</div><div class="yt-month" data-month="8" style="background:rgba(34,197,94,0.5)">9</div><div class="yt-month" data-month="9" style="background:rgba(234,179,8,0.4)">10</div><div class="yt-month" data-month="10" style="background:rgba(59,130,246,0.4)">11</div><div class="yt-month" data-month="11" style="background:rgba(34,197,94,0.5)">12</div></div>
+  <div class="month-selector" id="monthSelector"></div>
+  <div id="monthPanels"></div>
+</section>
+<script>
+const monthlyData=[{"month": "1\u6708", "nineStarNote": "\u4e2d\u5409\u30fb\u56de\u5fa9", "nineStarEnergy": 65, "rokuseiPhase": "\u5b89\u5b9a", "rokuseiType": "great", "work": 4, "money": 4, "health": 4, "romance": 4, "workMsg": "\u9806\u8abf\u306b\u9032\u3080\u3002\u30c1\u30e3\u30f3\u30b9\u3092\u9003\u3055\u305a\u7740\u5b9f\u306b\u6210\u679c\u3092\u7a4d\u3080", "moneyMsg": "\u5805\u5b9f\u306a\u53ce\u5165\u304c\u898b\u8fbc\u3081\u308b\u3002\u7121\u99c4\u9063\u3044\u3092\u907f\u3051\u308c\u3070\u84c4\u7a4d\u3067\u304d\u308b", "healthMsg": "\u6982\u306d\u826f\u597d\u3002\u898f\u5247\u6b63\u3057\u3044\u751f\u6d3b\u3092\u7dad\u6301\u3057\u3066\u597d\u8abf\u3092\u4fdd\u3064", "romanceMsg": "\u826f\u597d\u306a\u95a2\u4fc2\u304c\u7bc9\u3051\u308b\u3002\u30b3\u30df\u30e5\u30cb\u30b1\u30fc\u30b7\u30e7\u30f3\u304c\u5186\u6ed1"}, {"month": "2\u6708", "nineStarNote": "\u4e0a\u6607\u904b", "nineStarEnergy": 75, "rokuseiPhase": "\u9670\u5f71", "rokuseiType": "danger", "work": 3, "money": 2, "health": 3, "romance": 3, "workMsg": "\u666e\u901a\u30da\u30fc\u30b9\u3002\u5730\u9053\u306a\u7a4d\u307f\u91cd\u306d\u304c\u5f8c\u306b\u52b9\u3044\u3066\u304f\u308b", "moneyMsg": "\u4e88\u60f3\u5916\u306e\u51fa\u8cbb\u306b\u6ce8\u610f\u3002\u5927\u304d\u306a\u8cb7\u3044\u7269\u306f\u5ef6\u671f\u304c\u5409", "healthMsg": "\u53ef\u3082\u306a\u304f\u4e0d\u53ef\u3082\u306a\u304f\u3002\u7761\u7720\u306e\u8cea\u306b\u6ce8\u610f\u3092\u6255\u3046", "romanceMsg": "\u5e73\u7a4f\u306a\u6642\u671f\u3002\u65e2\u5b58\u306e\u95a2\u4fc2\u3092\u5927\u5207\u306b\u3059\u308b"}, {"month": "3\u6708", "nineStarNote": "\u5927\u5409\u30fb\u6700\u76db", "nineStarEnergy": 100, "rokuseiPhase": "\u505c\u6b62", "rokuseiType": "danger", "work": 3, "money": 2, "health": 3, "romance": 3, "workMsg": "\u666e\u901a\u30da\u30fc\u30b9\u3002\u5730\u9053\u306a\u7a4d\u307f\u91cd\u306d\u304c\u5f8c\u306b\u52b9\u3044\u3066\u304f\u308b", "moneyMsg": "\u4e88\u60f3\u5916\u306e\u51fa\u8cbb\u306b\u6ce8\u610f\u3002\u5927\u304d\u306a\u8cb7\u3044\u7269\u306f\u5ef6\u671f\u304c\u5409", "healthMsg": "\u53ef\u3082\u306a\u304f\u4e0d\u53ef\u3082\u306a\u304f\u3002\u7761\u7720\u306e\u8cea\u306b\u6ce8\u610f\u3092\u6255\u3046", "romanceMsg": "\u5e73\u7a4f\u306a\u6642\u671f\u3002\u65e2\u5b58\u306e\u95a2\u4fc2\u3092\u5927\u5207\u306b\u3059\u308b"}, {"month": "4\u6708", "nineStarNote": "\u5927\u5409\u30fb\u6700\u76db", "nineStarEnergy": 90, "rokuseiPhase": "\u6e1b\u9000", "rokuseiType": "danger", "work": 3, "money": 2, "health": 3, "romance": 3, "workMsg": "\u666e\u901a\u30da\u30fc\u30b9\u3002\u5730\u9053\u306a\u7a4d\u307f\u91cd\u306d\u304c\u5f8c\u306b\u52b9\u3044\u3066\u304f\u308b", "moneyMsg": "\u4e88\u60f3\u5916\u306e\u51fa\u8cbb\u306b\u6ce8\u610f\u3002\u5927\u304d\u306a\u8cb7\u3044\u7269\u306f\u5ef6\u671f\u304c\u5409", "healthMsg": "\u53ef\u3082\u306a\u304f\u4e0d\u53ef\u3082\u306a\u304f\u3002\u7761\u7720\u306e\u8cea\u306b\u6ce8\u610f\u3092\u6255\u3046", "romanceMsg": "\u5e73\u7a4f\u306a\u6642\u671f\u3002\u65e2\u5b58\u306e\u95a2\u4fc2\u3092\u5927\u5207\u306b\u3059\u308b"}, {"month": "5\u6708", "nineStarNote": "\u5927\u5409\u30fb\u597d\u8abf", "nineStarEnergy": 80, "rokuseiPhase": "\u7a2e\u5b50", "rokuseiType": "good", "work": 4, "money": 4, "health": 4, "romance": 4, "workMsg": "\u9806\u8abf\u306b\u9032\u3080\u3002\u30c1\u30e3\u30f3\u30b9\u3092\u9003\u3055\u305a\u7740\u5b9f\u306b\u6210\u679c\u3092\u7a4d\u3080", "moneyMsg": "\u5805\u5b9f\u306a\u53ce\u5165\u304c\u898b\u8fbc\u3081\u308b\u3002\u7121\u99c4\u9063\u3044\u3092\u907f\u3051\u308c\u3070\u84c4\u7a4d\u3067\u304d\u308b", "healthMsg": "\u6982\u306d\u826f\u597d\u3002\u898f\u5247\u6b63\u3057\u3044\u751f\u6d3b\u3092\u7dad\u6301\u3057\u3066\u597d\u8abf\u3092\u4fdd\u3064", "romanceMsg": "\u826f\u597d\u306a\u95a2\u4fc2\u304c\u7bc9\u3051\u308b\u3002\u30b3\u30df\u30e5\u30cb\u30b1\u30fc\u30b7\u30e7\u30f3\u304c\u5186\u6ed1"}, {"month": "6\u6708", "nineStarNote": "\u5409\u51f6\u6df7\u5408", "nineStarEnergy": 40, "rokuseiPhase": "\u7dd1\u751f", "rokuseiType": "good", "work": 3, "money": 3, "health": 3, "romance": 3, "workMsg": "\u666e\u901a\u30da\u30fc\u30b9\u3002\u5730\u9053\u306a\u7a4d\u307f\u91cd\u306d\u304c\u5f8c\u306b\u52b9\u3044\u3066\u304f\u308b", "moneyMsg": "\u53ce\u652f\u30c8\u30f3\u30c8\u30f3\u3002\u8a08\u753b\u7684\u306a\u652f\u51fa\u7ba1\u7406\u304c\u91cd\u8981", "healthMsg": "\u53ef\u3082\u306a\u304f\u4e0d\u53ef\u3082\u306a\u304f\u3002\u7761\u7720\u306e\u8cea\u306b\u6ce8\u610f\u3092\u6255\u3046", "romanceMsg": "\u5e73\u7a4f\u306a\u6642\u671f\u3002\u65e2\u5b58\u306e\u95a2\u4fc2\u3092\u5927\u5207\u306b\u3059\u308b"}, {"month": "7\u6708", "nineStarNote": "\u4e0a\u6607\u904b", "nineStarEnergy": 70, "rokuseiPhase": "\u7acb\u82b1", "rokuseiType": "great", "work": 4, "money": 4, "health": 4, "romance": 4, "workMsg": "\u9806\u8abf\u306b\u9032\u3080\u3002\u30c1\u30e3\u30f3\u30b9\u3092\u9003\u3055\u305a\u7740\u5b9f\u306b\u6210\u679c\u3092\u7a4d\u3080", "moneyMsg": "\u5805\u5b9f\u306a\u53ce\u5165\u304c\u898b\u8fbc\u3081\u308b\u3002\u7121\u99c4\u9063\u3044\u3092\u907f\u3051\u308c\u3070\u84c4\u7a4d\u3067\u304d\u308b", "healthMsg": "\u6982\u306d\u826f\u597d\u3002\u898f\u5247\u6b63\u3057\u3044\u751f\u6d3b\u3092\u7dad\u6301\u3057\u3066\u597d\u8abf\u3092\u4fdd\u3064", "romanceMsg": "\u826f\u597d\u306a\u95a2\u4fc2\u304c\u7bc9\u3051\u308b\u3002\u30b3\u30df\u30e5\u30cb\u30b1\u30fc\u30b7\u30e7\u30f3\u304c\u5186\u6ed1"}, {"month": "8\u6708", "nineStarNote": "\u4e2d\u51f6\u30fb\u6ce8\u610f", "nineStarEnergy": 30, "rokuseiPhase": "\u5065\u5f31", "rokuseiType": "caution", "work": 2, "money": 1, "health": 1, "romance": 2, "workMsg": "\u505c\u6ede\u611f\u3042\u308a\u3002\u7126\u3089\u305a\u57fa\u790e\u56fa\u3081\u306b\u96c6\u4e2d", "moneyMsg": "\u91d1\u904b\u4f4e\u8ff7\u3002\u5b88\u308a\u306e\u59ff\u52e2\u3067\u4e57\u308a\u5207\u308b\u3002\u885d\u52d5\u8cb7\u3044\u53b3\u7981", "healthMsg": "\u4f53\u8abf\u7ba1\u7406\u306b\u7d30\u5fc3\u306e\u6ce8\u610f\u3002\u7121\u7406\u306a\u30b9\u30b1\u30b8\u30e5\u30fc\u30eb\u306f\u907f\u3051\u308b", "romanceMsg": "\u3059\u308c\u9055\u3044\u304c\u8d77\u304d\u3084\u3059\u3044\u3002\u4e01\u5be7\u306a\u5bfe\u8a71\u3092\u5fc3\u304c\u3051\u308b"}, {"month": "9\u6708", "nineStarNote": "\u5409\u51f6\u6df7\u5408", "nineStarEnergy": 45, "rokuseiPhase": "\u9054\u6210", "rokuseiType": "great", "work": 4, "money": 4, "health": 4, "romance": 4, "workMsg": "\u9806\u8abf\u306b\u9032\u3080\u3002\u30c1\u30e3\u30f3\u30b9\u3092\u9003\u3055\u305a\u7740\u5b9f\u306b\u6210\u679c\u3092\u7a4d\u3080", "moneyMsg": "\u5805\u5b9f\u306a\u53ce\u5165\u304c\u898b\u8fbc\u3081\u308b\u3002\u7121\u99c4\u9063\u3044\u3092\u907f\u3051\u308c\u3070\u84c4\u7a4d\u3067\u304d\u308b", "healthMsg": "\u6982\u306d\u826f\u597d\u3002\u898f\u5247\u6b63\u3057\u3044\u751f\u6d3b\u3092\u7dad\u6301\u3057\u3066\u597d\u8abf\u3092\u4fdd\u3064", "romanceMsg": "\u826f\u597d\u306a\u95a2\u4fc2\u304c\u7bc9\u3051\u308b\u3002\u30b3\u30df\u30e5\u30cb\u30b1\u30fc\u30b7\u30e7\u30f3\u304c\u5186\u6ed1"}, {"month": "10\u6708", "nineStarNote": "\u4e2d\u5409\u30fb\u56de\u5fa9", "nineStarEnergy": 65, "rokuseiPhase": "\u4e71\u6c17", "rokuseiType": "caution", "work": 3, "money": 2, "health": 3, "romance": 3, "workMsg": "\u666e\u901a\u30da\u30fc\u30b9\u3002\u5730\u9053\u306a\u7a4d\u307f\u91cd\u306d\u304c\u5f8c\u306b\u52b9\u3044\u3066\u304f\u308b", "moneyMsg": "\u4e88\u60f3\u5916\u306e\u51fa\u8cbb\u306b\u6ce8\u610f\u3002\u5927\u304d\u306a\u8cb7\u3044\u7269\u306f\u5ef6\u671f\u304c\u5409", "healthMsg": "\u53ef\u3082\u306a\u304f\u4e0d\u53ef\u3082\u306a\u304f\u3002\u7761\u7720\u306e\u8cea\u306b\u6ce8\u610f\u3092\u6255\u3046", "romanceMsg": "\u5e73\u7a4f\u306a\u6642\u671f\u3002\u65e2\u5b58\u306e\u95a2\u4fc2\u3092\u5927\u5207\u306b\u3059\u308b"}, {"month": "11\u6708", "nineStarNote": "\u4e0a\u6607\u904b", "nineStarEnergy": 75, "rokuseiPhase": "\u518d\u4f1a", "rokuseiType": "good", "work": 4, "money": 4, "health": 4, "romance": 4, "workMsg": "\u9806\u8abf\u306b\u9032\u3080\u3002\u30c1\u30e3\u30f3\u30b9\u3092\u9003\u3055\u305a\u7740\u5b9f\u306b\u6210\u679c\u3092\u7a4d\u3080", "moneyMsg": "\u5805\u5b9f\u306a\u53ce\u5165\u304c\u898b\u8fbc\u3081\u308b\u3002\u7121\u99c4\u9063\u3044\u3092\u907f\u3051\u308c\u3070\u84c4\u7a4d\u3067\u304d\u308b", "healthMsg": "\u6982\u306d\u826f\u597d\u3002\u898f\u5247\u6b63\u3057\u3044\u751f\u6d3b\u3092\u7dad\u6301\u3057\u3066\u597d\u8abf\u3092\u4fdd\u3064", "romanceMsg": "\u826f\u597d\u306a\u95a2\u4fc2\u304c\u7bc9\u3051\u308b\u3002\u30b3\u30df\u30e5\u30cb\u30b1\u30fc\u30b7\u30e7\u30f3\u304c\u5186\u6ed1"}, {"month": "12\u6708", "nineStarNote": "\u5927\u5409\u30fb\u6700\u76db", "nineStarEnergy": 100, "rokuseiPhase": "\u8ca1\u6210", "rokuseiType": "great", "work": 5, "money": 5, "health": 5, "romance": 5, "workMsg": "\u5168\u529b\u6295\u7403\u3067\u6210\u679c\u304c\u51fa\u308b\u6642\u671f\u3002\u65b0\u30d7\u30ed\u30b8\u30a7\u30af\u30c8\u306e\u7acb\u3061\u4e0a\u3052\u306b\u6700\u9069", "moneyMsg": "\u91d1\u904b\u597d\u8abf\u3002\u6295\u8cc7\u30fb\u4ea4\u6e09\u306b\u826f\u3044\u6642\u671f\u3002\u5927\u304d\u306a\u5224\u65ad\u3082\u53ef", "healthMsg": "\u4f53\u8abf\u7d76\u597d\u8abf\u3002\u65b0\u3057\u3044\u904b\u52d5\u7fd2\u6163\u3092\u59cb\u3081\u308b\u30c1\u30e3\u30f3\u30b9", "romanceMsg": "\u4eba\u9593\u95a2\u4fc2\u304c\u6700\u3082\u8f1d\u304f\u6642\u671f\u3002\u65b0\u3057\u3044\u51fa\u4f1a\u3044\u3082\u6df1\u3044\u7d46\u3082"}];
+const currentMonth=2;
+function starRating(n){return'<span style="color:var(--yellow);">'+'★'.repeat(n)+'</span><span style="color:var(--border);">'+'★'.repeat(5-n)+'</span>';}
+function phaseColor(t){
+  if(t==='great')return{bg:'rgba(34,197,94,0.12)',border:'rgba(34,197,94,0.3)',color:'#4ade80'};
+  if(t==='good')return{bg:'rgba(59,130,246,0.12)',border:'rgba(59,130,246,0.3)',color:'#60a5fa'};
+  if(t==='caution')return{bg:'rgba(234,179,8,0.12)',border:'rgba(234,179,8,0.3)',color:'#facc15'};
+  return{bg:'rgba(239,68,68,0.12)',border:'rgba(239,68,68,0.3)',color:'#f87171'};
+}
+const selEl=document.getElementById('monthSelector');
+const panEl=document.getElementById('monthPanels');
+monthlyData.forEach((m,i)=>{
+  const btn=document.createElement('button');
+  btn.className='month-btn'+(i===currentMonth?' active current':'');
+  btn.textContent=m.month;btn.dataset.month=i;btn.onclick=()=>selectMonth(i);
+  selEl.appendChild(btn);
+  const pc=phaseColor(m.rokuseiType);
+  const panel=document.createElement('div');
+  panel.className='month-panel'+(i===currentMonth?' active':'');
+  panel.id='month-'+i;
+  panel.innerHTML=`<div class="card">
+    <div class="month-card-header">
+      <div class="month-label">${m.month}</div>
+      <div class="month-tags">
+        <span class="month-tag" style="background:rgba(99,102,241,0.15);color:#a5b4fc">九星: ${m.nineStarNote}</span>
+        <span class="month-tag" style="background:${pc.bg};color:${pc.color};border:1px solid ${pc.border}">六星: ${m.rokuseiPhase}</span>
+      </div>
+    </div>
+    <div class="domain-grid">
+      <div class="domain-card work"><div class="domain-icon-label"><div class="domain-label" style="color:var(--blue)">仕事</div><div class="domain-stars">${starRating(m.work)}</div></div><div class="domain-msg">${m.workMsg}</div></div>
+      <div class="domain-card money"><div class="domain-icon-label"><div class="domain-label" style="color:var(--gold)">お金</div><div class="domain-stars">${starRating(m.money)}</div></div><div class="domain-msg">${m.moneyMsg}</div></div>
+      <div class="domain-card health"><div class="domain-icon-label"><div class="domain-label" style="color:var(--green)">健康</div><div class="domain-stars">${starRating(m.health)}</div></div><div class="domain-msg">${m.healthMsg}</div></div>
+      <div class="domain-card romance"><div class="domain-icon-label"><div class="domain-label" style="color:#f472b6">恋愛</div><div class="domain-stars">${starRating(m.romance)}</div></div><div class="domain-msg">${m.romanceMsg}</div></div>
+    </div>
+  </div>`;
+  panEl.appendChild(panel);
+});
+function selectMonth(idx){
+  document.querySelectorAll('.month-btn').forEach(b=>b.classList.remove('active'));
+  document.querySelectorAll('.month-panel').forEach(p=>p.classList.remove('active'));
+  document.querySelector(`.month-btn[data-month="${idx}"]`).classList.add('active');
+  document.getElementById('month-'+idx).classList.add('active');
+  document.querySelectorAll('.yt-month').forEach(m=>m.style.opacity='0.5');
+  document.querySelector(`.yt-month[data-month="${idx}"]`).style.opacity='1';
+}
+document.querySelectorAll('.yt-month').forEach(el=>{
+  el.addEventListener('click',()=>selectMonth(parseInt(el.dataset.month)));
+});
+selectMonth(currentMonth);
+</script>
+<section class="section" id="cross">
+  <h2 class="section-title">Cross Analysis — 強み×運気の掛け合わせ</h2>
+  <div class="grid"><div class="insight-box">
+      <div class="insight-title">Empathy × 繊細さ × エニアグラム4</div>
+      <p>CliftonStrengths 1位の共感性と繊細な感受性、エニアグラムType 4の独自性追求が共鳴。「人の感情を深く理解し、独自の視点で表現する力」を形成する。この組み合わせはサービス設計においてユーザーの痛みを自分事として感じられるPMFの源泉。</p>
+    </div><div class="insight-box">
+      <div class="insight-title">Intellection × 集中パターン × 丁火（陰火）</div>
+      <p>深い思考力（Intellection 2位）× やや多動の集中特性 × 丁火（ロウソクの炎）。環境を整えれば安定して燃え続けるが、刺激に弱い。自動化で雑務を排除し、思考に没頭できる環境を作ることが最重要。</p>
+    </div><div class="insight-box">
+      <div class="insight-title">Deliberative × AB型 × Scorpio Fixed</div>
+      <p>慎重さ（3位）× AB型の合理的分析 × ScorpioのFixed（不動宮）。三重の慎重さは深い分析に基づく確実な意思決定を可能にする。一方で「分析麻痺」に陥りやすく、行動が遅れるリスクもある。</p>
+    </div><div class="insight-box">
+      <div class="insight-title">Connectedness × 七赤金星 × 坤宮2026</div>
+      <p>全てを繋げて見る直感力（4位）× 七赤金星の社交力と言葉の力。2026年の坤宮は「変化・準備」の年 — 点在するプロジェクト群を繋ぎ、エコシステムを設計するのに最適なタイミング。</p>
+    </div><div class="insight-box">
+      <div class="insight-title">Maximizer × 3S原則 × 7つの習慣</div>
+      <p>「良い→最高」の追求（5位）がOSそのもの。3S（Simple, Scalable, Sustainable）でフィルターし、第II領域（重要×非緊急）に集中投資する。「もっと良くできないか？」が止まらない性質は自動化・最適化の原動力。</p>
+    </div></div>
+</section>
+<footer class="page-footer">
+  <div>Self-Insight v0.5 — Phase 0→1</div>
+  <div style="margin-top:4px">Generated 2026-03-23 | 四柱推命 × 九星気学 × 六星占術 × 西洋占星術 × CliftonStrengths × Enneagram</div>
+</footer>
+</div>
+<script>
+new Chart(document.getElementById('chartOverlay'),{
+  type:'line',
+  data:{labels:["2022", "2023", "2024", "2025", "2026", "2027", "2028", "2029", "2030", "2031", "2032", "2033"],datasets:[
+    {label:'九星気学',data:[null, null, 70, 30, 45, 65, 75, 100, 90, 80, 40, null],borderColor:'#6366f1',fill:false,tension:0.4,borderWidth:2,pointRadius:4,pointBackgroundColor:'#6366f1'},
+    {label:'六星占術',data:[15, 10, 20, 50, 65, 80, 35, 90, 25, 70, 85, 95],borderColor:'#22c55e',fill:false,tension:0.4,borderWidth:2,pointRadius:4,pointBackgroundColor:'#22c55e'},
+    {label:'霊合合成',data:[null, null, 20, 64, 73, 77, 34, 70, 26, 76, 83, null],borderColor:'#eab308',fill:false,tension:0.4,borderWidth:2,borderDash:[6,3],pointRadius:4,pointBackgroundColor:'#eab308'}
+  ]},
+  options:{responsive:true,maintainAspectRatio:false,animation:{duration:1500,easing:'easeOutQuart'},interaction:{mode:'index',intersect:false},
+    plugins:{legend:{display:false}},
+    scales:{x:{ticks:{color:'#7c8293',font:{family:"'JetBrains Mono',monospace",size:11}},grid:{color:'rgba(255,255,255,0.05)'}},
+      y:{min:0,max:110,ticks:{display:false},grid:{color:'rgba(255,255,255,0.05)'}}}
+  }
+});
+const sections=document.querySelectorAll('.section[id]');
+const navLinks=document.querySelectorAll('.nav-bar a');
+const observer=new IntersectionObserver((entries)=>{
+  entries.forEach(e=>{if(e.isIntersecting){navLinks.forEach(l=>l.classList.remove('active'));
+    const link=document.querySelector(`.nav-bar a[href="#${e.target.id}"]`);if(link)link.classList.add('active');}});
+},{threshold:0.2,rootMargin:'-80px 0px -60% 0px'});
+sections.forEach(s=>observer.observe(s));
+</script>
+</body>
+</html>

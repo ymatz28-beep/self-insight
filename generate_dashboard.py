@@ -23,8 +23,8 @@ def satsukai_html(s):
 
 ENNEA_NAMES = {1:'完璧主義者',2:'援助者',3:'達成者',4:'個性派',5:'観察者',
                6:'忠実家',7:'楽天家',8:'挑戦者',9:'調停者'}
-HSP_LABELS = {'low':'低感受性','medium':'中程度','high':'高感受性'}
-ADHD_LABELS = {'minimal':'低傾向','leaning':'やや傾向あり','significant':'傾向あり'}
+HSP_LABELS = {'low':'穏やか','medium':'中程度','high':'繊細'}
+ADHD_LABELS = {'minimal':'安定型','leaning':'やや多動','significant':'多動型'}
 
 # Private nav — order from design-system.md SSOT
 GNAV_LINKS = [
@@ -138,7 +138,7 @@ def _core_identity(p):
       <div class="card-sub">静かな炎 × 言葉の力</div></div>
     <div class="card tc"><div class="card-label">Strongest Axis</div>
       <div class="card-value">共感 × 洞察</div>
-      <div class="card-sub">Empathy + Intellection + HSP</div></div>
+      <div class="card-sub">Empathy + Intellection + 繊細さ</div></div>
     <div class="card tc"><div class="card-label">Duality</div>
       <div class="card-value">合理 × 感性</div>
       <div class="card-sub">AB型 × 霊合星人 × Enneagram 4</div></div>
@@ -212,12 +212,12 @@ def _personality(p, tier):
           <div class="typo-cell"><div class="typo-label">Blood Type</div>
             <div class="typo-value">{bt["type"]}</div><div class="typo-sub">日本人口の{bt["population_pct"]}%</div>
             {"<div class='typo-desc'>"+pers_descs['blood_type']+"</div>" if pers_descs.get('blood_type') else ""}</div>
-          <div class="typo-cell"><div class="typo-label">HSP</div>
-            <div class="typo-value" style="color:#facc15">{hsp_label}</div><div class="typo-sub">感覚処理感受性</div>
-            {"<div class='typo-desc'>"+pers_descs['hsp']+"</div>" if pers_descs.get('hsp') else ""}</div>
-          <div class="typo-cell"><div class="typo-label">ADHD</div>
-            <div class="typo-value" style="color:#ff8f6b">{adhd_label}</div><div class="typo-sub">過集中×散漫の波</div>
-            {"<div class='typo-desc'>"+pers_descs['adhd']+"</div>" if pers_descs.get('adhd') else ""}</div>
+          <div class="typo-cell"><div class="typo-label">感覚感受性</div>
+            <div class="typo-value" style="color:#facc15">{hsp_label}</div><div class="typo-sub">環境・感情への感度</div>
+            {"<div class='typo-desc'>"+pers_descs['sensitivity']+"</div>" if pers_descs.get('sensitivity') else ""}</div>
+          <div class="typo-cell"><div class="typo-label">集中パターン</div>
+            <div class="typo-value" style="color:#ff8f6b">{adhd_label}</div><div class="typo-sub">過集中×拡散の波</div>
+            {"<div class='typo-desc'>"+pers_descs['focus_pattern']+"</div>" if pers_descs.get('focus_pattern') else ""}</div>
         </div></div>
     </div></div>'''
 
@@ -225,6 +225,41 @@ def _personality(p, tier):
   <h2 class="section-title">Personality Profile</h2>
   {sf_html}
 </section>'''
+
+
+def _western_detail(p):
+    wa = p['western_astrology']
+    west = wa['sun_sign']
+    ruling = wa.get('ruling_planet', '')
+    decan = wa.get('decan', {})
+    el_traits = wa.get('element_traits', '')
+    q_traits = wa.get('quality_traits', '')
+    traits = wa.get('traits', '')
+    forecast = wa.get('forecast_2026', '')
+
+    cards = f'''<div class="grid grid-3">
+    <div class="card"><div class="card-label">太陽星座</div>
+      <div class="card-value">{west["symbol"]} {west["sign"]}</div>
+      <div class="card-sub">{west["element"]} / {west["quality"]}</div>
+      {"<div class='typo-desc' style='margin-top:8px'>"+traits+"</div>" if traits else ""}</div>
+    <div class="card"><div class="card-label">支配星</div>
+      <div class="card-value">{ruling}</div>
+      {"<div class='typo-desc' style='margin-top:8px'>"+el_traits+"</div>" if el_traits else ""}</div>'''
+    if decan:
+        cards += f'''<div class="card"><div class="card-label">デカン（第{decan.get("number","")}区）</div>
+      <div class="card-value">{decan.get("sub_ruler","")}</div>
+      {"<div class='typo-desc' style='margin-top:8px'>"+decan.get("traits","")+"</div>" if decan.get("traits") else ""}</div>'''
+    cards += '</div>'
+
+    desc_parts = ''
+    if q_traits:
+        desc_parts += f'<div style="font-size:12px;color:var(--text-secondary);line-height:1.7;margin-top:12px">{q_traits}</div>'
+    if forecast:
+        desc_parts += f'''<div class="insight-box" style="margin-top:12px;border-color:rgba(139,92,246,0.3);background:linear-gradient(135deg,rgba(139,92,246,0.08),rgba(99,102,241,0.04))">
+      <div class="insight-title" style="color:#c4b5fd">2026年 {west["sign"]}の運勢</div>
+      <p style="line-height:1.9;font-size:14px">{forecast}</p></div>'''
+
+    return cards + desc_parts
 
 
 def _divination(p):
@@ -379,13 +414,7 @@ def _divination(p):
   <div style="margin-top:12px">{table}</div>
 
   <h3 class="sub-title">西洋占星術</h3>
-  <div class="grid grid-3">
-    <div class="card"><div class="card-label">太陽星座</div>
-      <div class="card-value">{west["symbol"]} {west["sign"]}</div>
-      <div class="card-sub">{west["element"]} / {west["quality"]}</div></div>
-    <div class="card"><div class="card-label">支配星</div>
-      <div class="card-value">{p["western_astrology"].get("ruling_planet","")}</div></div>
-  </div>
+  {_western_detail(p)}
   <div class="unlock-banner">出生時刻を追加すると、時柱・アセンダント・月星座が解放されます</div>
 </section>'''
 
@@ -508,6 +537,42 @@ def _forecast_insight(cur9, cur12, cur_sub, cur_comb, has_reigou, nsk, rok):
   </div>'''
 
 
+DOMAIN_MSGS = {
+    'work': {
+        5: '全力投球で成果が出る時期。新プロジェクトの立ち上げに最適',
+        4: '順調に進む。チャンスを逃さず着実に成果を積む',
+        3: '普通ペース。地道な積み重ねが後に効いてくる',
+        2: '停滞感あり。焦らず基礎固めに集中',
+        1: '無理は禁物。現状維持を心がけ、回復を優先',
+    },
+    'money': {
+        5: '金運好調。投資・交渉に良い時期。大きな判断も可',
+        4: '堅実な収入が見込める。無駄遣いを避ければ蓄積できる',
+        3: '収支トントン。計画的な支出管理が重要',
+        2: '予想外の出費に注意。大きな買い物は延期が吉',
+        1: '金運低迷。守りの姿勢で乗り切る。衝動買い厳禁',
+    },
+    'health': {
+        5: '体調絶好調。新しい運動習慣を始めるチャンス',
+        4: '概ね良好。規則正しい生活を維持して好調を保つ',
+        3: '可もなく不可もなく。睡眠の質に注意を払う',
+        2: '疲れが出やすい。休息を意識的に増やす',
+        1: '体調管理に細心の注意。無理なスケジュールは避ける',
+    },
+    'romance': {
+        5: '人間関係が最も輝く時期。新しい出会いも深い絆も',
+        4: '良好な関係が築ける。コミュニケーションが円滑',
+        3: '平穏な時期。既存の関係を大切にする',
+        2: 'すれ違いが起きやすい。丁寧な対話を心がける',
+        1: '距離感が大事。一人の時間で自分を充電する',
+    },
+}
+
+
+def _domain_msg(domain, stars, phase):
+    return DOMAIN_MSGS.get(domain, {}).get(stars, '')
+
+
 def _monthly(p):
     mf = p.get('monthly_fortune', [])
     if not mf:
@@ -524,7 +589,7 @@ def _monthly(p):
         bg = timeline_colors.get(m['rokusei']['type'], 'rgba(99,102,241,0.3)')
         timeline += f'<div class="yt-month" data-month="{m["month"]-1}" style="background:{bg}">{m["month"]}</div>'
 
-    # Month panels
+    # Month panels with domain messages
     panels_data = json.dumps([{
         'month': f'{m["month"]}月',
         'nineStarNote': m['nine_star']['note'],
@@ -535,6 +600,10 @@ def _monthly(p):
         'money': m['domains']['money'],
         'health': m['domains']['health'],
         'romance': m['domains']['romance'],
+        'workMsg': _domain_msg('work', m['domains']['work'], m['rokusei']['phase']),
+        'moneyMsg': _domain_msg('money', m['domains']['money'], m['rokusei']['phase']),
+        'healthMsg': _domain_msg('health', m['domains']['health'], m['rokusei']['phase']),
+        'romanceMsg': _domain_msg('romance', m['domains']['romance'], m['rokusei']['phase']),
     } for m in mf])
 
     return f'''<section class="section" id="monthly">
@@ -574,10 +643,10 @@ monthlyData.forEach((m,i)=>{{
       </div>
     </div>
     <div class="domain-grid">
-      <div class="domain-card work"><div class="domain-icon-label"><div class="domain-label" style="color:var(--blue)">仕事</div><div class="domain-stars">${{starRating(m.work)}}</div></div></div>
-      <div class="domain-card money"><div class="domain-icon-label"><div class="domain-label" style="color:var(--gold)">お金</div><div class="domain-stars">${{starRating(m.money)}}</div></div></div>
-      <div class="domain-card health"><div class="domain-icon-label"><div class="domain-label" style="color:var(--green)">健康</div><div class="domain-stars">${{starRating(m.health)}}</div></div></div>
-      <div class="domain-card romance"><div class="domain-icon-label"><div class="domain-label" style="color:#f472b6">恋愛</div><div class="domain-stars">${{starRating(m.romance)}}</div></div></div>
+      <div class="domain-card work"><div class="domain-icon-label"><div class="domain-label" style="color:var(--blue)">仕事</div><div class="domain-stars">${{starRating(m.work)}}</div></div><div class="domain-msg">${{m.workMsg}}</div></div>
+      <div class="domain-card money"><div class="domain-icon-label"><div class="domain-label" style="color:var(--gold)">お金</div><div class="domain-stars">${{starRating(m.money)}}</div></div><div class="domain-msg">${{m.moneyMsg}}</div></div>
+      <div class="domain-card health"><div class="domain-icon-label"><div class="domain-label" style="color:var(--green)">健康</div><div class="domain-stars">${{starRating(m.health)}}</div></div><div class="domain-msg">${{m.healthMsg}}</div></div>
+      <div class="domain-card romance"><div class="domain-icon-label"><div class="domain-label" style="color:#f472b6">恋愛</div><div class="domain-stars">${{starRating(m.romance)}}</div></div><div class="domain-msg">${{m.romanceMsg}}</div></div>
     </div>
   </div>`;
   panEl.appendChild(panel);
@@ -613,24 +682,25 @@ def _cross_analysis(p):
     # Build insight boxes from profile data
     boxes = []
 
-    # 1. Empathy × HSP × Enneagram
+    # 1. Empathy × Sensitivity × Enneagram
     if sf_top5 and ennea and hsp:
         etype = ennea.get('type', '')
         hsp_score = hsp.get('score', '')
+        sens_label = HSP_LABELS.get(hsp_score, hsp_score)
         boxes.append({
-            'title': f'Empathy × HSP × エニアグラム{etype}',
-            'text': f'CliftonStrengths 1位の共感性と{HSP_LABELS.get(hsp_score, hsp_score)}の感受性、'
+            'title': f'Empathy × 繊細さ × エニアグラム{etype}',
+            'text': f'CliftonStrengths 1位の共感性と{sens_label}な感受性、'
                     f'エニアグラムType {etype}の独自性追求が共鳴。'
                     f'「人の感情を深く理解し、独自の視点で表現する力」を形成する。'
                     f'この組み合わせはサービス設計においてユーザーの痛みを自分事として感じられるPMFの源泉。',
         })
 
-    # 2. Intellection × ADHD × Day Master
+    # 2. Intellection × Focus Pattern × Day Master
     if len(sf_top5) >= 2 and adhd:
-        adhd_label = ADHD_LABELS.get(adhd.get('tendency', ''), '')
+        focus_label = ADHD_LABELS.get(adhd.get('tendency', ''), '')
         boxes.append({
-            'title': f'Intellection × ADHD × {dm["char"]}火（陰火）',
-            'text': f'深い思考力（Intellection 2位）× {adhd_label}のADHD傾向 × '
+            'title': f'Intellection × 集中パターン × {dm["char"]}火（陰火）',
+            'text': f'深い思考力（Intellection 2位）× {focus_label}の集中特性 × '
                     f'{dm["char"]}火（ロウソクの炎）。'
                     f'環境を整えれば安定して燃え続けるが、刺激に弱い。'
                     f'自動化で雑務を排除し、思考に没頭できる環境を作ることが最重要。',
@@ -865,6 +935,7 @@ body::before{content:'';position:fixed;top:0;left:0;width:100%;height:100%;opaci
 .domain-icon-label{display:flex;align-items:center;gap:8px}
 .domain-label{font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:0.5px}
 .domain-stars{font-family:var(--font-mono);font-size:13px;letter-spacing:1px}
+.domain-msg{font-size:11px;color:var(--text-secondary);line-height:1.5;margin-top:6px}
 .chart-legend{display:flex;flex-direction:column;gap:10px;margin-top:12px;padding:16px;background:var(--surface);border:1px solid var(--border);border-radius:var(--r-md)}
 .chart-legend-item{display:flex;align-items:flex-start;gap:10px}
 .chart-legend-line{display:inline-block;width:24px;height:3px;border-radius:2px;margin-top:7px;flex-shrink:0}
