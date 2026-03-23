@@ -193,7 +193,7 @@
 5. **ユニットテスト**: 占術計算の正確性検証（test_calculations.py +214行追加済み、実行確認未了）
 6. **独自診断フレームワーク設計**: MBTI/SF/エニアグラムの代替となる独自性格診断の設計
 7. **入力ページ設計**: 生年月日→血液型→性格診断→結果出力のUXフロー
-8. **改善アイデア: ナラティブ自動生成**: 新規ユーザー向けに、profile.yamlからLLM APIでナラティブテキストを自動生成するパイプライン追加（Yumaはindex.htmlから抽出、他ユーザーは自動生成）
+8. **generate_dashboard.py ナラティブ生成ロジック**: profile.yamlの計算結果（占術+性格）からテンプレート+ロジックでリッチなナラティブを自動生成。narratives.yaml不要、LLM API不要。全ユーザーでYumaのindex.html品質を実現する
 
 ## Key Decisions
 - 2ピラー構造: Timeless Identity + Year Forecast
@@ -205,7 +205,8 @@
 - Nav順序: Stock → Market Intel → Insight → Wealth → Action → Self-Insight → Health → Property → Travel
 - Self-InsightはGitHub Pages公開だが、Private navにのみ掲載（個人データのため）
 - Public→Private nav隔離: 2026-03-21監査で全Public HTML（12ファイル）にPrivate URL混入ゼロを実証。`renderer.py` の `scope` パラメータで自動分離される設計
-- **ナラティブ分離設計**: profile.yaml（計算データ）+ narratives.yaml（テキストコンテンツ）を分離。Yumaはindex.htmlから抽出、新規ユーザーはLLM API自動生成の予定
+- **ナラティブ生成方針（session #15で更新）**: narratives.yamlは不要。generate_dashboard.pyがprofile.yamlの計算結果からプログラマティックにナラティブ（解説・インサイト・Cross Analysis）を生成する。どのユーザーでもYumaのindex.html相当のリッチな出力がゴール。LLM API依存なしで、テンプレート+ロジックで実現する
+- 周平への共有はPDFでなくURL提供（`users/shuhei/index.html`）。外部リンクゼロで単体完結
 
 ## Blockers
 - **API 502障害**: session #10, #12で計5時間以上の障害。大規模ファイル生成（Agent）が特に脆弱。回避策: Agent使用を最小化し、Edit分割方式で段階的変更
