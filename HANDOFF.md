@@ -5,7 +5,7 @@
 - [WARN] structural_reform: generate_profile.py is 1130 lines (threshold: 500). Consider splitting.
 
 ## Last Updated
-2026-03-23 (session #20 — UXオーバーホール+フォームバックエンド+Cloudflare Access延長)
+2026-03-24 (session #21 — 月間テキスト個別化+二重表示修正+CSS chevron)
 
 ## Project Overview
 複数の占術（四柱推命・九星気学・六星占術・西洋占星術・干支）+ 独自性格分析SIPS（Big Five基盤の16 Archetypes+24 Strengths+Sensitivity Score）を統合した、徹底的にパーソナライズされた自己理解ダッシュボードサービス。有料SaaS展開を目指す。
@@ -240,6 +240,13 @@
 - [x] **Cloudflare Accessセッション延長**（2026-03-23 session #20）
   - Zero Trust → iuma-private アプリのセッション期間を**1 month**に変更
   - スマホからも月1回のOTP認証で済む
+- [x] **月間テキスト個別化+二重表示修正+CSS chevron**（2026-03-24 session #21→951ca29, 60d0410, eb98bdc）
+  - 月間ナラティブ/アドバイス: 12/12ユニーク化（九星の宮+六星フェーズ+西洋テーマを直接組み込み）
+  - SF強みローテーション: Top5を月ごとに回す（月1=Empathy, 月2=Intellection, ...）
+  - 推奨ドメイン: 全スコア同一月は六星フェーズで決定（財成→お金, 立花→人間関係等）
+  - PALACE_DESC / PHASE_DESC辞書追加（九星9宮+六星12フェーズの意味解説）
+  - 二重タイトル表示修正: 全セクションの内部pillar-header/section-title/section-desc除去（Hub cardヘッダーに一本化）
+  - 折りたたみ記号: テキスト文字(+/−)→CSSボーダーchevron（フォント依存排除）
 
 ## In Progress
 - [ ] **generate_dashboard.py / generate_profile.py 構造分割**: constancy警告（両ファイル500行超過）への対応。generate_dashboard.py 2,084行、generate_profile.py 1,130行
@@ -321,3 +328,4 @@
 | 18 | 2026-03-23 | **P0+P1改善**: CSS修正、2人称化、fade-inアニメ、ガイダンス月間運勢統合、折りたたみUI、Co-Star風引用句、ドメインカラー統一、パーソナライズ助言(SF+日主)、占術アコーディオン、レアリティバッジ、--no-gnavフラグ。commits: 83a5fb5, 38930c3 |
 | 19 | 2026-03-23 | **フォームバックエンド+UXオーバーホール**: Apps Script+process_submission.py E2Eパイプライン構築。Hub+Detail Architecture（全セクション折りたたみカード化）、動的アーキタイプ名（day_master+強み）、感情的セクション名、Section Nav廃止、Gnav制御。generate_dashboard.py 1,677→2,084行。commits: 2a2a8f6, 6a91657 |
 | 20 | 2026-03-23 | **Cloudflare Accessセッション延長**: Zero Trust iuma-privateのセッション期間を1 monthに変更。Reminder↔アクション同期設計確認（iCloud即時同期、launchd 30分毎、スマホ入力OK）。コード変更なし |
+| 21 | 2026-03-24 | **月間テキスト個別化+UXバグ修正**: 月間ナラティブ12/12ユニーク化（PALACE_DESC/PHASE_DESC辞書+SF強みローテーション+六星フェーズ別ドメイン推奨）。全セクション二重タイトル除去。折りたたみ→CSS chevron（フォント非依存）。commits: 951ca29, 60d0410, eb98bdc |
