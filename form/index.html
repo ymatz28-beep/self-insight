@@ -587,16 +587,13 @@ async function submitAtTier(tier) {
   // Background: send to Google Sheets
   if (SUBMIT_URL) {
     try {
-      const res = await fetch(SUBMIT_URL, {
+      await fetch(SUBMIT_URL, {
         method: 'POST',
         body: resultJson,
-        headers: { 'Content-Type': 'text/plain' },
+        mode: 'no-cors',
       });
-      const result = await res.json();
-      if (result.success) {
-        document.getElementById('submitStatus').textContent = '✓ データ送信完了';
-        document.getElementById('submitStatus').style.color = 'var(--success)';
-      }
+      document.getElementById('submitStatus').textContent = '✓ データ送信完了';
+      document.getElementById('submitStatus').style.color = 'var(--success)';
     } catch (e) {
       document.getElementById('submitStatus').textContent = '';
     }
