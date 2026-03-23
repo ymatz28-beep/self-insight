@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Self-Insight Admin</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+JP:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--bg:#0f1117;--surface:#1a1d27;--surface2:#242837;--border:#2e3347;--text:#e8e9ed;--text2:#9ca3af;--accent:#6366f1;--accent2:#818cf8;--success:#34d399;--warn:#fbbf24;--error:#f87171;--font:Inter,'Noto Sans JP',sans-serif}
+body{font-family:var(--font);background:var(--bg);color:var(--text);line-height:1.6;min-height:100vh}
+.container{max-width:800px;margin:0 auto;padding:24px 16px}
+h1{font-size:20px;font-weight:700;margin-bottom:4px}
+.subtitle{color:var(--text2);font-size:13px;margin-bottom:24px}
+
+.config-section{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:16px;margin-bottom:24px}
+.config-section label{font-size:13px;color:var(--text2);display:block;margin-bottom:6px}
+.config-section input{width:100%;background:var(--surface2);border:1px solid var(--border);color:var(--text);padding:10px 12px;border-radius:8px;font-size:13px;font-family:var(--font);outline:none}
+.config-section input:focus{border-color:var(--accent)}
+.config-section button{background:var(--accent);color:#fff;border:none;padding:10px 20px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;margin-top:10px;font-family:var(--font)}
+
+.stats{display:flex;gap:12px;margin-bottom:24px}
+.stat-card{flex:1;background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:16px;text-align:center}
+.stat-num{font-size:28px;font-weight:700;color:var(--accent2)}
+.stat-label{font-size:11px;color:var(--text2);margin-top:4px}
+
+.user-list{display:flex;flex-direction:column;gap:8px}
+.user-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:16px;display:flex;justify-content:space-between;align-items:center}
+.user-info{flex:1}
+.user-name{font-size:15px;font-weight:600}
+.user-meta{font-size:12px;color:var(--text2);margin-top:2px}
+.user-actions{display:flex;gap:8px}
+.btn-sm{padding:6px 14px;border-radius:6px;font-size:12px;border:1px solid var(--border);background:var(--surface2);color:var(--text);cursor:pointer;font-family:var(--font)}
+.btn-sm:hover{border-color:var(--accent)}
+.btn-sm.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+.badge{display:inline-block;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:600;margin-left:6px}
+.badge.t1{background:rgba(99,102,241,.15);color:#818cf8}
+.badge.t2{background:rgba(52,211,153,.15);color:#34d399}
+.badge.t3{background:rgba(251,191,36,.15);color:#fbbf24}
+.badge.pending{background:rgba(248,113,113,.15);color:#f87171}
+.badge.done{background:rgba(52,211,153,.15);color:#34d399}
+
+.empty{text-align:center;padding:40px;color:var(--text2);font-size:14px}
+.loading{text-align:center;padding:40px;color:var(--text2);font-size:14px}
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>Self-Insight Admin</h1>
+  <p class="subtitle">フォーム回答一覧 · ダッシュボードURL管理</p>
+
+  <div class="config-section" id="configSection">
+    <label>Google Apps Script API URL</label>
+    <input type="text" id="apiUrl" placeholder="https://script.google.com/macros/s/xxx/exec" value="">
+    <button onclick="saveConfig()">保存して読み込み</button>
+    <div id="configStatus" style="font-size:12px;margin-top:6px;color:var(--text2)"></div>
+  </div>
+
+  <div class="stats" id="statsSection" style="display:none">
+    <div class="stat-card"><div class="stat-num" id="totalCount">0</div><div class="stat-label">総回答数</div></div>
+    <div class="stat-card"><div class="stat-num" id="pendingCount">0</div><div class="stat-label">未処理</div></div>
+    <div class="stat-card"><div class="stat-num" id="doneCount">0</div><div class="stat-label">生成済み</div></div>
+  </div>
+
+  <div id="userList">
+    <div class="empty">API URLを設定してください</div>
+  </div>
+</div>
+
+<script>
+const BASE_URL = 'https://ymatz28-beep.github.io/self-insight/users/';
+
+function saveConfig() {
+  const url = document.getElementById('apiUrl').value.trim();
+  if (!url) return;
+  localStorage.setItem('si_admin_api', url);
+  document.getElementById('configStatus').textContent = '保存しました。読み込み中...';
+  fetchSubmissions(url);
+}
+
+async function fetchSubmissions(url) {
+  try {
+    const res = await fetch(url + '?action=list');
+    const data = await res.json();
+    renderSubmissions(data.rows || []);
+  } catch (e) {
+    document.getElementById('userList').innerHTML = `<div class="empty">API接続に失敗しました: ${e.message}</div>`;
+  }
+}
+
+function renderSubmissions(rows) {
+  if (!rows.length) {
+    document.getElementById('userList').innerHTML = '<div class="empty">まだ回答がありません</div>';
+    return;
+  }
+
+  const pending = rows.filter(r => r.status === 'pending').length;
+  const done = rows.filter(r => r.status === 'done').length;
+  document.getElementById('totalCount').textContent = rows.length;
+  document.getElementById('pendingCount').textContent = pending;
+  document.getElementById('doneCount').textContent = done;
+  document.getElementById('statsSection').style.display = 'flex';
+
+  const html = rows.map(row => {
+    const tierClass = row.tier >= 3 ? 't3' : row.tier >= 2 ? 't2' : 't1';
+    const statusClass = row.status === 'done' ? 'done' : 'pending';
+    const url = row.uuid ? BASE_URL + row.uuid + '/' : '#';
+    const date = row.timestamp ? new Date(row.timestamp).toLocaleDateString('ja-JP') : '';
+
+    return `<div class="user-card">
+      <div class="user-info">
+        <span class="user-name">${row.display_name || '名前なし'}</span>
+        <span class="badge ${tierClass}">Tier ${row.tier || '?'}</span>
+        <span class="badge ${statusClass}">${row.status || 'pending'}</span>
+        <div class="user-meta">${date}${row.uuid ? ` · ${row.uuid}` : ''}</div>
+      </div>
+      <div class="user-actions">
+        ${row.uuid && row.status === 'done' ? `<button class="btn-sm" onclick="copyUrl('${url}')">URL コピー</button>` : ''}
+        <button class="btn-sm" onclick="viewData('${row.uuid}')">詳細</button>
+      </div>
+    </div>`;
+  }).join('');
+
+  document.getElementById('userList').innerHTML = `<div class="user-list">${html}</div>`;
+}
+
+function copyUrl(url) {
+  navigator.clipboard.writeText(url).then(() => alert('URLをコピーしました'));
+}
+
+function viewData(uuid) {
+  const url = document.getElementById('apiUrl').value.trim();
+  if (url && uuid) {
+    window.open(url + '?action=get&uuid=' + uuid, '_blank');
+  }
+}
+
+// Auto-load saved config
+const saved = localStorage.getItem('si_admin_api');
+if (saved) {
+  document.getElementById('apiUrl').value = saved;
+  fetchSubmissions(saved);
+}
+</script>
+</body>
+</html>

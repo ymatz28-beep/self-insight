@@ -403,18 +403,18 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);line-height:
 </form>
 
 <!-- ==================== RESULT ==================== -->
-<div id="resultScreen" class="result-screen" style="display:none">
-  <h2>回答ありがとうございます！</h2>
-  <p>あなたのSelf-Insightダッシュボードは<br>準備でき次第LINEでお届けします。</p>
-  <div class="result-actions">
-    <button type="button" class="btn-primary" onclick="copyResult()">回答データをコピー</button>
-    <button type="button" class="btn-line" onclick="shareViaLine()">LINEでYumaに送信</button>
+<div id="resultScreen" style="display:none">
+  <div id="dashboardContainer"></div>
+  <div style="text-align:center;margin-top:24px;padding-bottom:40px">
+    <p style="color:#9ca3af;font-size:13px;margin-bottom:12px">データは管理者に送信されました。</p>
+    <div id="submitStatus" style="font-size:13px;margin-top:8px"></div>
   </div>
-  <div id="submitStatus" style="font-size:13px;margin-top:8px"></div>
-  <div id="copyMsg" style="color:var(--success);font-size:13px;margin-top:8px;display:none">コピーしました！</div>
 </div>
 
 </div><!-- container -->
+
+<script src="engine.js"></script>
+<script src="renderer.js"></script>
 
 <script>
 // === Likert scale generation ===
@@ -561,46 +561,31 @@ async function submitAtTier(tier) {
   const data = collectData(tier);
   resultJson = JSON.stringify(data, null, 2);
 
-  // Try backend submission
+  // Generate profile and render dashboard instantly
+  const profile = SelfInsightEngine.generateProfile(data);
+  document.getElementById('insightForm').style.display = 'none';
+  document.getElementById('resultScreen').style.display = 'block';
+  document.getElementById('progressBar').style.width = '100%';
+  SelfInsightRenderer.renderDashboard(profile, document.getElementById('dashboardContainer'));
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+
+  // Background: send to Google Sheets
   if (SUBMIT_URL) {
     try {
       const res = await fetch(SUBMIT_URL, {
         method: 'POST',
         body: resultJson,
-        headers: { 'Content-Type': 'text/plain' }, // Apps Script CORS workaround
+        headers: { 'Content-Type': 'text/plain' },
       });
       const result = await res.json();
       if (result.success) {
-        document.getElementById('submitStatus').textContent = '送信完了';
+        document.getElementById('submitStatus').textContent = '✓ データ送信完了';
         document.getElementById('submitStatus').style.color = 'var(--success)';
       }
     } catch (e) {
-      // Fallback: manual copy/LINE share still available
-      document.getElementById('submitStatus').textContent = '自動送信に失敗しました。手動でコピーしてください';
-      document.getElementById('submitStatus').style.color = 'var(--warn)';
+      document.getElementById('submitStatus').textContent = '';
     }
   }
-
-  document.getElementById('insightForm').style.display = 'none';
-  document.getElementById('resultScreen').style.display = 'block';
-  document.getElementById('progressBar').style.width = '100%';
-  window.scrollTo({ top: 0, behavior: 'smooth' });
-}
-
-// === Copy ===
-function copyResult() {
-  navigator.clipboard.writeText(resultJson).then(() => {
-    const msg = document.getElementById('copyMsg');
-    msg.style.display = 'block';
-    setTimeout(() => msg.style.display = 'none', 2000);
-  });
-}
-
-// === LINE share ===
-function shareViaLine() {
-  const text = `Self-Insight 回答データ:\n${resultJson}`;
-  const url = 'https://line.me/R/share?text=' + encodeURIComponent(text);
-  window.open(url, '_blank');
 }
 </script>
 </body>
