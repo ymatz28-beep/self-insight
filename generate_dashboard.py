@@ -82,7 +82,6 @@ def _section_nav(has_personality):
     links += '<a href="#divination">占術プロファイル</a>'
     links += '<a href="#forecast-2026">2026 運勢</a>'
     links += '<a href="#monthly">月間運勢</a>'
-    links += '<a href="#this-month">今月のあなたへ</a>'
     links += '<a href="#cross">Cross Analysis（クロス分析）</a>'
     return f'<nav class="nav-bar">{links}</nav>'
 
@@ -612,15 +611,24 @@ def _core_identity(p):
     missing = p['four_pillars'].get('missing_elements', [])
     interp = p.get('interpretations', {})
 
-    # Integrated insight box
+    # Integrated insight box — first paragraph visible, rest collapsed
     insight_paras = interp.get('integrated_insight', [])
     insight_html = ''
     if insight_paras:
-        ps = ''.join(f'<p style="line-height:1.9;font-size:14px;{" margin-top:12px;" if i else ""}">{para}</p>'
-                     for i, para in enumerate(insight_paras))
-        insight_html = f'''<div class="insight-box" style="border-color:rgba(99,102,241,0.4);background:linear-gradient(135deg,rgba(99,102,241,0.12),rgba(139,92,246,0.08));">
+        first_p = f'<p style="line-height:1.9;font-size:14px;">{insight_paras[0]}</p>'
+        if len(insight_paras) > 1:
+            rest_ps = ''.join(f'<p style="line-height:1.9;font-size:14px;margin-top:12px;">{para}</p>'
+                              for para in insight_paras[1:])
+            insight_html = f'''<div class="insight-box" style="border-color:rgba(99,102,241,0.4);background:linear-gradient(135deg,rgba(99,102,241,0.12),rgba(139,92,246,0.08));">
     <div class="insight-title" style="font-size:15px;">統合インサイト</div>
-    {ps}
+    {first_p}
+    <div class="collapsible-content" style="display:none">{rest_ps}</div>
+    <button class="collapse-toggle" onclick="this.previousElementSibling.style.display=this.previousElementSibling.style.display==='none'?'block':'none';this.textContent=this.previousElementSibling.style.display==='none'?'続きを読む':'閉じる'">続きを読む</button>
+  </div>'''
+        else:
+            insight_html = f'''<div class="insight-box" style="border-color:rgba(99,102,241,0.4);background:linear-gradient(135deg,rgba(99,102,241,0.12),rgba(139,92,246,0.08));">
+    <div class="insight-title" style="font-size:15px;">統合インサイト</div>
+    {first_p}
   </div>'''
 
     # Dynamic summary cards
@@ -666,7 +674,7 @@ def _core_identity(p):
   <div class="pillar-header">
     <div class="pillar-icon" style="background:rgba(99,102,241,0.15);color:#a5b4fc">&#9733;</div>
     <div><h2>Core Identity（自己本質）— あなたはこういう人</h2>
-      <div class="pillar-sub">6つの分析体系が示す、時代を超えた人物像</div></div>
+      <div class="pillar-sub">6つの分析体系が示す、時代を超えたあなたの人物像</div></div>
   </div>
   {insight_html}
   <div class="grid grid-4" style="margin-top:16px">
@@ -714,8 +722,9 @@ def _personality(p, tier):
             ja_name = sf_ja.get(s['name'], '') or SF_JA.get(s['name'], '')
             ja_span = f' <span style="font-size:12px;color:var(--text-secondary);font-weight:400">（{ja_name}）</span>' if ja_name else ''
             desc = sf_descs.get(s['name'], '')
-            desc_html = f'<div style="font-size:12px;color:var(--text-secondary);line-height:1.6;margin-top:6px">{desc}</div>' if desc else ''
-            items += f'''<li class="top5-item"><span class="rank">{s["rank"]}</span>
+            desc_html = f'<div class="sf-desc-collapsible" style="display:none;font-size:12px;color:var(--text-secondary);line-height:1.6;margin-top:6px">{desc}</div>' if desc else ''
+            toggle_attr = ' onclick="var d=this.querySelector(\'.sf-desc-collapsible\');if(d){{d.style.display=d.style.display===\'none\'?\'block\':\'none\'}}" style="cursor:pointer"' if desc else ''
+            items += f'''<li class="top5-item"{toggle_attr}><span class="rank">{s["rank"]}</span>
           <div><div class="sf-name">{s["name"]}{ja_span}</div>
           <div class="sf-domain"><span class="tag {tc}">{s["domain"]}</span></div>{desc_html}</div></li>'''
         dom_bars = ''
@@ -930,13 +939,13 @@ def _divination(p):
         rok_desc_html = f'<div style="font-size:12px;color:var(--text-secondary);line-height:1.7;margin-bottom:12px">{parts}</div>'
     reigou_box = ''
     if rok.get('reigou') and rok_reigou_desc:
-        reigou_box = f'''<div style="background:rgba(234,179,8,0.08);border:1px solid rgba(234,179,8,0.2);border-radius:var(--radius-sm);padding:12px;text-align:center;margin-top:12px">
+        reigou_box = f'''<div style="background:rgba(234,179,8,0.08);border:1px solid rgba(234,179,8,0.2);border-radius:var(--r-sm);padding:12px;text-align:center;margin-top:12px">
       <div style="font-size:13px;color:var(--yellow);font-weight:600">霊合星人</div>
       <div style="font-size:12px;color:var(--text-secondary);margin-top:6px;line-height:1.7;text-align:left">{rok_reigou_desc}</div></div>'''
 
     return f'''<section class="section" id="divination">
   <h2 class="section-title">占術プロファイル</h2>
-  <p class="section-desc">四柱推命・九星気学・六星占術・西洋占星術 — 不変の本質的特性</p>
+  <p class="section-desc">四柱推命・九星気学・六星占術・西洋占星術 — あなたの不変の本質的特性</p>
 
   <h3 class="sub-title">四柱推命</h3>
   {fp_overview_html}
@@ -1198,6 +1207,62 @@ def _monthly_advice(p, month_data):
     return ''.join(parts) if parts else ''
 
 
+def _monthly_guidance_data(p, m):
+    """Generate guidance data (energy badge, narrative, actions, watchouts) for a month."""
+    domains = m['domains']
+    avg_stars = sum(domains.values()) / len(domains)
+    rok_type = m['rokusei']['type']
+
+    if avg_stars >= 4:
+        energy_tone = '追い風'
+        energy_desc = 'エネルギーが高く、積極的に動ける月'
+        energy_icon_bg = 'rgba(34,197,94,0.15)'
+        energy_icon_color = '#4ade80'
+    elif avg_stars >= 3:
+        energy_tone = '安定'
+        energy_desc = '地固めと準備に適した月'
+        energy_icon_bg = 'rgba(59,130,246,0.15)'
+        energy_icon_color = '#60a5fa'
+    elif avg_stars >= 2:
+        energy_tone = '慎重'
+        energy_desc = '守りを固め、無理をしない月'
+        energy_icon_bg = 'rgba(234,179,8,0.15)'
+        energy_icon_color = '#facc15'
+    else:
+        energy_tone = '充電'
+        energy_desc = '休息と回復を最優先にする月'
+        energy_icon_bg = 'rgba(239,68,68,0.15)'
+        energy_icon_color = '#f87171'
+
+    narrative = _generate_monthly_narrative(p, m, avg_stars, energy_tone)
+    actions = _generate_monthly_actions(p, m, avg_stars)
+    watchouts = _generate_monthly_watchouts(p, m, avg_stars)
+
+    actions_html = ''
+    for a in actions:
+        actions_html += (f'<div class="guidance-action">'
+                        f'<div class="guidance-action-icon" style="background:{a["icon_bg"]};color:{a["icon_color"]}">{a["icon"]}</div>'
+                        f'<div><div class="guidance-action-title">{a["title"]}</div>'
+                        f'<div class="guidance-action-desc">{a["desc"]}</div></div></div>')
+
+    watch_html = ''
+    if watchouts:
+        watch_html = '<div class="guidance-watch"><div class="guidance-watch-title">気をつけること</div>'
+        for w in watchouts:
+            watch_html += f'<div class="guidance-watch-item">{w}</div>'
+        watch_html += '</div>'
+
+    return {
+        'energyTone': energy_tone,
+        'energyDesc': energy_desc,
+        'energyBg': energy_icon_bg,
+        'energyColor': energy_icon_color,
+        'narrative': narrative,
+        'actionsHtml': actions_html,
+        'watchHtml': watch_html,
+    }
+
+
 def _monthly(p):
     mf = p.get('monthly_fortune', [])
     if not mf:
@@ -1214,9 +1279,17 @@ def _monthly(p):
         bg = timeline_colors.get(m['rokusei']['type'], 'rgba(99,102,241,0.3)')
         timeline += f'<div class="yt-month" data-month="{m["month"]-1}" style="background:{bg}">{m["month"]}</div>'
 
+    # Build guidance data for current month
+    cur_month_data = next((m for m in mf if m['month'] == _date.today().month), None)
+    guidance_json = 'null'
+    if cur_month_data:
+        gd = _monthly_guidance_data(p, cur_month_data)
+        guidance_json = json.dumps(gd, ensure_ascii=False)
+
     # Month panels with domain messages + personalized advice
     panels_data = json.dumps([{
         'month': f'{m["month"]}月',
+        'monthNum': m['month'],
         'nineStarNote': m['nine_star']['note'],
         'nineStarEnergy': m['nine_star']['energy'],
         'rokuseiPhase': m['rokusei']['phase'],
@@ -1230,7 +1303,7 @@ def _monthly(p):
         'healthMsg': _domain_msg('health', m['domains']['health'], m['rokusei']['phase']),
         'romanceMsg': _domain_msg('romance', m['domains']['romance'], m['rokusei']['phase']),
         'advice': _monthly_advice(p, m),
-    } for m in mf])
+    } for m in mf], ensure_ascii=False)
 
     return f'''<section class="section" id="monthly">
   <h2 class="section-title">2026年 月間運勢</h2>
@@ -1242,12 +1315,30 @@ def _monthly(p):
 <script>
 const monthlyData={panels_data};
 const currentMonth={current_month};
+const guidanceData={guidance_json};
 function starRating(n){{return'<span style="color:var(--yellow);">'+'★'.repeat(n)+'</span><span style="color:var(--border);">'+'★'.repeat(5-n)+'</span>';}}
 function phaseColor(t){{
   if(t==='great')return{{bg:'rgba(34,197,94,0.12)',border:'rgba(34,197,94,0.3)',color:'#4ade80'}};
   if(t==='good')return{{bg:'rgba(59,130,246,0.12)',border:'rgba(59,130,246,0.3)',color:'#60a5fa'}};
   if(t==='caution')return{{bg:'rgba(234,179,8,0.12)',border:'rgba(234,179,8,0.3)',color:'#facc15'}};
   return{{bg:'rgba(239,68,68,0.12)',border:'rgba(239,68,68,0.3)',color:'#f87171'}};
+}}
+function buildGuidanceHtml(g){{
+  if(!g)return'';
+  return`<div class="guidance-summary" style="margin-top:16px">
+    <div class="guidance-overview">
+      <div class="guidance-energy-badge" style="background:${{g.energyBg}};color:${{g.energyColor}};border:1px solid ${{g.energyColor}}">${{g.energyTone}}</div>
+      <div style="font-size:12px;color:var(--text-secondary)">${{g.energyDesc}}</div>
+    </div>
+    <div class="guidance-narrative">${{g.narrative}}</div>
+    <div class="guidance-actions-grid">
+      <div class="guidance-actions-section">
+        <div class="guidance-section-label">今月やるべきこと</div>
+        ${{g.actionsHtml}}
+      </div>
+      ${{g.watchHtml}}
+    </div>
+  </div>`;
 }}
 const selEl=document.getElementById('monthSelector');
 const panEl=document.getElementById('monthPanels');
@@ -1257,8 +1348,9 @@ monthlyData.forEach((m,i)=>{{
   btn.textContent=m.month;btn.dataset.month=i;btn.onclick=()=>selectMonth(i);
   selEl.appendChild(btn);
   const pc=phaseColor(m.rokuseiType);
+  const isCurrentMonth=(i===currentMonth);
   const panel=document.createElement('div');
-  panel.className='month-panel'+(i===currentMonth?' active':'');
+  panel.className='month-panel'+(isCurrentMonth?' active':'');
   panel.id='month-'+i;
   panel.innerHTML=`<div class="card">
     <div class="month-card-header">
@@ -1275,6 +1367,7 @@ monthlyData.forEach((m,i)=>{{
       <div class="domain-card health"><div class="domain-icon-label"><div class="domain-label" style="color:var(--green)">健康</div><div class="domain-stars">${{starRating(m.health)}}</div></div><div class="domain-msg">${{m.healthMsg}}</div></div>
       <div class="domain-card romance"><div class="domain-icon-label"><div class="domain-label" style="color:#f472b6">恋愛</div><div class="domain-stars">${{starRating(m.romance)}}</div></div><div class="domain-msg">${{m.romanceMsg}}</div></div>
     </div>
+    ${{isCurrentMonth ? buildGuidanceHtml(guidanceData) : ''}}
   </div>`;
   panEl.appendChild(panel);
 }});
@@ -1430,6 +1523,8 @@ const observer=new IntersectionObserver((entries)=>{{
     const link=document.querySelector(`.nav-bar a[href="#${{e.target.id}}"]`);if(link)link.classList.add('active');}}}});
 }},{{threshold:0.2,rootMargin:'-80px 0px -60% 0px'}});
 sections.forEach(s=>observer.observe(s));
+const fadeObserver=new IntersectionObserver((entries)=>{{entries.forEach(e=>{{if(e.isIntersecting){{e.target.classList.add('visible');fadeObserver.unobserve(e.target);}}}});}},{{threshold:0.1,rootMargin:'0px 0px -40px 0px'}});
+document.querySelectorAll('.section').forEach(s=>fadeObserver.observe(s));
 </script>'''
 
 
@@ -1477,7 +1572,8 @@ body::before{content:'';position:fixed;top:0;left:0;width:100%;height:100%;opaci
 .stat-card{background:rgba(255,255,255,0.05);border-radius:var(--r-md);padding:12px 20px;backdrop-filter:blur(10px)}
 .stat-card .label{font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.5px}
 .stat-card .value{font-size:20px;font-weight:700;font-family:var(--font-mono);margin-top:2px}
-.section{margin-bottom:40px}
+.section{margin-bottom:40px;opacity:0;transform:translateY(20px);transition:opacity 0.6s ease,transform 0.6s ease}
+.section.visible{opacity:1;transform:translateY(0)}
 .section-title{font-size:clamp(16px,2vw,22px);font-weight:700;margin-bottom:20px;padding-left:12px;border-left:3px solid var(--accent)}
 .sub-title{font-size:15px;font-weight:600;color:var(--text-secondary);margin:24px 0 12px;padding-top:16px;border-top:1px solid var(--border)}
 .pillar-header{display:flex;align-items:center;gap:12px;margin-bottom:24px;padding-bottom:16px;border-bottom:1px solid var(--border)}
@@ -1603,6 +1699,10 @@ body::before{content:'';position:fixed;top:0;left:0;width:100%;height:100%;opaci
 .blueprint-title{font-size:14px;font-weight:600;color:var(--text);margin-bottom:8px;line-height:1.4}
 .blueprint-desc{font-size:12px;color:var(--text-secondary);line-height:1.7}
 .month-advice{font-size:13px;color:var(--text-secondary);line-height:1.7;padding:12px 16px;background:linear-gradient(135deg,rgba(99,102,241,0.06),rgba(139,92,246,0.04));border:1px solid rgba(99,102,241,0.12);border-radius:var(--r-sm);margin-bottom:16px}
+.collapse-toggle{display:inline-block;margin-top:10px;padding:6px 16px;font-size:12px;font-weight:500;color:#a5b4fc;background:rgba(99,102,241,0.1);border:1px solid rgba(99,102,241,0.25);border-radius:var(--r-sm);cursor:pointer;font-family:var(--font-body);transition:background .2s}
+.collapse-toggle:hover{background:rgba(99,102,241,0.2)}
+.top5-item[style*=cursor]{transition:background .15s}
+.top5-item[style*=cursor]:hover{background:rgba(255,255,255,0.03);border-radius:var(--r-sm)}
 @media(max-width:768px){.grid{grid-template-columns:1fr}.pillar-grid{grid-template-columns:repeat(2,1fr)}.domain-grid{grid-template-columns:1fr}.guidance-actions-grid{grid-template-columns:1fr}.blueprint-grid{grid-template-columns:1fr}}
 @media(max-width:640px){
   .nav-toggle-label{display:inline-flex}
@@ -1648,7 +1748,6 @@ def generate_html(p, tier=2):
 {_divination(p)}
 {_forecast(p)}
 {_monthly(p)}
-{_this_month_guidance(p)}
 {_cross_analysis(p)}
 {_footer(tier)}
 </div>
