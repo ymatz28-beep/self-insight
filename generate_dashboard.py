@@ -210,12 +210,14 @@ def _hero(p, tier):
     else:
         hub3_summary = '自分の本質を活かす行動指針'
 
+    nickname = ident.get('nickname') or ident.get('display_name') or ident.get('name', '')
     return f'''<section class="hero">
   <div class="hero-particles"></div>
   <div class="hero-content">
     <div class="archetype-en">{archetype["en"]}</div>
     <h1 class="archetype-name">{archetype["ja"]}</h1>
     <div class="hero-tagline">{tagline}</div>
+    <div class="hero-name">{nickname}</div>
     <div class="stats">{stats}</div>
     <div class="hub-cards-grid">
       <div class="hub-card-mini" onclick="document.getElementById('core-identity').scrollIntoView({{behavior:'smooth'}});var c=document.querySelector('#core-identity').closest('.hub-card');if(c&&!c.classList.contains('expanded'))c.classList.add('expanded');">
@@ -2039,7 +2041,8 @@ body::before{content:'';position:fixed;top:0;left:0;width:100%;height:100%;opaci
 @keyframes float{0%,100%{transform:translateY(0) scale(1);opacity:0.3}50%{transform:translateY(-30px) scale(1.5);opacity:0.8}}
 .archetype-en{font-size:13px;font-weight:500;color:rgba(165,180,252,0.7);text-transform:uppercase;letter-spacing:3px;margin-bottom:8px}
 .archetype-name{font-size:clamp(24px,4vw,32px);font-weight:700;color:#e0e7ff;margin-bottom:8px;text-shadow:0 0 40px rgba(99,102,241,0.4),0 0 80px rgba(99,102,241,0.15);line-height:1.3}
-.hero-tagline{font-size:clamp(14px,2vw,16px);font-style:italic;color:rgba(224,231,255,0.7);margin-bottom:28px;line-height:1.6}
+.hero-tagline{font-size:clamp(14px,2vw,16px);font-style:italic;color:rgba(224,231,255,0.7);margin-bottom:12px;line-height:1.6}
+.hero-name{font-size:14px;font-weight:500;color:rgba(165,180,252,0.6);letter-spacing:1px;margin-bottom:28px}
 .hub-cards-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-top:24px;text-align:left}
 .hub-card-mini{display:flex;align-items:center;gap:12px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:var(--r-md);padding:14px 16px;cursor:pointer;transition:transform .2s,background .2s}
 .hub-card-mini:hover{transform:translateY(-2px);background:rgba(255,255,255,0.09)}
@@ -2057,6 +2060,7 @@ body::before{content:'';position:fixed;top:0;left:0;width:100%;height:100%;opaci
 .hub-card.expanded .hub-card-arrow{color:var(--accent)}
 .hub-card-content{max-height:0;overflow:hidden;transition:max-height .5s ease,padding .3s;padding:0 24px}
 .hub-card.expanded .hub-card-content{max-height:none;padding:0 24px 24px}
+.hub-card-content>section>.pillar-header:first-child,.hub-card-content>section>.section-title:first-child,.hub-card-content>div>.pillar-header:first-child{display:none}
 .chip{font-size:11px;font-weight:500;padding:4px 12px;border-radius:20px;background:rgba(255,255,255,0.08);color:var(--text-secondary);border:1px solid rgba(255,255,255,0.1)}
 .chip.hl{background:rgba(99,102,241,0.15);color:#a5b4fc;border-color:rgba(99,102,241,0.3)}
 .stats{display:flex;gap:24px;flex-wrap:wrap;justify-content:center}
