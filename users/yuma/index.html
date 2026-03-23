@@ -177,6 +177,13 @@ body::before{content:'';position:fixed;top:0;left:0;width:100%;height:100%;opaci
 .blueprint-title{font-size:14px;font-weight:600;color:var(--text);margin-bottom:8px;line-height:1.4}
 .blueprint-desc{font-size:12px;color:var(--text-secondary);line-height:1.7}
 .month-advice{font-size:13px;color:var(--text-secondary);line-height:1.7;padding:12px 16px;background:linear-gradient(135deg,rgba(99,102,241,0.06),rgba(139,92,246,0.04));border:1px solid rgba(99,102,241,0.12);border-radius:var(--r-sm);margin-bottom:16px}
+.section-quote{font-size:15px;font-style:italic;color:var(--text-muted);margin-bottom:20px;padding-left:16px;border-left:2px solid rgba(99,102,241,0.3);line-height:1.6}
+.accordion-header{cursor:pointer;display:flex;align-items:center;justify-content:space-between;padding:16px 0;border-top:1px solid var(--border)}
+.accordion-header::after{content:'B8';font-size:14px;color:var(--text-muted);transition:transform .3s}
+.accordion-header.open::after{transform:rotate(90deg)}
+.accordion-body{overflow:hidden;max-height:0;opacity:0;transition:max-height .4s ease,opacity .3s ease}
+.accordion-body.open{max-height:5000px;opacity:1}
+.rarity-badge{display:inline-flex;align-items:center;gap:6px;font-size:11px;color:var(--accent2);background:rgba(139,92,246,0.08);border:1px solid rgba(139,92,246,0.15);border-radius:20px;padding:4px 12px;margin-top:8px}
 .collapse-toggle{display:inline-block;margin-top:10px;padding:6px 16px;font-size:12px;font-weight:500;color:#a5b4fc;background:rgba(99,102,241,0.1);border:1px solid rgba(99,102,241,0.25);border-radius:var(--r-sm);cursor:pointer;font-family:var(--font-body);transition:background .2s}
 .collapse-toggle:hover{background:rgba(99,102,241,0.2)}
 .top5-item[style*=cursor]{transition:background .15s}
@@ -233,6 +240,7 @@ body::before{content:'';position:fixed;top:0;left:0;width:100%;height:100%;opaci
     <div><h2>Core Identity（自己本質）— あなたはこういう人</h2>
       <div class="pillar-sub">6つの分析体系が示す、時代を超えたあなたの人物像</div></div>
   </div>
+  <div class="section-quote">"あなたを一言で表すなら—"</div>
   <div class="insight-box" style="border-color:rgba(99,102,241,0.4);background:linear-gradient(135deg,rgba(99,102,241,0.12),rgba(139,92,246,0.08));">
     <div class="insight-title" style="font-size:15px;">統合インサイト</div>
     <p style="line-height:1.9;font-size:14px;">あなたの本質は<strong>「静かな炎で人を照らし、言葉で変容を導く人」</strong>です。四柱推命の日主「丁火」（ロウソクの炎）× 九星気学の七赤金星（沢の言葉力）× 蠍座（冥王星が司る変容と再生）。この三角形が示すのは、<strong>他者の感情を体感レベルで感じ取り（Empathy #1）、思考の深淵で本質を掘り当て（Intellection #2）、それを言葉の力で世界に届ける</strong>という稀有な才能の組み合わせです。蠍座の水のエレメントは感情の深さと変容力を与え、不動宮（Fixed）の性質は「一度決めたら貫く」執念を示します。</p>
@@ -272,6 +280,7 @@ body::before{content:'';position:fixed;top:0;left:0;width:100%;height:100%;opaci
 </div>
 <section class="section" id="personality">
   <h2 class="section-title">Personality Profile（性格プロファイル）</h2>
+  <div class="section-quote">"才能は、使い方を知ったとき初めて力になる"</div>
   <div class="grid"><div class="card">
       <div class="card-title"><span class="icon">&#9733;</span> CliftonStrengths（強み診断）TOP 5</div>
       <ul class="top5-list"><li class="top5-item" onclick="var d=this.querySelector('.sf-desc-collapsible');if(d){{d.style.display=d.style.display==='none'?'block':'none'}}" style="cursor:pointer"><span class="rank">1</span>
@@ -318,9 +327,12 @@ body::before{content:'';position:fixed;top:0;left:0;width:100%;height:100%;opaci
 </section>
 <section class="section" id="divination">
   <h2 class="section-title">占術プロファイル</h2>
+  <div class="section-quote">"2,000年の叡智が、あなたの星を読み解く"</div>
   <p class="section-desc">四柱推命・九星気学・六星占術・西洋占星術 — あなたの不変の本質的特性</p>
+  <div class="rarity-badges" style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px"><div class="rarity-badge">霊合星人は全人口の約10%。二つの星の影響を受ける稀少な存在です</div><div class="rarity-badge">日主「丁」（陰火）は十干の一つ。同じ本質を持つ人は約10%</div><div class="rarity-badge">五行「金・水」が同時に欠如する命式は稀少。意識的な補完が大きな差を生む</div></div>
 
-  <h3 class="sub-title">四柱推命</h3>
+  <div class="accordion-header open" onclick="toggleAccordion(this)"><h3 class="sub-title" style="border-top:none;padding-top:0;margin:0">四柱推命</h3></div>
+  <div class="accordion-body open">
   <div style="font-size:12px;color:var(--text-secondary);line-height:1.7;margin-bottom:16px">四柱推命は生年月日時の4つの柱から、先天的な性質・才能・人生の傾向を読み解く東洋最高峰の命術。各柱が人生の異なる側面を表します。</div>
   <div class="pillar-grid"><div class="pillar"><div class="pillar-label">年柱</div>
       <div class="kanji">乙卯</div>
@@ -355,8 +367,10 @@ body::before{content:'';position:fixed;top:0;left:0;width:100%;height:100%;opaci
       <div class="element-fill" style="height:2%;background:#60a5fa"></div>
       <div class="element-name">水</div></div></div>
   <div style="font-size:12px;color:var(--yellow);margin-top:8px">欠如: 金・水 — 金(決断力・収穫)と水(知恵・柔軟性)が欠如。意識的にこれらの要素を補う行動が有効</div>
+  </div>
 
-  <h3 class="sub-title">九星気学</h3>
+  <div class="accordion-header" onclick="toggleAccordion(this)"><h3 class="sub-title" style="border-top:none;padding-top:0;margin:0">九星気学</h3></div>
+  <div class="accordion-body">
   <div class="grid grid-3">
     <div class="card"><div class="card-label">本命星（年星）— あなたの根幹</div>
       <div class="card-value">七赤金星</div><div class="card-sub">金（Metal）/ 西（W）</div></div>
@@ -364,8 +378,10 @@ body::before{content:'';position:fixed;top:0;left:0;width:100%;height:100%;opaci
       <div class="card-value">九紫火星</div><div class="card-sub">火（Fire）/ 南（S）</div></div><div class="card"><div class="card-label">2026年 宮位置 — 今年の運気</div>
       <div class="card-value">坤宮</div><div class="card-sub">変化・準備（運気 45/100）</div></div></div>
   <div class="card" style="margin-top:12px"><div style="font-size:12px;color:var(--text-secondary);line-height:1.7">あなたの本命星（七赤金星）は生まれた年から算出される「社会的な自分」。「沢」の象意を持ち、あなたは社交的で人を楽しませる力と、言葉に説得力を持つ話術に恵まれています。金星の「金運」は財を呼び込む力ですが、同時に散財しやすい傾向も。方位は西（兌宮）で、収穫と悦びの方角。</div><div style="font-size:12px;color:var(--text-secondary);line-height:1.7;margin-top:8px">あなたの月命星（九紫火星）は生まれた月から算出される「内面の自分」。外から見える社交的な七赤金星の内側に、九紫火星の激しい情熱と知的好奇心が燃えています。九紫火星は「離」の象意 — 物事を明らかにする光の力。あなたの知識欲は旺盛で美意識が高く、直感が鋭い。この本命星と月命星の二層構造が、「表面は穏やかな社交家、内面は激しい探求者」というあなたの二面性を形成しています。</div></div>
+  </div>
 
-  <h3 class="sub-title">六星占術</h3>
+  <div class="accordion-header" onclick="toggleAccordion(this)"><h3 class="sub-title" style="border-top:none;padding-top:0;margin:0">六星占術</h3></div>
+  <div class="accordion-body">
   <div class="grid grid-3">
     <div class="card"><div class="card-label">運命星</div>
       <div class="card-value">木星人(-)</div>
@@ -379,8 +395,10 @@ body::before{content:'';position:fixed;top:0;left:0;width:100%;height:100%;opaci
       <div style="font-size:13px;color:var(--yellow);font-weight:600">霊合星人</div>
       <div style="font-size:12px;color:var(--text-secondary);margin-top:6px;line-height:1.7;text-align:left">あなたは霊合星人です。メインの運命星に加えてサブの運命星の影響も同時に受ける特殊な存在で、全人口の約16%が該当します。あなたの運気の振れ幅は通常の2倍。好調期は通常の人が到達できない高みに届きますが、不調期（大殺界）は通常以上に深く影響を受けます。メイン星とサブ星が好調なら「最高の年」、片方が大殺界なら「矛盾する年」、両方が大殺界なら「最大限の注意が必要な年」です。</div></div>
   <div style="margin-top:12px"><table class="cycle-table"><thead><tr><th>年</th><th>メイン</th><th>サブ</th><th>殺界</th><th>運気</th></tr></thead><tbody><tr><td>2022</td><td>陰影</td><td>—</td><td><span class="satsukai dai">大殺界</span></td><td><span style="color:#f87171">15</span></td></tr><tr><td>2023</td><td>停止</td><td>—</td><td><span class="satsukai dai">大殺界</span></td><td><span style="color:#f87171">10</span></td></tr><tr><td>2024</td><td>減退</td><td>乱気</td><td><span class="satsukai dai">大殺界</span></td><td><span style="color:#f87171">20</span></td></tr><tr><td>2025</td><td>種子</td><td>再会</td><td>—</td><td><span style="color:#facc15">50</span></td></tr><tr class="current"><td>2026</td><td>緑生</td><td>財成</td><td>—</td><td><span style="color:#facc15">65</span></td></tr><tr><td>2027</td><td>立花</td><td>安定</td><td>—</td><td><span style="color:#4ade80">80</span></td></tr><tr><td>2028</td><td>健弱</td><td>陰影</td><td><span class="satsukai sho">小殺界</span></td><td><span style="color:#f87171">35</span></td></tr><tr><td>2029</td><td>達成</td><td>停止</td><td>—</td><td><span style="color:#4ade80">90</span></td></tr><tr><td>2030</td><td>乱気</td><td>減退</td><td><span class="satsukai chu">中殺界</span></td><td><span style="color:#f87171">25</span></td></tr><tr><td>2031</td><td>再会</td><td>種子</td><td>—</td><td><span style="color:#4ade80">70</span></td></tr><tr><td>2032</td><td>財成</td><td>緑生</td><td>—</td><td><span style="color:#4ade80">85</span></td></tr><tr><td>2033</td><td>安定</td><td>—</td><td>—</td><td><span style="color:#4ade80">95</span></td></tr></tbody></table></div>
+  </div>
 
-  <h3 class="sub-title">西洋占星術</h3>
+  <div class="accordion-header" onclick="toggleAccordion(this)"><h3 class="sub-title" style="border-top:none;padding-top:0;margin:0">西洋占星術</h3></div>
+  <div class="accordion-body">
   <div class="grid grid-3">
     <div class="card"><div class="card-label">太陽星座</div>
       <div class="card-value">♏ Scorpio</div>
@@ -393,6 +411,8 @@ body::before{content:'';position:fixed;top:0;left:0;width:100%;height:100%;opaci
       <div class='typo-desc' style='margin-top:8px'>最も純粋な蠍座の性質。変容・再生・深層心理への探究</div></div></div><div style="font-size:12px;color:var(--text-secondary);line-height:1.7;margin-top:12px">不動宮（Fixed）— 一度決めたら変えない意志の強さ。安定と持続力。変化への抵抗もある</div><div class="insight-box" style="margin-top:12px;border-color:rgba(139,92,246,0.3);background:linear-gradient(135deg,rgba(139,92,246,0.08),rgba(99,102,241,0.04))">
       <div class="insight-title" style="color:#c4b5fd">2026年 Scorpioの運勢</div>
       <p style="line-height:1.9;font-size:14px">冥王星が水瓶座に完全移行した2026年は、蠍座にとって「変容の仕上げ」の年。これまで手放してきた古い構造の跡地に、新しい基盤を築く時期。特に人間関係と仕事の枠組みにおいて、より本質的な選択ができるようになる</p></div>
+  </div>
+
   <div class="unlock-banner">出生時刻を追加すると、時柱・アセンダント・月星座が解放されます</div>
 </section>
 <section class="section" id="forecast-2026">
@@ -401,6 +421,7 @@ body::before{content:'';position:fixed;top:0;left:0;width:100%;height:100%;opaci
     <div><h2>2026年 運勢フォーキャスト</h2>
       <div class="pillar-sub">九星気学 × 六星占術が示す年間の流れ</div></div>
   </div>
+  <div class="section-quote">"未来は決まっていない。しかし、流れは見える"</div>
   <div class="year-theme-banner">
     <div class="year-theme-label">2026年のテーマ</div>
     <div class="year-theme-text" style="color:#4ade80">攻めの年 — 種を蒔き、未来の収穫を設計する</div>
@@ -428,13 +449,14 @@ body::before{content:'';position:fixed;top:0;left:0;width:100%;height:100%;opaci
 </section>
 <section class="section" id="monthly">
   <h2 class="section-title">2026年 月間運勢</h2>
+  <div class="section-quote">"毎月、あなたの運気は新しい色に染まる"</div>
   <p class="section-desc">九星気学の月宮位置 × 六星占術の月フェーズを統合し、4ドメインで分析</p>
   <div class="year-timeline" id="yearTimeline"><div class="yt-month" data-month="0" style="background:rgba(34,197,94,0.5)">1</div><div class="yt-month" data-month="1" style="background:rgba(239,68,68,0.45)">2</div><div class="yt-month" data-month="2" style="background:rgba(239,68,68,0.45)">3</div><div class="yt-month" data-month="3" style="background:rgba(239,68,68,0.45)">4</div><div class="yt-month" data-month="4" style="background:rgba(59,130,246,0.4)">5</div><div class="yt-month" data-month="5" style="background:rgba(59,130,246,0.4)">6</div><div class="yt-month" data-month="6" style="background:rgba(34,197,94,0.5)">7</div><div class="yt-month" data-month="7" style="background:rgba(234,179,8,0.4)">8</div><div class="yt-month" data-month="8" style="background:rgba(34,197,94,0.5)">9</div><div class="yt-month" data-month="9" style="background:rgba(234,179,8,0.4)">10</div><div class="yt-month" data-month="10" style="background:rgba(59,130,246,0.4)">11</div><div class="yt-month" data-month="11" style="background:rgba(34,197,94,0.5)">12</div></div>
   <div class="month-selector" id="monthSelector"></div>
   <div id="monthPanels"></div>
 </section>
 <script>
-const monthlyData=[{"month": "1月", "monthNum": 1, "nineStarNote": "中吉・回復", "nineStarEnergy": 65, "rokuseiPhase": "安定", "rokuseiType": "great", "work": 4, "money": 4, "health": 4, "romance": 4, "workMsg": "順調に進む。チャンスを逃さず着実に成果を積む", "moneyMsg": "堅実な収入が見込める。無駄遣いを避ければ蓄積できる", "healthMsg": "概ね良好。規則正しい生活を維持して好調を保つ", "romanceMsg": "良好な関係が築ける。コミュニケーションが円滑", "advice": "全体的にエネルギーが高い月。特に健康が好調なので、ここに集中投資するのが吉。Empathy（共感性）を積極的に使って攻めてください。"}, {"month": "2月", "monthNum": 2, "nineStarNote": "上昇運", "nineStarEnergy": 75, "rokuseiPhase": "陰影", "rokuseiType": "danger", "work": 3, "money": 2, "health": 3, "romance": 3, "workMsg": "普通ペース。地道な積み重ねが後に効いてくる", "moneyMsg": "予想外の出費に注意。大きな買い物は延期が吉", "healthMsg": "可もなく不可もなく。睡眠の質に注意を払う", "romanceMsg": "平穏な時期。既存の関係を大切にする", "advice": "エネルギーが低下しやすい月。六星占術で「陰影」のため、大きな決断は控えるのが賢明。欠如要素の影響が出やすいので、意識的にケアを。"}, {"month": "3月", "monthNum": 3, "nineStarNote": "大吉・最盛", "nineStarEnergy": 100, "rokuseiPhase": "停止", "rokuseiType": "danger", "work": 3, "money": 2, "health": 3, "romance": 3, "workMsg": "普通ペース。地道な積み重ねが後に効いてくる", "moneyMsg": "予想外の出費に注意。大きな買い物は延期が吉", "healthMsg": "可もなく不可もなく。睡眠の質に注意を払う", "romanceMsg": "平穏な時期。既存の関係を大切にする", "advice": "エネルギーが低下しやすい月。六星占術で「停止」のため、大きな決断は控えるのが賢明。欠如要素の影響が出やすいので、意識的にケアを。"}, {"month": "4月", "monthNum": 4, "nineStarNote": "大吉・最盛", "nineStarEnergy": 90, "rokuseiPhase": "減退", "rokuseiType": "danger", "work": 3, "money": 2, "health": 3, "romance": 3, "workMsg": "普通ペース。地道な積み重ねが後に効いてくる", "moneyMsg": "予想外の出費に注意。大きな買い物は延期が吉", "healthMsg": "可もなく不可もなく。睡眠の質に注意を払う", "romanceMsg": "平穏な時期。既存の関係を大切にする", "advice": "エネルギーが低下しやすい月。六星占術で「減退」のため、大きな決断は控えるのが賢明。欠如要素の影響が出やすいので、意識的にケアを。"}, {"month": "5月", "monthNum": 5, "nineStarNote": "大吉・好調", "nineStarEnergy": 80, "rokuseiPhase": "種子", "rokuseiType": "good", "work": 4, "money": 4, "health": 4, "romance": 4, "workMsg": "順調に進む。チャンスを逃さず着実に成果を積む", "moneyMsg": "堅実な収入が見込める。無駄遣いを避ければ蓄積できる", "healthMsg": "概ね良好。規則正しい生活を維持して好調を保つ", "romanceMsg": "良好な関係が築ける。コミュニケーションが円滑", "advice": "全体的にエネルギーが高い月。特に健康が好調なので、ここに集中投資するのが吉。Empathy（共感性）を積極的に使って攻めてください。"}, {"month": "6月", "monthNum": 6, "nineStarNote": "吉凶混合", "nineStarEnergy": 40, "rokuseiPhase": "緑生", "rokuseiType": "good", "work": 3, "money": 3, "health": 3, "romance": 3, "workMsg": "普通ペース。地道な積み重ねが後に効いてくる", "moneyMsg": "収支トントン。計画的な支出管理が重要", "healthMsg": "可もなく不可もなく。睡眠の質に注意を払う", "romanceMsg": "平穏な時期。既存の関係を大切にする", "advice": "安定した月。大きな波はないが、地道な努力が蓄積される時期。今月の積み重ねが、次の好調期の成果につながります。"}, {"month": "7月", "monthNum": 7, "nineStarNote": "上昇運", "nineStarEnergy": 70, "rokuseiPhase": "立花", "rokuseiType": "great", "work": 4, "money": 4, "health": 4, "romance": 4, "workMsg": "順調に進む。チャンスを逃さず着実に成果を積む", "moneyMsg": "堅実な収入が見込める。無駄遣いを避ければ蓄積できる", "healthMsg": "概ね良好。規則正しい生活を維持して好調を保つ", "romanceMsg": "良好な関係が築ける。コミュニケーションが円滑", "advice": "全体的にエネルギーが高い月。特に健康が好調なので、ここに集中投資するのが吉。Empathy（共感性）を積極的に使って攻めてください。"}, {"month": "8月", "monthNum": 8, "nineStarNote": "中凶・注意", "nineStarEnergy": 30, "rokuseiPhase": "健弱", "rokuseiType": "caution", "work": 2, "money": 1, "health": 1, "romance": 2, "workMsg": "停滞感あり。焦らず基礎固めに集中", "moneyMsg": "金運低迷。守りの姿勢で乗り切る。衝動買い厳禁", "healthMsg": "体調管理に細心の注意。無理なスケジュールは避ける", "romanceMsg": "すれ違いが起きやすい。丁寧な対話を心がける", "advice": "充電を最優先にする月。無理は禁物。この時期の休息が、後の回復力を左右します。"}, {"month": "9月", "monthNum": 9, "nineStarNote": "吉凶混合", "nineStarEnergy": 45, "rokuseiPhase": "達成", "rokuseiType": "great", "work": 4, "money": 4, "health": 4, "romance": 4, "workMsg": "順調に進む。チャンスを逃さず着実に成果を積む", "moneyMsg": "堅実な収入が見込める。無駄遣いを避ければ蓄積できる", "healthMsg": "概ね良好。規則正しい生活を維持して好調を保つ", "romanceMsg": "良好な関係が築ける。コミュニケーションが円滑", "advice": "全体的にエネルギーが高い月。特に健康が好調なので、ここに集中投資するのが吉。Empathy（共感性）を積極的に使って攻めてください。"}, {"month": "10月", "monthNum": 10, "nineStarNote": "中吉・回復", "nineStarEnergy": 65, "rokuseiPhase": "乱気", "rokuseiType": "caution", "work": 3, "money": 2, "health": 3, "romance": 3, "workMsg": "普通ペース。地道な積み重ねが後に効いてくる", "moneyMsg": "予想外の出費に注意。大きな買い物は延期が吉", "healthMsg": "可もなく不可もなく。睡眠の質に注意を払う", "romanceMsg": "平穏な時期。既存の関係を大切にする", "advice": "エネルギーが低下しやすい月。六星占術で「乱気」のため、大きな決断は控えるのが賢明。欠如要素の影響が出やすいので、意識的にケアを。"}, {"month": "11月", "monthNum": 11, "nineStarNote": "上昇運", "nineStarEnergy": 75, "rokuseiPhase": "再会", "rokuseiType": "good", "work": 4, "money": 4, "health": 4, "romance": 4, "workMsg": "順調に進む。チャンスを逃さず着実に成果を積む", "moneyMsg": "堅実な収入が見込める。無駄遣いを避ければ蓄積できる", "healthMsg": "概ね良好。規則正しい生活を維持して好調を保つ", "romanceMsg": "良好な関係が築ける。コミュニケーションが円滑", "advice": "全体的にエネルギーが高い月。特に健康が好調なので、ここに集中投資するのが吉。Empathy（共感性）を積極的に使って攻めてください。"}, {"month": "12月", "monthNum": 12, "nineStarNote": "大吉・最盛", "nineStarEnergy": 100, "rokuseiPhase": "財成", "rokuseiType": "great", "work": 5, "money": 5, "health": 5, "romance": 5, "workMsg": "全力投球で成果が出る時期。新プロジェクトの立ち上げに最適", "moneyMsg": "金運好調。投資・交渉に良い時期。大きな判断も可", "healthMsg": "体調絶好調。新しい運動習慣を始めるチャンス", "romanceMsg": "人間関係が最も輝く時期。新しい出会いも深い絆も", "advice": "全体的にエネルギーが高い月。特に健康が好調なので、ここに集中投資するのが吉。Empathy（共感性）を積極的に使って攻めてください。"}];
+const monthlyData=[{"month": "1月", "monthNum": 1, "nineStarNote": "中吉・回復", "nineStarEnergy": 65, "rokuseiPhase": "安定", "rokuseiType": "great", "work": 4, "money": 4, "health": 4, "romance": 4, "workMsg": "順調に進む。チャンスを逃さず着実に成果を積む", "moneyMsg": "堅実な収入が見込める。無駄遣いを避ければ蓄積できる", "healthMsg": "概ね良好。規則正しい生活を維持して好調を保つ", "romanceMsg": "良好な関係が築ける。コミュニケーションが円滑", "advice": "全体的にエネルギーが高い月。特に健康が好調なので、ここに集中投資するのが吉。丁火の本質を持つあなたは、Empathy（共感性）を全開にして攻める月。"}, {"month": "2月", "monthNum": 2, "nineStarNote": "上昇運", "nineStarEnergy": 75, "rokuseiPhase": "陰影", "rokuseiType": "danger", "work": 3, "money": 2, "health": 3, "romance": 3, "workMsg": "普通ペース。地道な積み重ねが後に効いてくる", "moneyMsg": "予想外の出費に注意。大きな買い物は延期が吉", "healthMsg": "可もなく不可もなく。睡眠の質に注意を払う", "romanceMsg": "平穏な時期。既存の関係を大切にする", "advice": "エネルギーが低下しやすい月。六星占術で「陰影」のため、大きな決断は控えるのが賢明。丁火の炎を守りつつ、Empathy（共感性）を防御的に活用して。欠如要素「金・水」の影響が出やすいので、意識的にケアを。"}, {"month": "3月", "monthNum": 3, "nineStarNote": "大吉・最盛", "nineStarEnergy": 100, "rokuseiPhase": "停止", "rokuseiType": "danger", "work": 3, "money": 2, "health": 3, "romance": 3, "workMsg": "普通ペース。地道な積み重ねが後に効いてくる", "moneyMsg": "予想外の出費に注意。大きな買い物は延期が吉", "healthMsg": "可もなく不可もなく。睡眠の質に注意を払う", "romanceMsg": "平穏な時期。既存の関係を大切にする", "advice": "エネルギーが低下しやすい月。六星占術で「停止」のため、大きな決断は控えるのが賢明。丁火の炎を守りつつ、Empathy（共感性）を防御的に活用して。欠如要素「金・水」の影響が出やすいので、意識的にケアを。"}, {"month": "4月", "monthNum": 4, "nineStarNote": "大吉・最盛", "nineStarEnergy": 90, "rokuseiPhase": "減退", "rokuseiType": "danger", "work": 3, "money": 2, "health": 3, "romance": 3, "workMsg": "普通ペース。地道な積み重ねが後に効いてくる", "moneyMsg": "予想外の出費に注意。大きな買い物は延期が吉", "healthMsg": "可もなく不可もなく。睡眠の質に注意を払う", "romanceMsg": "平穏な時期。既存の関係を大切にする", "advice": "エネルギーが低下しやすい月。六星占術で「減退」のため、大きな決断は控えるのが賢明。丁火の炎を守りつつ、Empathy（共感性）を防御的に活用して。欠如要素「金・水」の影響が出やすいので、意識的にケアを。"}, {"month": "5月", "monthNum": 5, "nineStarNote": "大吉・好調", "nineStarEnergy": 80, "rokuseiPhase": "種子", "rokuseiType": "good", "work": 4, "money": 4, "health": 4, "romance": 4, "workMsg": "順調に進む。チャンスを逃さず着実に成果を積む", "moneyMsg": "堅実な収入が見込める。無駄遣いを避ければ蓄積できる", "healthMsg": "概ね良好。規則正しい生活を維持して好調を保つ", "romanceMsg": "良好な関係が築ける。コミュニケーションが円滑", "advice": "全体的にエネルギーが高い月。特に健康が好調なので、ここに集中投資するのが吉。丁火の本質を持つあなたは、Empathy（共感性）を全開にして攻める月。"}, {"month": "6月", "monthNum": 6, "nineStarNote": "吉凶混合", "nineStarEnergy": 40, "rokuseiPhase": "緑生", "rokuseiType": "good", "work": 3, "money": 3, "health": 3, "romance": 3, "workMsg": "普通ペース。地道な積み重ねが後に効いてくる", "moneyMsg": "収支トントン。計画的な支出管理が重要", "healthMsg": "可もなく不可もなく。睡眠の質に注意を払う", "romanceMsg": "平穏な時期。既存の関係を大切にする", "advice": "安定した月。大きな波はないが、地道な努力が蓄積される時期。Empathy（共感性）を土台に、丁火らしく着実に燃え続けることが鍵。今月の積み重ねが、次の好調期の成果につながります。"}, {"month": "7月", "monthNum": 7, "nineStarNote": "上昇運", "nineStarEnergy": 70, "rokuseiPhase": "立花", "rokuseiType": "great", "work": 4, "money": 4, "health": 4, "romance": 4, "workMsg": "順調に進む。チャンスを逃さず着実に成果を積む", "moneyMsg": "堅実な収入が見込める。無駄遣いを避ければ蓄積できる", "healthMsg": "概ね良好。規則正しい生活を維持して好調を保つ", "romanceMsg": "良好な関係が築ける。コミュニケーションが円滑", "advice": "全体的にエネルギーが高い月。特に健康が好調なので、ここに集中投資するのが吉。丁火の本質を持つあなたは、Empathy（共感性）を全開にして攻める月。"}, {"month": "8月", "monthNum": 8, "nineStarNote": "中凶・注意", "nineStarEnergy": 30, "rokuseiPhase": "健弱", "rokuseiType": "caution", "work": 2, "money": 1, "health": 1, "romance": 2, "workMsg": "停滞感あり。焦らず基礎固めに集中", "moneyMsg": "金運低迷。守りの姿勢で乗り切る。衝動買い厳禁", "healthMsg": "体調管理に細心の注意。無理なスケジュールは避ける", "romanceMsg": "すれ違いが起きやすい。丁寧な対話を心がける", "advice": "充電を最優先にする月。無理は禁物。丁火の炎が弱まる時期。Empathy（共感性）に頼りすぎず、静かに回復を。この時期の休息が、後の回復力を左右します。"}, {"month": "9月", "monthNum": 9, "nineStarNote": "吉凶混合", "nineStarEnergy": 45, "rokuseiPhase": "達成", "rokuseiType": "great", "work": 4, "money": 4, "health": 4, "romance": 4, "workMsg": "順調に進む。チャンスを逃さず着実に成果を積む", "moneyMsg": "堅実な収入が見込める。無駄遣いを避ければ蓄積できる", "healthMsg": "概ね良好。規則正しい生活を維持して好調を保つ", "romanceMsg": "良好な関係が築ける。コミュニケーションが円滑", "advice": "全体的にエネルギーが高い月。特に健康が好調なので、ここに集中投資するのが吉。丁火の本質を持つあなたは、Empathy（共感性）を全開にして攻める月。"}, {"month": "10月", "monthNum": 10, "nineStarNote": "中吉・回復", "nineStarEnergy": 65, "rokuseiPhase": "乱気", "rokuseiType": "caution", "work": 3, "money": 2, "health": 3, "romance": 3, "workMsg": "普通ペース。地道な積み重ねが後に効いてくる", "moneyMsg": "予想外の出費に注意。大きな買い物は延期が吉", "healthMsg": "可もなく不可もなく。睡眠の質に注意を払う", "romanceMsg": "平穏な時期。既存の関係を大切にする", "advice": "エネルギーが低下しやすい月。六星占術で「乱気」のため、大きな決断は控えるのが賢明。丁火の炎を守りつつ、Empathy（共感性）を防御的に活用して。欠如要素「金・水」の影響が出やすいので、意識的にケアを。"}, {"month": "11月", "monthNum": 11, "nineStarNote": "上昇運", "nineStarEnergy": 75, "rokuseiPhase": "再会", "rokuseiType": "good", "work": 4, "money": 4, "health": 4, "romance": 4, "workMsg": "順調に進む。チャンスを逃さず着実に成果を積む", "moneyMsg": "堅実な収入が見込める。無駄遣いを避ければ蓄積できる", "healthMsg": "概ね良好。規則正しい生活を維持して好調を保つ", "romanceMsg": "良好な関係が築ける。コミュニケーションが円滑", "advice": "全体的にエネルギーが高い月。特に健康が好調なので、ここに集中投資するのが吉。丁火の本質を持つあなたは、Empathy（共感性）を全開にして攻める月。"}, {"month": "12月", "monthNum": 12, "nineStarNote": "大吉・最盛", "nineStarEnergy": 100, "rokuseiPhase": "財成", "rokuseiType": "great", "work": 5, "money": 5, "health": 5, "romance": 5, "workMsg": "全力投球で成果が出る時期。新プロジェクトの立ち上げに最適", "moneyMsg": "金運好調。投資・交渉に良い時期。大きな判断も可", "healthMsg": "体調絶好調。新しい運動習慣を始めるチャンス", "romanceMsg": "人間関係が最も輝く時期。新しい出会いも深い絆も", "advice": "全体的にエネルギーが高い月。特に健康が好調なので、ここに集中投資するのが吉。丁火の本質を持つあなたは、Empathy（共感性）を全開にして攻める月。"}];
 const currentMonth=2;
 const guidanceData={"energyTone": "慎重", "energyDesc": "守りを固め、無理をしない月", "energyBg": "rgba(234,179,8,0.15)", "energyColor": "#facc15", "narrative": "3月は、守りを固めて内面を充実させる月です。大きな決断は避け、情報収集と計画立案に集中してください。五行で欠如している「金・水」の要素を意識的に補うのが特に有効なタイミングです。", "actionsHtml": "<div class=\"guidance-action\"><div class=\"guidance-action-icon\" style=\"background:rgba(34,197,94,0.15);color:#4ade80\">&#9829;</div><div><div class=\"guidance-action-title\">健康を守る</div><div class=\"guidance-action-desc\">体調を崩しやすい月。睡眠の質を最優先に。無理なスケジュールは組まない</div></div></div><div class=\"guidance-action\"><div class=\"guidance-action-icon\" style=\"background:rgba(99,102,241,0.15);color:#a5b4fc\">&#9733;</div><div><div class=\"guidance-action-title\">Empathy（共感性）で自分を守る</div><div class=\"guidance-action-desc\">他者の感情を吸収しすぎないよう、意識的に境界線を引く。「感じ取っても、背負わない」を練習する</div></div></div><div class=\"guidance-action\"><div class=\"guidance-action-icon\" style=\"background:rgba(139,92,246,0.15);color:#c4b5fd\">&#9826;</div><div><div class=\"guidance-action-title\">繊細さを創造性に変換する</div><div class=\"guidance-action-desc\">好調期の繊細さは、美しいものや深い体験から何倍もの充足を引き出す。アート・音楽・深い会話を意識的に取り入れて、感性を栄養にする</div></div></div>", "watchHtml": "<div class=\"guidance-watch\"><div class=\"guidance-watch-title\">気をつけること</div><div class=\"guidance-watch-item\">六星占術で大殺界に入っています。大きな契約・転職・引越しなど人生の重大決断は可能な限り避ける</div><div class=\"guidance-watch-item\">「決断できない」状態に陥りやすい月。迷ったら信頼できる人に相談して背中を押してもらう</div><div class=\"guidance-watch-item\">柔軟性が低下しやすい月。予定変更にイライラしたら深呼吸。「流れに身を任せる」ことも戦略</div></div>"};
 function starRating(n){return'<span style="color:var(--yellow);">'+'★'.repeat(n)+'</span><span style="color:var(--border);">'+'★'.repeat(5-n)+'</span>';}
@@ -507,6 +529,7 @@ selectMonth(currentMonth);
 </script>
 <section class="section" id="cross">
   <h2 class="section-title">Cross Analysis（クロス分析）— 強み×運気の掛け合わせ</h2>
+  <div class="section-quote">"点と点が、線になる瞬間"</div>
   <div class="grid"><div class="insight-box">
       <div class="insight-title">Empathy（共感性）× 繊細さ × エニアグラム4</div>
       <p>CliftonStrengths 1位の共感性と繊細な感受性、エニアグラムType 4の独自性追求が共鳴。「人の感情を深く理解し、独自の視点で表現する力」を形成する。この組み合わせはサービス設計においてユーザーの痛みを自分事として感じられるPMFの源泉。</p>
@@ -552,6 +575,7 @@ const observer=new IntersectionObserver((entries)=>{
 sections.forEach(s=>observer.observe(s));
 const fadeObserver=new IntersectionObserver((entries)=>{entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');fadeObserver.unobserve(e.target);}});},{threshold:0.1,rootMargin:'0px 0px -40px 0px'});
 document.querySelectorAll('.section').forEach(s=>fadeObserver.observe(s));
+function toggleAccordion(el){el.classList.toggle('open');const body=el.nextElementSibling;if(body)body.classList.toggle('open');}
 </script>
 </body>
 </html>

@@ -605,6 +605,23 @@ def _action_blueprint(p):
 </div>'''
 
 
+SECTION_QUOTES = {
+    'core_identity': 'あなたを一言で表すなら—',
+    'personality': '才能は、使い方を知ったとき初めて力になる',
+    'divination': '2,000年の叡智が、あなたの星を読み解く',
+    'forecast': '未来は決まっていない。しかし、流れは見える',
+    'monthly': '毎月、あなたの運気は新しい色に染まる',
+    'cross': '点と点が、線になる瞬間',
+}
+
+
+def _section_quote(key):
+    q = SECTION_QUOTES.get(key, '')
+    if not q:
+        return ''
+    return f'<div class="section-quote">"{q}"</div>'
+
+
 def _core_identity(p):
     dm = p['four_pillars']['day_master']
     ys = p['nine_star_ki']['year_star']
@@ -676,6 +693,7 @@ def _core_identity(p):
     <div><h2>Core Identity（自己本質）— あなたはこういう人</h2>
       <div class="pillar-sub">6つの分析体系が示す、時代を超えたあなたの人物像</div></div>
   </div>
+  {_section_quote('core_identity')}
   {insight_html}
   <div class="grid grid-4" style="margin-top:16px">
     <div class="card tc"><div class="card-label">Core Essence（本質）</div>
@@ -771,6 +789,7 @@ def _personality(p, tier):
 
     return f'''<section class="section" id="personality">
   <h2 class="section-title">Personality Profile（性格プロファイル）</h2>
+  {_section_quote('personality')}
   {sf_html}
 </section>'''
 
@@ -810,6 +829,44 @@ def _western_detail(p):
       <p style="line-height:1.9;font-size:14px">{forecast}</p></div>'''
 
     return cards + desc_parts
+
+
+def _rarity_badges(p):
+    """Generate rarity badges to make users feel special about their unique traits."""
+    badges = []
+    rok = p['rokusei']
+    fp = p['four_pillars']
+    dm = fp['day_master']
+    missing = fp.get('missing_elements', [])
+
+    # Reigou rarity
+    if rok.get('reigou'):
+        badges.append('霊合星人は全人口の約10%。二つの星の影響を受ける稀少な存在です')
+
+    # Day master rarity
+    dm_char = dm.get('char', '')
+    yin_yang = dm.get('yin_yang', '')
+    elem = dm.get('element', '')
+    elem_ja = {'Fire':'火','Wood':'木','Earth':'土','Metal':'金','Water':'水'}.get(elem, elem)
+    yy_ja = {'Yin':'陰','Yang':'陽'}.get(yin_yang, '')
+    if dm_char and yy_ja:
+        badges.append(f'日主「{dm_char}」（{yy_ja}{elem_ja}）は十干の一つ。同じ本質を持つ人は約10%')
+
+    # Missing elements rarity
+    if len(missing) >= 2:
+        missing_str = '・'.join(str(m) for m in missing)
+        badges.append(f'五行「{missing_str}」が同時に欠如する命式は稀少。意識的な補完が大きな差を生む')
+    elif len(missing) == 1:
+        badges.append(f'五行「{missing[0]}」の欠如は、その分他の要素が強い証。個性の源泉')
+
+    if not badges:
+        return ''
+
+    html = '<div class="rarity-badges" style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px">'
+    for b in badges:
+        html += f'<div class="rarity-badge">{b}</div>'
+    html += '</div>'
+    return html
 
 
 def _divination(p):
@@ -943,11 +1000,17 @@ def _divination(p):
       <div style="font-size:13px;color:var(--yellow);font-weight:600">霊合星人</div>
       <div style="font-size:12px;color:var(--text-secondary);margin-top:6px;line-height:1.7;text-align:left">{rok_reigou_desc}</div></div>'''
 
+    # Rarity badges
+    rarity_html = _rarity_badges(p)
+
     return f'''<section class="section" id="divination">
   <h2 class="section-title">占術プロファイル</h2>
+  {_section_quote('divination')}
   <p class="section-desc">四柱推命・九星気学・六星占術・西洋占星術 — あなたの不変の本質的特性</p>
+  {rarity_html}
 
-  <h3 class="sub-title">四柱推命</h3>
+  <div class="accordion-header open" onclick="toggleAccordion(this)"><h3 class="sub-title" style="border-top:none;padding-top:0;margin:0">四柱推命</h3></div>
+  <div class="accordion-body open">
   {fp_overview_html}
   <div class="pillar-grid">{pcards}</div>
   <div style="margin-top:16px;font-size:13px;color:var(--text-secondary);line-height:1.7">
@@ -955,19 +1018,27 @@ def _divination(p):
   {pillar_descs_html}
   <div class="element-bar" style="margin-top:12px">{el_bars}</div>
   {missing_html}
+  </div>
 
-  <h3 class="sub-title">九星気学</h3>
+  <div class="accordion-header" onclick="toggleAccordion(this)"><h3 class="sub-title" style="border-top:none;padding-top:0;margin:0">九星気学</h3></div>
+  <div class="accordion-body">
   {nsk_cards}
   {nsk_desc_html}
+  </div>
 
-  <h3 class="sub-title">六星占術</h3>
+  <div class="accordion-header" onclick="toggleAccordion(this)"><h3 class="sub-title" style="border-top:none;padding-top:0;margin:0">六星占術</h3></div>
+  <div class="accordion-body">
   {rok_cards}
   {rok_desc_html}
   {reigou_box}
   <div style="margin-top:12px">{table}</div>
+  </div>
 
-  <h3 class="sub-title">西洋占星術</h3>
+  <div class="accordion-header" onclick="toggleAccordion(this)"><h3 class="sub-title" style="border-top:none;padding-top:0;margin:0">西洋占星術</h3></div>
+  <div class="accordion-body">
   {_western_detail(p)}
+  </div>
+
   <div class="unlock-banner">出生時刻を追加すると、時柱・アセンダント・月星座が解放されます</div>
 </section>'''
 
@@ -1026,6 +1097,7 @@ def _forecast(p):
     <div><h2>2026年 運勢フォーキャスト</h2>
       <div class="pillar-sub">九星気学 × 六星占術が示す年間の流れ</div></div>
   </div>
+  {_section_quote('forecast')}
   {year_theme}
   {cards}
   <div class="chart-wrap"><canvas id="chartOverlay" height="280"></canvas></div>
@@ -1180,6 +1252,12 @@ def _monthly_advice(p, month_data):
     month_num = month_data['month']
     sf_top5 = p.get('strengths_finder', {}).get('top5', [])
     missing = p['four_pillars'].get('missing_elements', [])
+    dm = p['four_pillars']['day_master']
+    dm_char = dm.get('char', '')
+    dm_elem_ja = {'Fire':'火','Wood':'木','Earth':'土','Metal':'金','Water':'水'}.get(dm.get('element',''), '')
+
+    top_strength = sf_top5[0]['name'] if sf_top5 else ''
+    top_ja = SF_JA.get(top_strength, '')
 
     parts = []
 
@@ -1188,20 +1266,26 @@ def _monthly_advice(p, month_data):
         best = max(domains, key=domains.get)
         domain_ja = {'work': '仕事', 'money': '金運', 'health': '健康', 'romance': '人間関係'}
         parts.append(f'特に{domain_ja.get(best, best)}が好調なので、ここに集中投資するのが吉。')
-        if sf_top5:
-            top_ja = SF_JA.get(sf_top5[0]['name'], '')
-            parts.append(f'{sf_top5[0]["name"]}（{top_ja}）を積極的に使って攻めてください。')
+        if top_strength:
+            parts.append(f'{dm_char}{dm_elem_ja}の本質を持つあなたは、{top_strength}（{top_ja}）を全開にして攻める月。')
     elif avg >= 3:
         parts.append(f'安定した月。大きな波はないが、地道な努力が蓄積される時期。')
+        if top_strength:
+            parts.append(f'{top_strength}（{top_ja}）を土台に、{dm_char}{dm_elem_ja}らしく着実に燃え続けることが鍵。')
         parts.append(f'今月の積み重ねが、次の好調期の成果につながります。')
     elif avg >= 2:
         parts.append(f'エネルギーが低下しやすい月。')
         if rok_type in ('danger', 'caution'):
             parts.append(f'六星占術で「{rok_phase}」のため、大きな決断は控えるのが賢明。')
+        if top_strength:
+            parts.append(f'{dm_char}{dm_elem_ja}の炎を守りつつ、{top_strength}（{top_ja}）を防御的に活用して。')
         if missing:
-            parts.append(f'欠如要素の影響が出やすいので、意識的にケアを。')
+            missing_str = '・'.join(str(m) for m in missing[:2])
+            parts.append(f'欠如要素「{missing_str}」の影響が出やすいので、意識的にケアを。')
     else:
         parts.append(f'充電を最優先にする月。無理は禁物。')
+        if top_strength:
+            parts.append(f'{dm_char}{dm_elem_ja}の炎が弱まる時期。{top_strength}（{top_ja}）に頼りすぎず、静かに回復を。')
         parts.append(f'この時期の休息が、後の回復力を左右します。')
 
     return ''.join(parts) if parts else ''
@@ -1307,6 +1391,7 @@ def _monthly(p):
 
     return f'''<section class="section" id="monthly">
   <h2 class="section-title">2026年 月間運勢</h2>
+  {_section_quote('monthly')}
   <p class="section-desc">九星気学の月宮位置 × 六星占術の月フェーズを統合し、4ドメインで分析</p>
   <div class="year-timeline" id="yearTimeline">{timeline}</div>
   <div class="month-selector" id="monthSelector"></div>
@@ -1470,6 +1555,7 @@ def _cross_analysis(p):
 
     return f'''<section class="section" id="cross">
   <h2 class="section-title">Cross Analysis（クロス分析）— 強み×運気の掛け合わせ</h2>
+  {_section_quote('cross')}
   <div class="grid">{grid_items}</div>
 </section>'''
 
@@ -1525,6 +1611,7 @@ const observer=new IntersectionObserver((entries)=>{{
 sections.forEach(s=>observer.observe(s));
 const fadeObserver=new IntersectionObserver((entries)=>{{entries.forEach(e=>{{if(e.isIntersecting){{e.target.classList.add('visible');fadeObserver.unobserve(e.target);}}}});}},{{threshold:0.1,rootMargin:'0px 0px -40px 0px'}});
 document.querySelectorAll('.section').forEach(s=>fadeObserver.observe(s));
+function toggleAccordion(el){{el.classList.toggle('open');const body=el.nextElementSibling;if(body)body.classList.toggle('open');}}
 </script>'''
 
 
@@ -1699,6 +1786,13 @@ body::before{content:'';position:fixed;top:0;left:0;width:100%;height:100%;opaci
 .blueprint-title{font-size:14px;font-weight:600;color:var(--text);margin-bottom:8px;line-height:1.4}
 .blueprint-desc{font-size:12px;color:var(--text-secondary);line-height:1.7}
 .month-advice{font-size:13px;color:var(--text-secondary);line-height:1.7;padding:12px 16px;background:linear-gradient(135deg,rgba(99,102,241,0.06),rgba(139,92,246,0.04));border:1px solid rgba(99,102,241,0.12);border-radius:var(--r-sm);margin-bottom:16px}
+.section-quote{font-size:15px;font-style:italic;color:var(--text-muted);margin-bottom:20px;padding-left:16px;border-left:2px solid rgba(99,102,241,0.3);line-height:1.6}
+.accordion-header{cursor:pointer;display:flex;align-items:center;justify-content:space-between;padding:16px 0;border-top:1px solid var(--border)}
+.accordion-header::after{content:'\25B8';font-size:14px;color:var(--text-muted);transition:transform .3s}
+.accordion-header.open::after{transform:rotate(90deg)}
+.accordion-body{overflow:hidden;max-height:0;opacity:0;transition:max-height .4s ease,opacity .3s ease}
+.accordion-body.open{max-height:5000px;opacity:1}
+.rarity-badge{display:inline-flex;align-items:center;gap:6px;font-size:11px;color:var(--accent2);background:rgba(139,92,246,0.08);border:1px solid rgba(139,92,246,0.15);border-radius:20px;padding:4px 12px;margin-top:8px}
 .collapse-toggle{display:inline-block;margin-top:10px;padding:6px 16px;font-size:12px;font-weight:500;color:#a5b4fc;background:rgba(99,102,241,0.1);border:1px solid rgba(99,102,241,0.25);border-radius:var(--r-sm);cursor:pointer;font-family:var(--font-body);transition:background .2s}
 .collapse-toggle:hover{background:rgba(99,102,241,0.2)}
 .top5-item[style*=cursor]{transition:background .15s}
@@ -1724,8 +1818,9 @@ body::before{content:'';position:fixed;top:0;left:0;width:100%;height:100%;opaci
 </style>'''
 
 
-def generate_html(p, tier=2):
+def generate_html(p, tier=2, show_gnav=True):
     name = p['identity']['name']
+    gnav_html = _gnav() if show_gnav else ''
     return f'''<!DOCTYPE html>
 <html lang="ja">
 <head>
@@ -1738,7 +1833,7 @@ def generate_html(p, tier=2):
 {CSS}
 </head>
 <body>
-{_gnav()}
+{gnav_html}
 {_section_nav(tier >= 2)}
 <div class="container">
 {_hero(p, tier)}
@@ -1761,10 +1856,11 @@ def main():
     parser.add_argument('--profile', required=True, help='Path to profile.yaml')
     parser.add_argument('--output', required=True, help='Output HTML path')
     parser.add_argument('--tier', type=int, default=2, help='Completed tier (1, 2, or 3)')
+    parser.add_argument('--no-gnav', action='store_true', help='Hide iUMA private navigation (for client dashboards)')
     args = parser.parse_args()
 
     profile = load_yaml(args.profile)
-    html = generate_html(profile, tier=args.tier)
+    html = generate_html(profile, tier=args.tier, show_gnav=not args.no_gnav)
 
     os.makedirs(os.path.dirname(args.output) or '.', exist_ok=True)
     with open(args.output, 'w') as f:
