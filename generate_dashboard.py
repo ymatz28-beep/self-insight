@@ -448,19 +448,54 @@ def _phase_color_py(rtype):
     return {'bg': 'rgba(239,68,68,0.12)', 'border': 'rgba(239,68,68,0.3)', 'color': '#f87171'}
 
 
+# Nine Star Palace descriptions — what each palace means for *this month*
+PALACE_DESC = {
+    '震宮': '行動力が高まり、新しいスタートを切りやすい時期',
+    '巽宮': '人脈と信用が拡大する時期。情報が集まりやすい',
+    '中宮': '年間で最もエネルギーが集中する中心位置。影響力が最大化',
+    '乾宮': '目上の人や権威者からの後押しが得やすい時期',
+    '兌宮': '悦びと収穫の時期。社交的なイベントが好結果を生む',
+    '艮宮': '変化のタイミング。過去の蓄積を見直し、方向転換に適した時期',
+    '離宮': '注目を集めやすい時期。自己表現と発信が効果的',
+    '坎宮': '内省と忍耐の時期。表面的には停滞感があるが、内面の成長が進む',
+    '坤宮': '受容と準備の時期。土台をしっかり固め、次の飛躍に備える',
+}
+
+# Rokusei phase descriptions — what each phase means
+PHASE_DESC = {
+    '安定': '最も安定した運気。大きな決断や長期計画に最適',
+    '財成': '財運が充実する時期。投資や資産形成に追い風',
+    '達成': '努力が成果として実を結ぶ時期。目標達成に全力を',
+    '立花': '才能や魅力が開花する時期。クリエイティブな活動に最適',
+    '再会': '過去のつながりが復活する時期。旧友や以前の経験が価値を持つ',
+    '種子': '新しい種をまく時期。将来の芽を育てるスタート地点',
+    '緑生': '芽が伸び始める成長期。学びと実験に適した時期',
+    '陰影': '大殺界の入口。慎重に行動し、新規の大きな契約は避ける',
+    '停止': '大殺界の中心。じっと耐え、現状維持を最優先に',
+    '減退': '大殺界の出口。少しずつ回復するが、まだ油断は禁物',
+    '健弱': '小殺界。体調や気力にムラが出やすい。無理は禁物',
+    '乱気': '中殺界。判断力が鈍りやすい。衝動的な決断を避ける',
+}
+
+
 def _generate_monthly_narrative(p, cur_month, avg_stars, energy_tone):
     """Generate a personalized narrative for the current month."""
     dm = p['four_pillars']['day_master']
-    ys = p['nine_star_ki']['year_star']
-    west = p['western_astrology']['sun_sign']
     sf_top5 = p.get('strengths_finder', {}).get('top5', [])
     missing = p['four_pillars'].get('missing_elements', [])
     ennea = p.get('personality', {}).get('enneagram', {})
     rok_phase = cur_month['rokusei']['phase']
     nine_note = cur_month['nine_star']['note']
+    nine_palace = cur_month['nine_star'].get('palace', '')
     month_num = cur_month['month']
+    dm_desc = dm.get('description', '')
 
-    top_strength = sf_top5[0]['name'] if sf_top5 else ''
+    # Rotate through top 5 strengths by month
+    if sf_top5:
+        sf_idx = (month_num - 1) % len(sf_top5)
+        top_strength = sf_top5[sf_idx]['name']
+    else:
+        top_strength = ''
     top_ja = SF_JA.get(top_strength, '')
 
     # Get western horoscope data for this month
@@ -470,31 +505,43 @@ def _generate_monthly_narrative(p, cur_month, avg_stars, energy_tone):
     west_theme = cur_west['theme'] if cur_west else ''
     west_focus = cur_west['focus'] if cur_west else ''
 
+    palace_desc = PALACE_DESC.get(nine_palace, '')
+    phase_desc = PHASE_DESC.get(rok_phase, '')
+
     parts = []
 
-    # Opening — connect personality to month
+    # Opening — connect palace/phase specifics to month energy
     if avg_stars >= 4:
-        parts.append(f'{month_num}月は、あなたの持ち味が最も活きる月です。')
+        if nine_palace:
+            parts.append(f'{month_num}月、九星気学では{nine_palace}に入り、{palace_desc}。')
+        parts.append(f'六星占術では「{rok_phase}」— {phase_desc}。' if phase_desc else f'六星占術では「{rok_phase}」。')
         if top_strength:
-            parts.append(f'{top_strength}（{top_ja}）を全開にして、新しいことに積極的に挑戦してください。')
-        parts.append(f'九星気学では「{nine_note}」、六星占術では「{rok_phase}」— 複数の体系が後押ししています。')
+            parts.append(f'{top_strength}（{top_ja}）を全開にして、この好調の波に乗ってください。')
     elif avg_stars >= 3:
-        parts.append(f'{month_num}月は、地道な積み上げが後に大きく効いてくる月です。')
+        if nine_palace:
+            parts.append(f'{month_num}月は{nine_palace}（{palace_desc}）に位置する月。')
+        parts.append(f'六星占術では「{rok_phase}」ですが、{phase_desc}。' if phase_desc else '')
         if top_strength:
             parts.append(f'{top_strength}（{top_ja}）を活かしつつ、着実に一歩ずつ前進する意識を。')
-        parts.append(f'九星気学と六星占術で体系間に差があるため、バランス感覚が鍵になります。')
     elif avg_stars >= 2:
-        parts.append(f'{month_num}月は、守りを固めて内面を充実させる月です。')
-        parts.append(f'大きな決断は避け、情報収集と計画立案に集中してください。')
+        parts.append(f'{month_num}月は守りを固めて内面を充実させる月です。')
+        if nine_palace:
+            parts.append(f'九星気学では{nine_palace}（{palace_desc}）。')
+        if phase_desc:
+            parts.append(f'六星占術は「{rok_phase}」— {phase_desc}。')
         if missing:
             missing_str = '・'.join(str(m) for m in missing)
             parts.append(f'五行で欠如している「{missing_str}」の要素を意識的に補うのが特に有効なタイミングです。')
     else:
         parts.append(f'{month_num}月は、無理をせず回復に専念する月です。')
-        parts.append(f'この時期に充電したエネルギーが、次の好調期で花開きます。')
+        if nine_palace:
+            parts.append(f'九星気学では{nine_palace}（{palace_desc}）。')
+        if phase_desc:
+            parts.append(f'六星占術は「{rok_phase}」— {phase_desc}。')
+        parts.append('この時期に充電したエネルギーが、次の好調期で花開きます。')
         if ennea:
-            etype = ennea.get('type', '')
             stress = ennea.get('stress_direction', '')
+            etype = ennea.get('type', '')
             if stress:
                 parts.append(f'エニアグラムType {etype}はストレス下でType {stress}に退行しやすいので、意識的にリラックスの時間を確保してください。')
 
@@ -511,10 +558,22 @@ def _generate_monthly_actions(p, cur_month, avg_stars):
     ennea = p.get('personality', {}).get('enneagram', {})
     dm = p['four_pillars']['day_master']
     domains = cur_month['domains']
+    rok_phase = cur_month['rokusei']['phase']
     actions = []
 
-    # Best domain this month
-    best_domain = max(domains, key=domains.get)
+    # Best domain — when all scores are equal, use rokusei phase to pick focus
+    phase_domain_hint = {
+        '財成': 'money', '安定': 'work', '達成': 'work', '立花': 'romance',
+        '再会': 'romance', '種子': 'health', '緑生': 'health',
+        '陰影': 'health', '停止': 'health', '減退': 'health',
+        '健弱': 'health', '乱気': 'health',
+    }
+    all_equal = len(set(domains.values())) == 1
+    if all_equal:
+        best_domain = phase_domain_hint.get(rok_phase, 'work')
+    else:
+        best_domain = max(domains, key=domains.get)
+
     domain_ja = {'work': '仕事', 'money': 'お金', 'health': '健康', 'romance': '人間関係'}
     domain_icons = {
         'work': ('&#9733;', 'rgba(59,130,246,0.15)', '#60a5fa'),
@@ -538,9 +597,11 @@ def _generate_monthly_actions(p, cur_month, avg_stars):
             'icon': icon_data[0], 'icon_bg': icon_data[1], 'icon_color': icon_data[2],
         })
 
-    # Action 2: Strength-based action
+    # Action 2: Strength-based action — rotate through top 5 by month
     if sf_top5:
-        top = sf_top5[0]
+        month_num = cur_month['month']
+        sf_idx = (month_num - 1) % len(sf_top5)
+        top = sf_top5[sf_idx]
         top_ja = SF_JA.get(top['name'], '')
         if avg_stars >= 3:
             actions.append({
@@ -1545,6 +1606,7 @@ def _monthly_advice(p, month_data):
     rok_type = month_data['rokusei']['type']
     rok_phase = month_data['rokusei']['phase']
     nine_note = month_data['nine_star']['note']
+    nine_palace = month_data['nine_star'].get('palace', '')
     month_num = month_data['month']
     sf_top5 = p.get('strengths_finder', {}).get('top5', [])
     missing = p['four_pillars'].get('missing_elements', [])
@@ -1557,41 +1619,55 @@ def _monthly_advice(p, month_data):
     monthly_horo = wa.get('monthly_horoscope', [])
     cur_west = next((h for h in monthly_horo if h['month'] == month_num), None)
 
-    top_strength = sf_top5[0]['name'] if sf_top5 else ''
+    # Rotate through top 5 strengths by month
+    if sf_top5:
+        sf_idx = (month_num - 1) % len(sf_top5)
+        top_strength = sf_top5[sf_idx]['name']
+    else:
+        top_strength = ''
     top_ja = SF_JA.get(top_strength, '')
+
+    palace_desc = PALACE_DESC.get(nine_palace, '')
+    phase_desc = PHASE_DESC.get(rok_phase, '')
 
     parts = []
 
     if avg >= 4:
-        parts.append(f'全体的にエネルギーが高い月。')
-        best = max(domains, key=domains.get)
-        domain_ja = {'work': '仕事', 'money': '金運', 'health': '健康', 'romance': '人間関係'}
-        parts.append(f'特に{domain_ja.get(best, best)}が好調なので、ここに集中投資するのが吉。')
+        # Use palace + phase to differentiate same-avg months
+        if nine_palace:
+            parts.append(f'{nine_palace}（{palace_desc}）に位置する好調月。')
+        parts.append(f'六星占術「{rok_phase}」— {phase_desc}。' if phase_desc else '')
         if top_strength:
             parts.append(f'{dm_char}{dm_elem_ja}の本質を持つあなたは、{top_strength}（{top_ja}）を全開にして攻める月。')
     elif avg >= 3:
-        parts.append(f'安定した月。大きな波はないが、地道な努力が蓄積される時期。')
+        if nine_palace:
+            parts.append(f'{nine_palace}の影響で{palace_desc}。')
+        parts.append(f'六星占術「{rok_phase}」— {phase_desc}。' if phase_desc else '')
         if top_strength:
-            parts.append(f'{top_strength}（{top_ja}）を土台に、{dm_char}{dm_elem_ja}らしく着実に燃え続けることが鍵。')
-        parts.append(f'今月の積み重ねが、次の好調期の成果につながります。')
+            parts.append(f'{top_strength}（{top_ja}）を土台に、{dm_char}{dm_elem_ja}らしく着実に進むことが鍵。')
     elif avg >= 2:
         parts.append(f'エネルギーが低下しやすい月。')
+        if nine_palace:
+            parts.append(f'九星気学では{nine_palace}（{palace_desc}）。')
         if rok_type in ('danger', 'caution'):
-            parts.append(f'六星占術で「{rok_phase}」のため、大きな決断は控えるのが賢明。')
+            parts.append(f'六星占術で「{rok_phase}」— {phase_desc}。大きな決断は控えるのが賢明。')
         if top_strength:
             parts.append(f'{dm_char}{dm_elem_ja}の炎を守りつつ、{top_strength}（{top_ja}）を防御的に活用して。')
         if missing:
             missing_str = '・'.join(str(m) for m in missing[:2])
-            parts.append(f'欠如要素「{missing_str}」の影響が出やすいので、意識的にケアを。')
+            parts.append(f'欠如要素「{missing_str}」の影響が出やすいので意識的にケアを。')
     else:
-        parts.append(f'充電を最優先にする月。無理は禁物。')
+        parts.append(f'充電を最優先にする月。')
+        if nine_palace:
+            parts.append(f'{nine_palace}（{palace_desc}）。')
+        if phase_desc:
+            parts.append(f'六星占術「{rok_phase}」— {phase_desc}。')
         if top_strength:
             parts.append(f'{dm_char}{dm_elem_ja}の炎が弱まる時期。{top_strength}（{top_ja}）に頼りすぎず、静かに回復を。')
-        parts.append(f'この時期の休息が、後の回復力を左右します。')
 
     # Add western horoscope theme
     if cur_west:
-        parts.append(f' 西洋占星術のテーマ「{cur_west["theme"]}」— {cur_west["focus"]}')
+        parts.append(f'西洋占星術のテーマ「{cur_west["theme"]}」— {cur_west["focus"]}')
 
     return ''.join(parts) if parts else ''
 
