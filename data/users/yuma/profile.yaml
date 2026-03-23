@@ -186,6 +186,88 @@ western_astrology:
   quality_traits: "不動宮（Fixed）— 一度決めたら変えない意志の強さ。安定と持続力。変化への抵抗もある"
   forecast_2026: "冥王星が水瓶座に完全移行した2026年は、蠍座にとって「変容の仕上げ」の年。これまで手放してきた古い構造の跡地に、新しい基盤を築く時期。特に人間関係と仕事の枠組みにおいて、より本質的な選択ができるようになる"
 
+  # 2026 Major Transits
+  transits_2026:
+    jupiter:
+      sign: Cancer
+      aspect_to_sun: Trine
+      influence: "木星が蟹座でトライン — 感情的な成長と内面の豊かさが拡大。直感的な判断が冴える年"
+    saturn:
+      sign: Aries
+      aspect_to_sun: Quincunx
+      influence: "土星が牡羊座でクインカンクス — 行動と慎重さのバランス調整。新しい責任との折り合い"
+    pluto:
+      sign: Aquarius
+      aspect_to_sun: Square
+      influence: "冥王星が水瓶座でスクエア — 変容の最終段階。古い構造からの完全な脱却を促される"
+    uranus:
+      sign: Gemini
+      aspect_to_sun: Opposition
+      influence: "天王星が双子座でオポジション — 予期せぬ変化と覚醒。コミュニケーションの革新"
+
+  # Mercury Retrograde 2026
+  mercury_retrograde_2026:
+    - period: "2/26-3/20"
+      sign: Pisces
+      impact: "コミュニケーションの混乱に注意。重要な契約は前後にずらす"
+    - period: "6/29-7/23"
+      sign: Cancer
+      impact: "感情面のコミュニケーションに見直し。家族・身近な人との関係を再考"
+    - period: "10/24-11/13"
+      sign: Scorpio
+      impact: "蠍座での逆行 — 自分自身への影響が最大。深層心理の再探索と変容の総仕上げ"
+
+  # Monthly Western Horoscope (sun sign based)
+  monthly_horoscope:
+    - month: 1
+      theme: "新しい基盤づくり"
+      energy: 65
+      focus: "キャリアと長期目標の見直し。冥王星の影響で深い変容が進む"
+    - month: 2
+      theme: "人間関係の深化"
+      energy: 70
+      focus: "信頼できる人との絆が強まる。表面的な関係を手放す勇気"
+    - month: 3
+      theme: "内省と再構築"
+      energy: 55
+      focus: "水星逆行の影響。過去の選択を振り返り、方向性を微調整する"
+    - month: 4
+      theme: "行動の再開"
+      energy: 75
+      focus: "逆行明け。止まっていたプロジェクトが動き出す。直感に従う"
+    - month: 5
+      theme: "拡大と成長"
+      energy: 80
+      focus: "木星のトラインが最も効く月。学び・旅・新しい視点の獲得"
+    - month: 6
+      theme: "安定と収穫"
+      energy: 75
+      focus: "春の努力が形になる。経済面での良いニュースの可能性"
+    - month: 7
+      theme: "自己表現の見直し"
+      energy: 60
+      focus: "水星逆行期。創造性の方向を再考。過去作品のリバイバル"
+    - month: 8
+      theme: "情熱の再点火"
+      energy: 85
+      focus: "蠍座の支配星・冥王星のパワーが最高潮。変容の力を活用"
+    - month: 9
+      theme: "収穫と整理"
+      energy: 70
+      focus: "上半期の成果を整理。不要なものを手放し、次のステージへ"
+    - month: 10
+      theme: "誕生月のパワー"
+      energy: 90
+      focus: "太陽が蠍座入り。年間で最もエネルギーが高い月。重要な決断に最適"
+    - month: 11
+      theme: "深い洞察"
+      energy: 75
+      focus: "水星逆行だが蠍座のテーマ「変容」と共鳴。深層心理の探究"
+    - month: 12
+      theme: "統合と準備"
+      energy: 65
+      focus: "1年の統合。来年への種まき。精神的な充電期間"
+
 # === Blood Type ===
 blood_type:
   type: AB

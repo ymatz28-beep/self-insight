@@ -376,9 +376,21 @@ def _this_month_guidance(p):
             watch_html += f'<div class="guidance-watch-item">{w}</div>'
         watch_html += '</div>'
 
-    # Nine Star + Rokusei tags
+    # Nine Star + Rokusei + Western tags
     nine_note = cur_month['nine_star']['note']
     pc = _phase_color_py(rok_type)
+
+    # Western horoscope tag for this month
+    wa = p.get('western_astrology', {})
+    monthly_horo = wa.get('monthly_horoscope', [])
+    cur_west = next((h for h in monthly_horo if h['month'] == current_month_num), None)
+    west_tag = ''
+    if cur_west:
+        west_tag = f'<span class="month-tag" style="background:rgba(139,92,246,0.15);color:#c4b5fd;border:1px solid rgba(139,92,246,0.3)">西洋: {cur_west["theme"]}</span>'
+
+    # Mercury retrograde warning
+    mercury_retro = wa.get('mercury_retrograde_2026', [])
+    retro_badge = _mercury_retro_badge(mercury_retro, current_month_num)
 
     return f'''<section class="section" id="this-month">
   <div class="pillar-header">
@@ -392,6 +404,8 @@ def _this_month_guidance(p):
       <div class="guidance-tags">
         <span class="month-tag" style="background:rgba(99,102,241,0.15);color:#a5b4fc">九星: {nine_note}</span>
         <span class="month-tag" style="background:{pc['bg']};color:{pc['color']};border:1px solid {pc['border']}">六星: {rok_phase}</span>
+        {west_tag}
+        {retro_badge}
       </div>
     </div>
     <div class="guidance-narrative">{_generate_monthly_narrative(p, cur_month, avg_stars, energy_tone)}</div>
@@ -404,6 +418,23 @@ def _this_month_guidance(p):
     </div>
   </div>
 </section>'''
+
+
+def _mercury_retro_badge(mercury_retro, month_num):
+    """Generate a mercury retrograde warning badge if this month has one."""
+    if not mercury_retro:
+        return ''
+    for retro in mercury_retro:
+        period = retro.get('period', '')
+        # Parse period like "2/26-3/20" to check if month_num falls in range
+        parts = period.split('-')
+        if len(parts) == 2:
+            start_month = int(parts[0].split('/')[0])
+            end_month = int(parts[1].split('/')[0])
+            if start_month <= month_num <= end_month or (start_month == month_num or end_month == month_num):
+                return (f'<span class="month-tag" style="background:rgba(251,146,60,0.18);color:#fb923c;border:1px solid rgba(251,146,60,0.4)">'
+                        f'&#9888; 水星逆行 in {retro["sign"]} ({period})</span>')
+    return ''
 
 
 def _phase_color_py(rtype):
@@ -432,6 +463,13 @@ def _generate_monthly_narrative(p, cur_month, avg_stars, energy_tone):
     top_strength = sf_top5[0]['name'] if sf_top5 else ''
     top_ja = SF_JA.get(top_strength, '')
 
+    # Get western horoscope data for this month
+    wa = p.get('western_astrology', {})
+    monthly_horo = wa.get('monthly_horoscope', [])
+    cur_west = next((h for h in monthly_horo if h['month'] == month_num), None)
+    west_theme = cur_west['theme'] if cur_west else ''
+    west_focus = cur_west['focus'] if cur_west else ''
+
     parts = []
 
     # Opening — connect personality to month
@@ -459,6 +497,10 @@ def _generate_monthly_narrative(p, cur_month, avg_stars, energy_tone):
             stress = ennea.get('stress_direction', '')
             if stress:
                 parts.append(f'エニアグラムType {etype}はストレス下でType {stress}に退行しやすいので、意識的にリラックスの時間を確保してください。')
+
+    # Append western astrology theme when available
+    if west_theme and west_focus:
+        parts.append(f'西洋占星術では「{west_theme}」のテーマが強まる月。{west_focus}')
 
     return ''.join(parts)
 
@@ -939,6 +981,74 @@ def _western_detail(p):
       <div class="insight-title" style="color:#c4b5fd">2026年 {west["sign"]}の運勢</div>
       <p style="line-height:1.9;font-size:14px">{forecast}</p></div>'''
 
+    # --- Transits card ---
+    transits = wa.get('transits_2026', {})
+    if transits:
+        aspect_colors = {
+            'Trine': '#4ade80', 'Sextile': '#4ade80', 'Semisextile': '#60a5fa',
+            'Square': '#f87171', 'Opposition': '#f87171', 'Quincunx': '#facc15',
+            'Conjunction': '#c4b5fd',
+        }
+        aspect_icons = {
+            'Trine': '&#9651;', 'Sextile': '&#9734;', 'Semisextile': '&#8226;',
+            'Square': '&#9633;', 'Opposition': '&#9675;', 'Quincunx': '&#8767;',
+            'Conjunction': '&#9673;',
+        }
+        transit_html = '<div style="margin-top:20px"><div class="insight-title" style="color:#c4b5fd;margin-bottom:12px">2026年 惑星トランジット</div>'
+        transit_html += '<div class="grid grid-2">'
+        planet_ja = {'jupiter': '木星', 'saturn': '土星', 'pluto': '冥王星', 'uranus': '天王星'}
+        sign_ja = {
+            'Cancer': '蟹座', 'Aries': '牡羊座', 'Aquarius': '水瓶座', 'Gemini': '双子座',
+            'Leo': '獅子座', 'Taurus': '牡牛座', 'Pisces': '魚座', 'Scorpio': '蠍座',
+            'Sagittarius': '射手座', 'Capricorn': '山羊座', 'Virgo': '乙女座', 'Libra': '天秤座',
+        }
+        for planet_key in ['jupiter', 'saturn', 'pluto', 'uranus']:
+            t = transits.get(planet_key, {})
+            if not t:
+                continue
+            aspect = t.get('aspect_to_sun', '')
+            color = aspect_colors.get(aspect, '#a5b4fc')
+            icon = aspect_icons.get(aspect, '&#9679;')
+            sign = t.get('sign', '')
+            sign_display = sign_ja.get(sign, sign)
+            transit_html += f'''<div class="card" style="border-left:3px solid {color}">
+        <div class="card-label">{planet_ja.get(planet_key, planet_key)}</div>
+        <div class="card-value" style="font-size:16px">{icon} {sign_display}（{aspect}）</div>
+        <div class="typo-desc" style="margin-top:6px;font-size:12px">{t.get("influence", "")}</div></div>'''
+        transit_html += '</div></div>'
+        desc_parts += transit_html
+
+    # --- Mercury Retrograde Timeline ---
+    mercury_retro = wa.get('mercury_retrograde_2026', [])
+    if mercury_retro:
+        retro_html = '<div style="margin-top:20px"><div class="insight-title" style="color:#fb923c;margin-bottom:12px">&#9888; 2026年 水星逆行カレンダー</div>'
+        retro_html += '<div class="grid grid-3">'
+        for i, retro in enumerate(mercury_retro):
+            sign = retro.get('sign', '')
+            sign_display = sign_ja.get(sign, sign) if transits else sign
+            retro_html += f'''<div class="card" style="border-left:3px solid rgba(251,146,60,0.5)">
+        <div class="card-label">第{i+1}回</div>
+        <div class="card-value" style="font-size:14px">{retro.get("period", "")}</div>
+        <div class="card-sub">{sign_display}（{sign}）</div>
+        <div class="typo-desc" style="margin-top:6px;font-size:12px">{retro.get("impact", "")}</div></div>'''
+        retro_html += '</div></div>'
+        desc_parts += retro_html
+
+    # --- Current month western horoscope highlight ---
+    monthly_horo = wa.get('monthly_horoscope', [])
+    current_month_num = _date.today().month
+    cur_west = next((h for h in monthly_horo if h['month'] == current_month_num), None)
+    if cur_west:
+        west_energy = cur_west.get('energy', 0)
+        west_color = energy_color(west_energy)
+        desc_parts += f'''<div class="insight-box" style="margin-top:16px;border-color:rgba(139,92,246,0.3);background:linear-gradient(135deg,rgba(139,92,246,0.08),rgba(99,102,241,0.04))">
+      <div class="insight-title" style="color:#c4b5fd">{current_month_num}月の{west["sign"]}ホロスコープ — 「{cur_west["theme"]}」</div>
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:8px">
+        <div style="font-size:24px;font-weight:700;color:{west_color}">{west_energy}</div>
+        <div style="font-size:11px;color:var(--text-muted)">西洋エネルギー /100</div>
+      </div>
+      <p style="line-height:1.9;font-size:14px">{cur_west["focus"]}</p></div>'''
+
     return cards + desc_parts
 
 
@@ -1202,15 +1312,46 @@ def _forecast(p):
     # Year theme one-liner
     year_theme = _year_theme(cur_comb, cur9, cur12, has_reigou, p)
 
+    # Western astrology transit summary for forecast section
+    wa = p.get('western_astrology', {})
+    transits = wa.get('transits_2026', {})
+    transit_summary = ''
+    if transits:
+        sign_ja = {
+            'Cancer': '蟹座', 'Aries': '牡羊座', 'Aquarius': '水瓶座', 'Gemini': '双子座',
+            'Leo': '獅子座', 'Pisces': '魚座', 'Scorpio': '蠍座',
+        }
+        planet_ja = {'jupiter': '木星', 'saturn': '土星', 'pluto': '冥王星', 'uranus': '天王星'}
+        aspect_colors = {
+            'Trine': '#4ade80', 'Sextile': '#4ade80', 'Semisextile': '#60a5fa',
+            'Square': '#f87171', 'Opposition': '#f87171', 'Quincunx': '#facc15',
+        }
+        transit_items = ''
+        for pk in ['jupiter', 'saturn', 'pluto', 'uranus']:
+            t = transits.get(pk, {})
+            if not t:
+                continue
+            aspect = t.get('aspect_to_sun', '')
+            color = aspect_colors.get(aspect, '#a5b4fc')
+            sign_display = sign_ja.get(t.get('sign', ''), t.get('sign', ''))
+            transit_items += (f'<span style="display:inline-flex;align-items:center;gap:4px;margin-right:12px;font-size:12px">'
+                             f'<span style="color:{color};font-weight:600">{planet_ja.get(pk, pk)}</span>'
+                             f'<span style="color:var(--text-muted)">{sign_display} {aspect}</span></span>')
+        transit_summary = f'''<div style="margin-top:12px;padding:10px 14px;border-radius:8px;background:rgba(139,92,246,0.06);border:1px solid rgba(139,92,246,0.15)">
+      <div style="font-size:11px;color:#c4b5fd;margin-bottom:6px;font-weight:600">惑星トランジット</div>
+      <div style="display:flex;flex-wrap:wrap;gap:4px">{transit_items}</div>
+    </div>'''
+
     return f'''<section class="section" id="forecast-2026">
   <div class="pillar-header">
     <div class="pillar-icon" style="background:rgba(234,179,8,0.15);color:#facc15">&#9733;</div>
     <div><h2>2026年 — いま、あなたはどこにいるか</h2>
-      <div class="pillar-sub">九星気学 × 六星占術が示す年間の流れ</div></div>
+      <div class="pillar-sub">九星気学 × 六星占術 × 西洋占星術が示す年間の流れ</div></div>
   </div>
   {_section_quote('forecast')}
   {year_theme}
   {cards}
+  {transit_summary}
   <div class="chart-wrap"><canvas id="chartOverlay" height="280"></canvas></div>
   {legend_html}
   {insight}
@@ -1367,6 +1508,11 @@ def _monthly_advice(p, month_data):
     dm_char = dm.get('char', '')
     dm_elem_ja = {'Fire':'火','Wood':'木','Earth':'土','Metal':'金','Water':'水'}.get(dm.get('element',''), '')
 
+    # Western horoscope for this month
+    wa = p.get('western_astrology', {})
+    monthly_horo = wa.get('monthly_horoscope', [])
+    cur_west = next((h for h in monthly_horo if h['month'] == month_num), None)
+
     top_strength = sf_top5[0]['name'] if sf_top5 else ''
     top_ja = SF_JA.get(top_strength, '')
 
@@ -1398,6 +1544,10 @@ def _monthly_advice(p, month_data):
         if top_strength:
             parts.append(f'{dm_char}{dm_elem_ja}の炎が弱まる時期。{top_strength}（{top_ja}）に頼りすぎず、静かに回復を。')
         parts.append(f'この時期の休息が、後の回復力を左右します。')
+
+    # Add western horoscope theme
+    if cur_west:
+        parts.append(f' 西洋占星術のテーマ「{cur_west["theme"]}」— {cur_west["focus"]}')
 
     return ''.join(parts) if parts else ''
 
@@ -1481,6 +1631,20 @@ def _monthly(p):
         gd = _monthly_guidance_data(p, cur_month_data)
         guidance_json = json.dumps(gd, ensure_ascii=False)
 
+    # Western horoscope data
+    wa = p.get('western_astrology', {})
+    monthly_horo = wa.get('monthly_horoscope', [])
+    mercury_retro = wa.get('mercury_retrograde_2026', [])
+
+    def _get_west_data(month_num):
+        hw = next((h for h in monthly_horo if h['month'] == month_num), None)
+        retro = _mercury_retro_badge(mercury_retro, month_num)
+        return {
+            'theme': hw['theme'] if hw else '',
+            'energy': hw['energy'] if hw else 0,
+            'retroBadge': retro,
+        }
+
     # Month panels with domain messages + personalized advice
     panels_data = json.dumps([{
         'month': f'{m["month"]}月',
@@ -1489,6 +1653,9 @@ def _monthly(p):
         'nineStarEnergy': m['nine_star']['energy'],
         'rokuseiPhase': m['rokusei']['phase'],
         'rokuseiType': m['rokusei']['type'],
+        'westernTheme': _get_west_data(m['month'])['theme'],
+        'westernEnergy': _get_west_data(m['month'])['energy'],
+        'retroBadge': _get_west_data(m['month'])['retroBadge'],
         'work': m['domains']['work'],
         'money': m['domains']['money'],
         'health': m['domains']['health'],
@@ -1503,7 +1670,7 @@ def _monthly(p):
     return f'''<section class="section" id="monthly">
   <h2 class="section-title">月の流れ</h2>
   {_section_quote('monthly')}
-  <p class="section-desc">九星気学の月宮位置 × 六星占術の月フェーズを統合し、4ドメインで分析</p>
+  <p class="section-desc">九星気学 × 六星占術 × 西洋占星術を統合し、4ドメインで月間運勢を分析</p>
   <div class="year-timeline" id="yearTimeline">{timeline}</div>
   <div class="month-selector" id="monthSelector"></div>
   <div id="monthPanels"></div>
@@ -1554,6 +1721,8 @@ monthlyData.forEach((m,i)=>{{
       <div class="month-tags">
         <span class="month-tag" style="background:rgba(99,102,241,0.15);color:#a5b4fc">九星: ${{m.nineStarNote}}</span>
         <span class="month-tag" style="background:${{pc.bg}};color:${{pc.color}};border:1px solid ${{pc.border}}">六星: ${{m.rokuseiPhase}}</span>
+        ${{m.westernTheme ? '<span class="month-tag" style="background:rgba(139,92,246,0.15);color:#c4b5fd;border:1px solid rgba(139,92,246,0.3)">西洋: '+m.westernTheme+'</span>' : ''}}
+        ${{m.retroBadge || ''}}
       </div>
     </div>
     ${{m.advice ? '<div class="month-advice">' + m.advice + '</div>' : ''}}

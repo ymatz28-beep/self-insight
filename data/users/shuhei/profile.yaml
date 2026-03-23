@@ -293,6 +293,89 @@ western_astrology:
   element_traits: "火のエレメント — 情熱、行動力、直感。エネルギッシュで存在感がある"
   quality_traits: "不動宮（Fixed）— 安定した意志と忍耐力。一度始めたら最後までやり遂げる。頑固な面もある"
   forecast_2026: "太陽星座の獅子座にとって2026年は「自己表現の再定義」の年。これまで他者のために使ってきたエネルギーを、自分自身の創造性や自己実現に向ける転機。特に夏至以降、本来の輝きを取り戻すチャンスが訪れる"
+
+  # 2026 Major Transits
+  transits_2026:
+    jupiter:
+      sign: Cancer
+      aspect_to_sun: Semisextile
+      influence: "木星が蟹座でセミセクスタイル — 繊細な感性の成長。身近な人への愛情が深まる"
+    saturn:
+      sign: Aries
+      aspect_to_sun: Trine
+      influence: "土星が牡羊座でトライン — リーダーシップに構造と安定をもたらす。努力が認められる年"
+    pluto:
+      sign: Aquarius
+      aspect_to_sun: Opposition
+      influence: "冥王星が水瓶座でオポジション — 自己と他者の関係の根本的変容。パワーダイナミクスの再定義"
+    uranus:
+      sign: Gemini
+      aspect_to_sun: Sextile
+      influence: "天王星が双子座でセクスタイル — コミュニケーションに革新。新しい表現方法の発見"
+
+  # Mercury Retrograde 2026
+  mercury_retrograde_2026:
+    - period: "2/26-3/20"
+      sign: Pisces
+      impact: "直感的なメッセージに注意を払う。金銭面の契約は慎重に"
+    - period: "6/29-7/23"
+      sign: Cancer
+      impact: "感情面の見直し。家庭・プライベートに関する再考の時期"
+    - period: "10/24-11/13"
+      sign: Scorpio
+      impact: "深い関係性の再評価。隠れていた感情が表面化する可能性"
+
+  # Monthly Western Horoscope (sun sign based)
+  monthly_horoscope:
+    - month: 1
+      theme: "健康と習慣の見直し"
+      energy: 60
+      focus: "日常のルーティンを再構築。体のケアが運気の基盤になる"
+    - month: 2
+      theme: "パートナーシップ"
+      energy: 70
+      focus: "他者との関係に光が当たる。対等な関係の構築"
+    - month: 3
+      theme: "変容と再生"
+      energy: 55
+      focus: "水星逆行。深層心理と向き合う時期。手放すことで得るものがある"
+    - month: 4
+      theme: "冒険と学び"
+      energy: 80
+      focus: "逆行明けで視野が広がる。新しい知識・文化・哲学との出会い"
+    - month: 5
+      theme: "キャリアの飛躍"
+      energy: 85
+      focus: "土星のトラインが効く。リーダーシップを発揮し、地位が向上"
+    - month: 6
+      theme: "コミュニティ"
+      energy: 75
+      focus: "友人・同僚との絆が深まる。チームでの成果が出やすい"
+    - month: 7
+      theme: "内省の時期"
+      energy: 50
+      focus: "水星逆行 in 蟹座。感情の整理。外に出るより内面を磨く"
+    - month: 8
+      theme: "誕生月のパワー"
+      energy: 90
+      focus: "太陽が獅子座入り。年間最高のエネルギー。新しいスタートに最適"
+    - month: 9
+      theme: "経済の整理"
+      energy: 70
+      focus: "財務の見直し。投資や貯蓄の計画を立てる好機"
+    - month: 10
+      theme: "学びと探究"
+      energy: 75
+      focus: "知的好奇心が高まる。資格取得や専門スキルの習得に最適"
+    - month: 11
+      theme: "キャリアの収穫"
+      energy: 80
+      focus: "水星逆行の影響は軽微。年間の仕事の成果が認められる"
+    - month: 12
+      theme: "友情と希望"
+      energy: 70
+      focus: "年末に向けて人間関係が温かくなる。来年のビジョンを描く"
+
 blood_type:
   type: A
   population_pct: 40
