@@ -410,6 +410,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);line-height:
     <button type="button" class="btn-primary" onclick="copyResult()">回答データをコピー</button>
     <button type="button" class="btn-line" onclick="shareViaLine()">LINEでYumaに送信</button>
   </div>
+  <div id="submitStatus" style="font-size:13px;margin-top:8px"></div>
   <div id="copyMsg" style="color:var(--success);font-size:13px;margin-top:8px;display:none">コピーしました！</div>
 </div>
 
@@ -547,8 +548,11 @@ function validate(tier) {
 }
 
 // === Submit ===
+// Google Apps Script Web App URL (deploy apps-script.gs and paste URL here)
+const SUBMIT_URL = '';
+
 let resultJson = '';
-function submitAtTier(tier) {
+async function submitAtTier(tier) {
   const errs = validate(tier);
   if (errs.length) {
     alert(errs.join('\n'));
@@ -556,6 +560,27 @@ function submitAtTier(tier) {
   }
   const data = collectData(tier);
   resultJson = JSON.stringify(data, null, 2);
+
+  // Try backend submission
+  if (SUBMIT_URL) {
+    try {
+      const res = await fetch(SUBMIT_URL, {
+        method: 'POST',
+        body: resultJson,
+        headers: { 'Content-Type': 'text/plain' }, // Apps Script CORS workaround
+      });
+      const result = await res.json();
+      if (result.success) {
+        document.getElementById('submitStatus').textContent = '送信完了';
+        document.getElementById('submitStatus').style.color = 'var(--success)';
+      }
+    } catch (e) {
+      // Fallback: manual copy/LINE share still available
+      document.getElementById('submitStatus').textContent = '自動送信に失敗しました。手動でコピーしてください';
+      document.getElementById('submitStatus').style.color = 'var(--warn)';
+    }
+  }
+
   document.getElementById('insightForm').style.display = 'none';
   document.getElementById('resultScreen').style.display = 'block';
   document.getElementById('progressBar').style.width = '100%';
