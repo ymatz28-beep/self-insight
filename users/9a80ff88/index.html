@@ -224,6 +224,19 @@ body::before{content:'';position:fixed;top:0;left:0;width:100%;height:100%;opaci
   .stat-card .value{font-size:16px}
   .pillar .kanji{font-size:22px}
 }
+.personality-summary{font-size:15px;color:var(--text-secondary);line-height:1.7;margin-bottom:20px;font-style:italic}
+.personality-locked{position:relative;min-height:300px;overflow:hidden;border-radius:var(--r-md)}
+.locked-skeleton{filter:blur(8px);opacity:0.3;padding:24px}
+.locked-row{height:16px;background:var(--surface2);border-radius:4px;margin-bottom:12px}
+.locked-row.short{width:60%}
+.locked-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:20px}
+.locked-box{height:80px;background:var(--surface2);border-radius:var(--r-sm)}
+.locked-overlay{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:24px}
+.locked-icon{font-size:32px;margin-bottom:12px}
+.locked-title{font-size:18px;font-weight:700;color:var(--text);margin-bottom:8px}
+.locked-desc{font-size:13px;color:var(--text-secondary);line-height:1.6;max-width:360px;margin-bottom:20px}
+.locked-cta{display:inline-block;padding:12px 28px;background:var(--accent);color:white;border-radius:var(--r-md);font-size:14px;font-weight:600;text-decoration:none;transition:opacity .2s}
+.locked-cta:hover{opacity:0.85}
 </style>
 </head>
 <body>
@@ -320,15 +333,16 @@ body::before{content:'';position:fixed;top:0;left:0;width:100%;height:100%;opaci
   <div class="hub-card-preview" onclick="this.parentElement.classList.toggle('expanded')">
     <div class="hub-card-icon" style="background:rgba(59,130,246,0.12);color:#60a5fa">&#9632;</div>
     <div>
-      <div class="hub-card-title">才能と性格の地図</div>
-      <div class="hub-card-summary">CliftonStrengths × エニアグラム × 感受性分析</div>
+      <div class="hub-card-title">内なる才能の設計図</div>
+      <div class="hub-card-summary">強み × 性格タイプ × 感受性</div>
     </div>
     <div class="hub-card-arrow">&#9656;</div>
   </div>
   <div class="hub-card-content">
     <section class="section" id="personality">
-  <h2 class="section-title">才能と性格の地図</h2>
+  <h2 class="section-title">内なる才能の設計図</h2>
   <div class="section-quote">"才能は、使い方を知ったとき初めて力になる"</div>
+  
   
 </section>
   </div>

@@ -224,6 +224,19 @@ body::before{content:'';position:fixed;top:0;left:0;width:100%;height:100%;opaci
   .stat-card .value{font-size:16px}
   .pillar .kanji{font-size:22px}
 }
+.personality-summary{font-size:15px;color:var(--text-secondary);line-height:1.7;margin-bottom:20px;font-style:italic}
+.personality-locked{position:relative;min-height:300px;overflow:hidden;border-radius:var(--r-md)}
+.locked-skeleton{filter:blur(8px);opacity:0.3;padding:24px}
+.locked-row{height:16px;background:var(--surface2);border-radius:4px;margin-bottom:12px}
+.locked-row.short{width:60%}
+.locked-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:20px}
+.locked-box{height:80px;background:var(--surface2);border-radius:var(--r-sm)}
+.locked-overlay{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:24px}
+.locked-icon{font-size:32px;margin-bottom:12px}
+.locked-title{font-size:18px;font-weight:700;color:var(--text);margin-bottom:8px}
+.locked-desc{font-size:13px;color:var(--text-secondary);line-height:1.6;max-width:360px;margin-bottom:20px}
+.locked-cta{display:inline-block;padding:12px 28px;background:var(--accent);color:white;border-radius:var(--r-md);font-size:14px;font-weight:600;text-decoration:none;transition:opacity .2s}
+.locked-cta:hover{opacity:0.85}
 </style>
 </head>
 <body>
@@ -339,17 +352,18 @@ body::before{content:'';position:fixed;top:0;left:0;width:100%;height:100%;opaci
   <div class="hub-card-preview" onclick="this.parentElement.classList.toggle('expanded')">
     <div class="hub-card-icon" style="background:rgba(59,130,246,0.12);color:#60a5fa">&#9632;</div>
     <div>
-      <div class="hub-card-title">才能と性格の地図</div>
-      <div class="hub-card-summary">CliftonStrengths × エニアグラム × 感受性分析</div>
+      <div class="hub-card-title">内なる才能の設計図</div>
+      <div class="hub-card-summary">強み × 性格タイプ × 感受性</div>
     </div>
     <div class="hub-card-arrow">&#9656;</div>
   </div>
   <div class="hub-card-content">
     <section class="section" id="personality">
-  <h2 class="section-title">才能と性格の地図</h2>
+  <h2 class="section-title">内なる才能の設計図</h2>
   <div class="section-quote">"才能は、使い方を知ったとき初めて力になる"</div>
+  <div class="personality-summary">「共感性」と「内省」を軸に、個性派としての深みを持つ</div>
   <div class="grid"><div class="card">
-      <div class="card-title"><span class="icon">&#9733;</span> CliftonStrengths（強み診断）TOP 5</div>
+      <div class="card-title"><span class="icon">&#9733;</span> あなたの TOP 5 強み</div>
       <ul class="top5-list"><li class="top5-item" onclick="var d=this.querySelector('.sf-desc-collapsible');if(d){{d.style.display=d.style.display==='none'?'block':'none'}}" style="cursor:pointer"><span class="rank">1</span>
           <div><div class="sf-name">Empathy <span style="font-size:12px;color:var(--text-secondary);font-weight:400">（共感性）</span></div>
           <div class="sf-domain"><span class="tag tag-rb">Relationship Building</span></div><div class="sf-desc-collapsible" style="display:none;font-size:12px;color:var(--text-secondary);line-height:1.6;margin-top:6px">他者の感情を「推測」するのではなく「体感」する。言語化されていない不安や喜びを直感的に察知し、その人が本当に求めていることを理解する力。チームリーダーとしての最大の武器であり、サービス設計においてユーザーの痛みを自分事として感じられるPMFの源泉。</div></div></li><li class="top5-item" onclick="var d=this.querySelector('.sf-desc-collapsible');if(d){{d.style.display=d.style.display==='none'?'block':'none'}}" style="cursor:pointer"><span class="rank">2</span>
@@ -361,10 +375,10 @@ body::before{content:'';position:fixed;top:0;left:0;width:100%;height:100%;opaci
           <div class="sf-domain"><span class="tag tag-rb">Relationship Building</span></div><div class="sf-desc-collapsible" style="display:none;font-size:12px;color:var(--text-secondary);line-height:1.6;margin-top:6px">万物のつながりを直感的に感じ取る。一見無関係に見える出来事やアイデアの間に隠れた関連性を見出す力。占術と心理学と確率論を統合する発想、複数プロジェクト間のシナジーを設計する力の源泉。偶然を必然として捉える世界観。</div></div></li><li class="top5-item" onclick="var d=this.querySelector('.sf-desc-collapsible');if(d){{d.style.display=d.style.display==='none'?'block':'none'}}" style="cursor:pointer"><span class="rank">5</span>
           <div><div class="sf-name">Maximizer <span style="font-size:12px;color:var(--text-secondary);font-weight:400">（最上志向）</span></div>
           <div class="sf-domain"><span class="tag tag-inf">Influencing</span></div><div class="sf-desc-collapsible" style="display:none;font-size:12px;color:var(--text-secondary);line-height:1.6;margin-top:6px">「平均を良く」するのではなく「良いを最高に」引き上げる。弱みの修正より強みの極大化を追求する。3S原則（Simple, Scalable, Sustainable）の設計思想そのものがMaximizerの発露。「もっと良くできないか？」が止まらない性質。</div></div></li></ul>
-      <div style="font-size:11px;color:var(--text-muted);margin-top:12px">Lead Domain（主要領域）: Strategic Thinking (戦略的思考) | 受験日: 2015-05-12</div>
+      <div style="font-size:11px;color:var(--text-muted);margin-top:12px">主要な強みの分野: Strategic Thinking (戦略的思考) | 受験日: 2015-05-12</div>
     </div>
     <div class="card">
-      <div class="card-title"><span class="icon">&#9632;</span> ドメイン分布（TOP10内）</div>
+      <div class="card-title"><span class="icon">&#9632;</span> 強みの傾向</div>
       <div style="margin-top:8px"><div class="domain-bar">
           <div class="domain-header"><span>Relationship Building（人間関係構築）</span><span style="font-family:var(--font-mono)">4 / 10</span></div>
           <div class="domain-track"><div class="domain-fill" style="width:40%;background:#3b82f6"></div></div></div><div class="domain-bar">
@@ -375,21 +389,27 @@ body::before{content:'';position:fixed;top:0;left:0;width:100%;height:100%;opaci
           <div class="domain-header"><span>Influencing（影響力）</span><span style="font-family:var(--font-mono)">1 / 10</span></div>
           <div class="domain-track"><div class="domain-fill" style="width:10%;background:#ff6b35"></div></div></div></div>
       <div style="margin-top:24px">
-        <div class="card-title" style="font-size:13px"><span class="icon">&#9830;</span> Typology（類型分析）</div>
+        <div class="card-title" style="font-size:13px"><span class="icon">&#9830;</span> あなたの性格タイプ</div>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:4px">
-          <div class="typo-cell"><div class="typo-label">Enneagram（エニアグラム）</div>
+          <div class="typo-cell"><div class="typo-label">エニアグラム</div>
             <div class="typo-value">Type 4</div><div class="typo-sub">個性派</div>
             <div class='typo-desc'>自己表現とアイデンティティの探求者。「自分だけの世界観」を持ち、平凡であることを嫌う。健全時はType 1（改革者）に向かい原則と美学を融合。ストレス時はType 2（奉仕者）に向かい、自分を犠牲にして他者に尽くしすぎる傾向。</div></div>
-          <div class="typo-cell"><div class="typo-label">Blood Type（血液型）</div>
+          <div class="typo-cell"><div class="typo-label">血液型</div>
             <div class="typo-value">AB</div><div class="typo-sub">日本人口の10%</div>
             <div class='typo-desc'>冷静な分析力と繊細な感性が同居。「二面性がある」と言われがちだが、実態は「状況に応じて最適なモードを切り替えている」合理的適応。</div></div>
-          <div class="typo-cell"><div class="typo-label">感覚感受性</div>
+        </div>
+      </div>
+      <div style="margin-top:24px">
+        <div class="card-title" style="font-size:13px"><span class="icon">&#9830;</span> エネルギー特性</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:4px">
+          <div class="typo-cell"><div class="typo-label">感受性タイプ</div>
             <div class="typo-value" style="color:#facc15">繊細</div><div class="typo-sub">環境・感情への感度</div>
             <div class='typo-desc'>環境や人の感情を微細なレベルで処理する繊細さ。蠍座の深い洞察力、Empathy #1の体感的共感と相乗効果を発揮し、通常は見逃す情報を拾い上げる。美しいもの・深い会話からは何倍もの充足を得る一方、ネガティブな刺激からの回復にも時間がかかる。</div></div>
-          <div class="typo-cell"><div class="typo-label">集中パターン</div>
+          <div class="typo-cell"><div class="typo-label">集中スタイル</div>
             <div class="typo-value" style="color:#ff8f6b">やや多動</div><div class="typo-sub">過集中×拡散の波</div>
             <div class='typo-desc'>興味が点火されると驚異的な集中力を発揮し、何時間も一つのテーマに没頭する。Intellection #2の思考力と組み合わさり、深い洞察を生む原動力。一方で興味の対象が移ると瞬時に切り替わるため、仕組み化（自動化・ルーティン設計）で定型業務を排除することが有効。</div></div>
-        </div></div>
+        </div>
+      </div>
     </div></div>
 </section>
   </div>
@@ -677,7 +697,7 @@ selectMonth(currentMonth);
   <div class="section-quote">"点と点が、線になる瞬間"</div>
   <div class="grid"><div class="insight-box">
       <div class="insight-title">Empathy（共感性）× 繊細さ × エニアグラム4</div>
-      <p>CliftonStrengths 1位の共感性と繊細な感受性、エニアグラムType 4の独自性追求が共鳴。「人の感情を深く理解し、独自の視点で表現する力」を形成する。この組み合わせはサービス設計においてユーザーの痛みを自分事として感じられるPMFの源泉。</p>
+      <p>強み診断1位の共感性と繊細な感受性、エニアグラムType 4の独自性追求が共鳴。「人の感情を深く理解し、独自の視点で表現する力」を形成する。この組み合わせはサービス設計においてユーザーの痛みを自分事として感じられるPMFの源泉。</p>
     </div><div class="insight-box">
       <div class="insight-title">Intellection（内省）× 集中パターン × 丁火（陰火）</div>
       <p>深い思考力（Intellection 2位）× やや多動の集中特性 × 丁火（ロウソクの炎）。環境を整えれば安定して燃え続けるが、刺激に弱い。自動化で雑務を排除し、思考に没頭できる環境を作ることが最重要。</p>

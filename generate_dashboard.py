@@ -864,9 +864,35 @@ def _core_identity(p):
 </section>'''
 
 
+def _personality_locked():
+    """Show locked skeleton + CTA for users without personality data."""
+    return '''<section class="section" id="personality">
+  <h2 class="section-title">内なる才能の設計図</h2>
+  <div class="personality-locked">
+    <div class="locked-skeleton">
+      <div class="locked-row"></div>
+      <div class="locked-row short"></div>
+      <div class="locked-row"></div>
+      <div class="locked-grid">
+        <div class="locked-box"></div>
+        <div class="locked-box"></div>
+        <div class="locked-box"></div>
+        <div class="locked-box"></div>
+      </div>
+    </div>
+    <div class="locked-overlay">
+      <div class="locked-icon">&#128274;</div>
+      <div class="locked-title">あなたの強みと性格タイプが見える</div>
+      <div class="locked-desc">10分の質問に答えるだけで、あなたの隠れた才能と性格の核心が明らかになります</div>
+      <a href="../form/" class="locked-cta">才能を発見する</a>
+    </div>
+  </div>
+</section>'''
+
+
 def _personality(p, tier):
     if tier < 2:
-        return ''
+        return _personality_locked()
     pers = p.get('personality', {})
     ennea = pers.get('enneagram', {})
     hsp = pers.get('hsp', {})
@@ -883,6 +909,15 @@ def _personality(p, tier):
     sf_descs = interp.get('strengths', {})
     sf_ja = interp.get('strengths_ja', {})
     pers_descs = interp.get('personality', {})
+
+    # Dynamic personality summary
+    personality_summary = ''
+    if sf_top5 and ennea:
+        t1_ja = SF_JA.get(sf_top5[0]['name'], sf_top5[0]['name'])
+        t2_ja = SF_JA.get(sf_top5[1]['name'], sf_top5[1]['name']) if len(sf_top5) > 1 else ''
+        ename = ENNEA_NAMES.get(ennea.get('type', 0), '')
+        summary_text = f'「{t1_ja}」と「{t2_ja}」を軸に、{ename}としての深みを持つ'
+        personality_summary = f'<div class="personality-summary">{summary_text}</div>'
 
     sf_html = ''
     if sf_top5:
@@ -914,34 +949,41 @@ def _personality(p, tier):
         adhd_label = ADHD_LABELS.get(adhd.get('tendency', ''), adhd.get('tendency', ''))
 
         sf_html = f'''<div class="grid"><div class="card">
-      <div class="card-title"><span class="icon">&#9733;</span> CliftonStrengths（強み診断）TOP 5</div>
+      <div class="card-title"><span class="icon">&#9733;</span> あなたの TOP 5 強み</div>
       <ul class="top5-list">{items}</ul>
-      <div style="font-size:11px;color:var(--text-muted);margin-top:12px">Lead Domain（主要領域）: {sf.get("lead_domain","")}{" (" + DOMAIN_JA.get(sf.get("lead_domain",""), "") + ")" if DOMAIN_JA.get(sf.get("lead_domain","")) else ""} | 受験日: {sf.get("date_taken","")}</div>
+      <div style="font-size:11px;color:var(--text-muted);margin-top:12px">主要な強みの分野: {sf.get("lead_domain","")}{" (" + DOMAIN_JA.get(sf.get("lead_domain",""), "") + ")" if DOMAIN_JA.get(sf.get("lead_domain","")) else ""} | 受験日: {sf.get("date_taken","")}</div>
     </div>
     <div class="card">
-      <div class="card-title"><span class="icon">&#9632;</span> ドメイン分布（TOP10内）</div>
+      <div class="card-title"><span class="icon">&#9632;</span> 強みの傾向</div>
       <div style="margin-top:8px">{dom_bars}</div>
       <div style="margin-top:24px">
-        <div class="card-title" style="font-size:13px"><span class="icon">&#9830;</span> Typology（類型分析）</div>
+        <div class="card-title" style="font-size:13px"><span class="icon">&#9830;</span> あなたの性格タイプ</div>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:4px">
-          <div class="typo-cell"><div class="typo-label">Enneagram（エニアグラム）</div>
+          <div class="typo-cell"><div class="typo-label">エニアグラム</div>
             <div class="typo-value">Type {etype}</div><div class="typo-sub">{ename}</div>
             {"<div class='typo-desc'>"+pers_descs['enneagram']+"</div>" if pers_descs.get('enneagram') else ""}</div>
-          <div class="typo-cell"><div class="typo-label">Blood Type（血液型）</div>
+          <div class="typo-cell"><div class="typo-label">血液型</div>
             <div class="typo-value">{bt["type"]}</div><div class="typo-sub">日本人口の{bt["population_pct"]}%</div>
             {"<div class='typo-desc'>"+pers_descs['blood_type']+"</div>" if pers_descs.get('blood_type') else ""}</div>
-          <div class="typo-cell"><div class="typo-label">感覚感受性</div>
+        </div>
+      </div>
+      <div style="margin-top:24px">
+        <div class="card-title" style="font-size:13px"><span class="icon">&#9830;</span> エネルギー特性</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:4px">
+          <div class="typo-cell"><div class="typo-label">感受性タイプ</div>
             <div class="typo-value" style="color:#facc15">{hsp_label}</div><div class="typo-sub">環境・感情への感度</div>
             {"<div class='typo-desc'>"+pers_descs['sensitivity']+"</div>" if pers_descs.get('sensitivity') else ""}</div>
-          <div class="typo-cell"><div class="typo-label">集中パターン</div>
+          <div class="typo-cell"><div class="typo-label">集中スタイル</div>
             <div class="typo-value" style="color:#ff8f6b">{adhd_label}</div><div class="typo-sub">過集中×拡散の波</div>
             {"<div class='typo-desc'>"+pers_descs['focus_pattern']+"</div>" if pers_descs.get('focus_pattern') else ""}</div>
-        </div></div>
+        </div>
+      </div>
     </div></div>'''
 
     return f'''<section class="section" id="personality">
-  <h2 class="section-title">才能と性格の地図</h2>
+  <h2 class="section-title">内なる才能の設計図</h2>
   {_section_quote('personality')}
+  {personality_summary}
   {sf_html}
 </section>'''
 
@@ -1771,7 +1813,7 @@ def _cross_analysis(p):
         sens_label = HSP_LABELS.get(hsp_score, hsp_score)
         boxes.append({
             'title': f'Empathy（共感性）× 繊細さ × エニアグラム{etype}',
-            'text': f'CliftonStrengths 1位の共感性と{sens_label}な感受性、'
+            'text': f'強み診断1位の共感性と{sens_label}な感受性、'
                     f'エニアグラムType {etype}の独自性追求が共鳴。'
                     f'「人の感情を深く理解し、独自の視点で表現する力」を形成する。'
                     f'この組み合わせはサービス設計においてユーザーの痛みを自分事として感じられるPMFの源泉。',
@@ -2100,6 +2142,19 @@ body::before{content:'';position:fixed;top:0;left:0;width:100%;height:100%;opaci
   .stat-card .value{font-size:16px}
   .pillar .kanji{font-size:22px}
 }
+.personality-summary{font-size:15px;color:var(--text-secondary);line-height:1.7;margin-bottom:20px;font-style:italic}
+.personality-locked{position:relative;min-height:300px;overflow:hidden;border-radius:var(--r-md)}
+.locked-skeleton{filter:blur(8px);opacity:0.3;padding:24px}
+.locked-row{height:16px;background:var(--surface2);border-radius:4px;margin-bottom:12px}
+.locked-row.short{width:60%}
+.locked-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:20px}
+.locked-box{height:80px;background:var(--surface2);border-radius:var(--r-sm)}
+.locked-overlay{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:24px}
+.locked-icon{font-size:32px;margin-bottom:12px}
+.locked-title{font-size:18px;font-weight:700;color:var(--text);margin-bottom:8px}
+.locked-desc{font-size:13px;color:var(--text-secondary);line-height:1.6;max-width:360px;margin-bottom:20px}
+.locked-cta{display:inline-block;padding:12px 28px;background:var(--accent);color:white;border-radius:var(--r-md);font-size:14px;font-weight:600;text-decoration:none;transition:opacity .2s}
+.locked-cta:hover{opacity:0.85}
 </style>'''
 
 
@@ -2175,7 +2230,7 @@ def generate_html(p, tier=2, show_gnav=False):
     # Personality
     if personality_content:
         hub_sections += _hub_card('personality', '&#9632;', 'rgba(59,130,246,0.12)', '#60a5fa',
-                                  '才能と性格の地図', 'CliftonStrengths × エニアグラム × 感受性分析',
+                                  '内なる才能の設計図', '強み × 性格タイプ × 感受性',
                                   personality_content)
 
     # Divination
