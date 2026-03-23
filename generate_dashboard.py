@@ -67,43 +67,41 @@ def _section_nav(has_personality):
 
 def _hero(p, tier):
     ident = p['identity']
-    west = p['western_astrology']['sun_sign']
-    ys = p['nine_star_ki']['year_star']
+    interp = p.get('interpretations', {})
+    hero = interp.get('hero', {})
     rok = p['rokusei']
-    blood = p['blood_type']['type']
-    ennea = p.get('personality', {}).get('enneagram', {})
 
-    chips = [
-        f'<span class="chip hl">{p["four_pillars"]["day_master"]["char"]}火 陰火</span>',
-        f'<span class="chip hl">{ys["name"]}</span>',
-        f'<span class="chip hl">{west["symbol"]} {west["sign"]}</span>',
-        f'<span class="chip">{rok["main_star"]["name"]}({rok["main_star"]["polarity"]}){"霊合" if rok.get("reigou") else ""}</span>',
-        f'<span class="chip">{blood}型</span>',
-    ]
-    if tier >= 2 and ennea:
-        chips.append(f'<span class="chip">Enneagram {ennea.get("type","")}</span>')
-    sf_top1 = (p.get('strengths_finder', {}).get('top5', [None]) or [None])[0]
-    if sf_top1:
-        chips.append(f'<span class="chip">{sf_top1["name"]} #1</span>')
+    # Tagline
+    tagline = hero.get('tagline', '')
+    tagline_html = f'<div class="hero-tagline">「{tagline}」</div>' if tagline else ''
 
-    # Stat cards
-    cur9 = next((c for c in p['nine_star_ki'].get('nine_year_cycle', []) if c.get('current')), None)
-    cur12 = next((c for c in rok.get('twelve_year_cycle', []) if c.get('current')), None)
-    stats = ''
-    stats += '<div class="stat-card"><div class="label">Core Identity</div>'
-    stats += f'<div class="value" style="color:#f87171">{p["four_pillars"]["day_master"]["char"]}火</div></div>'
-    if cur9 and cur12:
-        stats += '<div class="stat-card"><div class="label">2026 Phase</div>'
-        stats += f'<div class="value" style="color:#a5b4fc">{cur9["palace"]}×{cur12["phase"]}</div></div>'
+    # Trait chips — human-readable with source labels
+    traits = hero.get('traits', [])
+    chips = ''
+    for t in traits:
+        chips += (f'<div class="hero-trait">'
+                  f'<div class="hero-trait-keyword">{t["keyword"]}</div>'
+                  f'<div class="hero-trait-detail">{t["detail"]}</div>'
+                  f'<div class="hero-trait-source">{t["source"]}</div>'
+                  f'</div>')
+
+    # Stat card — plain language
     cur_comb = next((c for c in rok.get('reigou_combined', []) if c.get('year') == 2026), None)
+    stats = ''
     if cur_comb:
-        stats += f'<div class="stat-card"><div class="label">Combined Score</div>'
-        stats += f'<div class="value" style="color:{energy_color(cur_comb["score"])}">{cur_comb["score"]}</div></div>'
+        score = cur_comb['score']
+        label = cur_comb.get('label', '')
+        stats = (f'<div class="stat-card">'
+                 f'<div class="label">2026年 総合運勢</div>'
+                 f'<div class="value" style="color:{energy_color(score)}">{label}</div>'
+                 f'<div class="stat-sub">{score} / 100</div>'
+                 f'</div>')
 
     return f'''<section class="hero">
   <h1>Self-Insight</h1>
   <div class="subtitle">{ident["name"]} — AI Self-Insight Dashboard</div>
-  <div class="hero-chips">{"".join(chips)}</div>
+  {tagline_html}
+  <div class="hero-traits">{chips}</div>
   <div class="stats">{stats}</div>
 </section>'''
 
@@ -835,7 +833,14 @@ body::before{content:'';position:fixed;top:0;left:0;width:100%;height:100%;opaci
 @keyframes heroShift{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
 .hero h1{font-size:clamp(20px,2.5vw,26px);font-weight:700;margin-bottom:4px}
 .hero .subtitle{color:var(--text-muted);font-size:14px;margin-bottom:20px}
-.hero-chips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:20px}
+.hero-tagline{font-size:clamp(15px,2vw,18px);font-weight:600;color:#e0e7ff;margin-bottom:24px;line-height:1.6}
+.hero-traits{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin-bottom:24px}
+.hero-trait{background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:var(--r-md);padding:14px 16px;transition:transform .2s}
+.hero-trait:hover{transform:translateY(-2px)}
+.hero-trait-keyword{font-size:14px;font-weight:600;color:#e0e7ff;margin-bottom:4px}
+.hero-trait-detail{font-size:12px;color:var(--text-secondary);line-height:1.5;margin-bottom:6px}
+.hero-trait-source{font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.5px}
+.stat-sub{font-size:12px;color:var(--text-secondary);margin-top:2px;font-family:var(--font-mono)}
 .chip{font-size:11px;font-weight:500;padding:4px 12px;border-radius:20px;background:rgba(255,255,255,0.08);color:var(--text-secondary);border:1px solid rgba(255,255,255,0.1)}
 .chip.hl{background:rgba(99,102,241,0.15);color:#a5b4fc;border-color:rgba(99,102,241,0.3)}
 .stats{display:flex;gap:24px;flex-wrap:wrap}
@@ -954,6 +959,8 @@ body::before{content:'';position:fixed;top:0;left:0;width:100%;height:100%;opaci
   .site-nav a{padding:8px 12px;font-size:12px;min-height:44px}
   .container{padding:12px}
   .hero{padding:20px 16px;border-radius:var(--r-md)}
+  .hero-traits{grid-template-columns:repeat(2,1fr);gap:8px}
+  .hero-trait{padding:10px 12px}
   .stats{gap:8px}.stat-card{padding:8px 12px}
   .stat-card .value{font-size:16px}
   .pillar .kanji{font-size:22px}
