@@ -21,6 +21,27 @@ def satsukai_html(s):
     cls = 'dai' if '大' in str(s) else 'chu' if '中' in str(s) else 'sho'
     return f'<span class="satsukai {cls}">{s}</span>'
 
+# Japanese translations
+SF_JA = {
+    'Empathy': '共感性', 'Intellection': '内省', 'Deliberative': '慎重さ',
+    'Connectedness': '運命思考', 'Maximizer': '最上志向', 'Futuristic': '未来志向',
+    'Relator': '親密性', 'Activator': '活発性', 'Individualization': '個別化',
+    'Learner': '学習欲', 'Input': '収集心', 'Ideation': '着想',
+    'Command': '指令性', 'Context': '原点思考', 'Focus': '目標志向',
+    'Developer': '成長促進', 'Achiever': '達成欲', 'Self-Assurance': '自己確信',
+    'Arranger': 'アレンジ', 'Analytical': '分析思考', 'Responsibility': '責任感',
+    'Consistency': '公平性', 'Positivity': 'ポジティブ', 'Strategic': '戦略性',
+    'Adaptability': '適応性', 'Harmony': '調和性', 'Includer': '包含',
+    'Communication': 'コミュニケーション', 'Woo': '社交性', 'Restorative': '回復志向',
+    'Discipline': '規律性', 'Significance': '自我', 'Competition': '競争性',
+    'Belief': '信念',
+}
+DOMAIN_JA = {
+    'Relationship Building': '人間関係構築',
+    'Strategic Thinking': '戦略的思考',
+    'Executing': '実行力',
+    'Influencing': '影響力',
+}
 ENNEA_NAMES = {1:'完璧主義者',2:'援助者',3:'達成者',4:'個性派',5:'観察者',
                6:'忠実家',7:'楽天家',8:'挑戦者',9:'調停者'}
 HSP_LABELS = {'low':'穏やか','medium':'中程度','high':'繊細'}
@@ -55,13 +76,13 @@ def _gnav():
 
 
 def _section_nav(has_personality):
-    links = '<a href="#core-identity">Core Identity</a>'
+    links = '<a href="#core-identity">Core Identity（自己本質）</a>'
     if has_personality:
-        links += '<a href="#personality">Personality</a>'
+        links += '<a href="#personality">Personality（性格特性）</a>'
     links += '<a href="#divination">占術プロファイル</a>'
     links += '<a href="#forecast-2026">2026 運勢</a>'
     links += '<a href="#monthly">月間運勢</a>'
-    links += '<a href="#cross">Cross Analysis</a>'
+    links += '<a href="#cross">Cross Analysis（クロス分析）</a>'
     return f'<nav class="nav-bar">{links}</nav>'
 
 
@@ -99,7 +120,7 @@ def _hero(p, tier):
 
     return f'''<section class="hero">
   <h1>Self-Insight</h1>
-  <div class="subtitle">{ident["name"]} — AI Self-Insight Dashboard</div>
+  <div class="subtitle">{ident["name"]} — AI自己分析ダッシュボード</div>
   {tagline_html}
   <div class="hero-traits">{chips}</div>
   <div class="stats">{stats}</div>
@@ -126,21 +147,21 @@ def _core_identity(p):
     return f'''<section class="section" id="core-identity">
   <div class="pillar-header">
     <div class="pillar-icon" style="background:rgba(99,102,241,0.15);color:#a5b4fc">&#9733;</div>
-    <div><h2>Core Identity — あなたはこういう人</h2>
+    <div><h2>Core Identity（自己本質）— あなたはこういう人</h2>
       <div class="pillar-sub">6つの分析体系が示す、時代を超えた人物像</div></div>
   </div>
   {insight_html}
   <div class="grid grid-4" style="margin-top:16px">
-    <div class="card tc"><div class="card-label">Core Essence</div>
+    <div class="card tc"><div class="card-label">Core Essence（本質）</div>
       <div class="card-value">{dm["char"]}火 × {ys["name"]}</div>
       <div class="card-sub">静かな炎 × 言葉の力</div></div>
-    <div class="card tc"><div class="card-label">Strongest Axis</div>
+    <div class="card tc"><div class="card-label">Strongest Axis（最強の軸）</div>
       <div class="card-value">共感 × 洞察</div>
-      <div class="card-sub">Empathy + Intellection + 繊細さ</div></div>
-    <div class="card tc"><div class="card-label">Duality</div>
+      <div class="card-sub">Empathy（共感性）+ Intellection（内省）+ 繊細さ</div></div>
+    <div class="card tc"><div class="card-label">Duality（二面性）</div>
       <div class="card-value">合理 × 感性</div>
-      <div class="card-sub">AB型 × 霊合星人 × Enneagram 4</div></div>
-    <div class="card tc"><div class="card-label">Watch Out</div>
+      <div class="card-sub">AB型 × 霊合星人 × エニアグラム 4</div></div>
+    <div class="card tc"><div class="card-label">Watch Out（注意点）</div>
       <div class="card-value" style="color:var(--yellow)">{("・".join(str(m) for m in missing)) if missing else "—"}の欠如</div>
       <div class="card-sub">決断力 × 柔軟性を意識的に補う</div></div>
   </div>
@@ -172,8 +193,8 @@ def _personality(p, tier):
         items = ''
         for s in sf_top5:
             tc = tag_cls.get(s.get('domain',''), 'tag-rb')
-            ja_name = sf_ja.get(s['name'], '')
-            ja_span = f' <span style="font-size:12px;color:var(--text-secondary);font-weight:400">{ja_name}</span>' if ja_name else ''
+            ja_name = sf_ja.get(s['name'], '') or SF_JA.get(s['name'], '')
+            ja_span = f' <span style="font-size:12px;color:var(--text-secondary);font-weight:400">（{ja_name}）</span>' if ja_name else ''
             desc = sf_descs.get(s['name'], '')
             desc_html = f'<div style="font-size:12px;color:var(--text-secondary);line-height:1.6;margin-top:6px">{desc}</div>' if desc else ''
             items += f'''<li class="top5-item"><span class="rank">{s["rank"]}</span>
@@ -184,8 +205,10 @@ def _personality(p, tier):
         for dname, ranks in sf_domains.items():
             dc = domain_colors.get(dname, '#6366f1')
             top10 = sum(1 for r in ranks if r <= 10)
+            dname_ja = DOMAIN_JA.get(dname, '')
+            dname_disp = f'{dname}（{dname_ja}）' if dname_ja else dname
             dom_bars += f'''<div class="domain-bar">
-          <div class="domain-header"><span>{dname}</span><span style="font-family:var(--font-mono)">{top10} / 10</span></div>
+          <div class="domain-header"><span>{dname_disp}</span><span style="font-family:var(--font-mono)">{top10} / 10</span></div>
           <div class="domain-track"><div class="domain-fill" style="width:{top10*10}%;background:{dc}"></div></div></div>'''
 
         etype = ennea.get('type', '?')
@@ -194,20 +217,20 @@ def _personality(p, tier):
         adhd_label = ADHD_LABELS.get(adhd.get('tendency', ''), adhd.get('tendency', ''))
 
         sf_html = f'''<div class="grid"><div class="card">
-      <div class="card-title"><span class="icon">&#9733;</span> CliftonStrengths TOP 5</div>
+      <div class="card-title"><span class="icon">&#9733;</span> CliftonStrengths（強み診断）TOP 5</div>
       <ul class="top5-list">{items}</ul>
-      <div style="font-size:11px;color:var(--text-muted);margin-top:12px">Lead Domain: {sf.get("lead_domain","")} | 受験日: {sf.get("date_taken","")}</div>
+      <div style="font-size:11px;color:var(--text-muted);margin-top:12px">Lead Domain（主要領域）: {sf.get("lead_domain","")}{" (" + DOMAIN_JA.get(sf.get("lead_domain",""), "") + ")" if DOMAIN_JA.get(sf.get("lead_domain","")) else ""} | 受験日: {sf.get("date_taken","")}</div>
     </div>
     <div class="card">
       <div class="card-title"><span class="icon">&#9632;</span> ドメイン分布（TOP10内）</div>
       <div style="margin-top:8px">{dom_bars}</div>
       <div style="margin-top:24px">
-        <div class="card-title" style="font-size:13px"><span class="icon">&#9830;</span> Typology</div>
+        <div class="card-title" style="font-size:13px"><span class="icon">&#9830;</span> Typology（類型分析）</div>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:4px">
-          <div class="typo-cell"><div class="typo-label">Enneagram</div>
+          <div class="typo-cell"><div class="typo-label">Enneagram（エニアグラム）</div>
             <div class="typo-value">Type {etype}</div><div class="typo-sub">{ename}</div>
             {"<div class='typo-desc'>"+pers_descs['enneagram']+"</div>" if pers_descs.get('enneagram') else ""}</div>
-          <div class="typo-cell"><div class="typo-label">Blood Type</div>
+          <div class="typo-cell"><div class="typo-label">Blood Type（血液型）</div>
             <div class="typo-value">{bt["type"]}</div><div class="typo-sub">日本人口の{bt["population_pct"]}%</div>
             {"<div class='typo-desc'>"+pers_descs['blood_type']+"</div>" if pers_descs.get('blood_type') else ""}</div>
           <div class="typo-cell"><div class="typo-label">感覚感受性</div>
@@ -220,7 +243,7 @@ def _personality(p, tier):
     </div></div>'''
 
     return f'''<section class="section" id="personality">
-  <h2 class="section-title">Personality Profile</h2>
+  <h2 class="section-title">Personality Profile（性格プロファイル）</h2>
   {sf_html}
 </section>'''
 
@@ -234,11 +257,13 @@ def _western_detail(p):
     q_traits = wa.get('quality_traits', '')
     traits = wa.get('traits', '')
     forecast = wa.get('forecast_2026', '')
+    west_el_ja = {'Water':'水','Fire':'火','Earth':'地','Air':'風'}.get(west['element'], west['element'])
+    west_q_ja = {'Fixed':'不動宮','Cardinal':'活動宮','Mutable':'柔軟宮'}.get(west['quality'], west['quality'])
 
     cards = f'''<div class="grid grid-3">
     <div class="card"><div class="card-label">太陽星座</div>
       <div class="card-value">{west["symbol"]} {west["sign"]}</div>
-      <div class="card-sub">{west["element"]} / {west["quality"]}</div>
+      <div class="card-sub">{west_el_ja}（{west["element"]}）/ {west_q_ja}（{west["quality"]}）</div>
       {"<div class='typo-desc' style='margin-top:8px'>"+traits+"</div>" if traits else ""}</div>
     <div class="card"><div class="card-label">支配星</div>
       <div class="card-value">{ruling}</div>
@@ -280,15 +305,16 @@ def _divination(p):
     pillar_roles = ['社会的顔・祖先運', '仕事・キャリア', '本質的な自己']
     pillar_keys = ['year', 'month', 'day']
     elem_cls = {'Wood':'elem-wood','Fire':'elem-fire','Earth':'elem-earth','Metal':'elem-metal','Water':'elem-water'}
+    elem_ja = {'Wood':'木','Fire':'火','Earth':'土','Metal':'金','Water':'水'}
     pcards = ''
     for i, pl in enumerate(pillars):
         ec = elem_cls.get(pl['stem']['element'], '')
         pcards += f'''<div class="pillar"><div class="pillar-label">{pillar_labels[i]}</div>
       <div class="kanji">{pl["full"]}</div>
       <div class="reading">{pl["stem"]["reading"]}・{pl["branch"]["reading"]}</div>
-      <div class="element-badge {ec}">{pl["stem"]["element"]}</div>
+      <div class="element-badge {ec}">{elem_ja.get(pl["stem"]["element"], pl["stem"]["element"])}（{pl["stem"]["element"]}）</div>
       <div style="font-size:10px;color:var(--text-muted);margin-top:6px">{pillar_roles[i]}</div></div>'''
-    pcards += '<div class="pillar unknown"><div class="pillar-label">時柱</div><div class="kanji">？？</div><div class="reading">出生時刻不明</div><div class="element-badge" style="background:rgba(255,255,255,0.05);color:var(--text-muted)">Locked</div><div style="font-size:10px;color:var(--text-muted);margin-top:6px">晩年・子孫運</div></div>'
+    pcards += '<div class="pillar unknown"><div class="pillar-label">時柱</div><div class="kanji">？？</div><div class="reading">出生時刻不明</div><div class="element-badge" style="background:rgba(255,255,255,0.05);color:var(--text-muted)">未解放</div><div style="font-size:10px;color:var(--text-muted);margin-top:6px">晩年・子孫運</div></div>'
 
     el_bars = ''
     el_colors = {'木':'#4ade80','火':'#f87171','土':'#facc15','金':'#94a3b8','水':'#60a5fa'}
@@ -306,14 +332,16 @@ def _divination(p):
         missing_html = f'<div style="font-size:12px;color:var(--yellow);margin-top:8px">欠如: {"・".join(str(m) for m in missing)}{" — "+insight if insight else ""}</div>'
 
     cur9 = next((c for c in nsk.get('nine_year_cycle', []) if c.get('current')), None)
+    el5_ja = {'Metal':'金','Fire':'火','Earth':'土','Water':'水','Wood':'木'}
+    dir_ja = {'N':'北','S':'南','E':'東','W':'西','NE':'北東','NW':'北西','SE':'南東','SW':'南西','C':'中央'}
     nsk_cards = f'''<div class="grid grid-3">
-    <div class="card"><div class="card-label">本命星（年星）</div>
-      <div class="card-value">{ys["name"]}</div><div class="card-sub">{ys["element"]} / {ys["direction"]}</div></div>
-    <div class="card"><div class="card-label">月命星</div>
-      <div class="card-value">{ms["name"]}</div><div class="card-sub">{ms["element"]} / {ms["direction"]}</div></div>'''
+    <div class="card"><div class="card-label">本命星（年星）— あなたの根幹</div>
+      <div class="card-value">{ys["name"]}</div><div class="card-sub">{el5_ja.get(ys["element"],ys["element"])}（{ys["element"]}）/ {dir_ja.get(ys["direction"],ys["direction"])}（{ys["direction"]}）</div></div>
+    <div class="card"><div class="card-label">月命星 — 内面の性格</div>
+      <div class="card-value">{ms["name"]}</div><div class="card-sub">{el5_ja.get(ms["element"],ms["element"])}（{ms["element"]}）/ {dir_ja.get(ms["direction"],ms["direction"])}（{ms["direction"]}）</div></div>'''
     if cur9:
-        nsk_cards += f'''<div class="card"><div class="card-label">2026年 宮位置</div>
-      <div class="card-value">{cur9["palace"]}</div><div class="card-sub">{cur9["theme"]}（Energy {cur9["energy"]}）</div></div>'''
+        nsk_cards += f'''<div class="card"><div class="card-label">2026年 宮位置 — 今年の運気</div>
+      <div class="card-value">{cur9["palace"]}</div><div class="card-sub">{cur9["theme"]}（運気 {cur9["energy"]}/100）</div></div>'''
     nsk_cards += '</div>'
 
     cur12 = next((c for c in rok.get('twelve_year_cycle', []) if c.get('current')), None)
@@ -329,7 +357,7 @@ def _divination(p):
         phase_label = satsukai_html(cur12.get('殺界')) if cur12.get('殺界') else '好調期'
         rok_cards += f'''<div class="card"><div class="card-label">2026年</div>
       <div class="card-value">{cur12["phase"]}</div>
-      <div class="card-sub">{phase_label}（Energy {cur12["energy"]}）</div></div>'''
+      <div class="card-sub">{phase_label}（運気 {cur12["energy"]}/100）</div></div>'''
     rok_cards += '</div>'
 
     cycle12 = rok.get('twelve_year_cycle', [])
@@ -344,7 +372,7 @@ def _divination(p):
         rows += f'<td><span style="color:{energy_color(c["energy"])}">{c["energy"]}</span></td></tr>'
 
     sub_th = '<th>サブ</th>' if has_sub else ''
-    table = f'<table class="cycle-table"><thead><tr><th>年</th><th>メイン</th>{sub_th}<th>殺界</th><th>Energy</th></tr></thead><tbody>{rows}</tbody></table>'
+    table = f'<table class="cycle-table"><thead><tr><th>年</th><th>メイン</th>{sub_th}<th>殺界</th><th>運気</th></tr></thead><tbody>{rows}</tbody></table>'
 
     # Four Pillars interpretation text
     fp_overview = fp_interp.get('overview', '')
@@ -396,7 +424,7 @@ def _divination(p):
   {fp_overview_html}
   <div class="pillar-grid">{pcards}</div>
   <div style="margin-top:16px;font-size:13px;color:var(--text-secondary);line-height:1.7">
-    <strong style="color:var(--text)">日主: {dm["char"]}火（{dm["yin_yang"]}火）</strong> — {dm_detail}</div>
+    <strong style="color:var(--text)">日主（にっしゅ）: {dm["char"]}火（{dm["yin_yang"]}火 / ひのと）</strong> — あなたの生まれ持った本質。{dm_detail}</div>
   {pillar_descs_html}
   <div class="element-bar" style="margin-top:12px">{el_bars}</div>
   {missing_html}
@@ -432,9 +460,9 @@ def _forecast(p):
       <div class="card-value">{cur9["palace"]}</div><div class="card-sub">{cur9["theme"]}</div></div>'''
     if cur12:
         cards += f'''<div class="card tc"><div class="card-label">六星占術（メイン）</div>
-      <div class="card-value">{cur12["phase"]}</div><div class="card-sub">Energy {cur12["energy"]}</div></div>'''
+      <div class="card-value">{cur12["phase"]}</div><div class="card-sub">運気 {cur12["energy"]}/100</div></div>'''
     if cur_sub:
-        sub_label = satsukai_html(cur_sub.get('殺界')) if cur_sub.get('殺界') else f'Energy {cur_sub["energy"]}'
+        sub_label = satsukai_html(cur_sub.get('殺界')) if cur_sub.get('殺界') else f'運気 {cur_sub["energy"]}/100'
         cards += f'''<div class="card tc"><div class="card-label">六星占術（サブ）</div>
       <div class="card-value">{cur_sub["phase"]}</div><div class="card-sub">{sub_label}</div></div>'''
     if cur_comb:
@@ -686,7 +714,7 @@ def _cross_analysis(p):
         hsp_score = hsp.get('score', '')
         sens_label = HSP_LABELS.get(hsp_score, hsp_score)
         boxes.append({
-            'title': f'Empathy × 繊細さ × エニアグラム{etype}',
+            'title': f'Empathy（共感性）× 繊細さ × エニアグラム{etype}',
             'text': f'CliftonStrengths 1位の共感性と{sens_label}な感受性、'
                     f'エニアグラムType {etype}の独自性追求が共鳴。'
                     f'「人の感情を深く理解し、独自の視点で表現する力」を形成する。'
@@ -697,7 +725,7 @@ def _cross_analysis(p):
     if len(sf_top5) >= 2 and adhd:
         focus_label = ADHD_LABELS.get(adhd.get('tendency', ''), '')
         boxes.append({
-            'title': f'Intellection × 集中パターン × {dm["char"]}火（陰火）',
+            'title': f'Intellection（内省）× 集中パターン × {dm["char"]}火（陰火）',
             'text': f'深い思考力（Intellection 2位）× {focus_label}の集中特性 × '
                     f'{dm["char"]}火（ロウソクの炎）。'
                     f'環境を整えれば安定して燃え続けるが、刺激に弱い。'
@@ -705,11 +733,12 @@ def _cross_analysis(p):
         })
 
     # 3. Deliberative × Blood Type × Western
+    q_ja = {'Fixed':'不動宮','Cardinal':'活動宮','Mutable':'柔軟宮'}.get(west['quality'], west['quality'])
     if len(sf_top5) >= 3:
         boxes.append({
-            'title': f'Deliberative × {bt["type"]}型 × {west["sign"]} {west["quality"]}',
+            'title': f'Deliberative（慎重さ）× {bt["type"]}型 × {west["sign"]}（{q_ja}）',
             'text': f'慎重さ（3位）× {bt["type"]}型の合理的分析 × '
-                    f'{west["sign"]}の{west["quality"]}（不動宮）。'
+                    f'{west["sign"]}の{q_ja}。'
                     f'三重の慎重さは深い分析に基づく確実な意思決定を可能にする。'
                     f'一方で「分析麻痺」に陥りやすく、行動が遅れるリスクもある。',
         })
@@ -718,7 +747,7 @@ def _cross_analysis(p):
     cur9 = next((c for c in p['nine_star_ki'].get('nine_year_cycle', []) if c.get('current')), None)
     if len(sf_top5) >= 4 and cur9:
         boxes.append({
-            'title': f'Connectedness × {ys["name"]} × {cur9["palace"]}2026',
+            'title': f'Connectedness（運命思考）× {ys["name"]} × {cur9["palace"]}2026',
             'text': f'全てを繋げて見る直感力（4位）× {ys["name"]}の社交力と言葉の力。'
                     f'2026年の{cur9["palace"]}は「{cur9["theme"]}」の年 — '
                     f'点在するプロジェクト群を繋ぎ、エコシステムを設計するのに最適なタイミング。',
@@ -727,7 +756,7 @@ def _cross_analysis(p):
     # 5. Maximizer × Systems
     if len(sf_top5) >= 5:
         boxes.append({
-            'title': 'Maximizer × 3S原則 × 7つの習慣',
+            'title': 'Maximizer（最上志向）× 3S原則 × 7つの習慣',
             'text': '「良い→最高」の追求（5位）がOSそのもの。'
                     '3S（Simple, Scalable, Sustainable）でフィルターし、'
                     '第II領域（重要×非緊急）に集中投資する。'
@@ -746,7 +775,7 @@ def _cross_analysis(p):
     </div>'''
 
     return f'''<section class="section" id="cross">
-  <h2 class="section-title">Cross Analysis — 強み×運気の掛け合わせ</h2>
+  <h2 class="section-title">Cross Analysis（クロス分析）— 強み×運気の掛け合わせ</h2>
   <div class="grid">{grid_items}</div>
 </section>'''
 
@@ -755,7 +784,7 @@ def _footer(tier):
     gen_date = _date.today().isoformat()
     systems = '四柱推命 × 九星気学 × 六星占術 × 西洋占星術'
     if tier >= 2:
-        systems += ' × CliftonStrengths × Enneagram'
+        systems += ' × CliftonStrengths（強み診断）× Enneagram（エニアグラム）'
     return f'''<footer class="page-footer">
   <div>Self-Insight v0.5 — Phase 0→1</div>
   <div style="margin-top:4px">Generated {gen_date} | {systems}</div>
