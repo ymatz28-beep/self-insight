@@ -2041,8 +2041,8 @@ body::before{content:'';position:fixed;top:0;left:0;width:100%;height:100%;opaci
 .hub-card-icon{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
 .hub-card-title{font-size:16px;font-weight:600}
 .hub-card-summary{font-size:13px;color:var(--text-secondary);margin-top:2px}
-.hub-card-arrow{font-size:20px;font-weight:300;color:var(--text-muted);margin-left:auto;font-family:var(--font-body)}
-.hub-card.expanded .hub-card-arrow{color:var(--accent)}
+.hub-card-arrow{width:10px;height:10px;border-right:2px solid var(--text-muted);border-bottom:2px solid var(--text-muted);transform:rotate(45deg);margin-left:auto;transition:transform .3s;flex-shrink:0}
+.hub-card.expanded .hub-card-arrow{transform:rotate(-135deg);border-color:var(--accent)}
 .hub-card-content{max-height:0;overflow:hidden;transition:max-height .5s ease,padding .3s;padding:0 24px}
 .hub-card.expanded .hub-card-content{max-height:none;padding:0 24px 24px}
 .chip{font-size:11px;font-weight:500;padding:4px 12px;border-radius:20px;background:rgba(255,255,255,0.08);color:var(--text-secondary);border:1px solid rgba(255,255,255,0.1)}
@@ -2229,13 +2229,13 @@ def _hub_card(section_id, icon, icon_bg, icon_color, title, summary, content, ex
     """Wrap a section in a collapsible hub card."""
     exp_cls = ' expanded' if expanded else ''
     return f'''<div class="hub-card{exp_cls}" id="{section_id}-card">
-  <div class="hub-card-preview" onclick="var c=this.parentElement;c.classList.toggle('expanded');this.querySelector('.hub-card-arrow').textContent=c.classList.contains('expanded')?'−':'+'">
+  <div class="hub-card-preview" onclick="this.parentElement.classList.toggle('expanded')">
     <div class="hub-card-icon" style="background:{icon_bg};color:{icon_color}">{icon}</div>
     <div>
       <div class="hub-card-title">{title}</div>
       <div class="hub-card-summary">{summary}</div>
     </div>
-    <div class="hub-card-arrow">+</div>
+    <div class="hub-card-arrow"></div>
   </div>
   <div class="hub-card-content">
     {content}

@@ -58,8 +58,8 @@ body::before{content:'';position:fixed;top:0;left:0;width:100%;height:100%;opaci
 .hub-card-icon{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
 .hub-card-title{font-size:16px;font-weight:600}
 .hub-card-summary{font-size:13px;color:var(--text-secondary);margin-top:2px}
-.hub-card-arrow{font-size:20px;font-weight:300;color:var(--text-muted);margin-left:auto;font-family:var(--font-body)}
-.hub-card.expanded .hub-card-arrow{color:var(--accent)}
+.hub-card-arrow{width:10px;height:10px;border-right:2px solid var(--text-muted);border-bottom:2px solid var(--text-muted);transform:rotate(45deg);margin-left:auto;transition:transform .3s;flex-shrink:0}
+.hub-card.expanded .hub-card-arrow{transform:rotate(-135deg);border-color:var(--accent)}
 .hub-card-content{max-height:0;overflow:hidden;transition:max-height .5s ease,padding .3s;padding:0 24px}
 .hub-card.expanded .hub-card-content{max-height:none;padding:0 24px 24px}
 .chip{font-size:11px;font-weight:500;padding:4px 12px;border-radius:20px;background:rgba(255,255,255,0.08);color:var(--text-secondary);border:1px solid rgba(255,255,255,0.1)}
@@ -272,13 +272,13 @@ body::before{content:'';position:fixed;top:0;left:0;width:100%;height:100%;opaci
   </div>
 </section>
 <div class="hub-card" id="core-identity-card">
-  <div class="hub-card-preview" onclick="var c=this.parentElement;c.classList.toggle('expanded');this.querySelector('.hub-card-arrow').textContent=c.classList.contains('expanded')?'−':'+'">
+  <div class="hub-card-preview" onclick="this.parentElement.classList.toggle('expanded')">
     <div class="hub-card-icon" style="background:rgba(99,102,241,0.12);color:#a5b4fc">&#9733;</div>
     <div>
       <div class="hub-card-title">あなたの本質</div>
       <div class="hub-card-summary">丁火 × 五黄土星 — 静かな炎 × 中央の統率力</div>
     </div>
-    <div class="hub-card-arrow">+</div>
+    <div class="hub-card-arrow"></div>
   </div>
   <div class="hub-card-content">
     <section class="section" id="core-identity">
@@ -306,13 +306,13 @@ body::before{content:'';position:fixed;top:0;left:0;width:100%;height:100%;opaci
 </section>
   </div>
 </div><div class="hub-card" id="blueprint-card">
-  <div class="hub-card-preview" onclick="var c=this.parentElement;c.classList.toggle('expanded');this.querySelector('.hub-card-arrow').textContent=c.classList.contains('expanded')?'−':'+'">
+  <div class="hub-card-preview" onclick="this.parentElement.classList.toggle('expanded')">
     <div class="hub-card-icon" style="background:rgba(139,92,246,0.12);color:#c4b5fd">&#9829;</div>
     <div>
       <div class="hub-card-title">明日からできること</div>
       <div class="hub-card-summary">自分の本質を活かす行動指針</div>
     </div>
-    <div class="hub-card-arrow">+</div>
+    <div class="hub-card-arrow"></div>
   </div>
   <div class="hub-card-content">
     <div class="blueprint-section" id="blueprint">
@@ -328,13 +328,13 @@ body::before{content:'';position:fixed;top:0;left:0;width:100%;height:100%;opaci
 </div>
   </div>
 </div><div class="hub-card" id="personality-card">
-  <div class="hub-card-preview" onclick="var c=this.parentElement;c.classList.toggle('expanded');this.querySelector('.hub-card-arrow').textContent=c.classList.contains('expanded')?'−':'+'">
+  <div class="hub-card-preview" onclick="this.parentElement.classList.toggle('expanded')">
     <div class="hub-card-icon" style="background:rgba(59,130,246,0.12);color:#60a5fa">&#9632;</div>
     <div>
       <div class="hub-card-title">内なる才能の設計図</div>
       <div class="hub-card-summary">強み × 性格タイプ × 感受性</div>
     </div>
-    <div class="hub-card-arrow">+</div>
+    <div class="hub-card-arrow"></div>
   </div>
   <div class="hub-card-content">
     <section class="section" id="personality">
@@ -344,13 +344,13 @@ body::before{content:'';position:fixed;top:0;left:0;width:100%;height:100%;opaci
 </section>
   </div>
 </div><div class="hub-card" id="divination-card">
-  <div class="hub-card-preview" onclick="var c=this.parentElement;c.classList.toggle('expanded');this.querySelector('.hub-card-arrow').textContent=c.classList.contains('expanded')?'−':'+'">
+  <div class="hub-card-preview" onclick="this.parentElement.classList.toggle('expanded')">
     <div class="hub-card-icon" style="background:rgba(139,92,246,0.12);color:#c4b5fd">&#9679;</div>
     <div>
       <div class="hub-card-title">星が語ること</div>
       <div class="hub-card-summary">四柱推命 × 九星気学 × 六星占術 × 西洋占星術</div>
     </div>
-    <div class="hub-card-arrow">+</div>
+    <div class="hub-card-arrow"></div>
   </div>
   <div class="hub-card-content">
     <section class="section" id="divination">
@@ -473,13 +473,13 @@ body::before{content:'';position:fixed;top:0;left:0;width:100%;height:100%;opaci
 </section>
   </div>
 </div><div class="hub-card" id="forecast-2026-card">
-  <div class="hub-card-preview" onclick="var c=this.parentElement;c.classList.toggle('expanded');this.querySelector('.hub-card-arrow').textContent=c.classList.contains('expanded')?'−':'+'">
+  <div class="hub-card-preview" onclick="this.parentElement.classList.toggle('expanded')">
     <div class="hub-card-icon" style="background:rgba(234,179,8,0.12);color:#facc15">&#9650;</div>
     <div>
       <div class="hub-card-title">2026年 — いま、あなたはどこにいるか</div>
       <div class="hub-card-summary">九星気学 × 六星占術が示す年間の流れ</div>
     </div>
-    <div class="hub-card-arrow">+</div>
+    <div class="hub-card-arrow"></div>
   </div>
   <div class="hub-card-content">
     <section class="section" id="forecast-2026">
@@ -516,13 +516,13 @@ body::before{content:'';position:fixed;top:0;left:0;width:100%;height:100%;opaci
 </section>
   </div>
 </div><div class="hub-card" id="monthly-card">
-  <div class="hub-card-preview" onclick="var c=this.parentElement;c.classList.toggle('expanded');this.querySelector('.hub-card-arrow').textContent=c.classList.contains('expanded')?'−':'+'">
+  <div class="hub-card-preview" onclick="this.parentElement.classList.toggle('expanded')">
     <div class="hub-card-icon" style="background:rgba(59,130,246,0.12);color:#60a5fa">&#9671;</div>
     <div>
       <div class="hub-card-title">月間運勢フォーキャスト</div>
       <div class="hub-card-summary">3月 — 追い風の月</div>
     </div>
-    <div class="hub-card-arrow">+</div>
+    <div class="hub-card-arrow"></div>
   </div>
   <div class="hub-card-content">
     <section class="section" id="monthly">
