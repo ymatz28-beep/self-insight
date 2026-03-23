@@ -1,11 +1,11 @@
 # Self-Insight — HANDOFF
 
 ## [Constancy] 2026-03-23
-- [WARN] structural_reform: generate_dashboard.py is 1677 lines (threshold: 500). Consider splitting.
+- [WARN] structural_reform: generate_dashboard.py is 2084 lines (threshold: 500). Consider splitting.
 - [WARN] structural_reform: generate_profile.py is 1130 lines (threshold: 500). Consider splitting.
 
 ## Last Updated
-2026-03-23 (session #17 — アクション提案+日本語化+UX改善+IP戦略確定+SIPS設計方針)
+2026-03-23 (session #20 — UXオーバーホール+フォームバックエンド+Cloudflare Access延長)
 
 ## Project Overview
 複数の占術（四柱推命・九星気学・六星占術・西洋占星術・干支）+ 独自性格分析SIPS（Big Five基盤の16 Archetypes+24 Strengths+Sensitivity Score）を統合した、徹底的にパーソナライズされた自己理解ダッシュボードサービス。有料SaaS展開を目指す。
@@ -24,7 +24,7 @@
 
 ### Phase Plan
 - **Phase 0**: Yuma自身のダッシュボードとして構築（identity.mdの延長）✅ 完了
-- **Phase 0→1移行**: パイプライン基盤構築（generate_profile.py + generate_dashboard.py）← 現在
+- **Phase 0→1移行**: パイプライン基盤構築（generate_profile.py + generate_dashboard.py + process_submission.py）+ UXオーバーホール ← 現在
 - **Phase 1**: 友人5人にβテスト（無料）→ PMF検証
 - **Phase 2**: 月額980円でローンチ
 
@@ -38,46 +38,48 @@
   - 血液型特性、エニアグラム、HSP-6、ADHD ASRS-6、Mini-IPIP Big Five → MBTI換算
   - **3-Tier制**: Tier 1=生年月日のみ、Tier 2=+エニアグラム/HSP/ADHD、Tier 3=+Big Five/MBTI
   - CLI: `python3 generate_profile.py --name "名前" --birth-date "YYYY-MM-DD" --blood-type AB --output path`
-- **generate_dashboard.py** (1,677行): profile.yaml → スタンドアロンHTML（Chart.js内蔵）— session #16でフルリライト完了
+- **generate_dashboard.py** (2,084行): profile.yaml → スタンドアロンHTML（Chart.js内蔵）— session #16フルリライト→#18-19で大幅拡張
   - Gnav+2ピラー骨格、月間運勢、Cross Analysis、CSS仕上げ全ステップ完了
   - リッチナラティブ自動生成（profile.yamlからテンプレート+ロジック）
   - 日本語翻訳+専門用語グロサリー、アクション提案（今月/年間テーマ/行動ブループリント）
   - Tier別機能ゲーティング（Tier 3未達セクションはblur+ロック表示）
   - 運気サイクルチャート（統合オーバーレイ1枚に集約）
+  - Hub+Detail Architecture: 全セクションを折りたたみカード化（デフォルト閉）
+  - アーキタイプシステム: 日主+TOP強み→動的アーキタイプ名生成（例: 静かな炎の共鳴者）
+  - `--gnav`フラグ: 個人用のみ。クライアント向けはデフォルトOFF
+  - `--no-gnav`フラグ: クライアント向けダッシュボードでiUMA Private navをスキップ
   - CLI: `python3 generate_dashboard.py --profile profile.yaml --output output.html --tier 2`
 - **Python venv**: `.venv/` (python3.14, PyYAML)
-- **ディレクトリ**: `data/users/`, `output/`, `form/`, `docs/`, `users/` (Phase 1スキャフォールド)
+- **process_submission.py** (155行): submission JSON → generate_profile.py → generate_dashboard.py の自動E2Eパイプライン
+- **scripts/apps-script.gs** (61行): Google Apps Script Web App — フォームPOST → Google Sheets蓄積
+- **ディレクトリ**: `data/users/`, `output/`, `form/`, `docs/`, `scripts/`, `users/` (Phase 1スキャフォールド)
 
-### Dashboard IA (v0.4)
+### Dashboard IA (v0.5 — Hub Architecture)
 ```
-1. Nav (sticky, horizontal scroll — 6セクション)
-2. Hero (compact card, identity chips + stats)
-3. ★ Core Identity (timeless — Pillar 1)
-   - 統合インサイト (6体系統合の人物像)
+1. Hero (アーキタイプ名 glow + tagline + particle animation + hub card shortcuts)
+   - 動的アーキタイプ名 (day_master + top strength → 例: 静かな炎の共鳴者)
+2. Hub Cards (全セクションへのショートカット、Section Nav廃止)
+3. ★ あなたの本質 (= Core Identity, timeless — Pillar 1) [折りたたみカード]
+   - 統合インサイト (6体系統合の人物像, 折りたたみ展開)
    - Summary cards (Core Essence / Strongest Axis / Duality / Watch Out)
-4. Personality Profile
-   - CliftonStrengths TOP5
-   - Domain Distribution (Relationship/Strategic/Executing/Influencing)
-   - Typology (Enneagram 4 / AB型 / HSP High / ADHD Leaning)
-5. 占術プロファイル (timeless core traits only)
-   - 四柱推命 (3柱 + 五行バランス)
-   - 九星気学 (七赤金星 × 九紫火星)
-   - 六星占術 (木星人− × 金星人− 霊合)
-   - 西洋占星術 (蠍座 Water Fixed Pluto)
-   - Unlock banner (出生時刻)
-6. ★ 2026年運勢 (Pillar 2)
-   - Year positioning (past/present/future narrative)
-   - 統合運気カーブ 3-line overlay (2020-2032)
-   - 3体系一致ポイント分析
-   - Year guidance cards (仕事/お金/健康/恋愛)
-7. 月間運勢 (Jan-Dec, interactive)
-   - Year timeline bar (color-coded)
-   - Month selector tabs (horizontal scroll)
-   - Monthly panels (4 domains: 仕事/お金/健康/恋愛 with star ratings)
-   - Monthly insight synthesizing 九星×六星
-8. Cross Analysis (strength × fortune combos)
-9. Footer (v0.4)
+4. Personality Profile [折りたたみカード]
+   - Self-Insight Strengths TOP5 (tap展開)
+   - Domain Distribution
+   - Typology + レアリティバッジ
+5. 占術プロファイル [折りたたみカード, アコーディオン]
+   - 四柱推命 (デフォルト展開) / 九星気学 / 六星占術 / 西洋占星術
+   - レアリティバッジ (霊合10%, 日主10%, 欠落五行コンボ)
+6. ★ 2026年運勢 (Pillar 2) [折りたたみカード]
+   - Year positioning + 統合運気カーブ + Year guidance cards
+7. 月間運勢 (Jan-Dec) [折りたたみカード]
+   - 当月パネルに「今月のガイダンス」統合
+   - パーソナライズ助言 (SF TOP強み + 日主五行参照)
+   - Domain color coding (blue/gold/green/pink)
+8. ★ 才能×運命 (= Cross Analysis) [折りたたみカード]
+9. Footer ("Self-Insight — Powered by AI × 東洋占術 × 心理学")
 ```
+- 全セクション: Co-Star風evocative引用句、IntersectionObserver fade-in
+- デフォルト全閉（Hub体験）、各カードtap/clickで展開
 
 ### Monthly Fortune Data Sources
 - **九星気学 月運**: 八雲院データ（月別エネルギーレベル 0-100）
@@ -208,16 +210,48 @@
   - Likertスケール統一（1-5表示、ADHD内部0-4変換）（5673a95）
   - 「今月」ガイダンス配置修正 — 月間運勢の後、Core Identity先頭（a741ec7）
 
+- [x] **P0改善: CSS修正+2nd-person化+フェードイン+折りたたみ**（2026-03-23 session #18→83a5fb5）
+  - `var(--radius-sm)` → `var(--r-sm)` CSS変数修正
+  - 全解釈テキストを2人称（あなた）視点に変更（両プロファイル）
+  - IntersectionObserver scroll-triggered fade-inアニメーション追加
+  - 「今月のガイダンス」を月間運勢の当月パネルに統合（別セクション削除）
+  - 統合インサイト折りたたみ（1段落表示+展開）、SF TOP5説明もtap展開化
+- [x] **P1改善: セクション引用句+ドメインカラー+パーソナライズ助言+レアリティバッジ**（2026-03-23 session #18→38930c3）
+  - Co-Star風セクション引用句（各主要セクション頭）
+  - ドメインカラーコーディング統一（blue/gold/green/pink）
+  - 月間アドバイスにユーザーのSF TOP強み+日主五行を反映
+  - 占術アコーディオン（4サブセクション折りたたみ、四柱推命がデフォルト展開）
+  - レアリティバッジ: 霊合10%、日主10%、欠落五行コンボ
+  - `--no-gnav`フラグ追加（クライアント向けダッシュボード用）
+- [x] **フォームバックエンドパイプライン構築**（2026-03-23 session #19→2a2a8f6）
+  - Google Apps Script Web App (`scripts/apps-script.gs`): フォーム → Google Sheets蓄積
+  - `scripts/process_submission.py` (155行): submission JSON → generate_profile.py → generate_dashboard.py E2Eパイプライン
+  - `form/index.html` 非同期POST送信対応（SUBMIT_URL設定可能、LINE/clipboard fallback）
+  - UUIDベースのユーザーパス（`users/{uuid}/`）
+  - E2Eテスト済: テスト太郎 Tier 2 → profile.yaml + index.html生成成功
+- [x] **UXオーバーホール — Hub Architecture+アーキタイプシステム**（2026-03-23 session #19→6a91657）
+  - **Hub+Detail Architecture**: 全セクションを折りたたみカード化（デフォルト閉）
+  - **アーキタイプシステム**: day_master + top strength → 動的アーキタイプ名（例: 静かな炎の共鳴者）
+  - Hero再デザイン: アーキタイプ名グロー、タグライン、パーティクルアニメ、hubカードショートカット
+  - 感情的セクション名: Core Identity→あなたの本質、Cross Analysis→才能×運命 等
+  - Section Nav削除（stickyナビバー廃止）
+  - Gnav デフォルトOFF（`--gnav`フラグで個人用のみ表示）
+  - generate_dashboard.py: 1,677→2,084行（+407行）
+- [x] **Cloudflare Accessセッション延長**（2026-03-23 session #20）
+  - Zero Trust → iuma-private アプリのセッション期間を**1 month**に変更
+  - スマホからも月1回のOTP認証で済む
+
 ## In Progress
-- [ ] **generate_dashboard.py / generate_profile.py 構造分割**: constancy警告（両ファイル500行超過）への対応。generate_dashboard.py 1,677行、generate_profile.py 1,130行
+- [ ] **generate_dashboard.py / generate_profile.py 構造分割**: constancy警告（両ファイル500行超過）への対応。generate_dashboard.py 2,084行、generate_profile.py 1,130行
 
 ## Next Actions
-1. **ファイル分割**: generate_dashboard.py（1,677行）をセクション生成モジュールに分割（constancy threshold: 500行）
-2. **月運データの精度向上**: 九星気学の月別宮位置を正確に計算（OSSライブラリ or 暦テーブル）
-3. **ユニットテスト**: 占術計算の正確性検証（test_calculations.py +214行追加済み、実行確認未了）
-4. **SIPS実装**: Self-Insight Personality System — Big Five 40問→16 Archetypes+24 Strengths導出ロジック、HSP/ADHD統合、アーキタイプ/強みテーマ名称設計
-5. **Google Apps Script デプロイ**: `scripts/apps-script.gs`をGoogle Sheetsに設定し、`form/index.html`のSUBMIT_URLに反映
-6. **💡改善アイデア: 競合調査ドキュメント整理**: `docs/competitive-research.md`（未追跡）をコミットし、Phase 1のβテスト準備に活用
+1. **ファイル分割**: generate_dashboard.py（2,084行）をセクション生成モジュールに分割（constancy threshold: 500行）
+2. **Google Apps Script デプロイ**: `scripts/apps-script.gs`をGoogle Sheetsに設定し、`form/index.html`のSUBMIT_URLに反映。E2Eパイプライン（process_submission.py）の本番接続テスト
+3. **SIPS実装**: Self-Insight Personality System — Big Five 40問→16 Archetypes+24 Strengths導出ロジック、HSP/ADHD統合、アーキタイプ/強みテーマ名称設計
+4. **月運データの精度向上**: 九星気学の月別宮位置を正確に計算（OSSライブラリ or 暦テーブル）
+5. **ユニットテスト**: 占術計算の正確性検証（test_calculations.py +214行追加済み、実行確認未了）
+6. **未追跡ドキュメントのコミット**: `docs/competitive-research.md`、`docs/subscription-model.md`（共にgit未追跡）
+7. **💡改善アイデア: βテスターフィードバック収集設計**: Hub Architecture導入で大幅UX変更あり。友人5人テスト前に、アーキタイプ名・折りたたみUI・感情的セクション名の評価ポイントを整理
 
 ## Key Decisions
 - 2ピラー構造: Timeless Identity + Year Forecast
@@ -233,6 +267,8 @@
 - 周平への共有はPDFでなくURL提供（`users/shuhei/index.html`）。外部リンクゼロで単体完結
 - **ユーザーパス方式**: `users/{uuid}/index.html`（UUID 8桁）。名前衝突回避+プライバシー保護
 - **フォームバックエンド**: Google Apps Script Web App → Google Sheets蓄積。`scripts/apps-script.gs` + `scripts/process_submission.py`（E2Eテスト済み）。LINE/clipboardはfallback
+- **クライアントサイド即時表示**: `form/engine.js`（全計算ロジックJS移植）+ `form/renderer.js`（ダッシュボード描画）。フォーム送信後にサーバー不要で即時結果表示
+- **管理者ページ**: `form/admin.html` — Google Sheetsの回答一覧表示、UUID/Tier/ステータス管理、URLコピー機能
 - **日本語化方針**: 全英語用語に日本語訳を併記 + 専門用語グロサリー。非専門家でも理解できるUI
 - **Likertスケール統一**: 全スケール1-5表示（ADHDは内部0-4で計算、表示時に1-5変換）
 - **アクション提案構成**: 「今月のガイダンス」（月間運勢後）+ 「年間テーマ」+ 「行動ブループリント」の3層
@@ -245,6 +281,12 @@
   - **エニアグラム**: 型番号は自由利用可 → そのまま使用可
   - **SIPS設計（Self-Insight Personality System）**: Big Five 40問（Mini-IPIP）→ 16 Archetypes + 24 Strengths + Sensitivity Score を導出。HSP 6問+ADHD 6問=12問をBig Five Factor 5の8問+補助6問に統合し、総質問数削減＆情報量増
   - アーキタイプ/強みテーマの具体名称は後続セッションで設計
+- **Hub+Detail Architecture（session #19で確定）**: 全セクションを折りたたみカードに。デフォルト閉。データレポート→プレミアムパーソナル体験への転換
+- **動的アーキタイプ名**: day_master + top strength から自動生成（例: 静かな炎の共鳴者）。Hero中央にグロー表示
+- **感情的セクション名**: 技術的名称→感情的ラベル（Core Identity→あなたの本質、Cross Analysis→才能×運命 等）
+- **Section Nav廃止**: stickyナビバー削除。Heroのhubカードがショートカット機能を代替
+- **Gnav制御**: デフォルトOFF（クライアント向け）。`--gnav`フラグで個人用表示。`--no-gnav`は明示的スキップ
+- **Cloudflare Accessセッション**: iuma-private の認証期間を1 monthに延長（月1回OTP）
 
 ## Blockers
 - **API 502障害**: session #10, #12で計5時間以上の障害。大規模ファイル生成（Agent）が特に脆弱。回避策: Agent使用を最小化し、Edit分割方式で段階的変更
@@ -274,4 +316,7 @@
 | 14 | 2026-03-22 | generate_dashboard.py(536行)読み取り中にAPI 502障害→「別セッションと重複してないよね？」確認後/clearで終了。コード変更なし |
 | 15 | 2026-03-22 | **narratives.yaml作成+--narratives対応+E2E全パス+周平再生成**: Bash grep+Pythonで index.html→narratives.yaml(44KB)抽出。generate_dashboard.pyに--narratives引数追加(全セクション注入)。E2Eテスト全パターンPASS。周平ダッシュボード再生成(470行)+PDF化+Gmail下書き。commits: 8ff378c, ec4ee39, 336c760 |
 | 16 | 2026-03-22 | **generate_dashboard.pyフルリライト完了**: Gnav+2ピラー骨格→月間運勢→Cross Analysis→CSS仕上げ(heroアニメ/noiseテクスチャ/chartイージング)。535→1,677行。commits: d9783d8〜c84bac0 |
-| 17 | 2026-03-23 | **ナラティブ充実+日本語化+UX改善+アクション提案+IP戦略確定**: 全セクションリッチテキスト、統合チャート1枚化、Hero再デザイン、全英語→日本語併記+グロサリー、Likert1-5統一、今月/年間テーマ/行動ブループリント追加。IP/著作権調査→SIPS（Self-Insight Personality System）設計方針確定: Big Five基盤+独自16 Archetypes/24 Strengths。constancy検知(2件:構造分割警告)。commits: 32da1d9〜a741ec7 |
+| 17 | 2026-03-23 | **ナラティブ充実+日本語化+UX改善+アクション提案+IP戦略確定**: 全セクションリッチテキスト、統合チャート1枚化、Hero再デザイン、全英語→日本語併記+グロサリー、Likert1-5統一、今月/年間テーマ/行動ブループリント追加。IP/著作権調査→SIPS設計方針確定。commits: 32da1d9〜a741ec7 |
+| 18 | 2026-03-23 | **P0+P1改善**: CSS修正、2人称化、fade-inアニメ、ガイダンス月間運勢統合、折りたたみUI、Co-Star風引用句、ドメインカラー統一、パーソナライズ助言(SF+日主)、占術アコーディオン、レアリティバッジ、--no-gnavフラグ。commits: 83a5fb5, 38930c3 |
+| 19 | 2026-03-23 | **フォームバックエンド+UXオーバーホール**: Apps Script+process_submission.py E2Eパイプライン構築。Hub+Detail Architecture（全セクション折りたたみカード化）、動的アーキタイプ名（day_master+強み）、感情的セクション名、Section Nav廃止、Gnav制御。generate_dashboard.py 1,677→2,084行。commits: 2a2a8f6, 6a91657 |
+| 20 | 2026-03-23 | **Cloudflare Accessセッション延長**: Zero Trust iuma-privateのセッション期間を1 monthに変更。Reminder↔アクション同期設計確認（iCloud即時同期、launchd 30分毎、スマホ入力OK）。コード変更なし |
