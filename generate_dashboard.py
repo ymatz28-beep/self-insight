@@ -76,13 +76,13 @@ def _gnav():
 
 
 def _section_nav(has_personality):
-    links = '<a href="#this-month">今月のあなたへ</a>'
-    links += '<a href="#core-identity">Core Identity（自己本質）</a>'
+    links = '<a href="#core-identity">Core Identity（自己本質）</a>'
     if has_personality:
         links += '<a href="#personality">Personality（性格特性）</a>'
     links += '<a href="#divination">占術プロファイル</a>'
     links += '<a href="#forecast-2026">2026 運勢</a>'
     links += '<a href="#monthly">月間運勢</a>'
+    links += '<a href="#this-month">今月のあなたへ</a>'
     links += '<a href="#cross">Cross Analysis（クロス分析）</a>'
     return f'<nav class="nav-bar">{links}</nav>'
 
@@ -1642,13 +1642,13 @@ def generate_html(p, tier=2):
 {_section_nav(tier >= 2)}
 <div class="container">
 {_hero(p, tier)}
-{_this_month_guidance(p)}
 {_core_identity(p)}
 {_action_blueprint(p)}
 {_personality(p, tier)}
 {_divination(p)}
 {_forecast(p)}
 {_monthly(p)}
+{_this_month_guidance(p)}
 {_cross_analysis(p)}
 {_footer(tier)}
 </div>
