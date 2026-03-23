@@ -753,7 +753,6 @@ def _action_blueprint(p):
     </div>'''
 
     return f'''<div class="blueprint-section" id="blueprint">
-  <div class="blueprint-header">明日からできること</div>
   <div class="blueprint-grid">{cards_html}</div>
 </div>'''
 
@@ -1668,8 +1667,6 @@ def _monthly(p):
     } for m in mf], ensure_ascii=False)
 
     return f'''<section class="section" id="monthly">
-  <h2 class="section-title">月の流れ</h2>
-  {_section_quote('monthly')}
   <p class="section-desc">九星気学 × 六星占術 × 西洋占星術を統合し、4ドメインで月間運勢を分析</p>
   <div class="year-timeline" id="yearTimeline">{timeline}</div>
   <div class="month-selector" id="monthSelector"></div>
@@ -2137,7 +2134,6 @@ def generate_html(p, tier=2, show_gnav=False):
     core_id_content = _core_identity(p)
     core_summary = f'{dm["char"]}火 × {ys["name"]} — {essence_sub}' if essence_sub else f'{dm["char"]}火 × {ys["name"]}'
 
-    this_month_content = _this_month_guidance(p)
     mf = p.get('monthly_fortune', [])
     current_month_num = _date.today().month
     cur_month = next((m for m in mf if m['month'] == current_month_num), None)
@@ -2192,15 +2188,11 @@ def generate_html(p, tier=2, show_gnav=False):
                               '2026年 — いま、あなたはどこにいるか', '九星気学 × 六星占術が示す年間の流れ',
                               forecast_content)
 
-    # Monthly (includes this month's guidance inline)
+    # Monthly — guidance is shown inline via JS buildGuidanceHtml() for the current month tab
     if monthly_content:
-        monthly_combined = ''
-        if this_month_content:
-            monthly_combined += this_month_content
-        monthly_combined += monthly_content
         hub_sections += _hub_card('monthly', '&#9671;', 'rgba(59,130,246,0.12)', '#60a5fa',
                                   '月の流れ', month_summary,
-                                  monthly_combined)
+                                  monthly_content)
 
     # Cross Analysis
     if cross_content:
