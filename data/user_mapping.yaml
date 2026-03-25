@@ -1,0 +1,13 @@
+# User ID Mapping — data dir name → public URL ID
+# Public IDs are random 8-char hex to protect privacy
+# data/users/{name}/profile.yaml → users/{public_id}/index.html
+
+users:
+  yuma:
+    public_id: c5809ff8
+    tier: 2
+    gnav: true
+  shuhei:
+    public_id: 9a80ff88
+    tier: 2
+    gnav: false

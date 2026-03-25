@@ -1,0 +1,622 @@
+# Self-Insight Profile — 周平
+# Generated: 2026-03-22
+
+identity:
+  name: 周平
+  birth_date: '1995-08-04'
+  birth_time: null
+  birth_place: 長野県
+  blood_type: A
+  age: 30
+  sex: male
+personality:
+  enneagram:
+    type: 2
+    name: The Helper
+    description: 人への奉仕と愛情。他者のニーズを察知する
+    wing: 6
+    growth_direction: 4
+    stress_direction: 8
+  hsp:
+    score: high
+    total: 22
+    max: 30
+    subscales:
+      sensory: 7
+      emotional: 7
+      social: 8
+  adhd:
+    tendency: significant
+    above_threshold_count: 4
+    total_items: 6
+  mbti: null
+four_pillars:
+  year_pillar:
+    stem:
+      char: 乙
+      element: Wood
+      yin_yang: Yin
+      reading: きのと
+    branch:
+      char: 亥
+      animal: Pig
+      element: Water
+      reading: い
+    full: 乙亥
+  month_pillar:
+    stem:
+      char: 甲
+      element: Wood
+      yin_yang: Yang
+      reading: きのえ
+    branch:
+      char: 申
+      animal: Monkey
+      element: Metal
+      reading: さる
+    full: 甲申
+  day_pillar:
+    stem:
+      char: 丁
+      element: Fire
+      yin_yang: Yin
+      reading: ひのと
+    branch:
+      char: 卯
+      animal: Rabbit
+      element: Wood
+      reading: う
+    full: 丁卯
+  hour_pillar: null
+  day_master:
+    char: 丁
+    element: Fire
+    yin_yang: Yin
+    description: 陰火 — ロウソクの炎。静かで温かく、人を照らす
+  five_elements_balance:
+    木:
+      count: 3
+      pct: 50
+      source: 乙(年干)+甲(月干)+卯(日支)
+    火:
+      count: 1
+      pct: 17
+      source: 丁(日干)
+    土:
+      count: 0
+      pct: 0
+      source: なし（時柱で補完の可能性）
+    金:
+      count: 1
+      pct: 17
+      source: 申(月支)
+    水:
+      count: 1
+      pct: 17
+      source: 亥(年支)
+  missing_elements:
+  - 土
+  element_insight: 土(安定・信頼)が欠如。意識的にこれらの要素を補う行動が有効
+nine_star_ki:
+  year_star:
+    number: 5
+    name: 五黄土星
+    element: Earth
+    direction: C
+  month_star:
+    number: 5
+    name: 五黄土星
+    element: Earth
+    direction: C
+  year_cycle:
+    center_star:
+      number: 1
+      name: 一白水星
+    position:
+      palace: 離宮
+      direction: S
+      meaning: 注目・離別
+  nine_year_cycle:
+  - year: 2024
+    palace: 兌宮
+    theme: 悦び・収穫
+    energy: 80
+  - year: 2025
+    palace: 艮宮
+    theme: 停滞・自己改革
+    energy: 40
+  - year: 2026
+    palace: 離宮
+    theme: 注目・離別
+    energy: 70
+    current: true
+  - year: 2027
+    palace: 坎宮
+    theme: 厄・試練
+    energy: 30
+  - year: 2028
+    palace: 坤宮
+    theme: 変化・準備
+    energy: 45
+  - year: 2029
+    palace: 震宮
+    theme: 発展・始動
+    energy: 65
+  - year: 2030
+    palace: 巽宮
+    theme: 整備・信用
+    energy: 75
+  - year: 2031
+    palace: 中宮
+    theme: 絶頂・転機
+    energy: 100
+  - year: 2032
+    palace: 乾宮
+    theme: 充実・実り
+    energy: 90
+rokusei:
+  main_star:
+    name: 土星人
+    polarity: '-'
+    reading: どせいじん マイナス
+  reigou: true
+  sub_star:
+    name: 天王星人
+    polarity: '-'
+    reading: てんのうせいじん マイナス
+  twelve_year_cycle:
+  - year: 2024
+    phase: 乱気
+    殺界: 中殺界
+    energy: 25
+  - year: 2025
+    phase: 再会
+    殺界: null
+    energy: 70
+  - year: 2026
+    phase: 財成
+    殺界: null
+    energy: 85
+    current: true
+  - year: 2027
+    phase: 安定
+    殺界: null
+    energy: 95
+  - year: 2028
+    phase: 陰影
+    殺界: 大殺界
+    energy: 15
+  - year: 2029
+    phase: 停止
+    殺界: 大殺界
+    energy: 10
+  - year: 2030
+    phase: 減退
+    殺界: 大殺界
+    energy: 20
+  - year: 2031
+    phase: 種子
+    殺界: null
+    energy: 50
+  - year: 2032
+    phase: 緑生
+    殺界: null
+    energy: 65
+  - year: 2033
+    phase: 立花
+    殺界: null
+    energy: 80
+  sub_star_cycle:
+  - year: 2024
+    phase: 財成
+    殺界: null
+    energy: 85
+  - year: 2025
+    phase: 安定
+    殺界: null
+    energy: 95
+  - year: 2026
+    phase: 陰影
+    殺界: 大殺界
+    energy: 15
+    current: true
+  - year: 2027
+    phase: 停止
+    殺界: 大殺界
+    energy: 10
+  - year: 2028
+    phase: 減退
+    殺界: 大殺界
+    energy: 20
+  - year: 2029
+    phase: 種子
+    殺界: null
+    energy: 50
+  - year: 2030
+    phase: 緑生
+    殺界: null
+    energy: 65
+  - year: 2031
+    phase: 立花
+    殺界: null
+    energy: 80
+  - year: 2032
+    phase: 健弱
+    殺界: 小殺界
+    energy: 35
+  - year: 2033
+    phase: 達成
+    殺界: null
+    energy: 90
+  reigou_combined:
+  - year: 2024
+    score: 43
+    label: 矛盾期
+  - year: 2025
+    score: 78
+    label: 絶好調
+  - year: 2026
+    score: 64
+    label: 矛盾期
+  - year: 2027
+    score: 70
+    label: 矛盾期
+  - year: 2028
+    score: 16
+    label: 最悪期
+  - year: 2029
+    score: 22
+    label: 危険期
+  - year: 2030
+    score: 34
+    label: 危険期
+  - year: 2031
+    score: 59
+    label: 回復開始
+  - year: 2032
+    score: 56
+    label: 回復開始
+  - year: 2033
+    score: 83
+    label: 絶好調
+western_astrology:
+  sun_sign:
+    sign: Leo
+    symbol: ♌
+    element: Fire
+    quality: Fixed
+  ruling_planet: Sun
+  decan: { number: 2, sub_ruler: Jupiter, traits: "獅子座の輝きに木星の拡大力が加わる。寛大さ・楽観性・教育者としての資質" }
+  ascendant: null
+  moon_sign: null
+  traits: "生命力、自己表現、リーダーシップ。太陽のように周囲を照らし元気づける"
+  element_traits: "火のエレメント — 情熱、行動力、直感。エネルギッシュで存在感がある"
+  quality_traits: "不動宮（Fixed）— 安定した意志と忍耐力。一度始めたら最後までやり遂げる。頑固な面もある"
+  forecast_2026: "太陽星座の獅子座にとって2026年は「自己表現の再定義」の年。これまで他者のために使ってきたエネルギーを、自分自身の創造性や自己実現に向ける転機。特に夏至以降、本来の輝きを取り戻すチャンスが訪れる"
+
+  # 2026 Major Transits
+  transits_2026:
+    jupiter:
+      sign: Cancer
+      aspect_to_sun: Semisextile
+      influence: "木星が蟹座でセミセクスタイル — 繊細な感性の成長。身近な人への愛情が深まる"
+    saturn:
+      sign: Aries
+      aspect_to_sun: Trine
+      influence: "土星が牡羊座でトライン — リーダーシップに構造と安定をもたらす。努力が認められる年"
+    pluto:
+      sign: Aquarius
+      aspect_to_sun: Opposition
+      influence: "冥王星が水瓶座でオポジション — 自己と他者の関係の根本的変容。パワーダイナミクスの再定義"
+    uranus:
+      sign: Gemini
+      aspect_to_sun: Sextile
+      influence: "天王星が双子座でセクスタイル — コミュニケーションに革新。新しい表現方法の発見"
+
+  # Mercury Retrograde 2026
+  mercury_retrograde_2026:
+    - period: "2/26-3/20"
+      sign: Pisces
+      impact: "直感的なメッセージに注意を払う。金銭面の契約は慎重に"
+    - period: "6/29-7/23"
+      sign: Cancer
+      impact: "感情面の見直し。家庭・プライベートに関する再考の時期"
+    - period: "10/24-11/13"
+      sign: Scorpio
+      impact: "深い関係性の再評価。隠れていた感情が表面化する可能性"
+
+  # Monthly Western Horoscope (sun sign based)
+  monthly_horoscope:
+    - month: 1
+      theme: "健康と習慣の見直し"
+      energy: 60
+      focus: "日常のルーティンを再構築。体のケアが運気の基盤になる"
+    - month: 2
+      theme: "パートナーシップ"
+      energy: 70
+      focus: "他者との関係に光が当たる。対等な関係の構築"
+    - month: 3
+      theme: "変容と再生"
+      energy: 55
+      focus: "水星逆行。深層心理と向き合う時期。手放すことで得るものがある"
+    - month: 4
+      theme: "冒険と学び"
+      energy: 80
+      focus: "逆行明けで視野が広がる。新しい知識・文化・哲学との出会い"
+    - month: 5
+      theme: "キャリアの飛躍"
+      energy: 85
+      focus: "土星のトラインが効く。リーダーシップを発揮し、地位が向上"
+    - month: 6
+      theme: "コミュニティ"
+      energy: 75
+      focus: "友人・同僚との絆が深まる。チームでの成果が出やすい"
+    - month: 7
+      theme: "内省の時期"
+      energy: 50
+      focus: "水星逆行 in 蟹座。感情の整理。外に出るより内面を磨く"
+    - month: 8
+      theme: "誕生月のパワー"
+      energy: 90
+      focus: "太陽が獅子座入り。年間最高のエネルギー。新しいスタートに最適"
+    - month: 9
+      theme: "経済の整理"
+      energy: 70
+      focus: "財務の見直し。投資や貯蓄の計画を立てる好機"
+    - month: 10
+      theme: "学びと探究"
+      energy: 75
+      focus: "知的好奇心が高まる。資格取得や専門スキルの習得に最適"
+    - month: 11
+      theme: "キャリアの収穫"
+      energy: 80
+      focus: "水星逆行の影響は軽微。年間の仕事の成果が認められる"
+    - month: 12
+      theme: "友情と希望"
+      energy: 70
+      focus: "年末に向けて人間関係が温かくなる。来年のビジョンを描く"
+
+blood_type:
+  type: A
+  population_pct: 40
+  traits:
+    strengths:
+    - 真面目で責任感が強い
+    - 計画性がある
+    - 協調性が高い
+    - 几帳面
+    challenges:
+    - 心配性
+    - 融通が利かない
+    - ストレスを溜めやすい
+
+# === Interpretations (AI-generated narrative) ===
+interpretations:
+  hero:
+    tagline: "太陽のような温かさで人を照らし、中心で全体を統合するリーダー"
+    traits:
+      - keyword: "太陽の温かさ"
+        detail: "周囲を照らし、元気づける存在"
+        source: "四柱推命"
+      - keyword: "♌ 情熱と表現力"
+        detail: "獅子座の輝き — 自分を表現する力"
+        source: "西洋占星術"
+      - keyword: "中心の統率力"
+        detail: "九星の帝王星 — 全体を動かす求心力"
+        source: "九星気学"
+      - keyword: "献身的な愛情"
+        detail: "相手のニーズを先読みする共感力"
+        source: "エニアグラム"
+      - keyword: "誠実さと計画性"
+        detail: "約束を守り、信頼を積み上げるA型"
+        source: "血液型"
+      - keyword: "堅実さ×冒険心"
+        detail: "霊合星人 — 安定志向の中に隠された革新"
+        source: "六星占術"
+  integrated_insight:
+    - "あなたの本質は<strong>「太陽のような温かさで人を照らし、中心で全体を統合するリーダー」</strong>です。四柱推命の日主「丁火」（ロウソクの炎）× 九星気学の五黄土星（九星の中央に座る帝王星）× 獅子座（太陽が支配する王者の星座）。この三角形が示すのは、<strong>火のエネルギーで周囲を温め、求心力で人を集め、献身的な愛情（エニアグラム2）で支える</strong>という二重の「照らす力」です。獅子座の火のエレメントは情熱と生命力を与え、不動宮（Fixed）の性質は「信じた道を貫く」忍耐力を示します。"
+    - "A型（日本人口の40%）の真面目さ×計画性は、あなたの行動基盤そのもの。チームの中で信頼を積み上げ、几帳面に約束を守る。この「堅実な実行者」の姿は、土星人(−)の安定志向と完全に共鳴しています。一方で、霊合サブ星の天王星人(−)が内側に革新への衝動を燃やしている — <strong>堅実さの中に隠された冒険心</strong>が、表面的な「真面目な人」像では捉えきれない多面性を生んでいます。エニアグラム2のウイング6（忠実家）が、この冒険心に「安全確認」のブレーキをかけることで、無謀にならない革新を可能にしています。"
+    - "あなたの感覚は繊細で、人の感情の微妙な変化を敏感に察知します。特に社会的な場面での感受性が高く、場の空気を瞬時に読み取る力がある。エニアグラム2の「相手が求めていることを言われる前に察知する」才能と、この繊細さが組み合わさることで、<strong>「この人といると安心する」と思われる存在</strong>になっています。一方で、<strong>興味の対象が移り変わりやすく、複数のことを同時に追いかける傾向</strong>がある。五黄土星の強い推進力と獅子座の情熱がこの多動性に拍車をかけますが、裏を返せば<strong>幅広い関心から異分野を接続するイノベーターの素質</strong>でもあります。"
+    - "<strong style=\"color:var(--yellow);\">注意すべきポイント — 全体系が一致する弱点</strong>: 五行で<strong>土（安定・信頼の基盤）が完全に欠如</strong>。これは五黄「土」星でありながら命式に土がないという逆説的構造で、<strong>強い求心力を持ちながらも自分自身の「居場所」への不安</strong>が潜在する。繊細な感受性とエニアグラム2の献身性は最大の武器ですが、<strong>他者のために自分を消耗しすぎて燃え尽きる</strong>リスクが常にある。ストレス下でType 8（挑戦者）に退行すると、普段の温かさが突然の攻撃性に転じ、周囲との信頼関係にひびが入る。<strong>自分のニーズにも目を向ける仕組み（定期的な内省・境界線設計）</strong>が、持続的に人を支え続けるための鍵です。"
+  strengths_ja: {}
+  personality:
+    enneagram: "人への奉仕と愛情の人。他者のニーズを言われる前に察知し、献身的に支える。ウイング6（忠実家）の影響で、信頼できる人間関係の構築を重視。健全時はType 4（個性派）に向かい、自分自身の感情やニーズにも目を向けられる。ストレス時はType 8（挑戦者）に向かい、攻撃的・支配的になる傾向。"
+    blood_type: "日本人口の40%。真面目で責任感が強く、計画性に優れる。協調性が高くチームプレイヤーとして信頼される。一方で心配性でストレスを溜めやすく、融通が利かない面も。「こうあるべき」という理想が高いため、自分にも他者にも厳しくなりがち。"
+    sensitivity: "人の感情の変化を敏感に察知し、場の空気を瞬時に読み取る繊細さ。特に社会的な感受性が高く、人間関係の微妙な変化にとくに敏感。エニアグラム2の献身性と組み合わさり、「相手が求めていることを先回りで察知する」才能の源泉。ネガティブな環境からの回復には意識的な自分時間が必要。"
+    focus_pattern: "複数の興味を同時に追いかけ、対象間を自由に行き来する探究スタイル。獅子座の情熱と五黄土星の推進力がこのエネルギーに拍車をかける。一つのテーマに没頭する過集中モードと、次の刺激へ飛ぶ拡散モードの波がある。仕組み化とルーティン設計で安定した実行力を補うことが効果的。"
+  four_pillars:
+    overview: "四柱推命は生年月日時の4つの柱から、先天的な性質・才能・人生の傾向を読み解く東洋最高峰の命術。各柱が人生の異なる側面を表します。"
+    year: "陰の草花（乙）と亥（猪・水）の組み合わせ。社会に対して柔軟で控えめな印象を与えるが、内面に水のような深い知恵と直感力を秘める。先祖から受け継いだ「穏やかに、しかし止まらない推進力」。"
+    month: "大木（甲）と申（猿・金）の組み合わせ。キャリアの柱に真っすぐな大木の誠実さと、猿の器用さ・知恵が同居。仕事では正道を歩みつつも機転が利く。甲木は日主の丁火を燃やす薪 — 仕事が情熱の燃料になる配置。"
+    day: "本質は陰火（丁）と卯（兎・木）。兎の穏やかさと木のエネルギーに支えられた炎 — 木が火を生む「相生」の関係で、エネルギーが尽きない構造。直感力が鋭く、人の心を照らす使命を持つ。"
+    day_master_detail: "ロウソクの炎。静かで温かく人を照らす。強い意志を内に秘め、感受性豊かで人の心の機微を感じ取る。丙火（太陽）のような自己主張ではなく、暗闇の中で必要な人にだけ光を届ける繊細な存在。五行で木が50%と最も多く、日主の丁火に絶えず薪を供給する構造 — エネルギッシュだが燃え尽きリスクにも注意。"
+  nine_star_ki:
+    year: "あなたの五黄土星は九星の中央に位置する「帝王星」。九星の中で最も強い求心力を持ち、あなたは周囲を自然と引きつけるカリスマ性があります。土の性質は「受容と安定」— すべてを受け入れる大地の力。あなたのリーダーシップは命令型ではなく、中心に座って全体を統合する「座長型」。ただし、その強さゆえに独善的になるリスクも。"
+    month: "あなたの月命星も五黄土星という珍しい二重の五黄。外面（本命星）も内面（月命星）も同じ「帝王の星」。あなたは表裏がなく、見た目の印象と内面が一致しています。一貫した存在感があり、ブレない芯の強さが特徴。ただし、二重の五黄は頑固さも二倍 — 柔軟性を意識的に補う必要があります。"
+  rokusei:
+    main: "あなたの土星人(−)は安定志向で堅実な星。着実に物事を積み上げていくタイプで、あなたは急な変化を好みません。忍耐力があり、長期的な視点で物事を進められます。(−)は偶数年生まれを示し、陰の性質（慎重・内省的）がベースにあります。"
+    sub: "あなたのサブ星・天王星人(−)は独創的で自由を愛する星。あなたの中にある既存の枠に収まらない発想力と、変化を恐れない冒険心を示しています。周囲からは「変わっている」と見られることもありますが、その独自の視点が革新を生みます。"
+    reigou: "あなたは霊合星人として、土星人の堅実さと天王星人の革新性という相反する性質を同時に持っています。全人口の約16%が該当し、あなたの運気の振れ幅は通常の2倍。2026年はメイン星（土星人）が財成で好調ですが、サブ星（天王星人）が陰影で大殺界入り — 矛盾する運気が同時進行します。表面的には好調に見えても、内面で不安定さを感じやすい年。2028年からはメイン星も大殺界に入るため、2026-2027年はあなたにとって重要な準備期間です。"
+
+# === 2026 Monthly Fortune ===
+monthly_fortune:
+- domains:
+    health: 3
+    money: 3
+    romance: 3
+    work: 3
+  month: 1
+  nine_star:
+    energy: 30
+    note: 中凶・注意
+    palace: 坎宮
+  rokusei:
+    energy: 80
+    phase: 立花
+    satsukai: null
+    type: great
+- domains:
+    health: 1
+    money: 1
+    romance: 2
+    work: 2
+  month: 2
+  nine_star:
+    energy: 45
+    note: 吉凶混合
+    palace: 坤宮
+  rokusei:
+    energy: 35
+    phase: 健弱
+    satsukai: 小殺界
+    type: caution
+- domains:
+    health: 4
+    money: 4
+    romance: 4
+    work: 4
+  month: 3
+  nine_star:
+    energy: 65
+    note: 中吉・回復
+    palace: 震宮
+  rokusei:
+    energy: 90
+    phase: 達成
+    satsukai: null
+    type: great
+- domains:
+    health: 3
+    money: 2
+    romance: 3
+    work: 3
+  month: 4
+  nine_star:
+    energy: 75
+    note: 上昇運
+    palace: 巽宮
+  rokusei:
+    energy: 25
+    phase: 乱気
+    satsukai: 中殺界
+    type: caution
+- domains:
+    health: 5
+    money: 5
+    romance: 5
+    work: 5
+  month: 5
+  nine_star:
+    energy: 100
+    note: 大吉・最盛
+    palace: 中宮
+  rokusei:
+    energy: 70
+    phase: 再会
+    satsukai: null
+    type: good
+- domains:
+    health: 5
+    money: 5
+    romance: 5
+    work: 5
+  month: 6
+  nine_star:
+    energy: 90
+    note: 大吉・最盛
+    palace: 乾宮
+  rokusei:
+    energy: 85
+    phase: 財成
+    satsukai: null
+    type: great
+- domains:
+    health: 5
+    money: 5
+    romance: 5
+    work: 5
+  month: 7
+  nine_star:
+    energy: 80
+    note: 大吉・好調
+    palace: 兌宮
+  rokusei:
+    energy: 95
+    phase: 安定
+    satsukai: null
+    type: great
+- domains:
+    health: 1
+    money: 1
+    romance: 2
+    work: 2
+  month: 8
+  nine_star:
+    energy: 40
+    note: 吉凶混合
+    palace: 艮宮
+  rokusei:
+    energy: 15
+    phase: 陰影
+    satsukai: 大殺界
+    type: danger
+- domains:
+    health: 2
+    money: 1
+    romance: 2
+    work: 2
+  month: 9
+  nine_star:
+    energy: 70
+    note: 上昇運
+    palace: 離宮
+  rokusei:
+    energy: 10
+    phase: 停止
+    satsukai: 大殺界
+    type: danger
+- domains:
+    health: 1
+    money: 1
+    romance: 2
+    work: 2
+  month: 10
+  nine_star:
+    energy: 30
+    note: 中凶・注意
+    palace: 坎宮
+  rokusei:
+    energy: 20
+    phase: 減退
+    satsukai: 大殺界
+    type: danger
+- domains:
+    health: 3
+    money: 3
+    romance: 3
+    work: 3
+  month: 11
+  nine_star:
+    energy: 45
+    note: 吉凶混合
+    palace: 坤宮
+  rokusei:
+    energy: 50
+    phase: 種子
+    satsukai: null
+    type: good
+- domains:
+    health: 4
+    money: 4
+    romance: 4
+    work: 4
+  month: 12
+  nine_star:
+    energy: 65
+    note: 中吉・回復
+    palace: 震宮
+  rokusei:
+    energy: 65
+    phase: 緑生
+    satsukai: null
+    type: good

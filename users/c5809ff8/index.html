@@ -1,0 +1,729 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>静かな炎の共鳴者 — Yuma Tejima</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Noto+Sans+JP:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
+<style>
+:root{--bg:#0f1117;--surface:#1a1d27;--surface2:#242836;--border:#2d3348;--border-light:#3d4460;
+  --accent:#6366f1;--accent2:#8b5cf6;--blue:#3b82f6;--green:#22c55e;--red:#ef4444;--yellow:#eab308;--gold:#c9a84c;
+  --text:#e4e4e7;--text-secondary:#9ca3af;--text-muted:#7c8293;
+  --font-body:'Inter','Noto Sans JP',sans-serif;--font-mono:'JetBrains Mono',monospace;
+  --r-sm:6px;--r-md:10px;--r-lg:14px;--r-xl:16px;--gnav-height:52px}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+html{font-size:16px;scroll-behavior:smooth;scroll-padding-top:60px}
+body{font-family:var(--font-body);background:var(--bg);color:var(--text);line-height:1.6;min-height:100vh;-webkit-font-smoothing:antialiased;position:relative}
+body::before{content:'';position:fixed;top:0;left:0;width:100%;height:100%;opacity:0.03;pointer-events:none;z-index:9999;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+.container{max-width:1100px;margin:0 auto;padding:24px}
+.site-header{display:flex;align-items:center;justify-content:space-between;padding:0 24px;height:52px;background:rgba(22,24,31,0.85);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid rgba(255,255,255,0.08);position:sticky;top:0;z-index:100}
+.site-nav{display:flex;gap:4px}
+.site-nav a{color:#71717a;text-decoration:none;font-size:13px;font-weight:500;padding:6px 14px;border-radius:6px;transition:background .15s,color .15s;font-family:var(--font-body)}
+.site-nav a:hover,.site-nav a[aria-current=page]{background:rgba(255,255,255,0.065);color:#f5f5f7}
+.nav-toggle{display:none}
+.nav-toggle-label{display:none;cursor:pointer;width:44px;height:44px;align-items:center;justify-content:center}
+.nav-toggle-label span,.nav-toggle-label span::before,.nav-toggle-label span::after{display:block;background:#9ca3af;height:2px;width:20px;border-radius:2px;position:relative;transition:all .3s}
+.nav-toggle-label span::before,.nav-toggle-label span::after{content:'';position:absolute}
+.nav-toggle-label span::before{top:-6px}
+.nav-toggle-label span::after{top:6px}
+.nav-bar{position:sticky;top:52px;z-index:90;background:rgba(15,17,23,0.92);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:0 24px;display:flex;justify-content:center;gap:4px;overflow-x:auto;scrollbar-width:none}
+.nav-bar::-webkit-scrollbar{display:none}
+.nav-bar a{color:var(--text-muted);text-decoration:none;font-size:12px;font-weight:500;padding:14px 16px;white-space:nowrap;transition:color .2s,background .2s;border-radius:var(--r-sm)}
+.nav-bar a:hover,.nav-bar a.active{color:var(--accent);background:rgba(99,102,241,0.12)}
+.hero{background:linear-gradient(135deg,#1e1b4b,#312e81,#1e1b4b);background-size:200% 200%;animation:heroShift 12s ease-in-out infinite;border-radius:var(--r-xl);padding:48px 32px;margin-bottom:32px;border:1px solid var(--border);overflow:hidden;position:relative;text-align:center}
+@keyframes heroShift{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
+.hero-content{position:relative;z-index:2}
+.hero-particles{position:absolute;top:0;left:0;width:100%;height:100%;overflow:hidden;z-index:1}
+.hero-particles::before,.hero-particles::after{content:'';position:absolute;border-radius:50%;animation:float 8s infinite ease-in-out}
+.hero-particles::before{width:3px;height:3px;background:rgba(165,180,252,0.3);top:20%;left:15%;animation-delay:0s;box-shadow:180px 40px 0 rgba(165,180,252,0.15),320px -20px 0 rgba(196,181,253,0.12),450px 60px 0 1px rgba(99,102,241,0.1)}
+.hero-particles::after{width:2px;height:2px;background:rgba(196,181,253,0.25);top:60%;left:75%;animation-delay:3s;box-shadow:-200px -30px 0 rgba(99,102,241,0.15),-100px 20px 0 1px rgba(165,180,252,0.1)}
+@keyframes float{0%,100%{transform:translateY(0) scale(1);opacity:0.3}50%{transform:translateY(-30px) scale(1.5);opacity:0.8}}
+.archetype-en{font-size:13px;font-weight:500;color:rgba(165,180,252,0.7);text-transform:uppercase;letter-spacing:3px;margin-bottom:8px}
+.archetype-name{font-size:clamp(24px,4vw,32px);font-weight:700;color:#e0e7ff;margin-bottom:8px;text-shadow:0 0 40px rgba(99,102,241,0.4),0 0 80px rgba(99,102,241,0.15);line-height:1.3}
+.hero-tagline{font-size:clamp(14px,2vw,16px);font-style:italic;color:rgba(224,231,255,0.7);margin-bottom:12px;line-height:1.6}
+.hero-name{font-size:16px;font-weight:500;color:rgba(224,231,255,0.75);letter-spacing:2.5px;margin-bottom:28px;text-transform:uppercase}
+.hero-name::before,.hero-name::after{content:'';display:inline-block;width:24px;height:1px;background:rgba(165,180,252,0.3);vertical-align:middle;margin:0 12px}
+.hub-cards-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-top:24px;text-align:left}
+.hub-card-mini{display:flex;align-items:center;gap:12px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:var(--r-md);padding:14px 16px;cursor:pointer;transition:transform .2s,background .2s}
+.hub-card-mini:hover{transform:translateY(-2px);background:rgba(255,255,255,0.09)}
+.hub-card-mini-icon{width:36px;height:36px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
+.hub-card-mini-title{font-size:13px;font-weight:600;color:#e0e7ff}
+.hub-card-mini-summary{font-size:11px;color:rgba(224,231,255,0.5);margin-top:2px;line-height:1.4}
+.stat-sub{font-size:12px;color:var(--text-secondary);margin-top:2px;font-family:var(--font-mono)}
+.hub-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);margin-bottom:16px;overflow:hidden;transition:all .3s}
+.hub-card-preview{display:flex;align-items:center;gap:16px;padding:20px 24px;cursor:pointer;transition:background .2s}
+.hub-card-preview:hover{background:rgba(255,255,255,0.02)}
+.hub-card-icon{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.hub-card-title{font-size:16px;font-weight:600}
+.hub-card-summary{font-size:13px;color:var(--text-secondary);margin-top:2px}
+.hub-card-arrow{width:10px;height:10px;border-right:2px solid var(--text-muted);border-bottom:2px solid var(--text-muted);transform:rotate(45deg);margin-left:auto;transition:transform .3s;flex-shrink:0}
+.hub-card.expanded .hub-card-arrow{transform:rotate(-135deg);border-color:var(--accent)}
+.hub-card-content{max-height:0;overflow:hidden;transition:max-height .5s ease,padding .3s;padding:0 24px}
+.hub-card.expanded .hub-card-content{max-height:none;padding:0 24px 24px}
+.chip{font-size:11px;font-weight:500;padding:4px 12px;border-radius:20px;background:rgba(255,255,255,0.08);color:var(--text-secondary);border:1px solid rgba(255,255,255,0.1)}
+.chip.hl{background:rgba(99,102,241,0.15);color:#a5b4fc;border-color:rgba(99,102,241,0.3)}
+.stats{display:flex;gap:24px;flex-wrap:wrap;justify-content:center}
+.stat-card{background:rgba(255,255,255,0.05);border-radius:var(--r-md);padding:12px 20px;backdrop-filter:blur(10px)}
+.stat-card .label{font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.5px}
+.stat-card .value{font-size:20px;font-weight:700;font-family:var(--font-mono);margin-top:2px}
+.section{margin-bottom:40px;opacity:0;transform:translateY(20px);transition:opacity 0.6s ease,transform 0.6s ease}
+.section.visible{opacity:1;transform:translateY(0)}
+.hub-card-content .section{margin-bottom:0;opacity:1;transform:none;transition:none}
+.section-title{font-size:clamp(16px,2vw,22px);font-weight:700;margin-bottom:20px;padding-left:12px;border-left:3px solid var(--accent)}
+.sub-title{font-size:15px;font-weight:600;color:var(--text-secondary);margin:24px 0 12px;padding-top:16px;border-top:1px solid var(--border)}
+.pillar-header{display:flex;align-items:center;gap:12px;margin-bottom:24px;padding-bottom:16px;border-bottom:1px solid var(--border)}
+.pillar-header .pillar-icon{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
+.pillar-header h2{font-size:clamp(16px,2vw,20px);font-weight:700;margin:0}
+.pillar-header .pillar-sub{font-size:12px;color:var(--text-muted);margin-top:2px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px}
+.grid-3{grid-template-columns:repeat(auto-fit,minmax(200px,1fr))}
+.grid-4{grid-template-columns:repeat(auto-fit,minmax(200px,1fr))}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-md);padding:20px;transition:transform .2s}
+.card:hover{transform:translateY(-2px)}
+.card-title{font-size:14px;font-weight:600;margin-bottom:12px;display:flex;align-items:center;gap:8px}
+.card-title .icon{font-size:18px}
+.card-label{font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:4px}
+.card-value{font-size:22px;font-weight:700;font-family:var(--font-mono)}
+.card-sub{font-size:12px;color:var(--text-secondary);margin-top:4px}
+.tc{text-align:center;padding:16px}
+.pillar-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.pillar{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-md);padding:16px;text-align:center}
+.pillar.unknown{opacity:0.4;border-style:dashed}
+.pillar .pillar-label{font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:8px}
+.pillar .kanji{font-size:28px;font-weight:700;line-height:1.2}
+.pillar .reading{font-size:11px;color:var(--text-secondary);margin-top:4px}
+.element-badge{display:inline-block;font-size:10px;font-weight:500;padding:2px 10px;border-radius:12px;margin-top:8px}
+.elem-wood{background:rgba(34,197,94,0.15);color:#4ade80}
+.elem-fire{background:rgba(239,68,68,0.15);color:#f87171}
+.elem-earth{background:rgba(234,179,8,0.15);color:#facc15}
+.elem-metal{background:rgba(148,163,184,0.15);color:#94a3b8}
+.elem-water{background:rgba(59,130,246,0.15);color:#60a5fa}
+.element-bar{display:flex;gap:8px;align-items:end;height:100px;margin:16px 0}
+.element-col{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px}
+.element-fill{width:100%;border-radius:4px 4px 0 0;transition:height .6s ease}
+.element-pct{font-size:12px;font-weight:600;font-family:var(--font-mono)}
+.element-name{font-size:11px;color:var(--text-muted)}
+.domain-bar{margin-bottom:12px}
+.domain-header{display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px}
+.domain-track{height:8px;background:var(--surface2);border-radius:4px;overflow:hidden}
+.domain-fill{height:100%;border-radius:4px;transition:width .6s ease}
+.top5-list{list-style:none}
+.top5-item{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--border)}
+.top5-item:last-child{border-bottom:none}
+.rank{width:28px;height:28px;display:flex;align-items:center;justify-content:center;border-radius:50%;font-size:12px;font-weight:700;font-family:var(--font-mono);background:rgba(99,102,241,0.15);color:var(--accent);flex-shrink:0}
+.sf-name{font-size:14px;font-weight:600}
+.sf-domain{font-size:11px;color:var(--text-muted)}
+.tag{display:inline-block;font-size:11px;font-weight:500;padding:3px 10px;border-radius:12px;margin:2px}
+.tag-rb{background:rgba(59,130,246,0.15);color:#60a5fa}
+.tag-st{background:rgba(34,197,94,0.15);color:#4ade80}
+.tag-ex{background:rgba(139,92,246,0.15);color:#c4b5fd}
+.tag-inf{background:rgba(255,107,53,0.15);color:#ff8f6b}
+.typo-cell{background:var(--surface2);border-radius:var(--r-sm);padding:10px}
+.typo-label{font-size:10px;color:var(--text-muted);text-transform:uppercase}
+.typo-value{font-size:18px;font-weight:700;margin-top:2px}
+.typo-sub{font-size:11px;color:var(--text-secondary)}
+.typo-desc{font-size:11px;color:var(--text-muted);line-height:1.5;margin-top:6px}
+.cycle-table{width:100%;border-collapse:collapse;font-size:13px}
+.cycle-table th{text-align:left;padding:8px 10px;color:var(--text-muted);font-weight:500;border-bottom:1px solid var(--border)}
+.cycle-table td{padding:8px 10px;border-bottom:1px solid rgba(45,51,72,0.5)}
+.cycle-table tr.current{background:rgba(99,102,241,0.12);border:1px solid rgba(99,102,241,0.3)}
+.satsukai{font-size:11px;padding:2px 8px;border-radius:10px;font-weight:600}
+.dai{background:rgba(239,68,68,0.15);color:var(--red)}
+.chu{background:rgba(234,179,8,0.15);color:var(--yellow)}
+.sho{background:rgba(234,179,8,0.1);color:var(--yellow)}
+.chart-wrap{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-md);padding:16px;margin:16px 0}
+.unlock-banner{background:rgba(234,179,8,0.08);border:1px dashed rgba(234,179,8,0.3);border-radius:var(--r-md);padding:16px 20px;font-size:12px;color:var(--yellow);text-align:center;margin-top:16px}
+.insight-box{background:linear-gradient(135deg,rgba(99,102,241,0.08),rgba(139,92,246,0.06));border:1px solid rgba(99,102,241,0.2);border-radius:var(--r-md);padding:20px;margin-bottom:16px}
+.insight-box .insight-title{font-size:13px;font-weight:600;color:#a5b4fc;margin-bottom:8px}
+.insight-box p{font-size:13px;color:var(--text-secondary);line-height:1.7}
+.section-desc{font-size:13px;color:var(--text-muted);margin-bottom:16px}
+.year-timeline{display:flex;gap:2px;margin:16px 0}
+.yt-month{flex:1;height:24px;border-radius:3px;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:600;color:rgba(255,255,255,0.7);cursor:pointer;transition:all .2s}
+.yt-month:hover{transform:scaleY(1.3)}
+.month-selector{display:flex;gap:4px;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;padding:8px 0;margin-bottom:20px}
+.month-selector::-webkit-scrollbar{display:none}
+.month-btn{flex-shrink:0;padding:8px 14px;border-radius:8px;background:var(--surface);border:1px solid var(--border);color:var(--text-muted);font-size:12px;font-weight:600;cursor:pointer;transition:all .2s;white-space:nowrap;font-family:var(--font-body)}
+.month-btn:hover{background:var(--surface2);color:var(--text-secondary)}
+.month-btn.active{background:rgba(99,102,241,0.15);color:#a5b4fc;border-color:rgba(99,102,241,0.4)}
+.month-btn.current{box-shadow:0 0 0 1px rgba(99,102,241,0.5)}
+.month-panel{display:none}
+.month-panel.active{display:block}
+.month-card-header{display:flex;align-items:center;gap:12px;margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid var(--border)}
+.month-label{font-size:18px;font-weight:700;font-family:var(--font-mono)}
+.month-tags{display:flex;gap:6px;flex-wrap:wrap}
+.month-tag{font-size:10px;font-weight:500;padding:2px 8px;border-radius:10px}
+.domain-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.domain-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-md);padding:16px;border-left:3px solid var(--accent)}
+.domain-card.work{border-left-color:var(--blue)}
+.domain-card.money{border-left-color:var(--gold)}
+.domain-card.health{border-left-color:var(--green)}
+.domain-card.romance{border-left-color:#f472b6}
+.domain-icon-label{display:flex;align-items:center;gap:8px}
+.domain-label{font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:0.5px}
+.domain-stars{font-family:var(--font-mono);font-size:13px;letter-spacing:1px}
+.domain-msg{font-size:11px;color:var(--text-secondary);line-height:1.5;margin-top:6px}
+.chart-legend{display:flex;flex-direction:column;gap:10px;margin-top:12px;padding:16px;background:var(--surface);border:1px solid var(--border);border-radius:var(--r-md)}
+.chart-legend-item{display:flex;align-items:flex-start;gap:10px}
+.chart-legend-line{display:inline-block;width:24px;height:3px;border-radius:2px;margin-top:7px;flex-shrink:0}
+.chart-legend-label{font-size:13px;font-weight:600;margin-right:6px}
+.chart-legend-desc{font-size:12px;color:var(--text-secondary)}
+.page-footer{text-align:center;padding:32px 0;font-size:11px;color:var(--text-muted);border-top:1px solid var(--border);margin-top:40px}
+.guidance-summary{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);padding:24px;margin-bottom:8px}
+.guidance-overview{display:flex;align-items:center;gap:12px;margin-bottom:16px;flex-wrap:wrap}
+.guidance-energy-badge{display:inline-block;font-size:14px;font-weight:700;padding:6px 16px;border-radius:20px}
+.guidance-tags{display:flex;gap:6px;flex-wrap:wrap}
+.guidance-narrative{font-size:14px;color:var(--text);line-height:1.8;margin-bottom:20px;padding-bottom:16px;border-bottom:1px solid var(--border)}
+.guidance-actions-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.guidance-actions-section{display:flex;flex-direction:column;gap:12px}
+.guidance-section-label{font-size:11px;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:4px}
+.guidance-action{display:flex;gap:12px;align-items:flex-start}
+.guidance-action-icon{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
+.guidance-action-title{font-size:13px;font-weight:600;color:var(--text);margin-bottom:2px}
+.guidance-action-desc{font-size:12px;color:var(--text-secondary);line-height:1.6}
+.guidance-watch{display:flex;flex-direction:column;gap:8px}
+.guidance-watch-title{font-size:11px;font-weight:600;color:var(--yellow);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:4px}
+.guidance-watch-item{font-size:12px;color:var(--text-secondary);line-height:1.6;padding-left:12px;border-left:2px solid rgba(234,179,8,0.3)}
+.year-theme-banner{background:linear-gradient(135deg,rgba(234,179,8,0.06),rgba(139,92,246,0.04));border:1px solid rgba(234,179,8,0.15);border-radius:var(--r-md);padding:20px 24px;margin-bottom:20px;text-align:center}
+.year-theme-label{font-size:11px;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px}
+.year-theme-text{font-size:clamp(16px,2.5vw,22px);font-weight:700;line-height:1.4}
+.blueprint-section{margin-top:24px;margin-bottom:8px}
+.blueprint-header{font-size:14px;font-weight:600;color:var(--text-secondary);margin-bottom:12px;padding-left:12px;border-left:3px solid var(--accent2)}
+.blueprint-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:12px}
+.blueprint-card{background:linear-gradient(135deg,rgba(139,92,246,0.06),rgba(99,102,241,0.04));border:1px solid rgba(139,92,246,0.15);border-radius:var(--r-md);padding:16px 20px}
+.blueprint-label{font-size:10px;font-weight:600;color:var(--accent2);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:6px}
+.blueprint-title{font-size:14px;font-weight:600;color:var(--text);margin-bottom:8px;line-height:1.4}
+.blueprint-desc{font-size:12px;color:var(--text-secondary);line-height:1.7}
+.month-advice{font-size:13px;color:var(--text-secondary);line-height:1.7;padding:12px 16px;background:linear-gradient(135deg,rgba(99,102,241,0.06),rgba(139,92,246,0.04));border:1px solid rgba(99,102,241,0.12);border-radius:var(--r-sm);margin-bottom:16px}
+.section-quote{font-size:15px;font-style:italic;color:var(--text-muted);margin-bottom:20px;padding-left:16px;border-left:2px solid rgba(99,102,241,0.3);line-height:1.6}
+.accordion-header{cursor:pointer;display:flex;align-items:center;justify-content:space-between;padding:16px 0;border-top:1px solid var(--border)}
+.accordion-header::after{content:'B8';font-size:14px;color:var(--text-muted);transition:transform .3s}
+.accordion-header.open::after{transform:rotate(90deg)}
+.accordion-body{overflow:hidden;max-height:0;opacity:0;transition:max-height .4s ease,opacity .3s ease}
+.accordion-body.open{max-height:5000px;opacity:1}
+.rarity-badge{display:inline-flex;align-items:center;gap:6px;font-size:11px;color:var(--accent2);background:rgba(139,92,246,0.08);border:1px solid rgba(139,92,246,0.15);border-radius:20px;padding:4px 12px;margin-top:8px}
+.collapse-toggle{display:inline-block;margin-top:10px;padding:6px 16px;font-size:12px;font-weight:500;color:#a5b4fc;background:rgba(99,102,241,0.1);border:1px solid rgba(99,102,241,0.25);border-radius:var(--r-sm);cursor:pointer;font-family:var(--font-body);transition:background .2s}
+.collapse-toggle:hover{background:rgba(99,102,241,0.2)}
+.top5-item[style*=cursor]{transition:background .15s}
+.top5-item[style*=cursor]:hover{background:rgba(255,255,255,0.03);border-radius:var(--r-sm)}
+@media(max-width:768px){.grid{grid-template-columns:1fr}.pillar-grid{grid-template-columns:repeat(2,1fr)}.domain-grid{grid-template-columns:1fr}.guidance-actions-grid{grid-template-columns:1fr}.blueprint-grid{grid-template-columns:1fr}.hub-cards-grid{grid-template-columns:1fr}}
+@media(max-width:640px){
+  .nav-toggle-label{display:inline-flex}
+  .site-header{flex-wrap:wrap;gap:8px;padding:8px 12px;height:auto}
+  .site-nav{display:none;width:100%;flex-direction:column;gap:4px;padding-top:8px}
+  .nav-toggle:checked~.site-nav{display:flex}
+  .nav-toggle:checked+.nav-toggle-label span{background:transparent}
+  .nav-toggle:checked+.nav-toggle-label span::before{top:0;transform:rotate(45deg)}
+  .nav-toggle:checked+.nav-toggle-label span::after{top:0;transform:rotate(-45deg)}
+  .site-nav a{padding:8px 12px;font-size:12px;min-height:44px}
+  .container{padding:12px}
+  .hero{padding:28px 16px;border-radius:var(--r-md)}
+  .hub-card-preview{padding:16px}
+  .hub-card-content{padding:0 16px}
+  .hub-card.expanded .hub-card-content{padding:0 16px 16px}
+  .stats{gap:8px}.stat-card{padding:8px 12px}
+  .stat-card .value{font-size:16px}
+  .pillar .kanji{font-size:22px}
+}
+.personality-summary{font-size:15px;color:var(--text-secondary);line-height:1.7;margin-bottom:20px;font-style:italic}
+.personality-locked{position:relative;min-height:300px;overflow:hidden;border-radius:var(--r-md)}
+.locked-skeleton{filter:blur(8px);opacity:0.3;padding:24px}
+.locked-row{height:16px;background:var(--surface2);border-radius:4px;margin-bottom:12px}
+.locked-row.short{width:60%}
+.locked-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:20px}
+.locked-box{height:80px;background:var(--surface2);border-radius:var(--r-sm)}
+.locked-overlay{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:24px}
+.locked-icon{font-size:32px;margin-bottom:12px}
+.locked-title{font-size:18px;font-weight:700;color:var(--text);margin-bottom:8px}
+.locked-desc{font-size:13px;color:var(--text-secondary);line-height:1.6;max-width:360px;margin-bottom:20px}
+.locked-cta{display:inline-block;padding:12px 28px;background:var(--accent);color:white;border-radius:var(--r-md);font-size:14px;font-weight:600;text-decoration:none;transition:opacity .2s}
+.locked-cta:hover{opacity:0.85}
+</style>
+</head>
+<body>
+<header class="site-header">
+  <input type="checkbox" id="nav-toggle" class="nav-toggle" aria-label="Toggle navigation">
+  <label for="nav-toggle" class="nav-toggle-label"><span></span></label>
+  <nav class="site-nav">
+    <a href="https://iuma-private.pages.dev/stock/portfolio.html">Stock</a>
+    <a href="https://iuma-private.pages.dev/stock/market-intel.html">Market Intel</a>
+    <a href="https://iuma-private.pages.dev/intel/">Insight</a>
+    <a href="https://iuma-private.pages.dev/wealth/dashboard.html">Wealth</a>
+    <a href="https://iuma-private.pages.dev/action/">Action</a>
+    <a href="https://ymatz28-beep.github.io/self-insight/" aria-current=page>Self-Insight</a>
+    <a href="https://iuma-private.pages.dev/health/">Health</a>
+    <a href="https://ymatz28-beep.github.io/property-report/">Property</a>
+    <a href="https://ymatz28-beep.github.io/trip-planner/">Travel</a>
+    <a href="https://iuma-private.pages.dev/newsletter/">Newsletter</a>
+  </nav>
+</header>
+<div class="container">
+<section class="hero">
+  <div class="hero-particles"></div>
+  <div class="hero-content">
+    <div class="archetype-en">The Silent Flame</div>
+    <h1 class="archetype-name">静かな炎の共鳴者</h1>
+    <div class="hero-tagline">静かな炎で人を照らし、言葉で変容を導く人</div>
+    <div class="hero-name">Yuma Tejima</div>
+    <div class="stats"><div class="stat-card"><div class="label">2026年</div><div class="value" style="color:#4ade80">好調 73</div></div></div>
+    <div class="hub-cards-grid">
+      <div class="hub-card-mini" onclick="document.getElementById('core-identity').scrollIntoView({behavior:'smooth'});var c=document.querySelector('#core-identity').closest('.hub-card');if(c&&!c.classList.contains('expanded'))c.classList.add('expanded');">
+        <div class="hub-card-mini-icon" style="background:rgba(99,102,241,0.15);color:#a5b4fc">&#9733;</div>
+        <div><div class="hub-card-mini-title">あなたの本質</div>
+        <div class="hub-card-mini-summary">丁火 × 七赤金星 — 静かな炎 × 言葉の力</div></div>
+      </div>
+      <div class="hub-card-mini" onclick="document.getElementById('monthly').scrollIntoView({behavior:'smooth'});var c=document.querySelector('#monthly').closest('.hub-card');if(c&&!c.classList.contains('expanded'))c.classList.add('expanded');">
+        <div class="hub-card-mini-icon" style="background:rgba(234,179,8,0.15);color:#facc15">&#9670;</div>
+        <div><div class="hub-card-mini-title">今月の運気</div>
+        <div class="hub-card-mini-summary">3月 — 慎重に。守りを固める</div></div>
+      </div>
+      <div class="hub-card-mini" onclick="document.getElementById('blueprint').scrollIntoView({behavior:'smooth'});var c=document.querySelector('#blueprint').closest('.hub-card');if(c&&!c.classList.contains('expanded'))c.classList.add('expanded');">
+        <div class="hub-card-mini-icon" style="background:rgba(139,92,246,0.15);color:#c4b5fd">&#9829;</div>
+        <div><div class="hub-card-mini-title">今日のアクション</div>
+        <div class="hub-card-mini-summary">Empathy（共感性）を活かす</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+<div class="hub-card" id="core-identity-card">
+  <div class="hub-card-preview" onclick="this.parentElement.classList.toggle('expanded')">
+    <div class="hub-card-icon" style="background:rgba(99,102,241,0.12);color:#a5b4fc">&#9733;</div>
+    <div>
+      <div class="hub-card-title">あなたの本質</div>
+      <div class="hub-card-summary">丁火 × 七赤金星 — 静かな炎 × 言葉の力</div>
+    </div>
+    <div class="hub-card-arrow"></div>
+  </div>
+  <div class="hub-card-content">
+    <section class="section" id="core-identity">
+  <div class="section-quote">"あなたを一言で表すなら—"</div>
+  <div class="insight-box" style="border-color:rgba(99,102,241,0.4);background:linear-gradient(135deg,rgba(99,102,241,0.12),rgba(139,92,246,0.08));">
+    <div class="insight-title" style="font-size:15px;">統合インサイト</div>
+    <p style="line-height:1.9;font-size:14px;">あなたの本質は<strong>「静かな炎で人を照らし、言葉で変容を導く人」</strong>です。四柱推命の日主「丁火」（ロウソクの炎）× 九星気学の七赤金星（沢の言葉力）× 蠍座（冥王星が司る変容と再生）。この三角形が示すのは、<strong>他者の感情を体感レベルで感じ取り（Empathy #1）、思考の深淵で本質を掘り当て（Intellection #2）、それを言葉の力で世界に届ける</strong>という稀有な才能の組み合わせです。蠍座の水のエレメントは感情の深さと変容力を与え、不動宮（Fixed）の性質は「一度決めたら貫く」執念を示します。</p>
+    <div class="collapsible-content" style="display:none"><p style="line-height:1.9;font-size:14px;margin-top:12px;">AB型（日本人口の10%）の合理性×感性の二面性は、あなたの思考回路そのもの。データとフレームワーク（3S, MECE）で構造化しながら、同時に感情の機微も逃さない。この「冷静な分析者」と「感受性の高い直感者」の共存は、蠍座の「表面と深層」の二重構造、木星人(−)×金星人(−)の霊合星人としての二重性、そしてエニアグラム4の「合理と美の統合」と完全に共鳴しています。<strong>相反する特質を矛盾なく統合する力</strong>が、Yumaの最大の特徴です。</p><p style="line-height:1.9;font-size:14px;margin-top:12px;">あなたの感覚は、一般より明らかに深く繊細です。環境や人の感情を微細なレベルで察知し、通常は気づかない情報を拾い上げる。蠍座の深い洞察力、七赤金星の社交的アンテナ、Empathyの体感的共感がすべて同じ方向を指している。一方で、<strong>興味が点火されると異常な集中力を発揮し、一つのテーマに何時間も没頭する</strong>。この過集中モードとConnectedness（運命思考 #4）の「全てを繋げて見る力」が組み合わさると、他者には到達できない深さの洞察が生まれます。ただし、興味が移ると別のテーマへ瞬時に飛ぶ — これは弱みではなく、<strong>複数プロジェクトを並行で深掘りし、意外なシナジーを見出す「拡散的探究力」</strong>の源泉です。</p><p style="line-height:1.9;font-size:14px;margin-top:12px;"><strong style="color:var(--yellow);">注意すべきポイント — 全体系が一致する弱点</strong>: 五行で<strong>金（決断力・収穫）と水（柔軟性・知恵）が完全に欠如</strong>。蠍座の執着気質 × Deliberative（慎重さ #3）× AB型の分析癖が重なり、<strong>「完璧な答えが出るまで動けない」分析麻痺</strong>に陥りやすい。感覚の繊細さとEmpathy #1は最大の武器ですが、他者のネガティブなエネルギーを吸収しすぎて<strong>自分の境界線が溶ける</strong>リスクが常にある。エニアグラム4はストレス下でType 2に退行し、独自性を捨てて自己犠牲に走る。<strong>仕組み化（自動化・ルーティン・境界線設計）で弱みを構造的にカバーする</strong>ことがYuma OSの本質です。</p></div>
+    <button class="collapse-toggle" onclick="this.previousElementSibling.style.display=this.previousElementSibling.style.display==='none'?'block':'none';this.textContent=this.previousElementSibling.style.display==='none'?'続きを読む':'閉じる'">続きを読む</button>
+  </div>
+  <div class="grid grid-4" style="margin-top:16px">
+    <div class="card tc"><div class="card-label">Core Essence（本質）</div>
+      <div class="card-value">丁火 × 七赤金星</div>
+      <div class="card-sub">静かな炎 × 言葉の力</div></div>
+    <div class="card tc"><div class="card-label">Strongest Axis（最強の軸）</div>
+      <div class="card-value">共感性 × 内省</div>
+      <div class="card-sub">Empathy（共感性）+ Intellection（内省）</div></div>
+    <div class="card tc"><div class="card-label">Duality（二面性）</div>
+      <div class="card-value">合理 × 感性</div>
+      <div class="card-sub">AB型 × 霊合星人 × エニアグラム 4</div></div>
+    <div class="card tc"><div class="card-label">Watch Out（注意点）</div>
+      <div class="card-value" style="color:var(--yellow)">金・水の欠如</div>
+      <div class="card-sub">決断力・収穫 × 柔軟性・知恵を意識的に補う</div></div>
+  </div>
+</section>
+  </div>
+</div><div class="hub-card" id="blueprint-card">
+  <div class="hub-card-preview" onclick="this.parentElement.classList.toggle('expanded')">
+    <div class="hub-card-icon" style="background:rgba(139,92,246,0.12);color:#c4b5fd">&#9829;</div>
+    <div>
+      <div class="hub-card-title">明日からできること</div>
+      <div class="hub-card-summary">Empathy（共感性）を武器にする</div>
+    </div>
+    <div class="hub-card-arrow"></div>
+  </div>
+  <div class="hub-card-content">
+    <div class="blueprint-section" id="blueprint">
+  <div class="blueprint-grid"><div class="blueprint-card">
+      <div class="blueprint-label">エネルギー管理</div>
+      <div class="blueprint-title">繊細さ × 過集中 — 「没頭」と「回復」のリズムを設計する</div>
+      <div class="blueprint-desc">繊細な感受性は最大の武器であると同時に、消耗の原因にもなる。90分集中→15分完全回復のサイクルを基本リズムに。ネガティブな環境からは物理的に距離を取る仕組みを作る</div>
+    </div><div class="blueprint-card">
+      <div class="blueprint-label">弱点の構造的カバー</div>
+      <div class="blueprint-title">決断力の補完</div>
+      <div class="blueprint-desc">「70点で動く」ルールを設定する。完璧な答えを待つのではなく、仮説→実行→修正のサイクルを高速で回す。タイマーで考える時間を制限するのも有効</div>
+    </div><div class="blueprint-card">
+      <div class="blueprint-label">最大の武器</div>
+      <div class="blueprint-title">共感力の最適活用</div>
+      <div class="blueprint-desc">共感力は「他者を理解する」だけでなく「他者が何を求めているか先読みする」戦略的スキル。サービス設計・チームマネジメント・交渉において、相手の言葉にならないニーズを読む武器として使う。ただし境界線は必須 — 「感じ取っても、背負わない」を原則に</div>
+    </div></div>
+</div>
+  </div>
+</div><div class="hub-card" id="personality-card">
+  <div class="hub-card-preview" onclick="this.parentElement.classList.toggle('expanded')">
+    <div class="hub-card-icon" style="background:rgba(59,130,246,0.12);color:#60a5fa">&#9632;</div>
+    <div>
+      <div class="hub-card-title">内なる才能の設計図</div>
+      <div class="hub-card-summary">強み × 性格タイプ × 感受性</div>
+    </div>
+    <div class="hub-card-arrow"></div>
+  </div>
+  <div class="hub-card-content">
+    <section class="section" id="personality">
+  <div class="section-quote">"才能は、使い方を知ったとき初めて力になる"</div>
+  <div class="personality-summary">「共感性」と「内省」を軸に、個性派としての深みを持つ</div>
+  <div class="grid"><div class="card">
+      <div class="card-title"><span class="icon">&#9733;</span> あなたの TOP 5 強み</div>
+      <ul class="top5-list"><li class="top5-item" onclick="var d=this.querySelector('.sf-desc-collapsible');if(d){{d.style.display=d.style.display==='none'?'block':'none'}}" style="cursor:pointer"><span class="rank">1</span>
+          <div><div class="sf-name">Empathy <span style="font-size:12px;color:var(--text-secondary);font-weight:400">（共感性）</span></div>
+          <div class="sf-domain"><span class="tag tag-rb">Relationship Building</span></div><div class="sf-desc-collapsible" style="display:none;font-size:12px;color:var(--text-secondary);line-height:1.6;margin-top:6px">他者の感情を「推測」するのではなく「体感」する。言語化されていない不安や喜びを直感的に察知し、その人が本当に求めていることを理解する力。チームリーダーとしての最大の武器であり、サービス設計においてユーザーの痛みを自分事として感じられるPMFの源泉。</div></div></li><li class="top5-item" onclick="var d=this.querySelector('.sf-desc-collapsible');if(d){{d.style.display=d.style.display==='none'?'block':'none'}}" style="cursor:pointer"><span class="rank">2</span>
+          <div><div class="sf-name">Intellection <span style="font-size:12px;color:var(--text-secondary);font-weight:400">（内省）</span></div>
+          <div class="sf-domain"><span class="tag tag-st">Strategic Thinking</span></div><div class="sf-desc-collapsible" style="display:none;font-size:12px;color:var(--text-secondary);line-height:1.6;margin-top:6px">思考することそのものが活動。1人の時間に頭の中で概念を回し、深い洞察に到達する。表面的な情報交換ではなく、哲学的な問いや構造的な分析を好む。このダッシュボード自体が、Intellectionが駆動する「自己を体系的に理解したい」という欲求の産物。</div></div></li><li class="top5-item" onclick="var d=this.querySelector('.sf-desc-collapsible');if(d){{d.style.display=d.style.display==='none'?'block':'none'}}" style="cursor:pointer"><span class="rank">3</span>
+          <div><div class="sf-name">Deliberative <span style="font-size:12px;color:var(--text-secondary);font-weight:400">（慎重さ）</span></div>
+          <div class="sf-domain"><span class="tag tag-ex">Executing</span></div><div class="sf-desc-collapsible" style="display:none;font-size:12px;color:var(--text-secondary);line-height:1.6;margin-top:6px">リスクを事前に感知し、慎重に選択肢を評価する。衝動的な判断を避け、深い分析に基づいて確実な意思決定をする力。投資判断や事業設計において、見えないリスクを察知する「守りの強み」。ただし行動の遅れにつながるリスクもある。</div></div></li><li class="top5-item" onclick="var d=this.querySelector('.sf-desc-collapsible');if(d){{d.style.display=d.style.display==='none'?'block':'none'}}" style="cursor:pointer"><span class="rank">4</span>
+          <div><div class="sf-name">Connectedness <span style="font-size:12px;color:var(--text-secondary);font-weight:400">（運命思考）</span></div>
+          <div class="sf-domain"><span class="tag tag-rb">Relationship Building</span></div><div class="sf-desc-collapsible" style="display:none;font-size:12px;color:var(--text-secondary);line-height:1.6;margin-top:6px">万物のつながりを直感的に感じ取る。一見無関係に見える出来事やアイデアの間に隠れた関連性を見出す力。占術と心理学と確率論を統合する発想、複数プロジェクト間のシナジーを設計する力の源泉。偶然を必然として捉える世界観。</div></div></li><li class="top5-item" onclick="var d=this.querySelector('.sf-desc-collapsible');if(d){{d.style.display=d.style.display==='none'?'block':'none'}}" style="cursor:pointer"><span class="rank">5</span>
+          <div><div class="sf-name">Maximizer <span style="font-size:12px;color:var(--text-secondary);font-weight:400">（最上志向）</span></div>
+          <div class="sf-domain"><span class="tag tag-inf">Influencing</span></div><div class="sf-desc-collapsible" style="display:none;font-size:12px;color:var(--text-secondary);line-height:1.6;margin-top:6px">「平均を良く」するのではなく「良いを最高に」引き上げる。弱みの修正より強みの極大化を追求する。3S原則（Simple, Scalable, Sustainable）の設計思想そのものがMaximizerの発露。「もっと良くできないか？」が止まらない性質。</div></div></li></ul>
+      <div style="font-size:11px;color:var(--text-muted);margin-top:12px">主要な強みの分野: Strategic Thinking (戦略的思考) | 受験日: 2015-05-12</div>
+    </div>
+    <div class="card">
+      <div class="card-title"><span class="icon">&#9632;</span> 強みの傾向</div>
+      <div style="margin-top:8px"><div class="domain-bar">
+          <div class="domain-header"><span>Relationship Building（人間関係構築）</span><span style="font-family:var(--font-mono)">4 / 10</span></div>
+          <div class="domain-track"><div class="domain-fill" style="width:40%;background:#3b82f6"></div></div></div><div class="domain-bar">
+          <div class="domain-header"><span>Strategic Thinking（戦略的思考）</span><span style="font-family:var(--font-mono)">3 / 10</span></div>
+          <div class="domain-track"><div class="domain-fill" style="width:30%;background:#22c55e"></div></div></div><div class="domain-bar">
+          <div class="domain-header"><span>Executing（実行力）</span><span style="font-family:var(--font-mono)">2 / 10</span></div>
+          <div class="domain-track"><div class="domain-fill" style="width:20%;background:#8b5cf6"></div></div></div><div class="domain-bar">
+          <div class="domain-header"><span>Influencing（影響力）</span><span style="font-family:var(--font-mono)">1 / 10</span></div>
+          <div class="domain-track"><div class="domain-fill" style="width:10%;background:#ff6b35"></div></div></div></div>
+      <div style="margin-top:24px">
+        <div class="card-title" style="font-size:13px"><span class="icon">&#9830;</span> あなたの性格タイプ</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:4px">
+          <div class="typo-cell"><div class="typo-label">エニアグラム</div>
+            <div class="typo-value">Type 4</div><div class="typo-sub">個性派</div>
+            <div class='typo-desc'>自己表現とアイデンティティの探求者。「自分だけの世界観」を持ち、平凡であることを嫌う。健全時はType 1（改革者）に向かい原則と美学を融合。ストレス時はType 2（奉仕者）に向かい、自分を犠牲にして他者に尽くしすぎる傾向。</div></div>
+          <div class="typo-cell"><div class="typo-label">血液型</div>
+            <div class="typo-value">AB</div><div class="typo-sub">日本人口の10%</div>
+            <div class='typo-desc'>冷静な分析力と繊細な感性が同居。「二面性がある」と言われがちだが、実態は「状況に応じて最適なモードを切り替えている」合理的適応。</div></div>
+        </div>
+      </div>
+      <div style="margin-top:24px">
+        <div class="card-title" style="font-size:13px"><span class="icon">&#9830;</span> エネルギー特性</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:4px">
+          <div class="typo-cell"><div class="typo-label">感受性タイプ</div>
+            <div class="typo-value" style="color:#facc15">繊細</div><div class="typo-sub">環境・感情への感度</div>
+            <div class='typo-desc'>環境や人の感情を微細なレベルで処理する繊細さ。蠍座の深い洞察力、Empathy #1の体感的共感と相乗効果を発揮し、通常は見逃す情報を拾い上げる。美しいもの・深い会話からは何倍もの充足を得る一方、ネガティブな刺激からの回復にも時間がかかる。</div></div>
+          <div class="typo-cell"><div class="typo-label">集中スタイル</div>
+            <div class="typo-value" style="color:#ff8f6b">やや多動</div><div class="typo-sub">過集中×拡散の波</div>
+            <div class='typo-desc'>興味が点火されると驚異的な集中力を発揮し、何時間も一つのテーマに没頭する。Intellection #2の思考力と組み合わさり、深い洞察を生む原動力。一方で興味の対象が移ると瞬時に切り替わるため、仕組み化（自動化・ルーティン設計）で定型業務を排除することが有効。</div></div>
+        </div>
+      </div>
+    </div></div>
+</section>
+  </div>
+</div><div class="hub-card" id="divination-card">
+  <div class="hub-card-preview" onclick="this.parentElement.classList.toggle('expanded')">
+    <div class="hub-card-icon" style="background:rgba(139,92,246,0.12);color:#c4b5fd">&#9679;</div>
+    <div>
+      <div class="hub-card-title">星が語ること</div>
+      <div class="hub-card-summary">四柱推命 × 九星気学 × 六星占術 × 西洋占星術</div>
+    </div>
+    <div class="hub-card-arrow"></div>
+  </div>
+  <div class="hub-card-content">
+    <section class="section" id="divination">
+  <div class="section-quote">"2,000年の叡智が、あなたの星を読み解く"</div>
+  <div class="rarity-badges" style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px"><div class="rarity-badge">霊合星人は全人口の約10%。二つの星の影響を受ける稀少な存在です</div><div class="rarity-badge">日主「丁」（陰火）は十干の一つ。同じ本質を持つ人は約10%</div><div class="rarity-badge">五行「金・水」が同時に欠如する命式は稀少。意識的な補完が大きな差を生む</div></div>
+
+  <div class="accordion-header open" onclick="toggleAccordion(this)"><h3 class="sub-title" style="border-top:none;padding-top:0;margin:0">四柱推命</h3></div>
+  <div class="accordion-body open">
+  <div style="font-size:12px;color:var(--text-secondary);line-height:1.7;margin-bottom:16px">四柱推命は生年月日時の4つの柱から、先天的な性質・才能・人生の傾向を読み解く東洋最高峰の命術。各柱が人生の異なる側面を表します。</div>
+  <div class="pillar-grid"><div class="pillar"><div class="pillar-label">年柱</div>
+      <div class="kanji">乙卯</div>
+      <div class="reading">きのと・う</div>
+      <div class="element-badge elem-wood">木（Wood）</div>
+      <div style="font-size:10px;color:var(--text-muted);margin-top:6px">社会的顔・祖先運</div></div><div class="pillar"><div class="pillar-label">月柱</div>
+      <div class="kanji">丙戌</div>
+      <div class="reading">ひのえ・いぬ</div>
+      <div class="element-badge elem-fire">火（Fire）</div>
+      <div style="font-size:10px;color:var(--text-muted);margin-top:6px">仕事・キャリア</div></div><div class="pillar"><div class="pillar-label">日柱</div>
+      <div class="kanji">丁未</div>
+      <div class="reading">ひのと・ひつじ</div>
+      <div class="element-badge elem-fire">火（Fire）</div>
+      <div style="font-size:10px;color:var(--text-muted);margin-top:6px">本質的な自己</div></div><div class="pillar unknown"><div class="pillar-label">時柱</div><div class="kanji">？？</div><div class="reading">出生時刻不明</div><div class="element-badge" style="background:rgba(255,255,255,0.05);color:var(--text-muted)">未解放</div><div style="font-size:10px;color:var(--text-muted);margin-top:6px">晩年・子孫運</div></div></div>
+  <div style="margin-top:16px;font-size:13px;color:var(--text-secondary);line-height:1.7">
+    <strong style="color:var(--text)">日主（にっしゅ）: 丁火（Yin火 / ひのと）</strong> — あなたの生まれ持った本質。ロウソクの炎。静かで温かく人を照らす。強い意志を内に秘め、感受性豊かで人の心の機微を感じ取る。丙火（太陽）のような自己主張ではなく、暗闇の中で必要な人にだけ光を届ける繊細な存在。</div>
+  <div style="margin-top:8px;font-size:12px;color:var(--text-secondary);line-height:1.7"><strong style="color:var(--text)">年柱（乙卯）</strong>: 草花と兎の組み合わせ。社会に対して柔軟で穏やかな印象を与えるが、木の根のようにしなやかな強さを持つ。先祖から受け継いだ「人を和ませる空気感」。<br><strong style="color:var(--text)">月柱（丙戌）</strong>: キャリアの柱に太陽の火と忠犬の組み合わせ。仕事では情熱的で忠誠心が強い。丙（太陽）は日主の丁（ロウソク）を支える強い火源 — 仕事にエネルギーの根源がある配置。<br><strong style="color:var(--text)">日柱（丁未）</strong>: 本質は陰火と未（羊・土）。温かい土壌の上で灯る炎 — 安定した基盤の上で人を照らす使命。未は「未来」の未でもあり、先見性を暗示。<br></div>
+  <div class="element-bar" style="margin-top:12px"><div class="element-col">
+      <div class="element-pct" style="color:#4ade80">33%</div>
+      <div class="element-fill" style="height:33%;background:#4ade80"></div>
+      <div class="element-name">木</div></div><div class="element-col">
+      <div class="element-pct" style="color:#f87171">33%</div>
+      <div class="element-fill" style="height:33%;background:#f87171"></div>
+      <div class="element-name">火</div></div><div class="element-col">
+      <div class="element-pct" style="color:#facc15">33%</div>
+      <div class="element-fill" style="height:33%;background:#facc15"></div>
+      <div class="element-name">土</div></div><div class="element-col">
+      <div class="element-pct" style="color:#94a3b8">0%</div>
+      <div class="element-fill" style="height:2%;background:#94a3b8"></div>
+      <div class="element-name">金</div></div><div class="element-col">
+      <div class="element-pct" style="color:#60a5fa">0%</div>
+      <div class="element-fill" style="height:2%;background:#60a5fa"></div>
+      <div class="element-name">水</div></div></div>
+  <div style="font-size:12px;color:var(--yellow);margin-top:8px">欠如: 金・水 — 金(決断力・収穫)と水(知恵・柔軟性)が欠如。意識的にこれらの要素を補う行動が有効</div>
+  </div>
+
+  <div class="accordion-header" onclick="toggleAccordion(this)"><h3 class="sub-title" style="border-top:none;padding-top:0;margin:0">九星気学</h3></div>
+  <div class="accordion-body">
+  <div class="grid grid-3">
+    <div class="card"><div class="card-label">本命星（年星）— あなたの根幹</div>
+      <div class="card-value">七赤金星</div><div class="card-sub">金（Metal）/ 西（W）</div></div>
+    <div class="card"><div class="card-label">月命星 — 内面の性格</div>
+      <div class="card-value">九紫火星</div><div class="card-sub">火（Fire）/ 南（S）</div></div><div class="card"><div class="card-label">2026年 宮位置 — 今年の運気</div>
+      <div class="card-value">坤宮</div><div class="card-sub">変化・準備（運気 45/100）</div></div></div>
+  <div class="card" style="margin-top:12px"><div style="font-size:12px;color:var(--text-secondary);line-height:1.7">あなたの本命星（七赤金星）は生まれた年から算出される「社会的な自分」。「沢」の象意を持ち、あなたは社交的で人を楽しませる力と、言葉に説得力を持つ話術に恵まれています。金星の「金運」は財を呼び込む力ですが、同時に散財しやすい傾向も。方位は西（兌宮）で、収穫と悦びの方角。</div><div style="font-size:12px;color:var(--text-secondary);line-height:1.7;margin-top:8px">あなたの月命星（九紫火星）は生まれた月から算出される「内面の自分」。外から見える社交的な七赤金星の内側に、九紫火星の激しい情熱と知的好奇心が燃えています。九紫火星は「離」の象意 — 物事を明らかにする光の力。あなたの知識欲は旺盛で美意識が高く、直感が鋭い。この本命星と月命星の二層構造が、「表面は穏やかな社交家、内面は激しい探求者」というあなたの二面性を形成しています。</div></div>
+  </div>
+
+  <div class="accordion-header" onclick="toggleAccordion(this)"><h3 class="sub-title" style="border-top:none;padding-top:0;margin:0">六星占術</h3></div>
+  <div class="accordion-body">
+  <div class="grid grid-3">
+    <div class="card"><div class="card-label">運命星</div>
+      <div class="card-value">木星人(-)</div>
+      <div class="card-sub">もくせいじん マイナス</div></div><div class="card"><div class="card-label">霊合サブ星</div>
+      <div class="card-value">金星人(-)</div>
+      <div class="card-sub">きんせいじん マイナス</div></div><div class="card"><div class="card-label">2026年</div>
+      <div class="card-value">緑生</div>
+      <div class="card-sub">好調期（運気 65/100）</div></div></div>
+  <div style="font-size:12px;color:var(--text-secondary);line-height:1.7;margin-bottom:12px"><strong style="color:var(--text)">木星人(-)</strong>: あなたの運命星は好奇心旺盛で行動力がある星。自由を重んじ束縛を嫌い、常に新しいことに挑戦したがる冒険者タイプです。あなたは社交的で人脈が広く、興味の幅も広い。(−)は偶数年生まれを示し、陰の性質（内向き・慎重）がベースにあります。<br><strong style="color:var(--text)">金星人(-)</strong>: あなたのサブ星はプライドが高く美意識がある星。完璧主義的で「こだわり」が強い。あなたは人から尊敬されたい欲求が強く、自分の世界観を大切にします。</div>
+  <div style="background:rgba(234,179,8,0.08);border:1px solid rgba(234,179,8,0.2);border-radius:var(--r-sm);padding:12px;text-align:center;margin-top:12px">
+      <div style="font-size:13px;color:var(--yellow);font-weight:600">霊合星人</div>
+      <div style="font-size:12px;color:var(--text-secondary);margin-top:6px;line-height:1.7;text-align:left">あなたは霊合星人です。メインの運命星に加えてサブの運命星の影響も同時に受ける特殊な存在で、全人口の約16%が該当します。あなたの運気の振れ幅は通常の2倍。好調期は通常の人が到達できない高みに届きますが、不調期（大殺界）は通常以上に深く影響を受けます。メイン星とサブ星が好調なら「最高の年」、片方が大殺界なら「矛盾する年」、両方が大殺界なら「最大限の注意が必要な年」です。</div></div>
+  <div style="margin-top:12px"><table class="cycle-table"><thead><tr><th>年</th><th>メイン</th><th>サブ</th><th>殺界</th><th>運気</th></tr></thead><tbody><tr><td>2022</td><td>陰影</td><td>—</td><td><span class="satsukai dai">大殺界</span></td><td><span style="color:#f87171">15</span></td></tr><tr><td>2023</td><td>停止</td><td>—</td><td><span class="satsukai dai">大殺界</span></td><td><span style="color:#f87171">10</span></td></tr><tr><td>2024</td><td>減退</td><td>乱気</td><td><span class="satsukai dai">大殺界</span></td><td><span style="color:#f87171">20</span></td></tr><tr><td>2025</td><td>種子</td><td>再会</td><td>—</td><td><span style="color:#facc15">50</span></td></tr><tr class="current"><td>2026</td><td>緑生</td><td>財成</td><td>—</td><td><span style="color:#facc15">65</span></td></tr><tr><td>2027</td><td>立花</td><td>安定</td><td>—</td><td><span style="color:#4ade80">80</span></td></tr><tr><td>2028</td><td>健弱</td><td>陰影</td><td><span class="satsukai sho">小殺界</span></td><td><span style="color:#f87171">35</span></td></tr><tr><td>2029</td><td>達成</td><td>停止</td><td>—</td><td><span style="color:#4ade80">90</span></td></tr><tr><td>2030</td><td>乱気</td><td>減退</td><td><span class="satsukai chu">中殺界</span></td><td><span style="color:#f87171">25</span></td></tr><tr><td>2031</td><td>再会</td><td>種子</td><td>—</td><td><span style="color:#4ade80">70</span></td></tr><tr><td>2032</td><td>財成</td><td>緑生</td><td>—</td><td><span style="color:#4ade80">85</span></td></tr><tr><td>2033</td><td>安定</td><td>—</td><td>—</td><td><span style="color:#4ade80">95</span></td></tr></tbody></table></div>
+  </div>
+
+  <div class="accordion-header" onclick="toggleAccordion(this)"><h3 class="sub-title" style="border-top:none;padding-top:0;margin:0">西洋占星術</h3></div>
+  <div class="accordion-body">
+  <div class="grid grid-3">
+    <div class="card"><div class="card-label">太陽星座</div>
+      <div class="card-value">♏ Scorpio</div>
+      <div class="card-sub">水（Water）/ 不動宮（Fixed）</div>
+      <div class='typo-desc' style='margin-top:8px'>深い洞察力、変容の力、情熱と集中。表面的なものに興味がない</div></div>
+    <div class="card"><div class="card-label">支配星</div>
+      <div class="card-value">Pluto</div>
+      <div class='typo-desc' style='margin-top:8px'>水のエレメント — 感情の深さ、直感力、共感力。表面ではなく深層で物事を捉える</div></div><div class="card"><div class="card-label">デカン（第1区）</div>
+      <div class="card-value">Pluto</div>
+      <div class='typo-desc' style='margin-top:8px'>最も純粋な蠍座の性質。変容・再生・深層心理への探究</div></div></div><div style="font-size:12px;color:var(--text-secondary);line-height:1.7;margin-top:12px">不動宮（Fixed）— 一度決めたら変えない意志の強さ。安定と持続力。変化への抵抗もある</div><div class="insight-box" style="margin-top:12px;border-color:rgba(139,92,246,0.3);background:linear-gradient(135deg,rgba(139,92,246,0.08),rgba(99,102,241,0.04))">
+      <div class="insight-title" style="color:#c4b5fd">2026年 Scorpioの運勢</div>
+      <p style="line-height:1.9;font-size:14px">冥王星が水瓶座に完全移行した2026年は、蠍座にとって「変容の仕上げ」の年。これまで手放してきた古い構造の跡地に、新しい基盤を築く時期。特に人間関係と仕事の枠組みにおいて、より本質的な選択ができるようになる</p></div><div style="margin-top:20px"><div class="insight-title" style="color:#c4b5fd;margin-bottom:8px">2026年 惑星の影響</div><div style="font-size:12px;color:var(--text-muted);margin-bottom:12px;line-height:1.6">木星・土星・冥王星・天王星が今年あなたの太陽星座にどんな影響を与えるか。緑は追い風、黄色は調整期、赤は試練（成長のチャンス）。</div><div class="grid grid-2"><div class="card" style="border-left:3px solid #4ade80">
+        <div class="card-label">木星 in 蟹座</div>
+        <div class="card-value" style="font-size:16px;color:#4ade80">追い風</div>
+        <div class="typo-desc" style="margin-top:6px;font-size:12px">木星が蟹座でトライン — 感情的な成長と内面の豊かさが拡大。直感的な判断が冴える年</div></div><div class="card" style="border-left:3px solid #facc15">
+        <div class="card-label">土星 in 牡羊座</div>
+        <div class="card-value" style="font-size:16px;color:#facc15">調整</div>
+        <div class="typo-desc" style="margin-top:6px;font-size:12px">土星が牡羊座でクインカンクス — 行動と慎重さのバランス調整。新しい責任との折り合い</div></div><div class="card" style="border-left:3px solid #f87171">
+        <div class="card-label">冥王星 in 水瓶座</div>
+        <div class="card-value" style="font-size:16px;color:#f87171">試練</div>
+        <div class="typo-desc" style="margin-top:6px;font-size:12px">冥王星が水瓶座でスクエア — 変容の最終段階。古い構造からの完全な脱却を促される</div></div><div class="card" style="border-left:3px solid #f87171">
+        <div class="card-label">天王星 in 双子座</div>
+        <div class="card-value" style="font-size:16px;color:#f87171">対峙</div>
+        <div class="typo-desc" style="margin-top:6px;font-size:12px">天王星が双子座でオポジション — 予期せぬ変化と覚醒。コミュニケーションの革新</div></div></div></div><div style="margin-top:20px"><div class="insight-title" style="color:#fb923c;margin-bottom:8px">&#9888; 2026年 水星逆行</div><div style="font-size:12px;color:var(--text-muted);margin-bottom:12px;line-height:1.6">水星逆行中はコミュニケーションの行き違い、契約トラブル、電子機器の不具合が起きやすい時期。重要な契約や大きな買い物はこの期間を避けるのが無難。</div><div class="grid grid-3"><div class="card" style="border-left:3px solid rgba(251,146,60,0.5)">
+        <div class="card-label">第1回</div>
+        <div class="card-value" style="font-size:14px">2/26-3/20</div>
+        <div class="card-sub">魚座（Pisces）</div>
+        <div class="typo-desc" style="margin-top:6px;font-size:12px">コミュニケーションの混乱に注意。重要な契約は前後にずらす</div></div><div class="card" style="border-left:3px solid rgba(251,146,60,0.5)">
+        <div class="card-label">第2回</div>
+        <div class="card-value" style="font-size:14px">6/29-7/23</div>
+        <div class="card-sub">蟹座（Cancer）</div>
+        <div class="typo-desc" style="margin-top:6px;font-size:12px">感情面のコミュニケーションに見直し。家族・身近な人との関係を再考</div></div><div class="card" style="border-left:3px solid rgba(251,146,60,0.5)">
+        <div class="card-label">第3回</div>
+        <div class="card-value" style="font-size:14px">10/24-11/13</div>
+        <div class="card-sub">蠍座（Scorpio）</div>
+        <div class="typo-desc" style="margin-top:6px;font-size:12px">蠍座での逆行 — 自分自身への影響が最大。深層心理の再探索と変容の総仕上げ</div></div></div></div><div class="insight-box" style="margin-top:16px;border-color:rgba(139,92,246,0.3);background:linear-gradient(135deg,rgba(139,92,246,0.08),rgba(99,102,241,0.04))">
+      <div class="insight-title" style="color:#c4b5fd">3月のScorpioホロスコープ — 「内省と再構築」</div>
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:8px">
+        <div style="font-size:24px;font-weight:700;color:#facc15">55</div>
+        <div style="font-size:11px;color:var(--text-muted)">西洋エネルギー /100</div>
+      </div>
+      <p style="line-height:1.9;font-size:14px">水星逆行の影響。過去の選択を振り返り、方向性を微調整する</p></div>
+  </div>
+
+  <div class="unlock-banner">出生時刻を追加すると、時柱・アセンダント・月星座が解放されます</div>
+</section>
+  </div>
+</div><div class="hub-card" id="forecast-2026-card">
+  <div class="hub-card-preview" onclick="this.parentElement.classList.toggle('expanded')">
+    <div class="hub-card-icon" style="background:rgba(234,179,8,0.12);color:#facc15">&#9650;</div>
+    <div>
+      <div class="hub-card-title">2026年 — いま、あなたはどこにいるか</div>
+      <div class="hub-card-summary">九星気学 × 六星占術が示す年間の流れ</div>
+    </div>
+    <div class="hub-card-arrow"></div>
+  </div>
+  <div class="hub-card-content">
+    <section class="section" id="forecast-2026">
+  <div class="section-quote">"未来は決まっていない。しかし、流れは見える"</div>
+  <div class="year-theme-banner">
+    <div class="year-theme-label">2026年のテーマ</div>
+    <div class="year-theme-text" style="color:#4ade80">攻めの年 — 種を蒔き、未来の収穫を設計する</div>
+  </div>
+  <div class="grid grid-4"><div class="card tc"><div class="card-label">九星気学</div>
+      <div class="card-value">坤宮</div><div class="card-sub">変化・準備</div></div><div class="card tc"><div class="card-label">六星占術（メイン）</div>
+      <div class="card-value">緑生</div><div class="card-sub">運気 65/100</div></div><div class="card tc"><div class="card-label">霊合統合スコア</div>
+      <div class="card-value" style="color:#4ade80">73</div>
+      <div class="card-sub">好調</div></div></div>
+  <div style="margin-top:12px;padding:10px 14px;border-radius:8px;background:rgba(139,92,246,0.06);border:1px solid rgba(139,92,246,0.15)">
+      <div style="font-size:11px;color:#c4b5fd;margin-bottom:6px;font-weight:600">惑星トランジット</div>
+      <div style="display:flex;flex-wrap:wrap;gap:4px"><span style="display:inline-flex;align-items:center;gap:4px;margin-right:12px;font-size:12px"><span style="color:#4ade80;font-weight:600">木星</span><span style="color:var(--text-muted)">蟹座 Trine</span></span><span style="display:inline-flex;align-items:center;gap:4px;margin-right:12px;font-size:12px"><span style="color:#facc15;font-weight:600">土星</span><span style="color:var(--text-muted)">牡羊座 Quincunx</span></span><span style="display:inline-flex;align-items:center;gap:4px;margin-right:12px;font-size:12px"><span style="color:#f87171;font-weight:600">冥王星</span><span style="color:var(--text-muted)">水瓶座 Square</span></span><span style="display:inline-flex;align-items:center;gap:4px;margin-right:12px;font-size:12px"><span style="color:#f87171;font-weight:600">天王星</span><span style="color:var(--text-muted)">双子座 Opposition</span></span></div>
+    </div>
+  <div class="chart-wrap"><canvas id="chartOverlay" height="280"></canvas></div>
+  <div class="chart-legend"><div class="chart-legend-item">
+      <span class="chart-legend-line" style="background:#6366f1"></span>
+      <div><span class="chart-legend-label">九星気学</span>
+      <span class="chart-legend-desc">9年周期。本命星の宮遷移による運気の波。社会的な運勢の流れを示す</span></div></div><div class="chart-legend-item">
+      <span class="chart-legend-line" style="background:#22c55e"></span>
+      <div><span class="chart-legend-label">六星占術</span>
+      <span class="chart-legend-desc">12年周期。大殺界を含む運命星の巡り。個人的な運気のバイオリズム</span></div></div><div class="chart-legend-item">
+      <span class="chart-legend-line" style="background:#eab308"></span>
+      <div><span class="chart-legend-label">霊合合成</span>
+      <span class="chart-legend-desc">メイン星70% + サブ星30%の加重平均。霊合星人の実効的な運気スコア</span></div></div></div>
+  <div class="insight-box" style="margin-top:16px;border-color:rgba(234,179,8,0.3);background:linear-gradient(135deg,rgba(234,179,8,0.08),rgba(250,204,21,0.04))">
+    <div class="insight-title" style="color:var(--yellow)">統合フォーキャスト</div>
+    <p style="line-height:1.9;font-size:14px">九星気学では<strong>坤宮</strong>（変化・準備）に位置し、エネルギーは<strong>45</strong>。六星占術のメイン星は<strong>緑生</strong>（Energy 65）で好調期。統合スコア<strong>73</strong>（好調）— 複数の体系が好調を示しており、<strong>攻めの年</strong>。新しい挑戦や投資に適したタイミング。次のピークは<strong>2032年</strong>（統合スコア83）。そこへ向けた布石を今から打つ。</p>
+  </div>
+</section>
+  </div>
+</div><div class="hub-card" id="monthly-card">
+  <div class="hub-card-preview" onclick="this.parentElement.classList.toggle('expanded')">
+    <div class="hub-card-icon" style="background:rgba(59,130,246,0.12);color:#60a5fa">&#9671;</div>
+    <div>
+      <div class="hub-card-title">月間運勢フォーキャスト</div>
+      <div class="hub-card-summary">3月 — 慎重の月</div>
+    </div>
+    <div class="hub-card-arrow"></div>
+  </div>
+  <div class="hub-card-content">
+    <section class="section" id="monthly">
+  <div class="year-timeline" id="yearTimeline"><div class="yt-month" data-month="0" style="background:rgba(34,197,94,0.5)">1</div><div class="yt-month" data-month="1" style="background:rgba(239,68,68,0.45)">2</div><div class="yt-month" data-month="2" style="background:rgba(239,68,68,0.45)">3</div><div class="yt-month" data-month="3" style="background:rgba(239,68,68,0.45)">4</div><div class="yt-month" data-month="4" style="background:rgba(59,130,246,0.4)">5</div><div class="yt-month" data-month="5" style="background:rgba(59,130,246,0.4)">6</div><div class="yt-month" data-month="6" style="background:rgba(34,197,94,0.5)">7</div><div class="yt-month" data-month="7" style="background:rgba(234,179,8,0.4)">8</div><div class="yt-month" data-month="8" style="background:rgba(34,197,94,0.5)">9</div><div class="yt-month" data-month="9" style="background:rgba(234,179,8,0.4)">10</div><div class="yt-month" data-month="10" style="background:rgba(59,130,246,0.4)">11</div><div class="yt-month" data-month="11" style="background:rgba(34,197,94,0.5)">12</div></div>
+  <div class="month-selector" id="monthSelector"></div>
+  <div id="monthPanels"></div>
+</section>
+<script>
+const monthlyData=[{"month": "1月", "monthNum": 1, "nineStarNote": "中吉・回復", "nineStarEnergy": 65, "rokuseiPhase": "安定", "rokuseiType": "great", "westernTheme": "新しい基盤づくり", "westernEnergy": 65, "retroBadge": "", "work": 4, "money": 4, "health": 4, "romance": 4, "workMsg": "順調に進む。チャンスを逃さず着実に成果を積む", "moneyMsg": "堅実な収入が見込める。無駄遣いを避ければ蓄積できる", "healthMsg": "概ね良好。規則正しい生活を維持して好調を保つ", "romanceMsg": "良好な関係が築ける。コミュニケーションが円滑", "advice": "震宮（行動力が高まり、新しいスタートを切りやすい時期）に位置する好調月。六星占術「安定」— 最も安定した運気。大きな決断や長期計画に最適。丁火の本質を持つあなたは、Empathy（共感性）を全開にして攻める月。西洋占星術のテーマ「新しい基盤づくり」— キャリアと長期目標の見直し。冥王星の影響で深い変容が進む"}, {"month": "2月", "monthNum": 2, "nineStarNote": "上昇運", "nineStarEnergy": 75, "rokuseiPhase": "陰影", "rokuseiType": "danger", "westernTheme": "人間関係の深化", "westernEnergy": 70, "retroBadge": "<span class=\"month-tag\" style=\"background:rgba(251,146,60,0.18);color:#fb923c;border:1px solid rgba(251,146,60,0.4)\">&#9888; 水星逆行 in Pisces (2/26-3/20)</span>", "work": 3, "money": 2, "health": 3, "romance": 3, "workMsg": "普通ペース。地道な積み重ねが後に効いてくる", "moneyMsg": "予想外の出費に注意。大きな買い物は延期が吉", "healthMsg": "可もなく不可もなく。睡眠の質に注意を払う", "romanceMsg": "平穏な時期。既存の関係を大切にする", "advice": "エネルギーが低下しやすい月。九星気学では巽宮（人脈と信用が拡大する時期。情報が集まりやすい）。六星占術で「陰影」— 大殺界の入口。慎重に行動し、新規の大きな契約は避ける。大きな決断は控えるのが賢明。丁火の炎を守りつつ、Intellection（内省）を防御的に活用して。欠如要素「金・水」の影響が出やすいので意識的にケアを。西洋占星術のテーマ「人間関係の深化」— 信頼できる人との絆が強まる。表面的な関係を手放す勇気"}, {"month": "3月", "monthNum": 3, "nineStarNote": "大吉・最盛", "nineStarEnergy": 100, "rokuseiPhase": "停止", "rokuseiType": "danger", "westernTheme": "内省と再構築", "westernEnergy": 55, "retroBadge": "<span class=\"month-tag\" style=\"background:rgba(251,146,60,0.18);color:#fb923c;border:1px solid rgba(251,146,60,0.4)\">&#9888; 水星逆行 in Pisces (2/26-3/20)</span>", "work": 3, "money": 2, "health": 3, "romance": 3, "workMsg": "普通ペース。地道な積み重ねが後に効いてくる", "moneyMsg": "予想外の出費に注意。大きな買い物は延期が吉", "healthMsg": "可もなく不可もなく。睡眠の質に注意を払う", "romanceMsg": "平穏な時期。既存の関係を大切にする", "advice": "エネルギーが低下しやすい月。九星気学では中宮（年間で最もエネルギーが集中する中心位置。影響力が最大化）。六星占術で「停止」— 大殺界の中心。じっと耐え、現状維持を最優先に。大きな決断は控えるのが賢明。丁火の炎を守りつつ、Deliberative（慎重さ）を防御的に活用して。欠如要素「金・水」の影響が出やすいので意識的にケアを。西洋占星術のテーマ「内省と再構築」— 水星逆行の影響。過去の選択を振り返り、方向性を微調整する"}, {"month": "4月", "monthNum": 4, "nineStarNote": "大吉・最盛", "nineStarEnergy": 90, "rokuseiPhase": "減退", "rokuseiType": "danger", "westernTheme": "行動の再開", "westernEnergy": 75, "retroBadge": "", "work": 3, "money": 2, "health": 3, "romance": 3, "workMsg": "普通ペース。地道な積み重ねが後に効いてくる", "moneyMsg": "予想外の出費に注意。大きな買い物は延期が吉", "healthMsg": "可もなく不可もなく。睡眠の質に注意を払う", "romanceMsg": "平穏な時期。既存の関係を大切にする", "advice": "エネルギーが低下しやすい月。九星気学では乾宮（目上の人や権威者からの後押しが得やすい時期）。六星占術で「減退」— 大殺界の出口。少しずつ回復するが、まだ油断は禁物。大きな決断は控えるのが賢明。丁火の炎を守りつつ、Connectedness（運命思考）を防御的に活用して。欠如要素「金・水」の影響が出やすいので意識的にケアを。西洋占星術のテーマ「行動の再開」— 逆行明け。止まっていたプロジェクトが動き出す。直感に従う"}, {"month": "5月", "monthNum": 5, "nineStarNote": "大吉・好調", "nineStarEnergy": 80, "rokuseiPhase": "種子", "rokuseiType": "good", "westernTheme": "拡大と成長", "westernEnergy": 80, "retroBadge": "", "work": 4, "money": 4, "health": 4, "romance": 4, "workMsg": "順調に進む。チャンスを逃さず着実に成果を積む", "moneyMsg": "堅実な収入が見込める。無駄遣いを避ければ蓄積できる", "healthMsg": "概ね良好。規則正しい生活を維持して好調を保つ", "romanceMsg": "良好な関係が築ける。コミュニケーションが円滑", "advice": "兌宮（悦びと収穫の時期。社交的なイベントが好結果を生む）に位置する好調月。六星占術「種子」— 新しい種をまく時期。将来の芽を育てるスタート地点。丁火の本質を持つあなたは、Maximizer（最上志向）を全開にして攻める月。西洋占星術のテーマ「拡大と成長」— 木星のトラインが最も効く月。学び・旅・新しい視点の獲得"}, {"month": "6月", "monthNum": 6, "nineStarNote": "吉凶混合", "nineStarEnergy": 40, "rokuseiPhase": "緑生", "rokuseiType": "good", "westernTheme": "安定と収穫", "westernEnergy": 75, "retroBadge": "<span class=\"month-tag\" style=\"background:rgba(251,146,60,0.18);color:#fb923c;border:1px solid rgba(251,146,60,0.4)\">&#9888; 水星逆行 in Cancer (6/29-7/23)</span>", "work": 3, "money": 3, "health": 3, "romance": 3, "workMsg": "普通ペース。地道な積み重ねが後に効いてくる", "moneyMsg": "収支トントン。計画的な支出管理が重要", "healthMsg": "可もなく不可もなく。睡眠の質に注意を払う", "romanceMsg": "平穏な時期。既存の関係を大切にする", "advice": "艮宮の影響で変化のタイミング。過去の蓄積を見直し、方向転換に適した時期。六星占術「緑生」— 芽が伸び始める成長期。学びと実験に適した時期。Empathy（共感性）を土台に、丁火らしく着実に進むことが鍵。西洋占星術のテーマ「安定と収穫」— 春の努力が形になる。経済面での良いニュースの可能性"}, {"month": "7月", "monthNum": 7, "nineStarNote": "上昇運", "nineStarEnergy": 70, "rokuseiPhase": "立花", "rokuseiType": "great", "westernTheme": "自己表現の見直し", "westernEnergy": 60, "retroBadge": "<span class=\"month-tag\" style=\"background:rgba(251,146,60,0.18);color:#fb923c;border:1px solid rgba(251,146,60,0.4)\">&#9888; 水星逆行 in Cancer (6/29-7/23)</span>", "work": 4, "money": 4, "health": 4, "romance": 4, "workMsg": "順調に進む。チャンスを逃さず着実に成果を積む", "moneyMsg": "堅実な収入が見込める。無駄遣いを避ければ蓄積できる", "healthMsg": "概ね良好。規則正しい生活を維持して好調を保つ", "romanceMsg": "良好な関係が築ける。コミュニケーションが円滑", "advice": "離宮（注目を集めやすい時期。自己表現と発信が効果的）に位置する好調月。六星占術「立花」— 才能や魅力が開花する時期。クリエイティブな活動に最適。丁火の本質を持つあなたは、Intellection（内省）を全開にして攻める月。西洋占星術のテーマ「自己表現の見直し」— 水星逆行期。創造性の方向を再考。過去作品のリバイバル"}, {"month": "8月", "monthNum": 8, "nineStarNote": "中凶・注意", "nineStarEnergy": 30, "rokuseiPhase": "健弱", "rokuseiType": "caution", "westernTheme": "情熱の再点火", "westernEnergy": 85, "retroBadge": "", "work": 2, "money": 1, "health": 1, "romance": 2, "workMsg": "停滞感あり。焦らず基礎固めに集中", "moneyMsg": "金運低迷。守りの姿勢で乗り切る。衝動買い厳禁", "healthMsg": "体調管理に細心の注意。無理なスケジュールは避ける", "romanceMsg": "すれ違いが起きやすい。丁寧な対話を心がける", "advice": "充電を最優先にする月。坎宮（内省と忍耐の時期。表面的には停滞感があるが、内面の成長が進む）。六星占術「健弱」— 小殺界。体調や気力にムラが出やすい。無理は禁物。丁火の炎が弱まる時期。Deliberative（慎重さ）に頼りすぎず、静かに回復を。西洋占星術のテーマ「情熱の再点火」— 蠍座の支配星・冥王星のパワーが最高潮。変容の力を活用"}, {"month": "9月", "monthNum": 9, "nineStarNote": "吉凶混合", "nineStarEnergy": 45, "rokuseiPhase": "達成", "rokuseiType": "great", "westernTheme": "収穫と整理", "westernEnergy": 70, "retroBadge": "", "work": 4, "money": 4, "health": 4, "romance": 4, "workMsg": "順調に進む。チャンスを逃さず着実に成果を積む", "moneyMsg": "堅実な収入が見込める。無駄遣いを避ければ蓄積できる", "healthMsg": "概ね良好。規則正しい生活を維持して好調を保つ", "romanceMsg": "良好な関係が築ける。コミュニケーションが円滑", "advice": "坤宮（受容と準備の時期。土台をしっかり固め、次の飛躍に備える）に位置する好調月。六星占術「達成」— 努力が成果として実を結ぶ時期。目標達成に全力を。丁火の本質を持つあなたは、Connectedness（運命思考）を全開にして攻める月。西洋占星術のテーマ「収穫と整理」— 上半期の成果を整理。不要なものを手放し、次のステージへ"}, {"month": "10月", "monthNum": 10, "nineStarNote": "中吉・回復", "nineStarEnergy": 65, "rokuseiPhase": "乱気", "rokuseiType": "caution", "westernTheme": "誕生月のパワー", "westernEnergy": 90, "retroBadge": "<span class=\"month-tag\" style=\"background:rgba(251,146,60,0.18);color:#fb923c;border:1px solid rgba(251,146,60,0.4)\">&#9888; 水星逆行 in Scorpio (10/24-11/13)</span>", "work": 3, "money": 2, "health": 3, "romance": 3, "workMsg": "普通ペース。地道な積み重ねが後に効いてくる", "moneyMsg": "予想外の出費に注意。大きな買い物は延期が吉", "healthMsg": "可もなく不可もなく。睡眠の質に注意を払う", "romanceMsg": "平穏な時期。既存の関係を大切にする", "advice": "エネルギーが低下しやすい月。九星気学では震宮（行動力が高まり、新しいスタートを切りやすい時期）。六星占術で「乱気」— 中殺界。判断力が鈍りやすい。衝動的な決断を避ける。大きな決断は控えるのが賢明。丁火の炎を守りつつ、Maximizer（最上志向）を防御的に活用して。欠如要素「金・水」の影響が出やすいので意識的にケアを。西洋占星術のテーマ「誕生月のパワー」— 太陽が蠍座入り。年間で最もエネルギーが高い月。重要な決断に最適"}, {"month": "11月", "monthNum": 11, "nineStarNote": "上昇運", "nineStarEnergy": 75, "rokuseiPhase": "再会", "rokuseiType": "good", "westernTheme": "深い洞察", "westernEnergy": 75, "retroBadge": "<span class=\"month-tag\" style=\"background:rgba(251,146,60,0.18);color:#fb923c;border:1px solid rgba(251,146,60,0.4)\">&#9888; 水星逆行 in Scorpio (10/24-11/13)</span>", "work": 4, "money": 4, "health": 4, "romance": 4, "workMsg": "順調に進む。チャンスを逃さず着実に成果を積む", "moneyMsg": "堅実な収入が見込める。無駄遣いを避ければ蓄積できる", "healthMsg": "概ね良好。規則正しい生活を維持して好調を保つ", "romanceMsg": "良好な関係が築ける。コミュニケーションが円滑", "advice": "巽宮（人脈と信用が拡大する時期。情報が集まりやすい）に位置する好調月。六星占術「再会」— 過去のつながりが復活する時期。旧友や以前の経験が価値を持つ。丁火の本質を持つあなたは、Empathy（共感性）を全開にして攻める月。西洋占星術のテーマ「深い洞察」— 水星逆行だが蠍座のテーマ「変容」と共鳴。深層心理の探究"}, {"month": "12月", "monthNum": 12, "nineStarNote": "大吉・最盛", "nineStarEnergy": 100, "rokuseiPhase": "財成", "rokuseiType": "great", "westernTheme": "統合と準備", "westernEnergy": 65, "retroBadge": "", "work": 5, "money": 5, "health": 5, "romance": 5, "workMsg": "全力投球で成果が出る時期。新プロジェクトの立ち上げに最適", "moneyMsg": "金運好調。投資・交渉に良い時期。大きな判断も可", "healthMsg": "体調絶好調。新しい運動習慣を始めるチャンス", "romanceMsg": "人間関係が最も輝く時期。新しい出会いも深い絆も", "advice": "中宮（年間で最もエネルギーが集中する中心位置。影響力が最大化）に位置する好調月。六星占術「財成」— 財運が充実する時期。投資や資産形成に追い風。丁火の本質を持つあなたは、Intellection（内省）を全開にして攻める月。西洋占星術のテーマ「統合と準備」— 1年の統合。来年への種まき。精神的な充電期間"}];
+const currentMonth=2;
+const guidanceData={"energyTone": "慎重", "energyDesc": "守りを固め、無理をしない月", "energyBg": "rgba(234,179,8,0.15)", "energyColor": "#facc15", "narrative": "3月は守りを固めて内面を充実させる月です。九星気学では中宮（年間で最もエネルギーが集中する中心位置。影響力が最大化）。六星占術は「停止」— 大殺界の中心。じっと耐え、現状維持を最優先に。五行で欠如している「金・水」の要素を意識的に補うのが特に有効なタイミングです。西洋占星術では「内省と再構築」のテーマが強まる月。水星逆行の影響。過去の選択を振り返り、方向性を微調整する", "actionsHtml": "<div class=\"guidance-action\"><div class=\"guidance-action-icon\" style=\"background:rgba(34,197,94,0.15);color:#4ade80\">&#9829;</div><div><div class=\"guidance-action-title\">健康を守る</div><div class=\"guidance-action-desc\">体調を崩しやすい月。睡眠の質を最優先に。無理なスケジュールは組まない</div></div></div><div class=\"guidance-action\"><div class=\"guidance-action-icon\" style=\"background:rgba(99,102,241,0.15);color:#a5b4fc\">&#9733;</div><div><div class=\"guidance-action-title\">Deliberative（慎重さ）で自分を守る</div><div class=\"guidance-action-desc\">慎重さが行動の先延ばしにならないよう意識する。「完璧な答えより、今できる最善」で動く</div></div></div><div class=\"guidance-action\"><div class=\"guidance-action-icon\" style=\"background:rgba(139,92,246,0.15);color:#c4b5fd\">&#9826;</div><div><div class=\"guidance-action-title\">繊細さを創造性に変換する</div><div class=\"guidance-action-desc\">好調期の繊細さは、美しいものや深い体験から何倍もの充足を引き出す。アート・音楽・深い会話を意識的に取り入れて、感性を栄養にする</div></div></div>", "watchHtml": "<div class=\"guidance-watch\"><div class=\"guidance-watch-title\">気をつけること</div><div class=\"guidance-watch-item\">六星占術で大殺界に入っています。大きな契約・転職・引越しなど人生の重大決断は可能な限り避ける</div><div class=\"guidance-watch-item\">「決断できない」状態に陥りやすい月。迷ったら信頼できる人に相談して背中を押してもらう</div><div class=\"guidance-watch-item\">柔軟性が低下しやすい月。予定変更にイライラしたら深呼吸。「流れに身を任せる」ことも戦略</div></div>"};
+function starRating(n){return'<span style="color:var(--yellow);">'+'★'.repeat(n)+'</span><span style="color:var(--border);">'+'★'.repeat(5-n)+'</span>';}
+function phaseColor(t){
+  if(t==='great')return{bg:'rgba(34,197,94,0.12)',border:'rgba(34,197,94,0.3)',color:'#4ade80'};
+  if(t==='good')return{bg:'rgba(59,130,246,0.12)',border:'rgba(59,130,246,0.3)',color:'#60a5fa'};
+  if(t==='caution')return{bg:'rgba(234,179,8,0.12)',border:'rgba(234,179,8,0.3)',color:'#facc15'};
+  return{bg:'rgba(239,68,68,0.12)',border:'rgba(239,68,68,0.3)',color:'#f87171'};
+}
+function buildGuidanceHtml(g){
+  if(!g)return'';
+  return`<div class="guidance-summary" style="margin-top:16px">
+    <div class="guidance-overview">
+      <div class="guidance-energy-badge" style="background:${g.energyBg};color:${g.energyColor};border:1px solid ${g.energyColor}">${g.energyTone}</div>
+      <div style="font-size:12px;color:var(--text-secondary)">${g.energyDesc}</div>
+    </div>
+    <div class="guidance-narrative">${g.narrative}</div>
+    <div class="guidance-actions-grid">
+      <div class="guidance-actions-section">
+        <div class="guidance-section-label">今月やるべきこと</div>
+        ${g.actionsHtml}
+      </div>
+      ${g.watchHtml}
+    </div>
+  </div>`;
+}
+const selEl=document.getElementById('monthSelector');
+const panEl=document.getElementById('monthPanels');
+monthlyData.forEach((m,i)=>{
+  const btn=document.createElement('button');
+  btn.className='month-btn'+(i===currentMonth?' active current':'');
+  btn.textContent=m.month;btn.dataset.month=i;btn.onclick=()=>selectMonth(i);
+  selEl.appendChild(btn);
+  const pc=phaseColor(m.rokuseiType);
+  const isCurrentMonth=(i===currentMonth);
+  const panel=document.createElement('div');
+  panel.className='month-panel'+(isCurrentMonth?' active':'');
+  panel.id='month-'+i;
+  panel.innerHTML=`<div class="card">
+    <div class="month-card-header">
+      <div class="month-label">${m.month}</div>
+      <div class="month-tags">
+        <span class="month-tag" style="background:rgba(99,102,241,0.15);color:#a5b4fc">九星: ${m.nineStarNote}</span>
+        <span class="month-tag" style="background:${pc.bg};color:${pc.color};border:1px solid ${pc.border}">六星: ${m.rokuseiPhase}</span>
+        ${m.westernTheme ? '<span class="month-tag" style="background:rgba(139,92,246,0.15);color:#c4b5fd;border:1px solid rgba(139,92,246,0.3)">西洋: '+m.westernTheme+'</span>' : ''}
+        ${m.retroBadge || ''}
+      </div>
+    </div>
+    ${m.advice ? '<div class="month-advice">' + m.advice + '</div>' : ''}
+    <div class="domain-grid">
+      <div class="domain-card work"><div class="domain-icon-label"><div class="domain-label" style="color:var(--blue)">仕事</div><div class="domain-stars">${starRating(m.work)}</div></div><div class="domain-msg">${m.workMsg}</div></div>
+      <div class="domain-card money"><div class="domain-icon-label"><div class="domain-label" style="color:var(--gold)">お金</div><div class="domain-stars">${starRating(m.money)}</div></div><div class="domain-msg">${m.moneyMsg}</div></div>
+      <div class="domain-card health"><div class="domain-icon-label"><div class="domain-label" style="color:var(--green)">健康</div><div class="domain-stars">${starRating(m.health)}</div></div><div class="domain-msg">${m.healthMsg}</div></div>
+      <div class="domain-card romance"><div class="domain-icon-label"><div class="domain-label" style="color:#f472b6">恋愛</div><div class="domain-stars">${starRating(m.romance)}</div></div><div class="domain-msg">${m.romanceMsg}</div></div>
+    </div>
+    ${isCurrentMonth ? buildGuidanceHtml(guidanceData) : ''}
+  </div>`;
+  panEl.appendChild(panel);
+});
+function selectMonth(idx){
+  document.querySelectorAll('.month-btn').forEach(b=>b.classList.remove('active'));
+  document.querySelectorAll('.month-panel').forEach(p=>p.classList.remove('active'));
+  document.querySelector(`.month-btn[data-month="${idx}"]`).classList.add('active');
+  document.getElementById('month-'+idx).classList.add('active');
+  document.querySelectorAll('.yt-month').forEach(m=>m.style.opacity='0.5');
+  document.querySelector(`.yt-month[data-month="${idx}"]`).style.opacity='1';
+}
+document.querySelectorAll('.yt-month').forEach(el=>{
+  el.addEventListener('click',()=>selectMonth(parseInt(el.dataset.month)));
+});
+selectMonth(currentMonth);
+</script>
+  </div>
+</div><div class="hub-card" id="cross-card">
+  <div class="hub-card-preview" onclick="this.parentElement.classList.toggle('expanded')">
+    <div class="hub-card-icon" style="background:rgba(99,102,241,0.12);color:#a5b4fc">&#10022;</div>
+    <div>
+      <div class="hub-card-title">才能 × 運命 — 交差点のインサイト</div>
+      <div class="hub-card-summary">強み × 運気の掛け合わせが生むシナジー</div>
+    </div>
+    <div class="hub-card-arrow"></div>
+  </div>
+  <div class="hub-card-content">
+    <section class="section" id="cross">
+  <div class="section-quote">"点と点が、線になる瞬間"</div>
+  <div class="grid"><div class="insight-box">
+      <div class="insight-title">Empathy（共感性）× 繊細さ × エニアグラム4</div>
+      <p>強み診断1位の共感性と繊細な感受性、エニアグラムType 4の独自性追求が共鳴。「人の感情を深く理解し、独自の視点で表現する力」を形成する。この組み合わせはサービス設計においてユーザーの痛みを自分事として感じられるPMFの源泉。</p>
+    </div><div class="insight-box">
+      <div class="insight-title">Intellection（内省）× 集中パターン × 丁火（陰火）</div>
+      <p>深い思考力（Intellection 2位）× やや多動の集中特性 × 丁火（ロウソクの炎）。環境を整えれば安定して燃え続けるが、刺激に弱い。自動化で雑務を排除し、思考に没頭できる環境を作ることが最重要。</p>
+    </div><div class="insight-box">
+      <div class="insight-title">Deliberative（慎重さ）× AB型 × Scorpio（不動宮）</div>
+      <p>慎重さ（3位）× AB型の合理的分析 × Scorpioの不動宮。三重の慎重さは深い分析に基づく確実な意思決定を可能にする。一方で「分析麻痺」に陥りやすく、行動が遅れるリスクもある。</p>
+    </div><div class="insight-box">
+      <div class="insight-title">Connectedness（運命思考）× 七赤金星 × 坤宮2026</div>
+      <p>全てを繋げて見る直感力（4位）× 七赤金星の社交力と言葉の力。2026年の坤宮は「変化・準備」の年 — 点在するプロジェクト群を繋ぎ、エコシステムを設計するのに最適なタイミング。</p>
+    </div><div class="insight-box">
+      <div class="insight-title">Maximizer（最上志向）× 3S原則 × 7つの習慣</div>
+      <p>「良い→最高」の追求（5位）がOSそのもの。3S（Simple, Scalable, Sustainable）でフィルターし、第II領域（重要×非緊急）に集中投資する。「もっと良くできないか？」が止まらない性質は自動化・最適化の原動力。</p>
+    </div></div>
+</section>
+  </div>
+</div>
+<footer class="page-footer">
+  <div>Self-Insight — Powered by AI × 東洋占術 × 心理学</div>
+  <div style="margin-top:4px;font-size:10px">Generated 2026-03-23</div>
+</footer>
+</div>
+<script>
+new Chart(document.getElementById('chartOverlay'),{
+  type:'line',
+  data:{labels:["2022", "2023", "2024", "2025", "2026", "2027", "2028", "2029", "2030", "2031", "2032", "2033"],datasets:[
+    {label:'九星気学',data:[null, null, 70, 30, 45, 65, 75, 100, 90, 80, 40, null],borderColor:'#6366f1',fill:false,tension:0.4,borderWidth:2,pointRadius:4,pointBackgroundColor:'#6366f1'},
+    {label:'六星占術',data:[15, 10, 20, 50, 65, 80, 35, 90, 25, 70, 85, 95],borderColor:'#22c55e',fill:false,tension:0.4,borderWidth:2,pointRadius:4,pointBackgroundColor:'#22c55e'},
+    {label:'霊合合成',data:[null, null, 20, 64, 73, 77, 34, 70, 26, 76, 83, null],borderColor:'#eab308',fill:false,tension:0.4,borderWidth:2,borderDash:[6,3],pointRadius:4,pointBackgroundColor:'#eab308'}
+  ]},
+  options:{responsive:true,maintainAspectRatio:false,animation:{duration:1500,easing:'easeOutQuart'},interaction:{mode:'index',intersect:false},
+    plugins:{legend:{display:false}},
+    scales:{x:{ticks:{color:'#7c8293',font:{family:"'JetBrains Mono',monospace",size:11}},grid:{color:'rgba(255,255,255,0.05)'}},
+      y:{min:0,max:110,ticks:{display:false},grid:{color:'rgba(255,255,255,0.05)'}}}
+  }
+});
+const fadeObserver=new IntersectionObserver((entries)=>{entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');fadeObserver.unobserve(e.target);}});},{threshold:0.1,rootMargin:'0px 0px -40px 0px'});
+document.querySelectorAll('.section').forEach(s=>fadeObserver.observe(s));
+function toggleAccordion(el){el.classList.toggle('open');const body=el.nextElementSibling;if(body)body.classList.toggle('open');}
+</script>
+</body>
+</html>

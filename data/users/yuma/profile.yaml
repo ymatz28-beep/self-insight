@@ -1,0 +1,519 @@
+# Self-Insight Profile — Yuma Tejima
+# Last Updated: 2026-03-19
+
+identity:
+  name: Yuma Tejima
+  birth_date: "1975-10-28"
+  birth_time: null  # Unknown — unlocks Hour Pillar + Ascendant
+  birth_place: "兵庫県尼崎市"
+  blood_type: AB
+  age: 50  # as of 2026
+
+# === CliftonStrengths 34 ===
+strengths_finder:
+  date_taken: "2015-05-12"
+  lead_domain: Strategic Thinking
+  top5:
+    - { rank: 1, name: Empathy, domain: Relationship Building }
+    - { rank: 2, name: Intellection, domain: Strategic Thinking }
+    - { rank: 3, name: Deliberative, domain: Executing }
+    - { rank: 4, name: Connectedness, domain: Relationship Building }
+    - { rank: 5, name: Maximizer, domain: Influencing }
+  top10:
+    - { rank: 6, name: Futuristic, domain: Strategic Thinking }
+    - { rank: 7, name: Relator, domain: Relationship Building }
+    - { rank: 8, name: Activator, domain: Executing }
+    - { rank: 9, name: Individualization, domain: Relationship Building }
+    - { rank: 10, name: Learner, domain: Strategic Thinking }
+  all34:
+    - Empathy
+    - Intellection
+    - Deliberative
+    - Connectedness
+    - Maximizer
+    - Futuristic
+    - Relator
+    - Activator
+    - Individualization
+    - Learner
+    - Input
+    - Ideation
+    - Command
+    - Context
+    - Focus
+    - Developer
+    - Achiever
+    - Self-Assurance
+    - Arranger
+    - Analytical
+    - Responsibility
+    - Consistency
+    - Positivity
+    - Competition
+    - Significance
+    - Adaptability
+    - Strategic
+    - Discipline
+    - Includer
+    - Communication
+    - Belief
+    - Restorative
+    - Woo
+    - Harmony
+  domain_distribution:
+    Relationship Building: [1, 4, 7, 9, 16]   # Empathy, Connectedness, Relator, Individualization, Developer
+    Strategic Thinking: [2, 6, 10, 11, 12, 14, 20]  # Intellection, Futuristic, Learner, Input, Ideation, Context, Analytical
+    Executing: [3, 8, 15, 17, 19, 21, 22, 28]  # Deliberative, Activator, Focus, Achiever, Arranger, Responsibility, Consistency, Discipline
+    Influencing: [5, 13, 18, 24, 25, 30, 33]   # Maximizer, Command, Self-Assurance, Competition, Significance, Communication, Woo
+
+# === Personality Typology ===
+personality:
+  enneagram:
+    type: 4
+    name: "The Individualist"
+    description: "自己表現とアイデンティティの探求。深い感情と独自性"
+    growth_direction: 1  # Type 1 (健全な方向)
+    stress_direction: 2  # Type 2 (不健全な方向)
+  hsp:
+    score: high  # 自己認識
+    traits: ["感覚処理感受性が高い", "環境刺激に敏感", "深い情報処理"]
+  adhd:
+    tendency: leaning  # 自己認識
+    traits: ["過集中と散漫の波", "新しい刺激への反応性", "マルチタスク傾向"]
+  mbti: null  # 後日追加
+
+# === Four Pillars of Destiny (四柱推命) ===
+four_pillars:
+  year_pillar:
+    stem: { char: 乙, element: Wood, yin_yang: Yin, reading: きのと }
+    branch: { char: 卯, animal: Rabbit, element: Wood, reading: う }
+    full: 乙卯
+  month_pillar:
+    stem: { char: 丙, element: Fire, yin_yang: Yang, reading: ひのえ }
+    branch: { char: 戌, animal: Dog, element: Earth, reading: いぬ }
+    full: 丙戌
+  day_pillar:
+    stem: { char: 丁, element: Fire, yin_yang: Yin, reading: ひのと }
+    branch: { char: 未, animal: Goat, element: Earth, reading: ひつじ }
+    full: 丁未
+  hour_pillar: null  # 出生時刻不明
+  day_master: { char: 丁, element: Fire, yin_yang: Yin, description: "陰火 — ロウソクの炎。静かで温かく、人を照らす" }
+  five_elements_balance:
+    木: { count: 2, pct: 33, source: "乙(年干)+卯(年支)" }
+    火: { count: 2, pct: 33, source: "丙(月干)+丁(日干)" }
+    土: { count: 2, pct: 33, source: "戌(月支)+未(日支)" }
+    金: { count: 0, pct: 0, source: "なし（時柱で補完の可能性）" }
+    水: { count: 0, pct: 0, source: "なし（時柱で補完の可能性）" }
+  missing_elements: [金, 水]
+  element_insight: "金(決断力・収穫)と水(知恵・柔軟性)が欠如。意識的にこれらの要素を補う行動が有効"
+
+# === Nine Star Ki (九星気学) ===
+nine_star_ki:
+  year_star: { number: 7, name: 七赤金星, element: Metal, direction: W }
+  month_star: { number: 9, name: 九紫火星, element: Fire, direction: S }
+  day_star: { number: 5, name: 五黄土星, element: Earth, direction: C }
+  inclination: { palace: 震宮, meaning: "行動力・決断力。内面に強い推進力" }
+  best_directions: [二黒土星, 八白土星]
+  good_directions: [一白水星, 六白金星]
+  traits: "社交的で人を楽しませる力。言葉に力がある。金運に恵まれやすいが散財に注意"
+  year_cycle_2026:
+    center_star: { number: 1, name: 一白水星 }
+    position: { palace: 坤宮, direction: SW, meaning: "変化・準備" }
+    description: "地固めの年。2027年の発展に向けた基盤を作る。急がず仕込みに集中"
+  nine_year_cycle:
+    - { year: 2024, palace: 離宮, theme: "注目・離別", energy: 70 }
+    - { year: 2025, palace: 坎宮, theme: "厄・試練", energy: 30 }
+    - { year: 2026, palace: 坤宮, theme: "変化・準備", energy: 45, current: true }
+    - { year: 2027, palace: 震宮, theme: "発展・始動", energy: 65 }
+    - { year: 2028, palace: 巽宮, theme: "整備・信用", energy: 75 }
+    - { year: 2029, palace: 中宮, theme: "絶頂・転機", energy: 100 }
+    - { year: 2030, palace: 乾宮, theme: "充実・実り", energy: 90 }
+    - { year: 2031, palace: 兌宮, theme: "悦び・収穫", energy: 80 }
+    - { year: 2032, palace: 艮宮, theme: "停滞・自己改革", energy: 40 }
+
+# === Rokusei Senjutsu (六星占術) ===
+rokusei:
+  main_star: { name: 木星人, polarity: "-", reading: "もくせいじん マイナス" }
+  sub_star: { name: 金星人, polarity: "-", reading: "きんせいじん マイナス" }
+  reigou: true  # 霊合星人 — メイン星とサブ星の二重性を持つ
+  traits:
+    main: "好奇心旺盛で行動力がある。社交的で人脈が広い。自由を重んじ束縛を嫌う"
+    sub: "プライドが高く美意識がある。完璧主義的。人から尊敬されたい欲求"
+    reigou_effect: "二つの星の性質を併せ持ち、運気の振れ幅が大きい。良い時は倍、悪い時も倍"
+  twelve_year_cycle:
+    - { year: 2022, phase: 陰影,殺界: 大殺界, energy: 15 }
+    - { year: 2023, phase: 停止, 殺界: 大殺界, energy: 10 }
+    - { year: 2024, phase: 減退, 殺界: 大殺界, energy: 20 }
+    - { year: 2025, phase: 種子, 殺界: null, energy: 50 }
+    - { year: 2026, phase: 緑生, 殺界: null, energy: 65, current: true }
+    - { year: 2027, phase: 立花, 殺界: null, energy: 80 }
+    - { year: 2028, phase: 健弱, 殺界: 小殺界, energy: 35 }
+    - { year: 2029, phase: 達成, 殺界: null, energy: 90 }
+    - { year: 2030, phase: 乱気, 殺界: 中殺界, energy: 25 }
+    - { year: 2031, phase: 再会, 殺界: null, energy: 70 }
+    - { year: 2032, phase: 財成, 殺界: null, energy: 85 }
+    - { year: 2033, phase: 安定, 殺界: null, energy: 95 }
+  sub_star_cycle:  # 金星人マイナス（霊合サブ）
+    - { year: 2024, phase: 乱気, 殺界: 中殺界, energy: 30 }
+    - { year: 2025, phase: 再会, 殺界: null, energy: 85 }
+    - { year: 2026, phase: 財成, 殺界: null, energy: 90 }
+    - { year: 2027, phase: 安定, 殺界: null, energy: 80 }
+    - { year: 2028, phase: 陰影, 殺界: 大殺界, energy: 20 }
+    - { year: 2029, phase: 停止, 殺界: 大殺界, energy: 10 }
+    - { year: 2030, phase: 減退, 殺界: 大殺界, energy: 15 }
+    - { year: 2031, phase: 種子, 殺界: null, energy: 55 }
+    - { year: 2032, phase: 緑生, 殺界: null, energy: 65 }
+  reigou_combined:  # 霊合合成スコア（メイン70% + サブ30%）
+    - { year: 2024, score: 20, label: "最悪期" }
+    - { year: 2025, score: 64, label: "回復開始" }
+    - { year: 2026, score: 73, label: "好調" }
+    - { year: 2027, score: 77, label: "絶好調" }
+    - { year: 2028, score: 34, label: "要注意" }
+    - { year: 2029, score: 70, label: "矛盾期" }
+    - { year: 2030, score: 26, label: "危険期" }
+    - { year: 2031, score: 76, label: "好調" }
+    - { year: 2032, score: 83, label: "絶好調" }
+
+# === Western Astrology ===
+western_astrology:
+  sun_sign: { sign: Scorpio, symbol: "♏", element: Water, quality: Fixed }
+  ruling_planet: Pluto
+  decan: { number: 1, sub_ruler: Pluto, traits: "最も純粋な蠍座の性質。変容・再生・深層心理への探究" }
+  ascendant: null  # 出生時刻不明
+  moon_sign: null  # 出生時刻不明（双子座付近の可能性）
+  traits: "深い洞察力、変容の力、情熱と集中。表面的なものに興味がない"
+  element_traits: "水のエレメント — 感情の深さ、直感力、共感力。表面ではなく深層で物事を捉える"
+  quality_traits: "不動宮（Fixed）— 一度決めたら変えない意志の強さ。安定と持続力。変化への抵抗もある"
+  forecast_2026: "冥王星が水瓶座に完全移行した2026年は、蠍座にとって「変容の仕上げ」の年。これまで手放してきた古い構造の跡地に、新しい基盤を築く時期。特に人間関係と仕事の枠組みにおいて、より本質的な選択ができるようになる"
+
+  # 2026 Major Transits
+  transits_2026:
+    jupiter:
+      sign: Cancer
+      aspect_to_sun: Trine
+      influence: "木星が蟹座でトライン — 感情的な成長と内面の豊かさが拡大。直感的な判断が冴える年"
+    saturn:
+      sign: Aries
+      aspect_to_sun: Quincunx
+      influence: "土星が牡羊座でクインカンクス — 行動と慎重さのバランス調整。新しい責任との折り合い"
+    pluto:
+      sign: Aquarius
+      aspect_to_sun: Square
+      influence: "冥王星が水瓶座でスクエア — 変容の最終段階。古い構造からの完全な脱却を促される"
+    uranus:
+      sign: Gemini
+      aspect_to_sun: Opposition
+      influence: "天王星が双子座でオポジション — 予期せぬ変化と覚醒。コミュニケーションの革新"
+
+  # Mercury Retrograde 2026
+  mercury_retrograde_2026:
+    - period: "2/26-3/20"
+      sign: Pisces
+      impact: "コミュニケーションの混乱に注意。重要な契約は前後にずらす"
+    - period: "6/29-7/23"
+      sign: Cancer
+      impact: "感情面のコミュニケーションに見直し。家族・身近な人との関係を再考"
+    - period: "10/24-11/13"
+      sign: Scorpio
+      impact: "蠍座での逆行 — 自分自身への影響が最大。深層心理の再探索と変容の総仕上げ"
+
+  # Monthly Western Horoscope (sun sign based)
+  monthly_horoscope:
+    - month: 1
+      theme: "新しい基盤づくり"
+      energy: 65
+      focus: "キャリアと長期目標の見直し。冥王星の影響で深い変容が進む"
+    - month: 2
+      theme: "人間関係の深化"
+      energy: 70
+      focus: "信頼できる人との絆が強まる。表面的な関係を手放す勇気"
+    - month: 3
+      theme: "内省と再構築"
+      energy: 55
+      focus: "水星逆行の影響。過去の選択を振り返り、方向性を微調整する"
+    - month: 4
+      theme: "行動の再開"
+      energy: 75
+      focus: "逆行明け。止まっていたプロジェクトが動き出す。直感に従う"
+    - month: 5
+      theme: "拡大と成長"
+      energy: 80
+      focus: "木星のトラインが最も効く月。学び・旅・新しい視点の獲得"
+    - month: 6
+      theme: "安定と収穫"
+      energy: 75
+      focus: "春の努力が形になる。経済面での良いニュースの可能性"
+    - month: 7
+      theme: "自己表現の見直し"
+      energy: 60
+      focus: "水星逆行期。創造性の方向を再考。過去作品のリバイバル"
+    - month: 8
+      theme: "情熱の再点火"
+      energy: 85
+      focus: "蠍座の支配星・冥王星のパワーが最高潮。変容の力を活用"
+    - month: 9
+      theme: "収穫と整理"
+      energy: 70
+      focus: "上半期の成果を整理。不要なものを手放し、次のステージへ"
+    - month: 10
+      theme: "誕生月のパワー"
+      energy: 90
+      focus: "太陽が蠍座入り。年間で最もエネルギーが高い月。重要な決断に最適"
+    - month: 11
+      theme: "深い洞察"
+      energy: 75
+      focus: "水星逆行だが蠍座のテーマ「変容」と共鳴。深層心理の探究"
+    - month: 12
+      theme: "統合と準備"
+      energy: 65
+      focus: "1年の統合。来年への種まき。精神的な充電期間"
+
+# === Blood Type ===
+blood_type:
+  type: AB
+  population_pct: 10
+  traits:
+    strengths: ["合理的思考と感性の共存", "冷静な分析力", "多角的視点", "適応力"]
+    challenges: ["二面性による迷い", "感情の複雑さ", "他者から理解されにくい"]
+
+# === Interpretations (AI-generated narrative) ===
+interpretations:
+  hero:
+    tagline: "静かな炎で人を照らし、言葉で変容を導く人"
+    traits:
+      - keyword: "静かな情熱"
+        detail: "内面でロウソクのように燃え続ける"
+        source: "四柱推命"
+      - keyword: "♏ 深い直感"
+        detail: "表面ではなく本質を見抜く"
+        source: "西洋占星術"
+      - keyword: "言葉の力"
+        detail: "コミュニケーションで人を動かす"
+        source: "九星気学"
+      - keyword: "共感力 #1"
+        detail: "人の感情を体感レベルで理解する"
+        source: "CliftonStrengths"
+      - keyword: "論理×感性"
+        detail: "分析力と直感を両立するAB型"
+        source: "血液型"
+      - keyword: "二面性の統合"
+        detail: "霊合星人 — 相反する特質を使い分ける"
+        source: "六星占術"
+  integrated_insight:
+    - "あなたの本質は<strong>「静かな炎で人を照らし、言葉で変容を導く人」</strong>です。四柱推命の日主「丁火」（ロウソクの炎）× 九星気学の七赤金星（沢の言葉力）× 蠍座（冥王星が司る変容と再生）。この三角形が示すのは、<strong>他者の感情を体感レベルで感じ取り（Empathy #1）、思考の深淵で本質を掘り当て（Intellection #2）、それを言葉の力で世界に届ける</strong>という稀有な才能の組み合わせです。蠍座の水のエレメントは感情の深さと変容力を与え、不動宮（Fixed）の性質は「一度決めたら貫く」執念を示します。"
+    - "AB型（日本人口の10%）の合理性×感性の二面性は、あなたの思考回路そのもの。データとフレームワーク（3S, MECE）で構造化しながら、同時に感情の機微も逃さない。この「冷静な分析者」と「感受性の高い直感者」の共存は、蠍座の「表面と深層」の二重構造、木星人(−)×金星人(−)の霊合星人としての二重性、そしてエニアグラム4の「合理と美の統合」と完全に共鳴しています。<strong>相反する特質を矛盾なく統合する力</strong>が、Yumaの最大の特徴です。"
+    - "あなたの感覚は、一般より明らかに深く繊細です。環境や人の感情を微細なレベルで察知し、通常は気づかない情報を拾い上げる。蠍座の深い洞察力、七赤金星の社交的アンテナ、Empathyの体感的共感がすべて同じ方向を指している。一方で、<strong>興味が点火されると異常な集中力を発揮し、一つのテーマに何時間も没頭する</strong>。この過集中モードとConnectedness（運命思考 #4）の「全てを繋げて見る力」が組み合わさると、他者には到達できない深さの洞察が生まれます。ただし、興味が移ると別のテーマへ瞬時に飛ぶ — これは弱みではなく、<strong>複数プロジェクトを並行で深掘りし、意外なシナジーを見出す「拡散的探究力」</strong>の源泉です。"
+    - "<strong style=\"color:var(--yellow);\">注意すべきポイント — 全体系が一致する弱点</strong>: 五行で<strong>金（決断力・収穫）と水（柔軟性・知恵）が完全に欠如</strong>。蠍座の執着気質 × Deliberative（慎重さ #3）× AB型の分析癖が重なり、<strong>「完璧な答えが出るまで動けない」分析麻痺</strong>に陥りやすい。感覚の繊細さとEmpathy #1は最大の武器ですが、他者のネガティブなエネルギーを吸収しすぎて<strong>自分の境界線が溶ける</strong>リスクが常にある。エニアグラム4はストレス下でType 2に退行し、独自性を捨てて自己犠牲に走る。<strong>仕組み化（自動化・ルーティン・境界線設計）で弱みを構造的にカバーする</strong>ことがYuma OSの本質です。"
+  strengths:
+    Empathy: "他者の感情を「推測」するのではなく「体感」する。言語化されていない不安や喜びを直感的に察知し、その人が本当に求めていることを理解する力。チームリーダーとしての最大の武器であり、サービス設計においてユーザーの痛みを自分事として感じられるPMFの源泉。"
+    Intellection: "思考することそのものが活動。1人の時間に頭の中で概念を回し、深い洞察に到達する。表面的な情報交換ではなく、哲学的な問いや構造的な分析を好む。このダッシュボード自体が、Intellectionが駆動する「自己を体系的に理解したい」という欲求の産物。"
+    Deliberative: "リスクを事前に感知し、慎重に選択肢を評価する。衝動的な判断を避け、深い分析に基づいて確実な意思決定をする力。投資判断や事業設計において、見えないリスクを察知する「守りの強み」。ただし行動の遅れにつながるリスクもある。"
+    Connectedness: "万物のつながりを直感的に感じ取る。一見無関係に見える出来事やアイデアの間に隠れた関連性を見出す力。占術と心理学と確率論を統合する発想、複数プロジェクト間のシナジーを設計する力の源泉。偶然を必然として捉える世界観。"
+    Maximizer: "「平均を良く」するのではなく「良いを最高に」引き上げる。弱みの修正より強みの極大化を追求する。3S原則（Simple, Scalable, Sustainable）の設計思想そのものがMaximizerの発露。「もっと良くできないか？」が止まらない性質。"
+  strengths_ja:
+    Empathy: "共感性"
+    Intellection: "内省"
+    Deliberative: "慎重さ"
+    Connectedness: "運命思考"
+    Maximizer: "最上志向"
+  personality:
+    enneagram: "自己表現とアイデンティティの探求者。「自分だけの世界観」を持ち、平凡であることを嫌う。健全時はType 1（改革者）に向かい原則と美学を融合。ストレス時はType 2（奉仕者）に向かい、自分を犠牲にして他者に尽くしすぎる傾向。"
+    blood_type: "冷静な分析力と繊細な感性が同居。「二面性がある」と言われがちだが、実態は「状況に応じて最適なモードを切り替えている」合理的適応。"
+    sensitivity: "環境や人の感情を微細なレベルで処理する繊細さ。蠍座の深い洞察力、Empathy #1の体感的共感と相乗効果を発揮し、通常は見逃す情報を拾い上げる。美しいもの・深い会話からは何倍もの充足を得る一方、ネガティブな刺激からの回復にも時間がかかる。"
+    focus_pattern: "興味が点火されると驚異的な集中力を発揮し、何時間も一つのテーマに没頭する。Intellection #2の思考力と組み合わさり、深い洞察を生む原動力。一方で興味の対象が移ると瞬時に切り替わるため、仕組み化（自動化・ルーティン設計）で定型業務を排除することが有効。"
+  four_pillars:
+    overview: "四柱推命は生年月日時の4つの柱から、先天的な性質・才能・人生の傾向を読み解く東洋最高峰の命術。各柱が人生の異なる側面を表します。"
+    year: "草花と兎の組み合わせ。社会に対して柔軟で穏やかな印象を与えるが、木の根のようにしなやかな強さを持つ。先祖から受け継いだ「人を和ませる空気感」。"
+    month: "キャリアの柱に太陽の火と忠犬の組み合わせ。仕事では情熱的で忠誠心が強い。丙（太陽）は日主の丁（ロウソク）を支える強い火源 — 仕事にエネルギーの根源がある配置。"
+    day: "本質は陰火と未（羊・土）。温かい土壌の上で灯る炎 — 安定した基盤の上で人を照らす使命。未は「未来」の未でもあり、先見性を暗示。"
+    day_master_detail: "ロウソクの炎。静かで温かく人を照らす。強い意志を内に秘め、感受性豊かで人の心の機微を感じ取る。丙火（太陽）のような自己主張ではなく、暗闇の中で必要な人にだけ光を届ける繊細な存在。"
+  nine_star_ki:
+    year: "あなたの本命星（七赤金星）は生まれた年から算出される「社会的な自分」。「沢」の象意を持ち、あなたは社交的で人を楽しませる力と、言葉に説得力を持つ話術に恵まれています。金星の「金運」は財を呼び込む力ですが、同時に散財しやすい傾向も。方位は西（兌宮）で、収穫と悦びの方角。"
+    month: "あなたの月命星（九紫火星）は生まれた月から算出される「内面の自分」。外から見える社交的な七赤金星の内側に、九紫火星の激しい情熱と知的好奇心が燃えています。九紫火星は「離」の象意 — 物事を明らかにする光の力。あなたの知識欲は旺盛で美意識が高く、直感が鋭い。この本命星と月命星の二層構造が、「表面は穏やかな社交家、内面は激しい探求者」というあなたの二面性を形成しています。"
+  rokusei:
+    main: "あなたの運命星は好奇心旺盛で行動力がある星。自由を重んじ束縛を嫌い、常に新しいことに挑戦したがる冒険者タイプです。あなたは社交的で人脈が広く、興味の幅も広い。(−)は偶数年生まれを示し、陰の性質（内向き・慎重）がベースにあります。"
+    sub: "あなたのサブ星はプライドが高く美意識がある星。完璧主義的で「こだわり」が強い。あなたは人から尊敬されたい欲求が強く、自分の世界観を大切にします。"
+    reigou: "あなたは霊合星人です。メインの運命星に加えてサブの運命星の影響も同時に受ける特殊な存在で、全人口の約16%が該当します。あなたの運気の振れ幅は通常の2倍。好調期は通常の人が到達できない高みに届きますが、不調期（大殺界）は通常以上に深く影響を受けます。メイン星とサブ星が好調なら「最高の年」、片方が大殺界なら「矛盾する年」、両方が大殺界なら「最大限の注意が必要な年」です。"
+
+# === 2026 Monthly Fortune ===
+monthly_fortune:
+- domains:
+    health: 4
+    money: 4
+    romance: 4
+    work: 4
+  month: 1
+  nine_star:
+    energy: 65
+    note: 中吉・回復
+    palace: 震宮
+  rokusei:
+    energy: 95
+    phase: 安定
+    satsukai: null
+    type: great
+- domains:
+    health: 3
+    money: 2
+    romance: 3
+    work: 3
+  month: 2
+  nine_star:
+    energy: 75
+    note: 上昇運
+    palace: 巽宮
+  rokusei:
+    energy: 15
+    phase: 陰影
+    satsukai: 大殺界
+    type: danger
+- domains:
+    health: 3
+    money: 2
+    romance: 3
+    work: 3
+  month: 3
+  nine_star:
+    energy: 100
+    note: 大吉・最盛
+    palace: 中宮
+  rokusei:
+    energy: 10
+    phase: 停止
+    satsukai: 大殺界
+    type: danger
+- domains:
+    health: 3
+    money: 2
+    romance: 3
+    work: 3
+  month: 4
+  nine_star:
+    energy: 90
+    note: 大吉・最盛
+    palace: 乾宮
+  rokusei:
+    energy: 20
+    phase: 減退
+    satsukai: 大殺界
+    type: danger
+- domains:
+    health: 4
+    money: 4
+    romance: 4
+    work: 4
+  month: 5
+  nine_star:
+    energy: 80
+    note: 大吉・好調
+    palace: 兌宮
+  rokusei:
+    energy: 50
+    phase: 種子
+    satsukai: null
+    type: good
+- domains:
+    health: 3
+    money: 3
+    romance: 3
+    work: 3
+  month: 6
+  nine_star:
+    energy: 40
+    note: 吉凶混合
+    palace: 艮宮
+  rokusei:
+    energy: 65
+    phase: 緑生
+    satsukai: null
+    type: good
+- domains:
+    health: 4
+    money: 4
+    romance: 4
+    work: 4
+  month: 7
+  nine_star:
+    energy: 70
+    note: 上昇運
+    palace: 離宮
+  rokusei:
+    energy: 80
+    phase: 立花
+    satsukai: null
+    type: great
+- domains:
+    health: 1
+    money: 1
+    romance: 2
+    work: 2
+  month: 8
+  nine_star:
+    energy: 30
+    note: 中凶・注意
+    palace: 坎宮
+  rokusei:
+    energy: 35
+    phase: 健弱
+    satsukai: 小殺界
+    type: caution
+- domains:
+    health: 4
+    money: 4
+    romance: 4
+    work: 4
+  month: 9
+  nine_star:
+    energy: 45
+    note: 吉凶混合
+    palace: 坤宮
+  rokusei:
+    energy: 90
+    phase: 達成
+    satsukai: null
+    type: great
+- domains:
+    health: 3
+    money: 2
+    romance: 3
+    work: 3
+  month: 10
+  nine_star:
+    energy: 65
+    note: 中吉・回復
+    palace: 震宮
+  rokusei:
+    energy: 25
+    phase: 乱気
+    satsukai: 中殺界
+    type: caution
+- domains:
+    health: 4
+    money: 4
+    romance: 4
+    work: 4
+  month: 11
+  nine_star:
+    energy: 75
+    note: 上昇運
+    palace: 巽宮
+  rokusei:
+    energy: 70
+    phase: 再会
+    satsukai: null
+    type: good
+- domains:
+    health: 5
+    money: 5
+    romance: 5
+    work: 5
+  month: 12
+  nine_star:
+    energy: 100
+    note: 大吉・最盛
+    palace: 中宮
+  rokusei:
+    energy: 85
+    phase: 財成
+    satsukai: null
+    type: great
