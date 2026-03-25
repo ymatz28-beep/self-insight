@@ -7,7 +7,7 @@
 - [WARN] gnav_consistency: Missing gnav link: Cisco (/cisco/)
 
 ## Last Updated
-2026-03-24 (session #23 — nav SSoT enforcement: generate_dashboard.pyのハードコードnav→get_nav_html()関数呼び出しに統一)
+2026-03-25 (session #24 — cross-project session: dotfiles/kaizen-agent。self-insightコード変更なし)
 
 ## Project Overview
 複数の占術（四柱推命・九星気学・六星占術・西洋占星術・干支）+ 独自性格分析SIPS（Big Five基盤の16 Archetypes+24 Strengths+Sensitivity Score）を統合した、徹底的にパーソナライズされた自己理解ダッシュボードサービス。有料SaaS展開を目指す。
@@ -344,3 +344,4 @@
 | 21 | 2026-03-24 | **月間テキスト個別化+UXバグ修正+フォーム接続**: 月間ナラティブ12/12ユニーク化（PALACE_DESC/PHASE_DESC辞書+SF強みローテーション+六星フェーズ別ドメイン推奨）。全セクション二重タイトル除去。折りたたみ→CSS chevron（フォント非依存）。Hero名スタイリング改善（大きく明るく+装飾線）。フォーム→Apps Script POST接続（SUBMIT_URL）+no-corsモード修正。commits: 951ca29, 60d0410, eb98bdc, 82e71eb, 405e1ec, d8ebed4 |
 | 22 | 2026-03-24 | **アクションアイテム登録**: si-sheets-test(フォーム→Sheets再テスト/high)をaction_tracker登録。newsletter-digest側セッションの一環。self-insightコード変更なし |
 | 23 | 2026-03-24 | **nav SSoT enforcement**: generate_dashboard.pyのハードコードGNAV_LINKS→get_nav_html()関数呼び出しに統一。kaizen-agent QAのfalse positive 2件解消(33→31)。全ジェネレータがrenderer.py SSoTを参照する3層防御完成。commit: f5f8209 |
+| 24 | 2026-03-25 | **cross-project session (dotfiles/kaizen-agent)**: Brewfile更新(deno/mlx/tesseract/zeromq/python@3.14追加)+setup.sh 8ステップ化+launchd plistバックアップ+kaizen-agent環境drift自動検出(check_brewfile_drift)。self-insightコード変更なし |
