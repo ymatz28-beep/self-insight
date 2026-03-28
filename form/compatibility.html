@@ -1,0 +1,878 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Self-Insight — 相性診断</title>
+<meta property="og:title" content="AI Self-Insight — 相性診断">
+<meta property="og:description" content="5つの占術軸で二人の相性を徹底分析。生年月日を入力するだけで深層相性が明らかに。">
+<meta property="og:type" content="website">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+JP:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4/dist/chart.umd.min.js"></script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0f1117;--surface:#1a1d27;--surface2:#242837;--border:#2e3347;
+  --text:#e8e9ed;--text2:#9ca3af;--accent:#6366f1;--accent2:#818cf8;
+  --success:#34d399;--warn:#fbbf24;--error:#f87171;
+  --radius:12px;--font:Inter,'Noto Sans JP',sans-serif;--mono:'JetBrains Mono',monospace;
+}
+html{font-size:16px;scroll-behavior:smooth}
+body{font-family:var(--font);background:var(--bg);color:var(--text);line-height:1.6;min-height:100vh;-webkit-font-smoothing:antialiased}
+.container{max-width:640px;margin:0 auto;padding:16px 16px 80px}
+
+/* ===== Step Progress ===== */
+.steps{display:flex;align-items:center;justify-content:center;gap:0;margin:0 auto 28px;max-width:320px}
+.step-item{display:flex;align-items:center;gap:0}
+.step-dot{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;border:2px solid var(--border);color:var(--text2);background:var(--surface);transition:all .4s ease;flex-shrink:0}
+.step-dot.active{border-color:var(--accent);background:var(--accent);color:#fff;box-shadow:0 0 20px rgba(99,102,241,.4)}
+.step-dot.done{border-color:var(--success);background:var(--success);color:#fff}
+.step-line{width:40px;height:2px;background:var(--border);transition:background .4s ease}
+.step-line.active{background:var(--accent)}
+.step-line.done{background:var(--success)}
+
+/* ===== Hero ===== */
+.hero{text-align:center;padding:32px 0 8px}
+.hero h1{font-size:clamp(22px,4vw,28px);font-weight:800;background:linear-gradient(135deg,var(--accent2),#f472b6);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero .sub{color:var(--text2);font-size:14px;margin-top:6px}
+
+/* ===== Form ===== */
+.form-panel{animation:fadeIn .5s ease}
+.person-label{font-size:13px;font-weight:700;color:var(--accent2);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:16px;display:flex;align-items:center;gap:8px}
+.person-label .icon{width:28px;height:28px;border-radius:50%;background:var(--accent);display:flex;align-items:center;justify-content:center;font-size:13px;color:#fff}
+.field{margin-bottom:20px}
+.field label{display:block;font-size:14px;font-weight:500;margin-bottom:6px}
+.field label .req{color:var(--error);margin-left:2px;font-size:12px}
+.field input[type=text],.field input[type=date]{width:100%;background:var(--surface2);border:1px solid var(--border);color:var(--text);padding:12px 14px;border-radius:8px;font-size:15px;font-family:var(--font);outline:none;transition:border .2s}
+.field input:focus{border-color:var(--accent)}
+.field input::placeholder{color:#555}
+.radio-group{display:flex;flex-wrap:wrap;gap:8px}
+.radio-group label{background:var(--surface2);border:1px solid var(--border);padding:10px 16px;border-radius:8px;font-size:14px;cursor:pointer;transition:all .2s;flex:1;min-width:60px;text-align:center;user-select:none}
+.radio-group input{display:none}
+.radio-group label:has(input:checked){border-color:var(--accent);background:rgba(99,102,241,.12)}
+.radio-group input:checked+span{color:var(--accent2)}
+
+.btn-primary{background:var(--accent);color:#fff;border:none;padding:14px 24px;border-radius:8px;font-size:15px;font-weight:600;cursor:pointer;font-family:var(--font);width:100%;transition:all .2s}
+.btn-primary:hover{opacity:.9;transform:translateY(-1px)}
+.btn-primary:disabled{opacity:.4;cursor:not-allowed;transform:none}
+.btn-secondary{background:var(--surface2);color:var(--text);border:1px solid var(--border);padding:12px 20px;border-radius:8px;font-size:14px;font-weight:500;cursor:pointer;font-family:var(--font);width:100%;transition:all .2s}
+.btn-secondary:hover{border-color:var(--accent)}
+
+.or-divider{display:flex;align-items:center;gap:12px;margin:20px 0;color:var(--text2);font-size:13px}
+.or-divider::before,.or-divider::after{content:'';flex:1;height:1px;background:var(--border)}
+
+.invite-box{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px;text-align:center}
+.invite-box p{font-size:13px;color:var(--text2);margin-bottom:12px}
+.invite-url{background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:10px 12px;font-size:12px;font-family:var(--mono);color:var(--accent2);word-break:break-all;margin-bottom:12px;max-height:60px;overflow:auto}
+.btn-copy{background:var(--accent);color:#fff;border:none;padding:10px 20px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;font-family:var(--font);transition:all .2s}
+.btn-copy:hover{opacity:.9}
+.btn-copy.copied{background:var(--success)}
+
+/* ===== Results ===== */
+@keyframes fadeIn{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+@keyframes countUp{from{opacity:0;transform:scale(.8)}to{opacity:1;transform:scale(1)}}
+@keyframes barFill{from{width:0}to{width:var(--fill)}}
+@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.05)}}
+@keyframes glow{0%,100%{box-shadow:0 0 20px rgba(99,102,241,.3)}50%{box-shadow:0 0 40px rgba(99,102,241,.6)}}
+@keyframes ringDraw{from{stroke-dashoffset:var(--circumference)}to{stroke-dashoffset:var(--offset)}}
+
+.result-panel{animation:fadeIn .6s ease}
+
+/* Score ring */
+.score-ring-wrap{text-align:center;margin:24px 0 16px;position:relative}
+.score-ring-container{position:relative;display:inline-block;width:200px;height:200px}
+.score-ring-svg{transform:rotate(-90deg)}
+.score-ring-bg{fill:none;stroke:var(--surface2);stroke-width:10}
+.score-ring-fg{fill:none;stroke-width:10;stroke-linecap:round;--circumference:565.48;--offset:565.48;stroke-dasharray:var(--circumference);stroke-dashoffset:var(--offset);animation:ringDraw 2s ease-out forwards;animation-delay:.3s}
+.score-center{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center}
+.score-number{font-family:var(--mono);font-size:48px;font-weight:700;line-height:1;animation:countUp .6s ease .3s both}
+.score-label{font-size:14px;color:var(--text2);margin-top:2px}
+.score-interpretation{text-align:center;font-size:18px;font-weight:700;margin:8px 0 24px;animation:fadeIn .6s ease .5s both}
+
+/* Radar chart */
+.chart-wrap{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px 16px;margin-bottom:24px;animation:fadeIn .6s ease .4s both}
+.chart-wrap h3{font-size:15px;font-weight:600;margin-bottom:16px;color:var(--text)}
+.radar-container{position:relative;max-width:320px;margin:0 auto}
+
+/* Axis detail cards */
+.axis-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin-bottom:12px;animation:fadeIn .5s ease both}
+.axis-card.best{border-color:var(--success);background:rgba(52,211,153,.06)}
+.axis-card.growth{border-color:var(--warn);background:rgba(251,191,36,.06)}
+.axis-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.axis-name{font-size:14px;font-weight:600;display:flex;align-items:center;gap:6px}
+.axis-badge{font-size:11px;font-weight:700;padding:2px 8px;border-radius:10px;color:#fff}
+.axis-badge.best{background:var(--success)}
+.axis-badge.growth{background:var(--warn);color:#000}
+.axis-score{font-family:var(--mono);font-size:20px;font-weight:700}
+.axis-bar{height:6px;background:var(--surface2);border-radius:3px;margin-bottom:10px;overflow:hidden}
+.axis-bar-fill{height:100%;border-radius:3px;animation:barFill 1s ease both;width:var(--fill)}
+.axis-narrative{font-size:13px;color:var(--text2);line-height:1.6}
+.axis-weight{font-size:11px;color:var(--text2);margin-top:6px}
+
+/* Comparison cards */
+.comparison{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:24px 0;animation:fadeIn .6s ease .6s both}
+.compare-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px;text-align:center}
+.compare-card h4{font-size:12px;color:var(--text2);margin-bottom:8px;font-weight:600;text-transform:uppercase;letter-spacing:1px}
+.compare-card .name{font-size:16px;font-weight:700;margin-bottom:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.compare-item{font-size:12px;color:var(--text2);padding:4px 0;border-bottom:1px solid var(--border)}
+.compare-item:last-child{border-bottom:none}
+.compare-item .val{font-size:13px;color:var(--text);font-weight:600;display:block;margin-top:2px}
+
+/* Share */
+.share-section{text-align:center;margin:32px 0;animation:fadeIn .6s ease .8s both}
+.btn-share{background:linear-gradient(135deg,#6366f1,#f472b6);color:#fff;border:none;padding:14px 28px;border-radius:8px;font-size:15px;font-weight:700;cursor:pointer;font-family:var(--font);transition:all .2s;display:inline-flex;align-items:center;gap:8px}
+.btn-share:hover{opacity:.9;transform:translateY(-1px)}
+.btn-restart{margin-top:16px;display:inline-block;font-size:13px;color:var(--text2);text-decoration:none;cursor:pointer;border:none;background:none;font-family:var(--font)}
+.btn-restart:hover{color:var(--accent2)}
+
+/* Divider */
+.divider{border:none;border-top:1px solid var(--border);margin:24px 0}
+
+/* Hidden */
+.hidden{display:none!important}
+
+/* Scroll hint */
+.scroll-hint{text-align:center;font-size:12px;color:var(--text2);margin-top:8px;animation:pulse 2s infinite}
+</style>
+</head>
+<body>
+<div class="container">
+
+<!-- Hero -->
+<div class="hero" id="hero">
+  <h1>相性診断</h1>
+  <div class="sub">5つの占術軸で二人の深層相性を解析</div>
+</div>
+
+<!-- Steps -->
+<div class="steps" id="stepsBar">
+  <div class="step-item">
+    <div class="step-dot active" id="stepDot1">1</div>
+  </div>
+  <div class="step-item">
+    <div class="step-line" id="stepLine1"></div>
+    <div class="step-dot" id="stepDot2">2</div>
+  </div>
+  <div class="step-item">
+    <div class="step-line" id="stepLine2"></div>
+    <div class="step-dot" id="stepDot3">3</div>
+  </div>
+</div>
+
+<!-- ===== STEP 1: Person A ===== -->
+<div class="form-panel" id="step1">
+  <div class="person-label"><div class="icon">A</div> あなたの情報</div>
+
+  <div class="field">
+    <label>名前<span class="req">*</span></label>
+    <input type="text" id="nameA" placeholder="例: タロウ" maxlength="20">
+  </div>
+  <div class="field">
+    <label>生年月日<span class="req">*</span></label>
+    <input type="date" id="birthA">
+  </div>
+  <div class="field">
+    <label>血液型<span class="req">*</span></label>
+    <div class="radio-group">
+      <label><input type="radio" name="bloodA" value="A"><span>A型</span></label>
+      <label><input type="radio" name="bloodA" value="B"><span>B型</span></label>
+      <label><input type="radio" name="bloodA" value="O"><span>O型</span></label>
+      <label><input type="radio" name="bloodA" value="AB"><span>AB型</span></label>
+    </div>
+  </div>
+
+  <button class="btn-primary" onclick="goToStep2()">次へ</button>
+</div>
+
+<!-- ===== STEP 2: Person B ===== -->
+<div class="form-panel hidden" id="step2">
+  <div class="person-label"><div class="icon">B</div> 相手の情報</div>
+
+  <div class="field">
+    <label>名前<span class="req">*</span></label>
+    <input type="text" id="nameB" placeholder="例: ハナコ" maxlength="20">
+  </div>
+  <div class="field">
+    <label>生年月日<span class="req">*</span></label>
+    <input type="date" id="birthB">
+  </div>
+  <div class="field">
+    <label>血液型<span class="req">*</span></label>
+    <div class="radio-group">
+      <label><input type="radio" name="bloodB" value="A"><span>A型</span></label>
+      <label><input type="radio" name="bloodB" value="B"><span>B型</span></label>
+      <label><input type="radio" name="bloodB" value="O"><span>O型</span></label>
+      <label><input type="radio" name="bloodB" value="AB"><span>AB型</span></label>
+    </div>
+  </div>
+
+  <button class="btn-primary" onclick="runDiagnosis()">診断する</button>
+
+  <div class="or-divider">または</div>
+
+  <div class="invite-box" id="inviteBox">
+    <p>相手にリンクを送って、入力してもらうこともできます</p>
+    <button class="btn-secondary" onclick="generateInviteLink()">招待リンクを生成</button>
+    <div class="invite-url hidden" id="inviteUrl"></div>
+    <button class="btn-copy hidden" id="copyBtn" onclick="copyInviteLink()">コピー</button>
+  </div>
+</div>
+
+<!-- ===== STEP 3: Results ===== -->
+<div class="result-panel hidden" id="step3"></div>
+
+</div><!-- container -->
+
+<script src="engine.js"></script>
+<script>
+// ============================================================
+// Compatibility Engine (ported from compatibility.py)
+// ============================================================
+
+const SOSEI_CYCLE = ['Wood','Fire','Earth','Metal','Water'];
+const SOKOKU_CYCLE = ['Wood','Earth','Water','Fire','Metal'];
+const ELEMENT_JP = {Wood:'木',Fire:'火',Earth:'土',Metal:'金',Water:'水'};
+
+function fiveElementRelationship(a, b) {
+  if (a === b) return 'same';
+  const ai = SOSEI_CYCLE.indexOf(a);
+  if (SOSEI_CYCLE[(ai + 1) % 5] === b) return 'nurtures';
+  if (SOSEI_CYCLE[((ai - 1) % 5 + 5) % 5] === b) return 'nurtured';
+  const ki = SOKOKU_CYCLE.indexOf(a);
+  if (SOKOKU_CYCLE[(ki + 1) % 5] === b) return 'controls';
+  if (SOKOKU_CYCLE[((ki - 1) % 5 + 5) % 5] === b) return 'controlled';
+  return 'neutral';
+}
+
+const NINE_STAR_ELEMENTS = {1:'Water',2:'Earth',3:'Wood',4:'Wood',5:'Earth',6:'Metal',7:'Metal',8:'Earth',9:'Fire'};
+const NINE_STAR_NAMES = {1:'一白水星',2:'二黒土星',3:'三碧木星',4:'四緑木星',5:'五黄土星',6:'六白金星',7:'七赤金星',8:'八白土星',9:'九紫火星'};
+const NINE_STAR_GROUPS = {Water:[1],Earth:[2,5,8],Wood:[3,4],Metal:[6,7],Fire:[9]};
+
+const ROKUSEI_COMPLEMENTARY = [
+  new Set(['土星人','木星人']),
+  new Set(['金星人','火星人']),
+  new Set(['天王星人','水星人']),
+];
+
+const SIGN_INDEX = {Aries:0,Taurus:1,Gemini:2,Cancer:3,Leo:4,Virgo:5,Libra:6,Scorpio:7,Sagittarius:8,Capricorn:9,Aquarius:10,Pisces:11};
+const SIGN_JP = {Aries:'牡羊座',Taurus:'牡牛座',Gemini:'双子座',Cancer:'蟹座',Leo:'獅子座',Virgo:'乙女座',Libra:'天秤座',Scorpio:'蠍座',Sagittarius:'射手座',Capricorn:'山羊座',Aquarius:'水瓶座',Pisces:'魚座'};
+
+const BLOOD_COMPAT = {
+  'O_A':85,'A_O':85,'A_AB':80,'AB_A':80,'O_B':80,'B_O':80,'AB_B':75,'B_AB':75,
+  'A_A':70,'B_B':70,'O_O':70,'AB_AB':70,'O_AB':70,'AB_O':70,
+  'A_B':55,'B_A':55,'B_AB_':60,
+};
+
+// --- Axis 1: Five Elements (30%) ---
+function scoreFiveElements(p1, p2) {
+  const fp1 = p1.four_pillars || {};
+  const fp2 = p2.four_pillars || {};
+  const dm1 = (fp1.day_master || {}).element || 'Fire';
+  const dm2 = (fp2.day_master || {}).element || 'Fire';
+
+  const rel = fiveElementRelationship(dm1, dm2);
+  const dmScoreMap = {nurtures:85,nurtured:80,same:65,controls:40,controlled:50,neutral:60};
+  const dmScore = dmScoreMap[rel] || 60;
+
+  const relDesc = {
+    nurtures: `${ELEMENT_JP[dm1]}が${ELEMENT_JP[dm2]}を育てる相生の関係。活力を与え合う好相性`,
+    nurtured: `${ELEMENT_JP[dm2]}が${ELEMENT_JP[dm1]}を育てる関係。包まれるような安心感`,
+    same: `同じ${ELEMENT_JP[dm1]}の日主。深い共感と一致。競争に注意`,
+    controls: `${ELEMENT_JP[dm1]}が${ELEMENT_JP[dm2]}を制御。リーダーシップと摩擦が共存`,
+    controlled: `${ELEMENT_JP[dm2]}が${ELEMENT_JP[dm1]}を抑制。刺激的だが長期的な抑圧に注意`,
+    neutral: `${ELEMENT_JP[dm1]}と${ELEMENT_JP[dm2]}の中立的関係。安定しているが化学反応は少ない`,
+  };
+
+  // Balance similarity (cosine)
+  const order = ['木','火','土','金','水'];
+  const bal1 = fp1.five_elements_balance || {};
+  const bal2 = fp2.five_elements_balance || {};
+  const v1 = order.map(el => (bal1[el] || {}).pct || 0);
+  const v2 = order.map(el => (bal2[el] || {}).pct || 0);
+  const dot = v1.reduce((s, a, i) => s + a * v2[i], 0);
+  const mag1 = Math.sqrt(v1.reduce((s, a) => s + a * a, 0)) || 1;
+  const mag2 = Math.sqrt(v2.reduce((s, a) => s + a * a, 0)) || 1;
+  const balanceScore = Math.min(100, Math.round((dot / (mag1 * mag2)) * 100));
+
+  const score = Math.round(0.6 * dmScore + 0.4 * balanceScore);
+  return { score, narrative: relDesc[rel] || '', dm1, dm2, rel };
+}
+
+// --- Axis 2: Nine Star Ki (25%) ---
+function scoreNineStarKi(p1, p2) {
+  const nsk1 = p1.nine_star_ki || {};
+  const nsk2 = p2.nine_star_ki || {};
+  const star1 = (nsk1.year_star || {}).number || 5;
+  const star2 = (nsk2.year_star || {}).number || 5;
+  const el1 = NINE_STAR_ELEMENTS[star1] || 'Earth';
+  const el2 = NINE_STAR_ELEMENTS[star2] || 'Earth';
+  const name1 = NINE_STAR_NAMES[star1] || '';
+  const name2 = NINE_STAR_NAMES[star2] || '';
+
+  const sameStar = star1 === star2;
+  const group1 = Object.entries(NINE_STAR_GROUPS).find(([, nums]) => nums.includes(star1))?.[0];
+  const group2 = Object.entries(NINE_STAR_GROUPS).find(([, nums]) => nums.includes(star2))?.[0];
+  const sameGroup = group1 === group2;
+  const rel = fiveElementRelationship(el1, el2);
+
+  let score, desc;
+  if (sameStar) {
+    score = 62;
+    desc = `同じ${name1}同士。価値観が非常に近く、理解し合える。同じ弱点を共有し盲点に注意`;
+  } else if (sameGroup) {
+    score = 80;
+    desc = `${name1}と${name2}は同じ${ELEMENT_JP[el1]}グループ。感性と生きるテンポが自然に合う`;
+  } else if (rel === 'nurtures' || rel === 'nurtured') {
+    score = 82;
+    desc = `相生の関係。${name1}と${name2}は互いを高め合うエネルギーを持つ`;
+  } else if (rel === 'controls' || rel === 'controlled') {
+    score = 42;
+    desc = `相剋の関係。${name1}と${name2}には緊張感がある。成長の触媒にもなるが摩擦に注意`;
+  } else {
+    score = 60;
+    desc = `${name1}と${name2}は中立的な関係。特別な化学反応はないが安定している`;
+  }
+
+  // Month star modifier
+  const ms1 = (nsk1.month_star || {}).number || 5;
+  const ms2 = (nsk2.month_star || {}).number || 5;
+  const msEl1 = NINE_STAR_ELEMENTS[ms1] || 'Earth';
+  const msEl2 = NINE_STAR_ELEMENTS[ms2] || 'Earth';
+  const msRel = fiveElementRelationship(msEl1, msEl2);
+  const bonus = ['nurtures','nurtured','same'].includes(msRel) ? 8 : (['controls','controlled'].includes(msRel) ? -5 : 0);
+  score = Math.max(0, Math.min(100, score + bonus));
+
+  return { score, narrative: desc, star1: { number: star1, name: name1 }, star2: { number: star2, name: name2 } };
+}
+
+// --- Axis 3: Rokusei (15%) ---
+function scoreRokusei(p1, p2) {
+  const r1 = p1.rokusei || {};
+  const r2 = p2.rokusei || {};
+  const ms1 = (r1.main_star || {}).name || '土星人';
+  const ms2 = (r2.main_star || {}).name || '土星人';
+  const reigou1 = r1.reigou || false;
+  const reigou2 = r2.reigou || false;
+  const sameStar = ms1 === ms2;
+  const bothReigou = reigou1 && reigou2;
+  const isComplementary = ROKUSEI_COMPLEMENTARY.some(pair => pair.has(ms1) && pair.has(ms2));
+
+  let score, desc;
+  if (bothReigou && sameStar) {
+    score = 70;
+    desc = `両者とも${ms1}の霊合星人。極めて稀な深い共鳴。運気の振れ幅が大きい`;
+  } else if (bothReigou) {
+    score = 72;
+    desc = `二人とも霊合星人。互いの二面性を理解し合える稀有な関係`;
+  } else if (sameStar) {
+    score = 65;
+    desc = `同じ${ms1}同士。価値観が似ており打ち解けやすい。弱点の補完が課題`;
+  } else if (isComplementary) {
+    score = 80;
+    desc = `${ms1}と${ms2}は補完的な星のペア。違いが強みとなりバランスの良い関係`;
+  } else {
+    score = 55;
+    desc = `${ms1}と${ms2}の組み合わせ。意識的に深い接点を作ることで関係が深まる`;
+  }
+
+  return { score, narrative: desc, star1: ms1, star2: ms2, reigou1, reigou2 };
+}
+
+// --- Axis 4: Western Astrology (15%) ---
+function scoreWesternAstrology(p1, p2) {
+  const wa1 = p1.western_astrology || {};
+  const wa2 = p2.western_astrology || {};
+  const sd1 = wa1.sun_sign || {};
+  const sd2 = wa2.sun_sign || {};
+  const sign1 = sd1.sign || 'Aries';
+  const sign2 = sd2.sign || 'Aries';
+  const el1 = sd1.element || 'Fire';
+  const el2 = sd2.element || 'Fire';
+  const jp1 = SIGN_JP[sign1] || sign1;
+  const jp2 = SIGN_JP[sign2] || sign2;
+
+  const idx1 = SIGN_INDEX[sign1] || 0;
+  const idx2 = SIGN_INDEX[sign2] || 0;
+  let diff = Math.abs(idx1 - idx2);
+  if (diff > 6) diff = 12 - diff;
+
+  let score, desc;
+  if (diff === 0) {
+    score = 68;
+    desc = `同じ${jp1}同士。強い共感と価値観の一致。鏡のような関係で摩擦も`;
+  } else if (diff === 4) {
+    score = 85;
+    desc = `${jp1}と${jp2}はトライン（120度）。同じ${el1}エレメントの自然な調和`;
+  } else if (diff === 2) {
+    score = 75;
+    desc = `${jp1}と${jp2}はセクスタイル（60度）。互いの違いが良い刺激になる`;
+  } else if (diff === 6) {
+    score = 62;
+    desc = `${jp1}と${jp2}はオポジション（180度）。引き合う対極同士。強い吸引力`;
+  } else if (diff === 3) {
+    score = 38;
+    desc = `${jp1}と${jp2}はスクエア（90度）。緊張感があるが成長を促す組み合わせ`;
+  } else {
+    // 30 or 150 degrees
+    const compatPairs = new Set(['Fire_Air','Air_Fire','Earth_Water','Water_Earth']);
+    const key = `${el1}_${el2}`;
+    score = compatPairs.has(key) ? 65 : 50;
+    desc = `${jp1}と${jp2}の組み合わせ。${el1}と${el2}の関係が相性の核`;
+  }
+
+  return { score, narrative: desc, sign1: { sign: sign1, jp: jp1, element: el1, symbol: sd1.symbol || '' }, sign2: { sign: sign2, jp: jp2, element: el2, symbol: sd2.symbol || '' } };
+}
+
+// --- Axis 5: Blood Type (15%) ---
+function scoreBloodType(p1, p2) {
+  const bt1 = ((p1.identity || {}).blood_type || (p1.blood_type || {}).type || 'O').toUpperCase();
+  const bt2 = ((p2.identity || {}).blood_type || (p2.blood_type || {}).type || 'O').toUpperCase();
+
+  const key = `${bt1}_${bt2}`;
+  const revKey = `${bt2}_${bt1}`;
+  let score = BLOOD_COMPAT[key] || BLOOD_COMPAT[revKey] || 50;
+
+  const descriptions = {
+    85: `${bt1}型と${bt2}型は最高の相性。自然体でいられる関係`,
+    80: `${bt1}型と${bt2}型は非常に良い相性。互いの強みを引き出す`,
+    75: `${bt1}型と${bt2}型は良い相性。コミュニケーションが弾む`,
+    70: `${bt1}型同士。価値観が共通し安心感がある`,
+    60: `${bt1}型と${bt2}型はまずまずの相性。互いの違いを楽しめる`,
+    55: `${bt1}型と${bt2}型は独自のリズムを持つ。違いを尊重することで深まる`,
+    50: `${bt1}型と${bt2}型は平均的な相性。コミュニケーションの工夫で好転`,
+  };
+
+  const descKey = Object.keys(descriptions).map(Number).sort((a, b) => b - a).find(k => score >= k) || 50;
+  return { score, narrative: descriptions[descKey], bt1, bt2 };
+}
+
+// --- Total ---
+function calculateCompatibility(profileA, profileB) {
+  const fe = scoreFiveElements(profileA, profileB);
+  const nsk = scoreNineStarKi(profileA, profileB);
+  const rk = scoreRokusei(profileA, profileB);
+  const wa = scoreWesternAstrology(profileA, profileB);
+  const bt = scoreBloodType(profileA, profileB);
+
+  const total = Math.round(
+    fe.score * 0.30 +
+    nsk.score * 0.25 +
+    rk.score * 0.15 +
+    wa.score * 0.15 +
+    bt.score * 0.15
+  );
+
+  const axes = [
+    { key: 'five_elements', label: '五行相性', weight: 30, ...fe },
+    { key: 'nine_star_ki', label: '九星気学', weight: 25, ...nsk },
+    { key: 'rokusei', label: '六星占術', weight: 15, ...rk },
+    { key: 'western_astrology', label: '西洋占星術', weight: 15, ...wa },
+    { key: 'blood_type', label: '血液型相性', weight: 15, ...bt },
+  ];
+
+  const sorted = [...axes].sort((a, b) => b.score - a.score);
+  const bestAxes = sorted.slice(0, 2);
+  const growthAxes = sorted.slice(-1);
+
+  let interpretation, interpColor;
+  if (total >= 90) { interpretation = '運命の絆'; interpColor = '#c9a84c'; }
+  else if (total >= 80) { interpretation = '最高の相性'; interpColor = '#34d399'; }
+  else if (total >= 70) { interpretation = '良い相性'; interpColor = '#6366f1'; }
+  else if (total >= 60) { interpretation = '成長する関係'; interpColor = '#818cf8'; }
+  else if (total >= 50) { interpretation = '学びの関係'; interpColor = '#eab308'; }
+  else { interpretation = 'チャレンジング'; interpColor = '#f87171'; }
+
+  return { total, interpretation, interpColor, axes, bestAxes, growthAxes };
+}
+
+
+// ============================================================
+// UI Logic
+// ============================================================
+
+function validateStep1() {
+  const errs = [];
+  if (!document.getElementById('nameA').value.trim()) errs.push('名前を入力してください');
+  if (!document.getElementById('birthA').value) errs.push('生年月日を入力してください');
+  if (!document.querySelector('input[name=bloodA]:checked')) errs.push('血液型を選択してください');
+  return errs;
+}
+
+function validateStep2() {
+  const errs = [];
+  if (!document.getElementById('nameB').value.trim()) errs.push('相手の名前を入力してください');
+  if (!document.getElementById('birthB').value) errs.push('相手の生年月日を入力してください');
+  if (!document.querySelector('input[name=bloodB]:checked')) errs.push('相手の血液型を選択してください');
+  return errs;
+}
+
+function setStep(n) {
+  for (let i = 1; i <= 3; i++) {
+    const dot = document.getElementById('stepDot' + i);
+    dot.classList.remove('active', 'done');
+    if (i < n) dot.classList.add('done');
+    else if (i === n) dot.classList.add('active');
+    if (i < 3) {
+      const line = document.getElementById('stepLine' + i);
+      line.classList.remove('active', 'done');
+      if (i < n) line.classList.add('done');
+      else if (i === n) line.classList.add('active');
+    }
+  }
+}
+
+function goToStep2() {
+  const errs = validateStep1();
+  if (errs.length) { alert(errs.join('\n')); return; }
+  document.getElementById('step1').classList.add('hidden');
+  document.getElementById('step2').classList.remove('hidden');
+  setStep(2);
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function getPersonData(suffix) {
+  return {
+    name: document.getElementById('name' + suffix).value.trim(),
+    birth: document.getElementById('birth' + suffix).value,
+    blood: document.querySelector(`input[name=blood${suffix}]:checked`)?.value || 'O',
+  };
+}
+
+function buildProfile(person) {
+  return SelfInsightEngine.generateProfile({
+    tier: 1,
+    identity: {
+      display_name: person.name,
+      birth_date: person.birth,
+      blood_type: person.blood,
+    }
+  });
+}
+
+function runDiagnosis() {
+  const errs = validateStep2();
+  if (errs.length) { alert(errs.join('\n')); return; }
+
+  const personA = getPersonData('A');
+  const personB = getPersonData('B');
+  const profileA = buildProfile(personA);
+  const profileB = buildProfile(personB);
+  const result = calculateCompatibility(profileA, profileB);
+
+  // Save to hash
+  const hashData = { a: personA, b: personB };
+  const encoded = btoa(unescape(encodeURIComponent(JSON.stringify(hashData))));
+  history.replaceState(null, '', '#a=' + encoded);
+
+  showResults(result, profileA, profileB, personA, personB);
+}
+
+// Invite link
+function generateInviteLink() {
+  const errsA = validateStep1();
+  if (errsA.length) { alert('先にあなたの情報（Step 1）を入力してください'); return; }
+  const personA = getPersonData('A');
+  const aData = btoa(unescape(encodeURIComponent(JSON.stringify(personA))));
+  const url = location.origin + location.pathname + '#invite=' + aData;
+  const urlEl = document.getElementById('inviteUrl');
+  urlEl.textContent = url;
+  urlEl.classList.remove('hidden');
+  document.getElementById('copyBtn').classList.remove('hidden');
+}
+
+function copyInviteLink() {
+  const url = document.getElementById('inviteUrl').textContent;
+  navigator.clipboard.writeText(url).then(() => {
+    const btn = document.getElementById('copyBtn');
+    btn.textContent = 'コピーしました';
+    btn.classList.add('copied');
+    setTimeout(() => { btn.textContent = 'コピー'; btn.classList.remove('copied'); }, 2000);
+  });
+}
+
+
+// ============================================================
+// Results Rendering
+// ============================================================
+
+function scoreColor(score) {
+  if (score >= 80) return '#34d399';
+  if (score >= 65) return '#6366f1';
+  if (score >= 50) return '#eab308';
+  return '#f87171';
+}
+
+function showResults(result, profileA, profileB, personA, personB) {
+  document.getElementById('step1').classList.add('hidden');
+  document.getElementById('step2').classList.add('hidden');
+  document.getElementById('hero').innerHTML = `
+    <h1>相性診断結果</h1>
+    <div class="sub">${personA.name} × ${personB.name}</div>
+  `;
+  setStep(3);
+
+  const panel = document.getElementById('step3');
+  panel.classList.remove('hidden');
+
+  const circumference = 2 * Math.PI * 90; // r=90
+  const offset = circumference - (result.total / 100) * circumference;
+
+  // Build axis cards
+  let axisHTML = '';
+  result.axes.forEach((axis, i) => {
+    const isBest = result.bestAxes.includes(axis);
+    const isGrowth = result.growthAxes.includes(axis);
+    const cls = isBest ? 'best' : (isGrowth ? 'growth' : '');
+    const badge = isBest ? '<span class="axis-badge best">BEST</span>' : (isGrowth ? '<span class="axis-badge growth">GROWTH</span>' : '');
+    const color = scoreColor(axis.score);
+    axisHTML += `
+      <div class="axis-card ${cls}" style="animation-delay:${0.6 + i * 0.1}s">
+        <div class="axis-header">
+          <div class="axis-name">${badge} ${axis.label}</div>
+          <div class="axis-score" style="color:${color}">${axis.score}</div>
+        </div>
+        <div class="axis-bar"><div class="axis-bar-fill" style="--fill:${axis.score}%;background:${color};animation-delay:${0.8 + i * 0.1}s"></div></div>
+        <div class="axis-narrative">${axis.narrative}</div>
+        <div class="axis-weight">Weight: ${axis.weight}%</div>
+      </div>
+    `;
+  });
+
+  // Comparison cards
+  const fp1 = profileA.four_pillars || {};
+  const fp2 = profileB.four_pillars || {};
+  const wa1 = profileA.western_astrology || {};
+  const wa2 = profileB.western_astrology || {};
+  const nsk1 = profileA.nine_star_ki || {};
+  const nsk2 = profileB.nine_star_ki || {};
+  const rk1 = profileA.rokusei || {};
+  const rk2 = profileB.rokusei || {};
+
+  panel.innerHTML = `
+    <!-- Score Ring -->
+    <div class="score-ring-wrap">
+      <div class="score-ring-container">
+        <svg class="score-ring-svg" width="200" height="200" viewBox="0 0 200 200">
+          <circle class="score-ring-bg" cx="100" cy="100" r="90"/>
+          <circle class="score-ring-fg" cx="100" cy="100" r="90"
+            style="stroke:${result.interpColor};--circumference:${circumference};--offset:${offset}"/>
+        </svg>
+        <div class="score-center">
+          <div class="score-number" id="scoreNum" style="color:${result.interpColor}">0</div>
+          <div class="score-label">/ 100</div>
+        </div>
+      </div>
+    </div>
+    <div class="score-interpretation" style="color:${result.interpColor}">${result.interpretation}</div>
+
+    <!-- Radar Chart -->
+    <div class="chart-wrap">
+      <h3>5軸レーダーチャート</h3>
+      <div class="radar-container"><canvas id="radarChart"></canvas></div>
+    </div>
+
+    <!-- Axis Details -->
+    ${axisHTML}
+
+    <!-- Comparison -->
+    <hr class="divider">
+    <div class="comparison">
+      <div class="compare-card">
+        <h4>Person A</h4>
+        <div class="name">${personA.name}</div>
+        <div class="compare-item">日主 <span class="val">${(fp1.day_master||{}).char||''} ${ELEMENT_JP[(fp1.day_master||{}).element]||''}</span></div>
+        <div class="compare-item">本命星 <span class="val">${(nsk1.year_star||{}).name||''}</span></div>
+        <div class="compare-item">運命星 <span class="val">${(rk1.main_star||{}).name||''}${rk1.reigou?' 霊合':''}</span></div>
+        <div class="compare-item">星座 <span class="val">${(wa1.sun_sign||{}).jp||''} ${(wa1.sun_sign||{}).symbol||''}</span></div>
+        <div class="compare-item">血液型 <span class="val">${personA.blood}型</span></div>
+      </div>
+      <div class="compare-card">
+        <h4>Person B</h4>
+        <div class="name">${personB.name}</div>
+        <div class="compare-item">日主 <span class="val">${(fp2.day_master||{}).char||''} ${ELEMENT_JP[(fp2.day_master||{}).element]||''}</span></div>
+        <div class="compare-item">本命星 <span class="val">${(nsk2.year_star||{}).name||''}</span></div>
+        <div class="compare-item">運命星 <span class="val">${(rk2.main_star||{}).name||''}${rk2.reigou?' 霊合':''}</span></div>
+        <div class="compare-item">星座 <span class="val">${(wa2.sun_sign||{}).jp||''} ${(wa2.sun_sign||{}).symbol||''}</span></div>
+        <div class="compare-item">血液型 <span class="val">${personB.blood}型</span></div>
+      </div>
+    </div>
+
+    <!-- Share & Restart -->
+    <div class="share-section">
+      <button class="btn-share" onclick="shareResults()">結果をシェアする</button>
+      <br>
+      <button class="btn-restart" onclick="restart()">もう一度診断する</button>
+    </div>
+  `;
+
+  // Animate score count-up
+  animateScore(result.total);
+
+  // Render radar chart
+  setTimeout(() => renderRadarChart(result), 200);
+
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function animateScore(target) {
+  const el = document.getElementById('scoreNum');
+  if (!el) return;
+  let current = 0;
+  const duration = 1500;
+  const start = performance.now();
+  function tick(now) {
+    const elapsed = now - start;
+    const progress = Math.min(elapsed / duration, 1);
+    // Ease out cubic
+    const eased = 1 - Math.pow(1 - progress, 3);
+    current = Math.round(eased * target);
+    el.textContent = current;
+    if (progress < 1) requestAnimationFrame(tick);
+  }
+  requestAnimationFrame(tick);
+}
+
+function renderRadarChart(result) {
+  const canvas = document.getElementById('radarChart');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+
+  new Chart(ctx, {
+    type: 'radar',
+    data: {
+      labels: result.axes.map(a => a.label),
+      datasets: [{
+        label: '相性スコア',
+        data: result.axes.map(a => a.score),
+        fill: true,
+        backgroundColor: 'rgba(99,102,241,0.15)',
+        borderColor: '#6366f1',
+        borderWidth: 2,
+        pointBackgroundColor: result.axes.map(a => scoreColor(a.score)),
+        pointBorderColor: '#fff',
+        pointBorderWidth: 1,
+        pointRadius: 5,
+        pointHoverRadius: 7,
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: true,
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          backgroundColor: '#1a1d27',
+          titleColor: '#e8e9ed',
+          bodyColor: '#9ca3af',
+          borderColor: '#2e3347',
+          borderWidth: 1,
+          callbacks: {
+            label: ctx => `${ctx.parsed.r} / 100`,
+          }
+        }
+      },
+      scales: {
+        r: {
+          beginAtZero: true,
+          max: 100,
+          ticks: {
+            stepSize: 20,
+            color: '#555',
+            backdropColor: 'transparent',
+            font: { size: 10, family: "'JetBrains Mono', monospace" },
+          },
+          grid: { color: 'rgba(46,51,71,0.6)' },
+          angleLines: { color: 'rgba(46,51,71,0.6)' },
+          pointLabels: {
+            color: '#9ca3af',
+            font: { size: 12, family: "'Noto Sans JP', sans-serif", weight: '500' },
+          }
+        }
+      },
+      animation: {
+        duration: 1200,
+        easing: 'easeOutQuart',
+      }
+    }
+  });
+}
+
+
+// ============================================================
+// Share & Restart
+// ============================================================
+
+function shareResults() {
+  const url = location.href;
+  if (navigator.share) {
+    navigator.share({
+      title: 'AI Self-Insight 相性診断結果',
+      text: '5つの占術軸で相性を分析しました。あなたも試してみませんか？',
+      url: url,
+    }).catch(() => {});
+  } else {
+    navigator.clipboard.writeText(url).then(() => {
+      const btn = document.querySelector('.btn-share');
+      const orig = btn.innerHTML;
+      btn.innerHTML = 'URLをコピーしました';
+      setTimeout(() => { btn.innerHTML = orig; }, 2000);
+    });
+  }
+}
+
+function restart() {
+  history.replaceState(null, '', location.pathname);
+  location.reload();
+}
+
+
+// ============================================================
+// Restore from URL hash
+// ============================================================
+
+(function restoreFromHash() {
+  const hash = location.hash;
+
+  // Full result: #a=BASE64_ENCODED_BOTH
+  if (hash.startsWith('#a=')) {
+    try {
+      const decoded = decodeURIComponent(escape(atob(hash.slice(3))));
+      const data = JSON.parse(decoded);
+      if (data.a && data.b) {
+        const profileA = buildProfile(data.a);
+        const profileB = buildProfile(data.b);
+        const result = calculateCompatibility(profileA, profileB);
+        showResults(result, profileA, profileB, data.a, data.b);
+      }
+    } catch (e) { /* invalid hash, show form */ }
+    return;
+  }
+
+  // Invite link: #invite=BASE64_PERSON_A
+  if (hash.startsWith('#invite=')) {
+    try {
+      const decoded = decodeURIComponent(escape(atob(hash.slice(8))));
+      const personA = JSON.parse(decoded);
+      // Pre-fill person A and go to step 2
+      document.getElementById('nameA').value = personA.name || '';
+      document.getElementById('birthA').value = personA.birth || '';
+      if (personA.blood) {
+        const radio = document.querySelector(`input[name=bloodA][value="${personA.blood}"]`);
+        if (radio) radio.checked = true;
+      }
+      // Skip to step 2
+      document.getElementById('step1').classList.add('hidden');
+      document.getElementById('step2').classList.remove('hidden');
+      setStep(2);
+      // Update hero for invited person
+      document.getElementById('hero').innerHTML = `
+        <h1>相性診断</h1>
+        <div class="sub">${personA.name}さんから招待されました</div>
+      `;
+    } catch (e) { /* invalid hash */ }
+  }
+})();
+</script>
+</body>
+</html>

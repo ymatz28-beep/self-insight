@@ -1,0 +1,1050 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>AI Self-Insight Story</title>
+<meta property="og:title" content="AI Self-Insight -- 30秒であなたの本質を解き明かす">
+<meta property="og:description" content="生年月日から占術AIがあなたの本質・運命・2026年運勢をストーリーで可視化。">
+<meta property="og:type" content="website">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&family=Noto+Sans+JP:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4/dist/chart.umd.min.js"></script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0f1117;--surface:#1a1d27;--surface2:#242837;--border:#2e3347;
+  --text:#e8e9ed;--text2:#9ca3af;--accent:#6366f1;--accent2:#8b5cf6;
+  --success:#34d399;--warn:#fbbf24;--error:#f87171;
+  --font:'Inter','Noto Sans JP',sans-serif;
+  --mono:'JetBrains Mono','Noto Sans JP',monospace;
+  --el-wood:#4ade80;--el-fire:#f87171;--el-earth:#facc15;--el-metal:#94a3b8;--el-water:#60a5fa;
+}
+html,body{
+  font-family:var(--font);background:var(--bg);color:var(--text);
+  -webkit-font-smoothing:antialiased;overflow:hidden;
+  width:100%;height:100%;position:fixed;top:0;left:0;
+}
+
+/* ============================================
+   Entry Screen
+   ============================================ */
+#entry{
+  position:fixed;inset:0;z-index:100;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  background:var(--bg);padding:24px;
+  transition:opacity .6s ease,transform .6s ease;
+}
+#entry.hidden{opacity:0;transform:scale(1.05);pointer-events:none}
+
+.entry-brand{
+  font-size:clamp(28px,6vw,42px);font-weight:800;letter-spacing:-0.5px;
+  background:linear-gradient(135deg,var(--accent2),var(--accent),var(--success));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  background-clip:text;margin-bottom:12px;
+  animation:brandPulse 3s ease-in-out infinite alternate;
+}
+@keyframes brandPulse{
+  0%{filter:brightness(1)}
+  100%{filter:brightness(1.2)}
+}
+
+.entry-sub{
+  color:var(--text2);font-size:clamp(13px,3vw,16px);margin-bottom:40px;
+  text-align:center;line-height:1.6;
+}
+
+.entry-form{width:100%;max-width:380px}
+
+.entry-field{margin-bottom:20px}
+.entry-field label{
+  display:block;font-size:13px;font-weight:600;color:var(--text2);
+  margin-bottom:6px;letter-spacing:0.3px;
+}
+.entry-field input[type=date],
+.entry-field input[type=text]{
+  width:100%;background:var(--surface);border:1px solid var(--border);
+  color:var(--text);padding:14px 16px;border-radius:10px;font-size:16px;
+  font-family:var(--font);outline:none;transition:border .25s ease;
+  -webkit-appearance:none;
+}
+.entry-field input:focus{border-color:var(--accent)}
+
+.blood-group{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.blood-btn{
+  background:var(--surface);border:1.5px solid var(--border);color:var(--text);
+  padding:12px 0;border-radius:10px;font-size:15px;font-weight:600;
+  cursor:pointer;transition:all .2s ease;font-family:var(--font);
+  text-align:center;user-select:none;-webkit-tap-highlight-color:transparent;
+}
+.blood-btn.active{border-color:var(--accent);background:rgba(99,102,241,.15);color:var(--accent2)}
+
+.entry-submit{
+  width:100%;padding:16px;border:none;border-radius:12px;
+  background:linear-gradient(135deg,var(--accent),var(--accent2));
+  color:#fff;font-size:16px;font-weight:700;cursor:pointer;
+  font-family:var(--font);margin-top:8px;
+  transition:opacity .2s,transform .15s;
+  -webkit-tap-highlight-color:transparent;
+}
+.entry-submit:active{transform:scale(0.97)}
+.entry-submit:disabled{opacity:.4;cursor:not-allowed}
+
+.entry-opt{
+  font-size:12px;color:var(--text2);text-align:center;margin-top:16px;
+  opacity:.6;
+}
+
+/* ============================================
+   Story Container
+   ============================================ */
+#story{
+  position:fixed;inset:0;display:none;
+  overflow:hidden;touch-action:pan-y;
+}
+#story.active{display:block}
+
+/* Progress bar */
+.story-progress{
+  position:fixed;top:0;left:0;right:0;z-index:200;
+  height:3px;background:rgba(255,255,255,.08);
+}
+.story-progress-fill{
+  height:100%;background:linear-gradient(90deg,var(--accent),var(--accent2));
+  transition:width .4s cubic-bezier(.4,0,.2,1);
+  border-radius:0 2px 2px 0;
+}
+
+/* Dot indicators */
+.story-dots{
+  position:fixed;bottom:28px;left:50%;transform:translateX(-50%);
+  z-index:200;display:flex;gap:8px;
+}
+.story-dot{
+  width:8px;height:8px;border-radius:50%;
+  background:rgba(255,255,255,.2);transition:all .3s ease;
+}
+.story-dot.active{
+  background:var(--accent2);width:24px;border-radius:4px;
+  box-shadow:0 0 12px rgba(139,92,246,.5);
+}
+
+/* Slide */
+.slide{
+  position:absolute;inset:0;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding:60px 24px 80px;
+  opacity:0;transform:translateY(30px);
+  transition:opacity .5s cubic-bezier(.4,0,.2,1),transform .5s cubic-bezier(.4,0,.2,1);
+  pointer-events:none;overflow-y:auto;
+  -webkit-overflow-scrolling:touch;
+}
+.slide.active{
+  opacity:1;transform:translateY(0);pointer-events:auto;
+}
+.slide.exit-left{
+  opacity:0;transform:translateY(-30px);
+}
+
+/* Stagger children */
+.slide .stagger{
+  opacity:0;transform:translateY(20px);
+  transition:opacity .5s ease,transform .5s ease;
+}
+.slide.active .stagger{opacity:1;transform:translateY(0)}
+.slide.active .stagger:nth-child(1){transition-delay:.1s}
+.slide.active .stagger:nth-child(2){transition-delay:.3s}
+.slide.active .stagger:nth-child(3){transition-delay:.5s}
+.slide.active .stagger:nth-child(4){transition-delay:.7s}
+.slide.active .stagger:nth-child(5){transition-delay:.9s}
+.slide.active .stagger:nth-child(6){transition-delay:1.1s}
+.slide.active .stagger:nth-child(7){transition-delay:1.3s}
+
+/* ============================================
+   Slide 1: Essence
+   ============================================ */
+.essence-kanji{
+  font-size:clamp(100px,28vw,180px);font-weight:800;line-height:1;
+  font-family:'Noto Sans JP',serif;
+  text-shadow:0 0 80px var(--glow-color,var(--accent)),0 0 160px var(--glow-color,var(--accent));
+  animation:kanjiGlow 2.5s ease-in-out infinite alternate;
+  transform:scale(0);
+}
+.slide.active .essence-kanji{
+  animation:kanjiEnter .8s cubic-bezier(.17,.67,.35,1.3) forwards,kanjiGlow 2.5s ease-in-out 1s infinite alternate;
+}
+@keyframes kanjiEnter{
+  0%{transform:scale(0);opacity:0}
+  100%{transform:scale(1);opacity:1}
+}
+@keyframes kanjiGlow{
+  0%{text-shadow:0 0 60px var(--glow-color,var(--accent)),0 0 120px var(--glow-color,var(--accent))}
+  100%{text-shadow:0 0 100px var(--glow-color,var(--accent)),0 0 200px var(--glow-color,var(--accent)),0 0 40px var(--glow-color,var(--accent))}
+}
+
+.essence-badge{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:8px 20px;border-radius:24px;
+  background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);
+  font-size:clamp(14px,3.5vw,18px);font-weight:600;
+  margin-top:20px;color:var(--glow-color,var(--accent));
+}
+
+.essence-desc{
+  font-size:clamp(14px,3.5vw,17px);color:var(--text2);
+  text-align:center;line-height:1.8;margin-top:24px;
+  max-width:360px;
+}
+
+.slide-label{
+  font-size:clamp(11px,2.5vw,13px);font-weight:600;
+  color:var(--accent2);letter-spacing:2px;text-transform:uppercase;
+  margin-bottom:16px;
+}
+
+/* ============================================
+   Slide 2: Five Elements
+   ============================================ */
+.elements-container{width:100%;max-width:380px}
+
+.element-row{
+  display:flex;align-items:center;gap:12px;margin-bottom:16px;
+}
+.element-label{
+  font-size:14px;font-weight:700;width:28px;text-align:center;
+  font-family:var(--mono);
+}
+.element-bar-track{
+  flex:1;height:28px;background:rgba(255,255,255,.06);
+  border-radius:14px;overflow:hidden;position:relative;
+}
+.element-bar-fill{
+  height:100%;border-radius:14px;
+  width:0;transition:width 1.2s cubic-bezier(.4,0,.2,1);
+  position:relative;
+}
+.slide.active .element-bar-fill{width:var(--fill-width)}
+.element-pct{
+  font-size:13px;font-weight:600;font-family:var(--mono);
+  width:42px;text-align:right;color:var(--text2);
+}
+
+.element-missing{
+  display:inline-flex;align-items:center;gap:6px;
+  padding:6px 14px;border-radius:20px;
+  background:rgba(248,113,113,.12);border:1px solid rgba(248,113,113,.25);
+  font-size:13px;font-weight:600;color:var(--error);
+}
+.element-missing-badge{
+  background:var(--error);color:#fff;font-size:10px;font-weight:800;
+  padding:2px 6px;border-radius:4px;
+}
+
+.element-insight{
+  font-size:clamp(13px,3vw,15px);color:var(--text2);
+  text-align:center;line-height:1.7;margin-top:20px;max-width:360px;
+}
+
+/* ============================================
+   Slide 3: Star Cards
+   ============================================ */
+.star-cards{
+  display:flex;flex-direction:column;gap:16px;
+  width:100%;max-width:360px;
+}
+.star-card{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:16px;padding:20px 24px;
+  transform:perspective(600px) rotateY(90deg);
+  transition:transform .6s cubic-bezier(.4,0,.2,1),opacity .6s ease;
+  opacity:0;
+}
+.slide.active .star-card{transform:perspective(600px) rotateY(0);opacity:1}
+.slide.active .star-card:nth-child(2){transition-delay:.2s}
+.slide.active .star-card:nth-child(3){transition-delay:.4s}
+
+.star-card-label{
+  font-size:11px;font-weight:600;color:var(--text2);
+  letter-spacing:1px;text-transform:uppercase;margin-bottom:6px;
+}
+.star-card-value{
+  font-size:clamp(22px,5vw,28px);font-weight:800;
+}
+.star-card-sub{
+  font-size:13px;color:var(--text2);margin-top:4px;
+}
+
+.reigou-badge{
+  display:inline-block;padding:3px 10px;border-radius:12px;
+  background:linear-gradient(135deg,rgba(250,204,21,.2),rgba(234,179,8,.1));
+  border:1px solid rgba(250,204,21,.35);
+  color:var(--warn);font-size:12px;font-weight:700;
+  margin-left:8px;vertical-align:middle;
+}
+
+/* ============================================
+   Slide 4: 2026 Position
+   ============================================ */
+.position-container{width:100%;max-width:400px;text-align:center}
+
+.palace-name{
+  font-size:clamp(36px,9vw,52px);font-weight:800;
+  background:linear-gradient(135deg,var(--accent2),var(--accent));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  background-clip:text;
+}
+.palace-meaning{
+  font-size:clamp(16px,4vw,20px);color:var(--text2);margin-top:8px;
+}
+
+.energy-meter{
+  width:100%;max-width:300px;margin:24px auto 0;
+}
+.energy-label{
+  display:flex;justify-content:space-between;
+  font-size:12px;color:var(--text2);margin-bottom:6px;
+}
+.energy-track{
+  height:10px;background:rgba(255,255,255,.08);border-radius:5px;
+  overflow:hidden;
+}
+.energy-fill{
+  height:100%;border-radius:5px;
+  background:linear-gradient(90deg,var(--accent),var(--accent2),var(--success));
+  width:0;transition:width 1.5s cubic-bezier(.4,0,.2,1);
+}
+.slide.active .energy-fill{width:var(--energy-width)}
+
+.fortune-chart-wrap{
+  width:100%;max-width:360px;height:160px;margin:24px auto 0;position:relative;
+}
+
+.rokusei-phase{
+  display:flex;align-items:center;justify-content:center;gap:12px;
+  margin-top:20px;flex-wrap:wrap;
+}
+.rokusei-phase-badge{
+  padding:8px 18px;border-radius:20px;
+  background:var(--surface);border:1px solid var(--border);
+  font-size:14px;font-weight:600;
+}
+.satsukai-warn{
+  padding:6px 14px;border-radius:16px;
+  background:rgba(248,113,113,.12);border:1px solid rgba(248,113,113,.25);
+  font-size:12px;font-weight:700;color:var(--error);
+}
+.peak-callout{
+  margin-top:16px;font-size:clamp(13px,3vw,15px);color:var(--text2);
+}
+.peak-year{
+  font-family:var(--mono);font-weight:700;color:var(--success);font-size:1.1em;
+}
+
+/* ============================================
+   Slide 5: CTA
+   ============================================ */
+.cta-container{text-align:center;width:100%;max-width:380px}
+
+.cta-title{
+  font-size:clamp(22px,5.5vw,30px);font-weight:800;
+  margin-bottom:24px;line-height:1.4;
+}
+
+.cta-teaser{
+  display:flex;flex-direction:column;gap:12px;margin-bottom:28px;
+}
+.cta-blur-box{
+  height:48px;border-radius:12px;
+  background:linear-gradient(135deg,rgba(99,102,241,.1),rgba(139,92,246,.06));
+  border:1px solid var(--border);
+  filter:blur(3px);
+}
+
+.cta-desc{
+  font-size:clamp(13px,3vw,15px);color:var(--text2);
+  line-height:1.7;margin-bottom:28px;
+}
+
+.cta-btn-primary{
+  display:block;width:100%;padding:16px;border:none;border-radius:12px;
+  background:linear-gradient(135deg,var(--accent),var(--accent2));
+  color:#fff;font-size:16px;font-weight:700;cursor:pointer;
+  font-family:var(--font);transition:opacity .2s,transform .15s;
+  text-decoration:none;text-align:center;
+  -webkit-tap-highlight-color:transparent;
+}
+.cta-btn-primary:active{transform:scale(0.97)}
+
+.cta-btn-secondary{
+  display:block;width:100%;padding:14px;margin-top:12px;
+  border:1.5px solid var(--border);border-radius:12px;
+  background:transparent;color:var(--text);font-size:15px;font-weight:600;
+  cursor:pointer;font-family:var(--font);transition:border-color .2s;
+  text-decoration:none;text-align:center;
+  -webkit-tap-highlight-color:transparent;
+}
+.cta-btn-secondary:hover{border-color:var(--accent)}
+
+.cta-link{
+  display:block;margin-top:20px;
+  font-size:13px;color:var(--text2);text-decoration:none;
+  transition:color .2s;
+}
+.cta-link:hover{color:var(--accent2)}
+
+/* ============================================
+   Decorative Backgrounds
+   ============================================ */
+.bg-orb{
+  position:absolute;border-radius:50%;
+  filter:blur(80px);opacity:.15;pointer-events:none;
+}
+.bg-grid{
+  position:absolute;inset:0;pointer-events:none;
+  background-image:
+    linear-gradient(rgba(255,255,255,.02) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(255,255,255,.02) 1px,transparent 1px);
+  background-size:60px 60px;
+}
+</style>
+</head>
+<body>
+
+<!-- ==================== ENTRY SCREEN ==================== -->
+<div id="entry">
+  <div class="entry-brand">AI Self-Insight</div>
+  <div class="entry-sub">30秒で、あなたの本質を解き明かす</div>
+
+  <div class="entry-form">
+    <div class="entry-field">
+      <label>生年月日 *</label>
+      <input type="date" id="e-birth" required>
+    </div>
+
+    <div class="entry-field">
+      <label>血液型 *</label>
+      <div class="blood-group" id="e-blood">
+        <button type="button" class="blood-btn" data-val="A">A</button>
+        <button type="button" class="blood-btn" data-val="B">B</button>
+        <button type="button" class="blood-btn" data-val="O">O</button>
+        <button type="button" class="blood-btn" data-val="AB">AB</button>
+      </div>
+    </div>
+
+    <div class="entry-field">
+      <label>ニックネーム</label>
+      <input type="text" id="e-name" placeholder="あなた" maxlength="20">
+    </div>
+
+    <button class="entry-submit" id="e-submit" disabled>診断する</button>
+    <div class="entry-opt">所要時間: 約30秒 / データは端末内のみに保存</div>
+  </div>
+</div>
+
+<!-- ==================== STORY SLIDES ==================== -->
+<div id="story">
+  <div class="bg-grid"></div>
+  <div class="story-progress"><div class="story-progress-fill" id="progressFill"></div></div>
+  <div class="story-dots" id="dots"></div>
+
+  <!-- Slide 1: Essence -->
+  <div class="slide" id="slide-1">
+    <div class="bg-orb" style="width:300px;height:300px;top:-80px;right:-60px;background:var(--accent)"></div>
+    <div class="bg-orb" style="width:250px;height:250px;bottom:10%;left:-40px;background:var(--accent2)"></div>
+    <div class="slide-label stagger">SLIDE 1 / 5</div>
+    <div class="stagger" style="font-size:clamp(16px,4vw,20px);font-weight:600;color:var(--text2);margin-bottom:12px">あなたの本質</div>
+    <div class="essence-kanji stagger" id="dm-kanji"></div>
+    <div class="essence-badge stagger" id="dm-badge"></div>
+    <div class="essence-desc stagger" id="dm-desc"></div>
+  </div>
+
+  <!-- Slide 2: Five Elements -->
+  <div class="slide" id="slide-2">
+    <div class="bg-orb" style="width:280px;height:280px;top:5%;left:-50px;background:var(--el-wood)"></div>
+    <div class="bg-orb" style="width:200px;height:200px;bottom:15%;right:-30px;background:var(--el-fire)"></div>
+    <div class="slide-label stagger">SLIDE 2 / 5</div>
+    <div class="stagger" style="font-size:clamp(16px,4vw,20px);font-weight:600;color:var(--text2);margin-bottom:20px">五行バランス</div>
+    <div class="elements-container stagger" id="elements-bars"></div>
+    <div class="stagger" id="elements-missing"></div>
+    <div class="element-insight stagger" id="elements-insight"></div>
+  </div>
+
+  <!-- Slide 3: Stars -->
+  <div class="slide" id="slide-3">
+    <div class="bg-orb" style="width:350px;height:350px;top:-60px;left:50%;transform:translateX(-50%);background:var(--accent)"></div>
+    <div class="slide-label stagger">SLIDE 3 / 5</div>
+    <div class="stagger" style="font-size:clamp(16px,4vw,20px);font-weight:600;color:var(--text2);margin-bottom:20px">運命の星</div>
+    <div class="star-cards" id="star-cards"></div>
+  </div>
+
+  <!-- Slide 4: Position -->
+  <div class="slide" id="slide-4">
+    <div class="bg-orb" style="width:320px;height:320px;top:8%;right:-40px;background:var(--accent2)"></div>
+    <div class="bg-orb" style="width:200px;height:200px;bottom:20%;left:-30px;background:var(--success)"></div>
+    <div class="slide-label stagger">SLIDE 4 / 5</div>
+    <div class="stagger" style="font-size:clamp(14px,3.5vw,17px);font-weight:600;color:var(--text2);margin-bottom:8px" id="position-year"></div>
+    <div class="position-container">
+      <div class="palace-name stagger" id="palace-name"></div>
+      <div class="palace-meaning stagger" id="palace-meaning"></div>
+      <div class="energy-meter stagger" id="energy-meter">
+        <div class="energy-label"><span>Energy</span><span id="energy-value"></span></div>
+        <div class="energy-track"><div class="energy-fill" id="energy-fill"></div></div>
+      </div>
+      <div class="fortune-chart-wrap stagger"><canvas id="fortuneChart"></canvas></div>
+      <div class="rokusei-phase stagger" id="rokusei-info"></div>
+      <div class="peak-callout stagger" id="peak-callout"></div>
+    </div>
+  </div>
+
+  <!-- Slide 5: CTA -->
+  <div class="slide" id="slide-5">
+    <div class="bg-orb" style="width:400px;height:400px;top:-100px;left:50%;transform:translateX(-50%);background:var(--accent)"></div>
+    <div class="cta-container">
+      <div class="cta-title stagger">もっと深く知りたい？</div>
+      <div class="cta-teaser stagger">
+        <div class="cta-blur-box"></div>
+        <div class="cta-blur-box"></div>
+        <div class="cta-blur-box"></div>
+      </div>
+      <div class="cta-desc stagger">性格診断を追加すると、<br>才能 x 運命の掛け合わせが見える</div>
+      <a class="cta-btn-primary stagger" id="cta-personality">性格診断へ進む</a>
+      <button class="cta-btn-secondary stagger" id="cta-share">結果をシェア</button>
+      <a class="cta-link stagger" href="compatibility.html" style="margin-top:8px">&#9829; 友達との相性を診断する</a>
+      <a class="cta-link stagger" id="cta-dashboard">ダッシュボードを見る</a>
+    </div>
+  </div>
+</div>
+
+<script src="engine.js"></script>
+<script>
+// ============================================================
+// Element Color Map
+// ============================================================
+const EL_COLORS = {
+  Wood:'#4ade80', Fire:'#f87171', Earth:'#facc15', Metal:'#94a3b8', Water:'#60a5fa'
+};
+const EL_JP = { Wood:'木', Fire:'火', Earth:'土', Metal:'金', Water:'水' };
+
+// ============================================================
+// State
+// ============================================================
+let profile = null;
+let currentSlide = 0;
+const totalSlides = 5;
+let autoTimer = null;
+let touchStartY = 0;
+let touchStartX = 0;
+let isTransitioning = false;
+let chartInstance = null;
+
+// ============================================================
+// Entry Screen Logic
+// ============================================================
+const birthInput  = document.getElementById('e-birth');
+const nameInput   = document.getElementById('e-name');
+const submitBtn   = document.getElementById('e-submit');
+let selectedBlood = null;
+
+document.querySelectorAll('.blood-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.blood-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    selectedBlood = btn.dataset.val;
+    checkReady();
+  });
+});
+
+birthInput.addEventListener('input', checkReady);
+
+function checkReady() {
+  submitBtn.disabled = !(birthInput.value && selectedBlood);
+}
+
+submitBtn.addEventListener('click', () => {
+  if (submitBtn.disabled) return;
+  const displayName = nameInput.value.trim() || 'あなた';
+
+  profile = SelfInsightEngine.generateProfile({
+    tier: 1,
+    identity: {
+      display_name: displayName,
+      birth_date: birthInput.value,
+      blood_type: selectedBlood,
+      birth_time: null,
+      birth_place: null,
+      sex: null
+    }
+  });
+
+  // Persist to URL hash
+  const payload = JSON.stringify({
+    n: displayName,
+    d: birthInput.value,
+    b: selectedBlood
+  });
+  const encoded = btoa(unescape(encodeURIComponent(payload)));
+  history.replaceState(null, '', '#s=' + encoded);
+
+  startStory();
+});
+
+// ============================================================
+// Restore from hash
+// ============================================================
+function tryRestore() {
+  const hash = location.hash;
+  if (!hash.startsWith('#s=')) return false;
+  try {
+    const decoded = decodeURIComponent(escape(atob(hash.slice(3))));
+    const data = JSON.parse(decoded);
+    profile = SelfInsightEngine.generateProfile({
+      tier: 1,
+      identity: {
+        display_name: data.n || 'あなた',
+        birth_date: data.d,
+        blood_type: data.b,
+        birth_time: null,
+        birth_place: null,
+        sex: null
+      }
+    });
+    return true;
+  } catch (e) {
+    return false;
+  }
+}
+
+// ============================================================
+// Start Story Mode
+// ============================================================
+function startStory() {
+  populateSlides();
+  document.getElementById('entry').classList.add('hidden');
+  setTimeout(() => {
+    document.getElementById('story').classList.add('active');
+    goToSlide(0);
+  }, 400);
+}
+
+// ============================================================
+// Populate Slide Data
+// ============================================================
+function populateSlides() {
+  const fp = profile.four_pillars;
+  const ns = profile.nine_star_ki;
+  const rk = profile.rokusei;
+  const wa = profile.western_astrology;
+
+  // --- Slide 1: Essence ---
+  const dmEl = fp.day_master.element;
+  const glowColor = EL_COLORS[dmEl] || '#6366f1';
+  const kanjiEl = document.getElementById('dm-kanji');
+  kanjiEl.textContent = fp.day_master.char;
+  kanjiEl.style.setProperty('--glow-color', glowColor);
+  kanjiEl.style.color = glowColor;
+
+  const yyJP = fp.day_master.yin_yang === 'Yang' ? '陽' : '陰';
+  const elJP = EL_JP[dmEl] || dmEl;
+  document.getElementById('dm-badge').innerHTML =
+    `<span style="font-size:1.3em">${elJP}</span>${yyJP}${elJP}`;
+  document.getElementById('dm-badge').style.color = glowColor;
+  document.getElementById('dm-badge').style.borderColor = glowColor + '40';
+
+  document.getElementById('dm-desc').textContent = fp.day_master.description;
+
+  // Set glow color for slide 1 orbs
+  document.querySelectorAll('#slide-1 .bg-orb').forEach(orb => {
+    orb.style.background = glowColor;
+  });
+
+  // --- Slide 2: Five Elements ---
+  const barsContainer = document.getElementById('elements-bars');
+  barsContainer.innerHTML = '';
+  const elements = ['木','火','土','金','水'];
+  const elToKey = {'木':'Wood','火':'Fire','土':'Earth','金':'Metal','水':'Water'};
+
+  elements.forEach(el => {
+    const data = fp.five_elements_balance[el];
+    const pct = data?.pct ?? 0;
+    const color = EL_COLORS[elToKey[el]];
+    const row = document.createElement('div');
+    row.className = 'element-row';
+    row.innerHTML = `
+      <div class="element-label" style="color:${color}">${el}</div>
+      <div class="element-bar-track">
+        <div class="element-bar-fill" style="--fill-width:${pct}%;background:${color}"></div>
+      </div>
+      <div class="element-pct" style="color:${color}">${pct}%</div>
+    `;
+    barsContainer.appendChild(row);
+  });
+
+  const missingEl = document.getElementById('elements-missing');
+  if (fp.missing_elements && fp.missing_elements.length > 0) {
+    missingEl.innerHTML = fp.missing_elements.map(el =>
+      `<span class="element-missing"><span class="element-missing-badge">欠</span>${el}</span>`
+    ).join(' ');
+    missingEl.style.display = 'flex';
+    missingEl.style.gap = '8px';
+    missingEl.style.justifyContent = 'center';
+    missingEl.style.marginTop = '16px';
+  } else {
+    missingEl.innerHTML = '';
+  }
+
+  document.getElementById('elements-insight').textContent = fp.element_insight || '';
+
+  // --- Slide 3: Star Cards ---
+  const cardsContainer = document.getElementById('star-cards');
+  cardsContainer.innerHTML = '';
+
+  // Card 1: Nine Star Ki
+  const nsColor = EL_COLORS[ns.year_star.element] || '#a5b4fc';
+  cardsContainer.innerHTML += `
+    <div class="star-card">
+      <div class="star-card-label">九星気学</div>
+      <div class="star-card-value" style="color:${nsColor}">${ns.year_star.name}</div>
+      <div class="star-card-sub">${ns.year_star.element} / ${ns.year_star.direction}</div>
+    </div>
+  `;
+
+  // Card 2: Rokusei
+  const rkLabel = `${rk.main_star.name}(${rk.main_star.polarity === '+' ? '+' : '\u2212'})`;
+  let rkExtra = '';
+  if (rk.reigou) {
+    rkExtra = `<span class="reigou-badge">霊合</span>`;
+  }
+  cardsContainer.innerHTML += `
+    <div class="star-card">
+      <div class="star-card-label">六星占術</div>
+      <div class="star-card-value">${rkLabel}${rkExtra}</div>
+      ${rk.reigou && rk.sub_star ? `<div class="star-card-sub">副星: ${rk.sub_star.name}</div>` : ''}
+    </div>
+  `;
+
+  // Card 3: Western
+  cardsContainer.innerHTML += `
+    <div class="star-card">
+      <div class="star-card-label">西洋占星術</div>
+      <div class="star-card-value">${wa.sun_sign.jp} <span style="font-size:0.8em;opacity:.7">${wa.sun_sign.symbol}</span></div>
+      <div class="star-card-sub">${wa.sun_sign.element} / ${wa.sun_sign.quality} / ${wa.ruling_planet}</div>
+    </div>
+  `;
+
+  // --- Slide 4: Position ---
+  const forecastYear = new Date().getFullYear();
+  document.getElementById('position-year').textContent = `${forecastYear}年の位置`;
+
+  let palaceName = '';
+  let palaceMeaning = '';
+  let currentEnergy = 50;
+
+  if (ns.year_cycle?.position) {
+    palaceName = ns.year_cycle.position.palace;
+    palaceMeaning = ns.year_cycle.position.meaning;
+  } else if (ns.nine_year_cycle) {
+    const cur = ns.nine_year_cycle.find(e => e.current);
+    if (cur) {
+      palaceName = cur.palace;
+      palaceMeaning = cur.theme;
+      currentEnergy = cur.energy;
+    }
+  }
+
+  document.getElementById('palace-name').textContent = palaceName;
+  document.getElementById('palace-meaning').textContent = palaceMeaning;
+
+  // Energy
+  if (ns.nine_year_cycle) {
+    const cur = ns.nine_year_cycle.find(e => e.current);
+    if (cur) currentEnergy = cur.energy;
+  }
+  document.getElementById('energy-value').textContent = currentEnergy + '%';
+  document.getElementById('energy-fill').style.setProperty('--energy-width', currentEnergy + '%');
+
+  // Fortune chart (nine year cycle)
+  buildFortuneChart(ns.nine_year_cycle || []);
+
+  // Rokusei phase
+  const rkInfo = document.getElementById('rokusei-info');
+  rkInfo.innerHTML = '';
+  if (rk.twelve_year_cycle) {
+    const curPhase = rk.twelve_year_cycle.find(e => e.current);
+    if (curPhase) {
+      rkInfo.innerHTML += `<span class="rokusei-phase-badge">${curPhase.phase}</span>`;
+      if (curPhase['\u6bba\u754c']) {
+        rkInfo.innerHTML += `<span class="satsukai-warn">${curPhase['\u6bba\u754c']}</span>`;
+      }
+    }
+  }
+
+  // Peak year
+  let peakYear = forecastYear;
+  let peakEnergy = 0;
+  if (ns.nine_year_cycle) {
+    ns.nine_year_cycle.forEach(e => {
+      if (e.energy > peakEnergy) { peakEnergy = e.energy; peakYear = e.year; }
+    });
+  }
+  document.getElementById('peak-callout').innerHTML =
+    `ピークイヤー: <span class="peak-year">${peakYear}</span>`;
+
+  // --- Slide 5: CTA ---
+  // Build URL hash for passing data to index.html
+  const identityPayload = {
+    tier: 1,
+    identity: profile.identity
+  };
+  const b64 = btoa(unescape(encodeURIComponent(JSON.stringify(identityPayload))));
+  document.getElementById('cta-personality').href = 'index.html#r=' + b64;
+  document.getElementById('cta-dashboard').href = 'index.html#r=' + b64;
+
+  document.getElementById('cta-share').addEventListener('click', () => {
+    if (window.SelfInsightShareCard) {
+      window.SelfInsightShareCard.showShareModal(profile);
+    } else {
+      // Fallback: copy summary text
+      const text = `AI Self-Insight\n${fp.day_master.char}(${elJP}${yyJP}) / ${ns.year_star.name} / ${wa.sun_sign.jp}${wa.sun_sign.symbol}\n${palaceName} - ${palaceMeaning}`;
+      navigator.clipboard.writeText(text).then(() => {
+        const btn = document.getElementById('cta-share');
+        btn.textContent = 'コピーしました';
+        setTimeout(() => { btn.textContent = '結果をシェア'; }, 2000);
+      }).catch(() => {});
+    }
+  });
+
+  // Build dots
+  const dotsEl = document.getElementById('dots');
+  dotsEl.innerHTML = '';
+  for (let i = 0; i < totalSlides; i++) {
+    const dot = document.createElement('div');
+    dot.className = 'story-dot' + (i === 0 ? ' active' : '');
+    dot.addEventListener('click', () => goToSlide(i));
+    dotsEl.appendChild(dot);
+  }
+}
+
+// ============================================================
+// Chart.js Fortune Curve
+// ============================================================
+function buildFortuneChart(cycle) {
+  if (!cycle.length) return;
+
+  const ctx = document.getElementById('fortuneChart');
+  if (!ctx) return;
+
+  const labels = cycle.map(e => String(e.year));
+  const data = cycle.map(e => e.energy);
+  const currentIdx = cycle.findIndex(e => e.current);
+
+  const pointColors = cycle.map((e, i) =>
+    i === currentIdx ? '#ffffff' : 'rgba(255,255,255,.3)'
+  );
+  const pointRadii = cycle.map((e, i) =>
+    i === currentIdx ? 7 : 3
+  );
+
+  if (chartInstance) chartInstance.destroy();
+
+  chartInstance = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels,
+      datasets: [{
+        data,
+        borderColor: '#8b5cf6',
+        backgroundColor: 'rgba(139,92,246,.1)',
+        fill: true,
+        tension: 0.4,
+        pointBackgroundColor: pointColors,
+        pointBorderColor: pointColors,
+        pointRadius: pointRadii,
+        pointHoverRadius: pointRadii.map(r => r + 2),
+        borderWidth: 2.5,
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          backgroundColor: '#1a1d27',
+          borderColor: '#2e3347',
+          borderWidth: 1,
+          titleColor: '#e8e9ed',
+          bodyColor: '#9ca3af',
+          titleFont: { family: 'Inter, Noto Sans JP', weight: '600' },
+          bodyFont: { family: 'Inter, Noto Sans JP' },
+          padding: 10,
+          cornerRadius: 8,
+          displayColors: false,
+          callbacks: {
+            label: (ctx) => `Energy: ${ctx.parsed.y}%`
+          }
+        }
+      },
+      scales: {
+        x: {
+          ticks: {
+            color: (ctx) => {
+              return ctx.index === currentIdx ? '#ffffff' : '#6b7280';
+            },
+            font: { family: 'JetBrains Mono, monospace', size: 11, weight: '500' }
+          },
+          grid: { color: 'rgba(255,255,255,.04)' },
+          border: { display: false }
+        },
+        y: {
+          min: 0, max: 110,
+          ticks: { display: false },
+          grid: { color: 'rgba(255,255,255,.04)' },
+          border: { display: false }
+        }
+      },
+      interaction: { intersect: false, mode: 'index' }
+    }
+  });
+}
+
+// ============================================================
+// Slide Navigation
+// ============================================================
+function goToSlide(idx) {
+  if (isTransitioning || idx === currentSlide) return;
+  if (idx < 0 || idx >= totalSlides) return;
+
+  isTransitioning = true;
+  clearAutoAdvance();
+
+  const oldSlide = document.getElementById('slide-' + (currentSlide + 1));
+  const newSlide = document.getElementById('slide-' + (idx + 1));
+
+  if (oldSlide) {
+    oldSlide.classList.remove('active');
+    oldSlide.classList.add('exit-left');
+    setTimeout(() => oldSlide.classList.remove('exit-left'), 600);
+  }
+
+  currentSlide = idx;
+
+  setTimeout(() => {
+    if (newSlide) newSlide.classList.add('active');
+    updateProgress();
+    isTransitioning = false;
+    startAutoAdvance();
+  }, 100);
+}
+
+function nextSlide() {
+  if (currentSlide < totalSlides - 1) {
+    goToSlide(currentSlide + 1);
+  }
+}
+
+function prevSlide() {
+  if (currentSlide > 0) {
+    goToSlide(currentSlide - 1);
+  }
+}
+
+function updateProgress() {
+  const pct = ((currentSlide + 1) / totalSlides) * 100;
+  document.getElementById('progressFill').style.width = pct + '%';
+
+  document.querySelectorAll('.story-dot').forEach((dot, i) => {
+    dot.classList.toggle('active', i === currentSlide);
+  });
+}
+
+// ============================================================
+// Auto Advance
+// ============================================================
+function startAutoAdvance() {
+  clearAutoAdvance();
+  if (currentSlide >= totalSlides - 1) return;
+  autoTimer = setTimeout(() => {
+    nextSlide();
+  }, 5000);
+}
+
+function clearAutoAdvance() {
+  if (autoTimer) {
+    clearTimeout(autoTimer);
+    autoTimer = null;
+  }
+}
+
+// ============================================================
+// Touch / Click Handling
+// ============================================================
+const storyEl = document.getElementById('story');
+
+storyEl.addEventListener('touchstart', (e) => {
+  touchStartY = e.touches[0].clientY;
+  touchStartX = e.touches[0].clientX;
+  clearAutoAdvance();
+}, { passive: true });
+
+storyEl.addEventListener('touchend', (e) => {
+  const dy = e.changedTouches[0].clientY - touchStartY;
+  const dx = e.changedTouches[0].clientX - touchStartX;
+  const absDy = Math.abs(dy);
+  const absDx = Math.abs(dx);
+
+  // Prioritize vertical swipes but also handle horizontal
+  if (absDy > 50 || absDx > 50) {
+    if (absDy > absDx) {
+      // Vertical swipe
+      if (dy < -50) nextSlide();
+      else if (dy > 50) prevSlide();
+    } else {
+      // Horizontal swipe
+      if (dx < -50) nextSlide();
+      else if (dx > 50) prevSlide();
+    }
+  }
+}, { passive: true });
+
+// Tap to advance (exclude interactive elements)
+storyEl.addEventListener('click', (e) => {
+  const tag = e.target.tagName.toLowerCase();
+  if (tag === 'a' || tag === 'button' || e.target.closest('a') || e.target.closest('button') || e.target.closest('canvas')) return;
+
+  const x = e.clientX;
+  const w = window.innerWidth;
+  clearAutoAdvance();
+
+  if (x < w * 0.3) {
+    prevSlide();
+  } else {
+    nextSlide();
+  }
+});
+
+// Keyboard
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.key === ' ') {
+    e.preventDefault();
+    nextSlide();
+  } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+    e.preventDefault();
+    prevSlide();
+  }
+});
+
+// ============================================================
+// Init
+// ============================================================
+(function init() {
+  if (tryRestore()) {
+    startStory();
+  }
+})();
+</script>
+
+<!-- Lazy-load share-card.js for CTA -->
+<script src="share-card.js" defer></script>
+</body>
+</html>

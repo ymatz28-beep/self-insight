@@ -412,6 +412,41 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);line-height:
     </p>
     <div id="submitStatus" style="font-size:12px;color:var(--text2)"></div>
   </div>
+
+  <!-- Share Card Button -->
+  <div id="shareCardSection" style="margin-bottom:20px;display:none">
+    <button
+      id="shareCardBtn"
+      onclick="openShareCard()"
+      style="
+        width:100%;padding:14px 20px;border:none;border-radius:8px;
+        background:linear-gradient(135deg,#6366f1,#8b5cf6);
+        color:#fff;font-size:15px;font-weight:700;
+        cursor:pointer;font-family:var(--font);
+        display:flex;align-items:center;justify-content:center;gap:8px;
+        transition:opacity .2s;
+      "
+      onmouseover="this.style.opacity='.88'"
+      onmouseout="this.style.opacity='1'"
+    >
+      <span style="font-size:18px;">✦</span>
+      結果をシェアする
+      <span style="font-size:12px;opacity:.75;font-weight:500;">→ PNG生成</span>
+    </button>
+  </div>
+
+  <!-- Navigation Links -->
+  <div id="navLinksSection" style="display:flex;gap:10px;margin-bottom:20px">
+    <a href="compatibility.html" style="flex:1;text-align:center;padding:12px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--accent2);text-decoration:none;font-size:13px;font-weight:600;transition:border-color .2s" onmouseover="this.style.borderColor='var(--accent)'" onmouseout="this.style.borderColor='var(--border)'">
+      <span style="display:block;font-size:18px;margin-bottom:4px">&#9829;</span>
+      相性診断
+    </a>
+    <a href="story.html" style="flex:1;text-align:center;padding:12px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--accent2);text-decoration:none;font-size:13px;font-weight:600;transition:border-color .2s" onmouseover="this.style.borderColor='var(--accent)'" onmouseout="this.style.borderColor='var(--border)'">
+      <span style="display:block;font-size:18px;margin-bottom:4px">&#10024;</span>
+      ストーリーモード
+    </a>
+  </div>
+
   <div id="dashboardContainer"></div>
 </div>
 
@@ -419,6 +454,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);line-height:
 
 <script src="engine.js"></script>
 <script src="renderer.js"></script>
+<script src="share-card.js"></script>
 
 <script>
 // === Likert scale generation ===
@@ -556,15 +592,28 @@ function validate(tier) {
 const SUBMIT_URL = 'https://script.google.com/macros/s/AKfycbyqST_7ZK4ijRp_MyVwZEiAAK6G8oY85YEDSzuAfkMecwa_qt3OHrrkrGV2fk9zNXIp/exec';
 
 let resultJson = '';
+let _lastProfile = null;
 
 function showResult(data) {
   const profile = SelfInsightEngine.generateProfile(data);
+  _lastProfile = profile;
   document.getElementById('insightForm').style.display = 'none';
   document.querySelector('.hero').style.display = 'none';
   document.querySelector('.disclaimer').style.display = 'none';
   document.querySelector('.progress').style.display = 'none';
   document.getElementById('resultScreen').style.display = 'block';
   SelfInsightRenderer.renderDashboard(profile, document.getElementById('dashboardContainer'));
+  // Show share button after results render
+  document.getElementById('shareCardSection').style.display = 'block';
+}
+
+function openShareCard() {
+  if (!_lastProfile) return;
+  if (window.SelfInsightShareCard) {
+    window.SelfInsightShareCard.showShareModal(_lastProfile);
+  } else {
+    alert('シェアカード機能を読み込み中です。しばらくしてから再度お試しください。');
+  }
 }
 
 async function submitAtTier(tier) {
