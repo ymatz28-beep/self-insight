@@ -657,9 +657,29 @@ async function submitAtTier(tier) {
       const decoded = decodeURIComponent(escape(atob(hash.slice(3))));
       const data = JSON.parse(decoded);
       showResult(data);
-    } catch (e) {
-      // Invalid hash, show form normally
-    }
+    } catch (e) {}
+  } else if (hash.startsWith('#continue=')) {
+    // From story.html: pre-fill Tier 1 and jump to Tier 2
+    try {
+      const decoded = decodeURIComponent(escape(atob(hash.slice(10))));
+      const data = JSON.parse(decoded);
+      const id = data.identity || {};
+      if (id.display_name) document.getElementById('display_name').value = id.display_name;
+      if (id.birth_date) document.getElementById('birth_date').value = id.birth_date;
+      if (id.birth_time) document.getElementById('birth_time').value = id.birth_time;
+      if (id.birth_place) document.getElementById('birth_place').value = id.birth_place;
+      if (id.blood_type) {
+        const radio = document.querySelector(`input[name=blood_type][value="${id.blood_type}"]`);
+        if (radio) radio.checked = true;
+      }
+      if (id.sex) {
+        const radio = document.querySelector(`input[name=sex][value="${id.sex}"]`);
+        if (radio) radio.checked = true;
+      }
+      // Auto-advance to Tier 2
+      showTier(2);
+      history.replaceState(null, '', location.pathname);
+    } catch (e) {}
   }
 })();
 </script>

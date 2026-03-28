@@ -6,7 +6,7 @@
 - [WARN] post_change_testing: self-insight: 直近71時間以内に変更あり、テスト証跡なし（self-insight/.test_ok）
 
 ## Last Updated
-2026-03-27 (session #26 — Projects CLAUDE.md Skill Routing追加。self-insightコード変更なし)
+2026-03-28 (session #28 — cross-project: section_nav migration, self-insight変更なし)
 
 ## Project Overview
 複数の占術（四柱推命・九星気学・六星占術・西洋占星術・干支）+ 独自性格分析SIPS（Big Five基盤の16 Archetypes+24 Strengths+Sensitivity Score）を統合した、徹底的にパーソナライズされた自己理解ダッシュボードサービス。有料SaaS展開を目指す。
@@ -258,17 +258,28 @@
   - kaizen-agent QA config: nav_python_filesを空配列に更新（false positive 2件解消、33→31）
   - 3層防御完成: ①SSoT関数 ②デプロイ時inject_gnav()自動注入 ③毎晩patrol.pyが乖離検知
 
+## Completed (story mode + share card + 相性診断ページ新規作成 2026-03-28)
+- **Before**: フォームは入力→結果の1方向のみ。ストーリーモード・シェアカード・相性診断ページが存在しなかった
+- **After**: story.html（物語風の性格紹介ページ）新規作成、share-card.js（OGP風シェアカード生成）新規作成、compatibility.html（5軸相性診断：五行30%+九星25%+六星15%+西洋占星15%+血液型15%、レーダーチャート+スコアリング+招待リンク機能付き）新規作成
+- **Commits**: self-insight b60af71
+
+## Completed (compatibility.html const重複エラー修正 + share-card SNSボタン追加 2026-03-28)
+- **Before**: compatibility.htmlの`<script>`内でengine.jsと同名のconst（ELEMENT_JP, NINE_STAR_ELEMENTS, NINE_STAR_NAMES）を再宣言 → スクリプト全体がSyntaxErrorで死亡し相性診断が完全に動作しない。share-card.jsはWeb Share API非対応のデスクトップでシェアボタンが非表示
+- **After**: 重複const 3件を削除（engine.js側を参照）→ nodeで結合構文チェックOK・重複ゼロ確認済み。share-card.jsにX・LINE・コピーの3ボタンを常時表示（デスクトップ対応）。index.htmlに`#continue=`ハッシュハンドラ追加、story.htmlのCTA遷移を`#r=`→`#continue=`に変更
+- **Commits**: self-insight cdf2cba
+
 ## In Progress
 - [ ] **generate_dashboard.py / generate_profile.py 構造分割**: constancy警告（両ファイル500行超過）への対応。generate_dashboard.py 2,348行、generate_profile.py 1,130行
 
 ## Next Actions
-1. **E2Eフロー完成**（最優先）: フォーム送信→Google Sheets蓄積が未確認（no-cors修正済み、再テスト必要）。LINE通知の動作確認。admin.htmlでの一覧確認
-2. **admin.html 結果URL管理ページ整備**: Apps Script URL接続済み。回答一覧+結果URLコピー+ステータス管理。実データで動作確認が必要
-3. **renderer.js本番品質化**: generate_dashboard.pyレベルのリッチUI（アーキタイプ名、折りたたみカード、Chart.js運気チャート、リッチナラティブ、ドメインカラー、レアリティバッジ）をrenderer.jsに移植。完成すればPython版パイプライン不要に
-4. **短縮URL設計**: `form/#r=base64...`（長い）→ `/results/{uuid}`（短い）への移行。バックエンドストレージ必要
-5. **SIPS実装**: Big Five 40問→16 Archetypes+24 Strengths導出ロジック、アーキタイプ/強みテーマ名称設計
-6. **engine.js検証**: Yumaプロファイルで計算結果をPython版と照合（差異がないか）
-7. **ファイル分割**: generate_dashboard.py（2,084行）/ generate_profile.py（1,130行）のモジュール分割（constancy threshold超過）
+1. **相性診断の動作テスト**: compatibility.htmlのconst重複修正済み → ハードリロード（Cmd+Shift+R）で動作確認が必要
+2. **E2Eフロー完成**: フォーム送信→Google Sheets蓄積が未確認（no-cors修正済み、再テスト必要）。LINE通知の動作確認。admin.htmlでの一覧確認
+3. **admin.html 結果URL管理ページ整備**: Apps Script URL接続済み。回答一覧+結果URLコピー+ステータス管理。実データで動作確認が必要
+4. **renderer.js本番品質化**: generate_dashboard.pyレベルのリッチUI（アーキタイプ名、折りたたみカード、Chart.js運気チャート、リッチナラティブ、ドメインカラー、レアリティバッジ）をrenderer.jsに移植。完成すればPython版パイプライン不要に
+5. **短縮URL設計**: `form/#r=base64...`（長い）→ `/results/{uuid}`（短い）への移行。バックエンドストレージ必要
+6. **SIPS実装**: Big Five 40問→16 Archetypes+24 Strengths導出ロジック、アーキタイプ/強みテーマ名称設計
+7. **engine.js検証**: Yumaプロファイルで計算結果をPython版と照合（差異がないか）
+8. **ファイル分割**: generate_dashboard.py（2,084行）/ generate_profile.py（1,130行）のモジュール分割（constancy threshold超過）
 
 ## Key Decisions
 - 2ピラー構造: Timeless Identity + Year Forecast
@@ -346,3 +357,4 @@
 | 24 | 2026-03-25 | **cross-project session (dotfiles/kaizen-agent)**: Brewfile更新(deno/mlx/tesseract/zeromq/python@3.14追加)+setup.sh 8ステップ化+launchd plistバックアップ+kaizen-agent環境drift自動検出(check_brewfile_drift)。self-insightコード変更なし |
 | 25 | 2026-03-26 | **kaizen-agent QA改革セッション**: action_items.yaml確認 — self-insight関連3件(si-e2e/si-admin/si-sheets-test)がhigh/pendingで残存を確認。全125件中self-insight固有タスクの優先度変更なし。self-insightコード変更なし |
 | 26 | 2026-03-27 | **Projects CLAUDE.md Skill Routing追加**: Before: スキル発火ルールが暗黙知 → After: Skill Routing表(8ルール)をCLAUDE.mdに明文化+story-intakeトリガーに「インタビューして」追加。self-insightコード変更なし |
+| 27 | 2026-03-28 | **story mode+share card+相性診断+バグ修正**: Before: ストーリー/シェア/相性診断が未実装+const重複でスクリプト全死亡 → After: 3ページ新規作成+重複修正+SNSボタン追加。commits: b60af71, cdf2cba |

@@ -797,7 +797,7 @@ function populateSlides() {
     identity: profile.identity
   };
   const b64 = btoa(unescape(encodeURIComponent(JSON.stringify(identityPayload))));
-  document.getElementById('cta-personality').href = 'index.html#r=' + b64;
+  document.getElementById('cta-personality').href = 'index.html#continue=' + b64;
   document.getElementById('cta-dashboard').href = 'index.html#r=' + b64;
 
   document.getElementById('cta-share').addEventListener('click', () => {
