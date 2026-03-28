@@ -1,13 +1,12 @@
 # Self-Insight — HANDOFF
 
-## [Constancy] 2026-03-24
+## [Constancy] 2026-03-28
 - [WARN] structural_reform: generate_dashboard.py is 2348 lines (threshold: 500). Consider splitting.
 - [WARN] structural_reform: generate_profile.py is 1130 lines (threshold: 500). Consider splitting.
-- [WARN] gnav_consistency: Missing gnav link: Bookmarks (/bookmarks/)
-- [WARN] gnav_consistency: Missing gnav link: Cisco (/cisco/)
+- [WARN] post_change_testing: self-insight: 直近71時間以内に変更あり、テスト証跡なし（self-insight/.test_ok）
 
 ## Last Updated
-2026-03-25 (session #24 — cross-project session: dotfiles/kaizen-agent。self-insightコード変更なし)
+2026-03-27 (session #26 — Projects CLAUDE.md Skill Routing追加。self-insightコード変更なし)
 
 ## Project Overview
 複数の占術（四柱推命・九星気学・六星占術・西洋占星術・干支）+ 独自性格分析SIPS（Big Five基盤の16 Archetypes+24 Strengths+Sensitivity Score）を統合した、徹底的にパーソナライズされた自己理解ダッシュボードサービス。有料SaaS展開を目指す。
@@ -345,3 +344,5 @@
 | 22 | 2026-03-24 | **アクションアイテム登録**: si-sheets-test(フォーム→Sheets再テスト/high)をaction_tracker登録。newsletter-digest側セッションの一環。self-insightコード変更なし |
 | 23 | 2026-03-24 | **nav SSoT enforcement**: generate_dashboard.pyのハードコードGNAV_LINKS→get_nav_html()関数呼び出しに統一。kaizen-agent QAのfalse positive 2件解消(33→31)。全ジェネレータがrenderer.py SSoTを参照する3層防御完成。commit: f5f8209 |
 | 24 | 2026-03-25 | **cross-project session (dotfiles/kaizen-agent)**: Brewfile更新(deno/mlx/tesseract/zeromq/python@3.14追加)+setup.sh 8ステップ化+launchd plistバックアップ+kaizen-agent環境drift自動検出(check_brewfile_drift)。self-insightコード変更なし |
+| 25 | 2026-03-26 | **kaizen-agent QA改革セッション**: action_items.yaml確認 — self-insight関連3件(si-e2e/si-admin/si-sheets-test)がhigh/pendingで残存を確認。全125件中self-insight固有タスクの優先度変更なし。self-insightコード変更なし |
+| 26 | 2026-03-27 | **Projects CLAUDE.md Skill Routing追加**: Before: スキル発火ルールが暗黙知 → After: Skill Routing表(8ルール)をCLAUDE.mdに明文化+story-intakeトリガーに「インタビューして」追加。self-insightコード変更なし |
