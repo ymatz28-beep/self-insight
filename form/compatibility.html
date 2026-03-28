@@ -232,7 +232,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);line-height:
 
 const SOSEI_CYCLE = ['Wood','Fire','Earth','Metal','Water'];
 const SOKOKU_CYCLE = ['Wood','Earth','Water','Fire','Metal'];
-const ELEMENT_JP = {Wood:'木',Fire:'火',Earth:'土',Metal:'金',Water:'水'};
+// ELEMENT_JP is already declared in engine.js
 
 function fiveElementRelationship(a, b) {
   if (a === b) return 'same';
@@ -245,8 +245,7 @@ function fiveElementRelationship(a, b) {
   return 'neutral';
 }
 
-const NINE_STAR_ELEMENTS = {1:'Water',2:'Earth',3:'Wood',4:'Wood',5:'Earth',6:'Metal',7:'Metal',8:'Earth',9:'Fire'};
-const NINE_STAR_NAMES = {1:'一白水星',2:'二黒土星',3:'三碧木星',4:'四緑木星',5:'五黄土星',6:'六白金星',7:'七赤金星',8:'八白土星',9:'九紫火星'};
+// NINE_STAR_ELEMENTS and NINE_STAR_NAMES are already declared in engine.js
 const NINE_STAR_GROUPS = {Water:[1],Earth:[2,5,8],Wood:[3,4],Metal:[6,7],Fire:[9]};
 
 const ROKUSEI_COMPLEMENTARY = [
@@ -523,12 +522,17 @@ function setStep(n) {
 }
 
 function goToStep2() {
-  const errs = validateStep1();
-  if (errs.length) { alert(errs.join('\n')); return; }
-  document.getElementById('step1').classList.add('hidden');
-  document.getElementById('step2').classList.remove('hidden');
-  setStep(2);
-  window.scrollTo({ top: 0, behavior: 'smooth' });
+  try {
+    const errs = validateStep1();
+    if (errs.length) { alert(errs.join('\n')); return; }
+    document.getElementById('step1').classList.add('hidden');
+    document.getElementById('step2').classList.remove('hidden');
+    setStep(2);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  } catch (e) {
+    alert('エラーが発生しました: ' + e.message);
+    console.error('goToStep2 error:', e);
+  }
 }
 
 function getPersonData(suffix) {
