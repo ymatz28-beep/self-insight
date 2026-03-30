@@ -2,7 +2,7 @@
 
 ## [Constancy] 2026-03-30
 - [WARN] structural_reform: generate_dashboard.py is 2348 lines (threshold: 800). Consider splitting.
-- [WARN] post_change_testing: self-insight: 直近42時間以内に変更あり、テスト証跡なし（self-insight/.test_ok）
+- [WARN] post_change_testing: self-insight: 直近0時間以内に変更あり、テスト証跡なし（self-insight/.test_ok）
 
 ## Last Updated
 2026-03-30
