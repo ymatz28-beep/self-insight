@@ -1,11 +1,11 @@
 # Self-Insight — HANDOFF
 
-## [Constancy] 2026-03-23
-- [WARN] structural_reform: generate_dashboard.py is 2084 lines (threshold: 500). Consider splitting.
-- [WARN] structural_reform: generate_profile.py is 1130 lines (threshold: 500). Consider splitting.
+## [Constancy] 2026-03-30
+- [WARN] structural_reform: generate_dashboard.py is 2348 lines (threshold: 800). Consider splitting.
+- [WARN] post_change_testing: self-insight: 直近42時間以内に変更あり、テスト証跡なし（self-insight/.test_ok）
 
 ## Last Updated
-2026-03-24 (session #21 — 月間テキスト個別化+二重表示修正+CSS chevron)
+2026-03-28 (session #29 — cross-project: 全HANDOFF履歴→SNSネタ21件一括生成, self-insight変更なし)
 
 ## Project Overview
 複数の占術（四柱推命・九星気学・六星占術・西洋占星術・干支）+ 独自性格分析SIPS（Big Five基盤の16 Archetypes+24 Strengths+Sensitivity Score）を統合した、徹底的にパーソナライズされた自己理解ダッシュボードサービス。有料SaaS展開を目指す。
@@ -240,24 +240,45 @@
 - [x] **Cloudflare Accessセッション延長**（2026-03-23 session #20）
   - Zero Trust → iuma-private アプリのセッション期間を**1 month**に変更
   - スマホからも月1回のOTP認証で済む
-- [x] **月間テキスト個別化+二重表示修正+CSS chevron**（2026-03-24 session #21→951ca29, 60d0410, eb98bdc）
+- [x] **月間テキスト個別化+二重表示修正+CSS chevron+フォーム接続**（2026-03-24 session #21→951ca29, 60d0410, eb98bdc, 82e71eb, 405e1ec, d8ebed4）
   - 月間ナラティブ/アドバイス: 12/12ユニーク化（九星の宮+六星フェーズ+西洋テーマを直接組み込み）
   - SF強みローテーション: Top5を月ごとに回す（月1=Empathy, 月2=Intellection, ...）
   - 推奨ドメイン: 全スコア同一月は六星フェーズで決定（財成→お金, 立花→人間関係等）
   - PALACE_DESC / PHASE_DESC辞書追加（九星9宮+六星12フェーズの意味解説）
   - 二重タイトル表示修正: 全セクションの内部pillar-header/section-title/section-desc除去（Hub cardヘッダーに一本化）
   - 折りたたみ記号: テキスト文字(+/−)→CSSボーダーchevron（フォント依存排除）
+  - Hero名スタイリング: フォントサイズ拡大+明度アップ+装飾線追加（82e71eb）
+  - フォーム→Apps Script接続: form/index.htmlにSUBMIT_URL設定+非同期POST送信（405e1ec）
+  - CORS修正: Apps Script POSTのリダイレクト問題をno-corsモードで解決（d8ebed4）
+
+## Completed (session #23)
+- [x] **nav SSoT enforcement — generate_dashboard.py**（2026-03-24 session #23→f5f8209）
+  - ハードコードGNAV_LINKSリスト → `from lib.renderer import get_nav_html` SSoT関数呼び出しに切替
+  - kaizen-agent QA config: nav_python_filesを空配列に更新（false positive 2件解消、33→31）
+  - 3層防御完成: ①SSoT関数 ②デプロイ時inject_gnav()自動注入 ③毎晩patrol.pyが乖離検知
+
+## Completed (story mode + share card + 相性診断ページ新規作成 2026-03-28)
+- **Before**: フォームは入力→結果の1方向のみ。ストーリーモード・シェアカード・相性診断ページが存在しなかった
+- **After**: story.html（物語風の性格紹介ページ）新規作成、share-card.js（OGP風シェアカード生成）新規作成、compatibility.html（5軸相性診断：五行30%+九星25%+六星15%+西洋占星15%+血液型15%、レーダーチャート+スコアリング+招待リンク機能付き）新規作成
+- **Commits**: self-insight b60af71
+
+## Completed (compatibility.html const重複エラー修正 + share-card SNSボタン追加 2026-03-28)
+- **Before**: compatibility.htmlの`<script>`内でengine.jsと同名のconst（ELEMENT_JP, NINE_STAR_ELEMENTS, NINE_STAR_NAMES）を再宣言 → スクリプト全体がSyntaxErrorで死亡し相性診断が完全に動作しない。share-card.jsはWeb Share API非対応のデスクトップでシェアボタンが非表示
+- **After**: 重複const 3件を削除（engine.js側を参照）→ nodeで結合構文チェックOK・重複ゼロ確認済み。share-card.jsにX・LINE・コピーの3ボタンを常時表示（デスクトップ対応）。index.htmlに`#continue=`ハッシュハンドラ追加、story.htmlのCTA遷移を`#r=`→`#continue=`に変更
+- **Commits**: self-insight cdf2cba
 
 ## In Progress
-- [ ] **generate_dashboard.py / generate_profile.py 構造分割**: constancy警告（両ファイル500行超過）への対応。generate_dashboard.py 2,084行、generate_profile.py 1,130行
+- [ ] **generate_dashboard.py / generate_profile.py 構造分割**: constancy警告（両ファイル500行超過）への対応。generate_dashboard.py 2,348行、generate_profile.py 1,130行
 
 ## Next Actions
-1. **renderer.js本番品質化**（最重要）: generate_dashboard.pyレベルのリッチUI（アーキタイプ名、折りたたみカード、Chart.js運気チャート、リッチナラティブ、ドメインカラー、レアリティバッジ）をrenderer.jsに移植。完成すればPython版パイプライン不要に
-2. **Google Apps Script デプロイ**: `scripts/apps-script.gs`をGoogle Sheetsに設定 → `form/index.html`のSUBMIT_URLに反映 → LINE通知（結果URL含む）
-3. **短縮URL設計**: `form/#r=base64...`（長い）→ `/results/{uuid}`（短い）への移行。バックエンドストレージ必要
-4. **SIPS実装**: Big Five 40問→16 Archetypes+24 Strengths導出ロジック、アーキタイプ/強みテーマ名称設計
+1. **🔥 「30秒で鳥肌」Tier 1即時体験の実装**: 生年月日のみ入力→即座にリッチな結果表示。renderer.jsをgenerate_dashboard.pyレベルに本番品質化（アーキタイプ名、折りたたみカード、Chart.js運気チャート、リッチナラティブ、ドメインカラー、レアリティバッジ）。バイラルループの起点
+2. **相性診断の動作テスト+バイラル機能強化**: compatibility.htmlのconst重複修正済み → 動作確認 + シェアカード→招待リンク→友達流入のバイラルループ検証
+3. **E2Eフロー完成**: フォーム送信→Google Sheets蓄積が未確認（no-cors修正済み、再テスト必要）
+4. **「取扱説明書」ブランディング反映**: Hero/CTA/OGPのコピーを「あなたの取扱説明書をAIが作ります」に統一
 5. **engine.js検証**: Yumaプロファイルで計算結果をPython版と照合（差異がないか）
-6. **ファイル分割**: generate_dashboard.py（2,084行）/ generate_profile.py（1,130行）のモジュール分割（constancy threshold超過）
+6. **SIPS実装**: Big Five 40問→16 Archetypes+24 Strengths導出ロジック、アーキタイプ/強みテーマ名称設計
+7. **短縮URL設計**: `form/#r=base64...`（長い）→ `/results/{uuid}`（短い）への移行
+8. **ファイル分割**: generate_dashboard.py（2,348行）/ generate_profile.py（1,130行）のモジュール分割
 
 ## Key Decisions
 - 2ピラー構造: Timeless Identity + Year Forecast
@@ -294,7 +315,11 @@
 - **感情的セクション名**: 技術的名称→感情的ラベル（Core Identity→あなたの本質、Cross Analysis→才能×運命 等）
 - **Section Nav廃止**: stickyナビバー削除。Heroのhubカードがショートカット機能を代替
 - **Gnav制御**: デフォルトOFF（クライアント向け）。`--gnav`フラグで個人用表示。`--no-gnav`は明示的スキップ
+- **Nav SSoT enforcement（session #23で確定）**: generate_dashboard.pyのハードコードGNAV_LINKS → `get_nav_html()` 関数呼び出し。renderer.pyのPRIVATE_NAVが全ナビの唯一の定義元。変更は1箇所で全ページに自動反映
 - **Cloudflare Accessセッション**: iuma-private の認証期間を1 monthに延長（月1回OTP）
+- **ファネル転換（session #27ブレスト 2026-03-28）**: 12分フォーム入口 → 「30秒で鳥肌体験→シェアカード→友達流入」バイラルループ。生年月日だけで即Tier 1結果表示。相性診断でバイラル係数>1を狙う
+- **ポジショニング転換（session #27ブレスト 2026-03-28）**: 「統合ダッシュボード」→「あなたの取扱説明書をAIが作ります」。機能ではなくメタファーで売る
+- **価格転換（session #27ブレスト 2026-03-28）**: 全部サブスク → Tier 2は買い切り¥980（16Personalities $9が証明済み）。月額サブスクはTier 3のみに集中
 
 ## Blockers
 - **API 502障害**: session #10, #12で計5時間以上の障害。大規模ファイル生成（Agent）が特に脆弱。回避策: Agent使用を最小化し、Edit分割方式で段階的変更
@@ -328,4 +353,12 @@
 | 18 | 2026-03-23 | **P0+P1改善**: CSS修正、2人称化、fade-inアニメ、ガイダンス月間運勢統合、折りたたみUI、Co-Star風引用句、ドメインカラー統一、パーソナライズ助言(SF+日主)、占術アコーディオン、レアリティバッジ、--no-gnavフラグ。commits: 83a5fb5, 38930c3 |
 | 19 | 2026-03-23 | **フォームバックエンド+UXオーバーホール**: Apps Script+process_submission.py E2Eパイプライン構築。Hub+Detail Architecture（全セクション折りたたみカード化）、動的アーキタイプ名（day_master+強み）、感情的セクション名、Section Nav廃止、Gnav制御。generate_dashboard.py 1,677→2,084行。commits: 2a2a8f6, 6a91657 |
 | 20 | 2026-03-23 | **Cloudflare Accessセッション延長**: Zero Trust iuma-privateのセッション期間を1 monthに変更。Reminder↔アクション同期設計確認（iCloud即時同期、launchd 30分毎、スマホ入力OK）。コード変更なし |
-| 21 | 2026-03-24 | **月間テキスト個別化+UXバグ修正**: 月間ナラティブ12/12ユニーク化（PALACE_DESC/PHASE_DESC辞書+SF強みローテーション+六星フェーズ別ドメイン推奨）。全セクション二重タイトル除去。折りたたみ→CSS chevron（フォント非依存）。commits: 951ca29, 60d0410, eb98bdc |
+| 21 | 2026-03-24 | **月間テキスト個別化+UXバグ修正+フォーム接続**: 月間ナラティブ12/12ユニーク化（PALACE_DESC/PHASE_DESC辞書+SF強みローテーション+六星フェーズ別ドメイン推奨）。全セクション二重タイトル除去。折りたたみ→CSS chevron（フォント非依存）。Hero名スタイリング改善（大きく明るく+装飾線）。フォーム→Apps Script POST接続（SUBMIT_URL）+no-corsモード修正。commits: 951ca29, 60d0410, eb98bdc, 82e71eb, 405e1ec, d8ebed4 |
+| 22 | 2026-03-24 | **アクションアイテム登録**: si-sheets-test(フォーム→Sheets再テスト/high)をaction_tracker登録。newsletter-digest側セッションの一環。self-insightコード変更なし |
+| 23 | 2026-03-24 | **nav SSoT enforcement**: generate_dashboard.pyのハードコードGNAV_LINKS→get_nav_html()関数呼び出しに統一。kaizen-agent QAのfalse positive 2件解消(33→31)。全ジェネレータがrenderer.py SSoTを参照する3層防御完成。commit: f5f8209 |
+| 24 | 2026-03-25 | **cross-project session (dotfiles/kaizen-agent)**: Brewfile更新(deno/mlx/tesseract/zeromq/python@3.14追加)+setup.sh 8ステップ化+launchd plistバックアップ+kaizen-agent環境drift自動検出(check_brewfile_drift)。self-insightコード変更なし |
+| 25 | 2026-03-26 | **kaizen-agent QA改革セッション**: action_items.yaml確認 — self-insight関連3件(si-e2e/si-admin/si-sheets-test)がhigh/pendingで残存を確認。全125件中self-insight固有タスクの優先度変更なし。self-insightコード変更なし |
+| 26 | 2026-03-27 | **Projects CLAUDE.md Skill Routing追加**: Before: スキル発火ルールが暗黙知 → After: Skill Routing表(8ルール)をCLAUDE.mdに明文化+story-intakeトリガーに「インタビューして」追加。self-insightコード変更なし |
+| 27 | 2026-03-28 | **story mode+share card+相性診断+バグ修正**: Before: ストーリー/シェア/相性診断が未実装+const重複でスクリプト全死亡 → After: 3ページ新規作成+重複修正+SNSボタン追加。commits: b60af71, cdf2cba |
+| 28 | 2026-03-28 | **cross-project: section_nav migration**: self-insight変更なし（lib/scripts側でsection_navコンポーネント化） |
+| 29 | 2026-03-28 | **cross-project: 全HANDOFF履歴→SNSネタ一括生成**: 14プロジェクトのHANDOFF History抽出→topic_candidates.yaml 21件追加(027-047)。self-insight関連: topic-038(占いSaaS 3週間MVP), topic-040(Cloudflare Access OTP)。self-insightコード変更なし |

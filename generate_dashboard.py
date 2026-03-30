@@ -47,19 +47,10 @@ ENNEA_NAMES = {1:'完璧主義者',2:'援助者',3:'達成者',4:'個性派',5:'
 HSP_LABELS = {'low':'穏やか','medium':'中程度','high':'繊細'}
 ADHD_LABELS = {'minimal':'安定型','leaning':'やや多動','significant':'多動型'}
 
-# Private nav — order from design-system.md SSOT
-GNAV_LINKS = [
-    ('Stock', 'https://iuma-private.pages.dev/stock/portfolio.html'),
-    ('Market Intel', 'https://iuma-private.pages.dev/stock/market-intel.html'),
-    ('Insight', 'https://iuma-private.pages.dev/intel/'),
-    ('Wealth', 'https://iuma-private.pages.dev/wealth/dashboard.html'),
-    ('Action', 'https://iuma-private.pages.dev/action/'),
-    ('Self-Insight', 'https://ymatz28-beep.github.io/self-insight/'),
-    ('Health', 'https://iuma-private.pages.dev/health/'),
-    ('Property', 'https://ymatz28-beep.github.io/property-report/'),
-    ('Travel', 'https://ymatz28-beep.github.io/trip-planner/'),
-    ('Newsletter', 'https://iuma-private.pages.dev/newsletter/'),
-]
+# Nav from renderer.py SSoT (absolute URLs for GitHub Pages-hosted page)
+import sys as _sys
+_sys.path.insert(0, str(__import__('pathlib').Path(__file__).resolve().parent.parent))
+from lib.renderer import get_nav_html as _get_nav_html
 
 
 def _get_archetype(p):
@@ -124,16 +115,7 @@ def _get_archetype_tagline(p):
 
 
 def _gnav():
-    links = '\n    '.join(
-        f'<a href="{url}"{" aria-current=page" if label=="Self-Insight" else ""}>{label}</a>'
-        for label, url in GNAV_LINKS)
-    return f'''<header class="site-header">
-  <input type="checkbox" id="nav-toggle" class="nav-toggle" aria-label="Toggle navigation">
-  <label for="nav-toggle" class="nav-toggle-label"><span></span></label>
-  <nav class="site-nav">
-    {links}
-  </nav>
-</header>'''
+    return _get_nav_html(scope="private", current_page="Self-Insight", absolute=True)
 
 
 def _section_nav(has_personality):
