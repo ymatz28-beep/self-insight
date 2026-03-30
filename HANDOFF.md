@@ -1,12 +1,11 @@
 # Self-Insight — HANDOFF
 
-## [Constancy] 2026-03-28
-- [WARN] structural_reform: generate_dashboard.py is 2348 lines (threshold: 500). Consider splitting.
-- [WARN] structural_reform: generate_profile.py is 1130 lines (threshold: 500). Consider splitting.
-- [WARN] post_change_testing: self-insight: 直近71時間以内に変更あり、テスト証跡なし（self-insight/.test_ok）
+## [Constancy] 2026-03-30
+- [WARN] structural_reform: generate_dashboard.py is 2348 lines (threshold: 800). Consider splitting.
+- [WARN] post_change_testing: self-insight: 直近42時間以内に変更あり、テスト証跡なし（self-insight/.test_ok）
 
 ## Last Updated
-2026-03-28 (session #28 — cross-project: section_nav migration, self-insight変更なし)
+2026-03-28 (session #29 — cross-project: 全HANDOFF履歴→SNSネタ21件一括生成, self-insight変更なし)
 
 ## Project Overview
 複数の占術（四柱推命・九星気学・六星占術・西洋占星術・干支）+ 独自性格分析SIPS（Big Five基盤の16 Archetypes+24 Strengths+Sensitivity Score）を統合した、徹底的にパーソナライズされた自己理解ダッシュボードサービス。有料SaaS展開を目指す。
@@ -272,14 +271,14 @@
 - [ ] **generate_dashboard.py / generate_profile.py 構造分割**: constancy警告（両ファイル500行超過）への対応。generate_dashboard.py 2,348行、generate_profile.py 1,130行
 
 ## Next Actions
-1. **相性診断の動作テスト**: compatibility.htmlのconst重複修正済み → ハードリロード（Cmd+Shift+R）で動作確認が必要
-2. **E2Eフロー完成**: フォーム送信→Google Sheets蓄積が未確認（no-cors修正済み、再テスト必要）。LINE通知の動作確認。admin.htmlでの一覧確認
-3. **admin.html 結果URL管理ページ整備**: Apps Script URL接続済み。回答一覧+結果URLコピー+ステータス管理。実データで動作確認が必要
-4. **renderer.js本番品質化**: generate_dashboard.pyレベルのリッチUI（アーキタイプ名、折りたたみカード、Chart.js運気チャート、リッチナラティブ、ドメインカラー、レアリティバッジ）をrenderer.jsに移植。完成すればPython版パイプライン不要に
-5. **短縮URL設計**: `form/#r=base64...`（長い）→ `/results/{uuid}`（短い）への移行。バックエンドストレージ必要
+1. **🔥 「30秒で鳥肌」Tier 1即時体験の実装**: 生年月日のみ入力→即座にリッチな結果表示。renderer.jsをgenerate_dashboard.pyレベルに本番品質化（アーキタイプ名、折りたたみカード、Chart.js運気チャート、リッチナラティブ、ドメインカラー、レアリティバッジ）。バイラルループの起点
+2. **相性診断の動作テスト+バイラル機能強化**: compatibility.htmlのconst重複修正済み → 動作確認 + シェアカード→招待リンク→友達流入のバイラルループ検証
+3. **E2Eフロー完成**: フォーム送信→Google Sheets蓄積が未確認（no-cors修正済み、再テスト必要）
+4. **「取扱説明書」ブランディング反映**: Hero/CTA/OGPのコピーを「あなたの取扱説明書をAIが作ります」に統一
+5. **engine.js検証**: Yumaプロファイルで計算結果をPython版と照合（差異がないか）
 6. **SIPS実装**: Big Five 40問→16 Archetypes+24 Strengths導出ロジック、アーキタイプ/強みテーマ名称設計
-7. **engine.js検証**: Yumaプロファイルで計算結果をPython版と照合（差異がないか）
-8. **ファイル分割**: generate_dashboard.py（2,084行）/ generate_profile.py（1,130行）のモジュール分割（constancy threshold超過）
+7. **短縮URL設計**: `form/#r=base64...`（長い）→ `/results/{uuid}`（短い）への移行
+8. **ファイル分割**: generate_dashboard.py（2,348行）/ generate_profile.py（1,130行）のモジュール分割
 
 ## Key Decisions
 - 2ピラー構造: Timeless Identity + Year Forecast
@@ -318,6 +317,9 @@
 - **Gnav制御**: デフォルトOFF（クライアント向け）。`--gnav`フラグで個人用表示。`--no-gnav`は明示的スキップ
 - **Nav SSoT enforcement（session #23で確定）**: generate_dashboard.pyのハードコードGNAV_LINKS → `get_nav_html()` 関数呼び出し。renderer.pyのPRIVATE_NAVが全ナビの唯一の定義元。変更は1箇所で全ページに自動反映
 - **Cloudflare Accessセッション**: iuma-private の認証期間を1 monthに延長（月1回OTP）
+- **ファネル転換（session #27ブレスト 2026-03-28）**: 12分フォーム入口 → 「30秒で鳥肌体験→シェアカード→友達流入」バイラルループ。生年月日だけで即Tier 1結果表示。相性診断でバイラル係数>1を狙う
+- **ポジショニング転換（session #27ブレスト 2026-03-28）**: 「統合ダッシュボード」→「あなたの取扱説明書をAIが作ります」。機能ではなくメタファーで売る
+- **価格転換（session #27ブレスト 2026-03-28）**: 全部サブスク → Tier 2は買い切り¥980（16Personalities $9が証明済み）。月額サブスクはTier 3のみに集中
 
 ## Blockers
 - **API 502障害**: session #10, #12で計5時間以上の障害。大規模ファイル生成（Agent）が特に脆弱。回避策: Agent使用を最小化し、Edit分割方式で段階的変更
@@ -358,3 +360,5 @@
 | 25 | 2026-03-26 | **kaizen-agent QA改革セッション**: action_items.yaml確認 — self-insight関連3件(si-e2e/si-admin/si-sheets-test)がhigh/pendingで残存を確認。全125件中self-insight固有タスクの優先度変更なし。self-insightコード変更なし |
 | 26 | 2026-03-27 | **Projects CLAUDE.md Skill Routing追加**: Before: スキル発火ルールが暗黙知 → After: Skill Routing表(8ルール)をCLAUDE.mdに明文化+story-intakeトリガーに「インタビューして」追加。self-insightコード変更なし |
 | 27 | 2026-03-28 | **story mode+share card+相性診断+バグ修正**: Before: ストーリー/シェア/相性診断が未実装+const重複でスクリプト全死亡 → After: 3ページ新規作成+重複修正+SNSボタン追加。commits: b60af71, cdf2cba |
+| 28 | 2026-03-28 | **cross-project: section_nav migration**: self-insight変更なし（lib/scripts側でsection_navコンポーネント化） |
+| 29 | 2026-03-28 | **cross-project: 全HANDOFF履歴→SNSネタ一括生成**: 14プロジェクトのHANDOFF History抽出→topic_candidates.yaml 21件追加(027-047)。self-insight関連: topic-038(占いSaaS 3週間MVP), topic-040(Cloudflare Access OTP)。self-insightコード変更なし |

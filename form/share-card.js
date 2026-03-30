@@ -421,9 +421,12 @@ function drawStoryCard(ctx, profile, w, h) {
   }
 
   // -- Five elements mini bars --
-  const barZoneW = w - pad * 2;
-  const barH = 14;
-  const barGap = 22;
+  const labelColW = 100;
+  const pctColW = 70;
+  const barStartX = pad + labelColW;
+  const barZoneW = w - pad * 2 - labelColW - pctColW;
+  const barH = 20;
+  const barGap = 40;
   const elements = ['木', '火', '土', '金', '水'];
   const elColorMap = {
     '木': SC_ELEMENT_COLORS.Wood,
@@ -433,35 +436,41 @@ function drawStoryCard(ctx, profile, w, h) {
     '水': SC_ELEMENT_COLORS.Water,
   };
 
-  // Label
+  // Section label
   ctx.fillStyle = 'rgba(255,255,255,0.35)';
   ctx.font = '400 24px Inter, "Noto Sans JP", sans-serif';
   ctx.textAlign = 'left';
   ctx.fillText('五行バランス', pad, y);
-  y += 36;
+  y += 44;
 
   elements.forEach(el => {
     const b = fp.five_elements_balance[el];
     const pct = b?.pct ?? 0;
-    const fillW = Math.round(barZoneW * pct / 100);
+    const fillW = Math.max(0, Math.round(barZoneW * pct / 100));
+
+    // Element label (left)
+    ctx.fillStyle = elColorMap[el] || '#a5b4fc';
+    ctx.font = '700 28px "Noto Sans JP", Inter, sans-serif';
+    ctx.textAlign = 'left';
+    ctx.fillText(el, pad, y + 16);
 
     // Track
-    roundRect(ctx, pad, y, barZoneW, barH, barH / 2);
+    roundRect(ctx, barStartX, y, barZoneW, barH, barH / 2);
     ctx.fillStyle = 'rgba(255,255,255,0.07)';
     ctx.fill();
 
     // Fill
     if (fillW > 0) {
-      roundRect(ctx, pad, y, fillW, barH, barH / 2);
+      roundRect(ctx, barStartX, y, fillW, barH, barH / 2);
       ctx.fillStyle = elColorMap[el] || '#a5b4fc';
       ctx.fill();
     }
 
-    // Label
-    ctx.fillStyle = elColorMap[el] || '#a5b4fc';
-    ctx.font = '600 22px "Noto Sans JP", Inter, sans-serif';
+    // Percentage (right)
+    ctx.fillStyle = 'rgba(255,255,255,0.55)';
+    ctx.font = '600 24px "JetBrains Mono", Inter, sans-serif';
     ctx.textAlign = 'right';
-    ctx.fillText(`${el} ${pct}%`, pad - 10, y + 12);
+    ctx.fillText(`${pct}%`, w - pad, y + 16);
 
     y += barGap;
   });
