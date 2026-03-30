@@ -5,7 +5,12 @@
 - [WARN] post_change_testing: self-insight: 直近42時間以内に変更あり、テスト証跡なし（self-insight/.test_ok）
 
 ## Last Updated
-2026-03-28 (session #29 — cross-project: 全HANDOFF履歴→SNSネタ21件一括生成, self-insight変更なし)
+2026-03-30
+
+## Completed (renderer.js本番品質化 + story/share-card「取扱説明書」ブランディング 2026-03-29)
+- **Before**: renderer.jsがMVP品質（辞書データ・ナラティブ・セクション引用句なし）。generate_dashboard.pyレベルの本番品質に未到達。story.htmlのブランド名が「AI Self-Insight」のままでスライドラベルが「SLIDE 1/5」等の番号表示。share-card.jsのSNS共有機能が限定的
+- **After**: renderer.js +397行net（659ins/262del）。PALACE_DESC(九星9宮)+PHASE_DESC(六星12フェーズ)+DM_NARRATIVE(日主10パターン)+WESTERN_NARRATIVE+SECTION_QUOTES辞書を追加し、generate_dashboard.py同等の本番品質に到達。story.htmlブランド名を「あなたの取扱説明書」に変更+スライドラベルをセマンティック化（YOUR ESSENCE/FIVE ELEMENTS/DESTINY STARS等）。share-card.js +33行改善。generate_dashboard.py -28行クリーンアップ。計6ファイル変更（693ins/262del）
+- **Commits**: self-insight `e80268e`, Projects root `ed3dd9a`（session recovery）
 
 ## Project Overview
 複数の占術（四柱推命・九星気学・六星占術・西洋占星術・干支）+ 独自性格分析SIPS（Big Five基盤の16 Archetypes+24 Strengths+Sensitivity Score）を統合した、徹底的にパーソナライズされた自己理解ダッシュボードサービス。有料SaaS展開を目指す。
@@ -271,14 +276,13 @@
 - [ ] **generate_dashboard.py / generate_profile.py 構造分割**: constancy警告（両ファイル500行超過）への対応。generate_dashboard.py 2,348行、generate_profile.py 1,130行
 
 ## Next Actions
-1. **🔥 「30秒で鳥肌」Tier 1即時体験の実装**: 生年月日のみ入力→即座にリッチな結果表示。renderer.jsをgenerate_dashboard.pyレベルに本番品質化（アーキタイプ名、折りたたみカード、Chart.js運気チャート、リッチナラティブ、ドメインカラー、レアリティバッジ）。バイラルループの起点
+1. **renderer.js動作テスト**: Tier 1即時体験（生年月日のみ→リッチ結果表示）の本番品質化は完了。ブラウザ実機テストで全辞書・ナラティブ・チャートが正常表示されるか確認
 2. **相性診断の動作テスト+バイラル機能強化**: compatibility.htmlのconst重複修正済み → 動作確認 + シェアカード→招待リンク→友達流入のバイラルループ検証
 3. **E2Eフロー完成**: フォーム送信→Google Sheets蓄積が未確認（no-cors修正済み、再テスト必要）
-4. **「取扱説明書」ブランディング反映**: Hero/CTA/OGPのコピーを「あなたの取扱説明書をAIが作ります」に統一
-5. **engine.js検証**: Yumaプロファイルで計算結果をPython版と照合（差異がないか）
-6. **SIPS実装**: Big Five 40問→16 Archetypes+24 Strengths導出ロジック、アーキタイプ/強みテーマ名称設計
-7. **短縮URL設計**: `form/#r=base64...`（長い）→ `/results/{uuid}`（短い）への移行
-8. **ファイル分割**: generate_dashboard.py（2,348行）/ generate_profile.py（1,130行）のモジュール分割
+4. **engine.js検証**: Yumaプロファイルで計算結果をPython版と照合（差異がないか）
+5. **SIPS実装**: Big Five 40問→16 Archetypes+24 Strengths導出ロジック、アーキタイプ/強みテーマ名称設計
+6. **短縮URL設計**: `form/#r=base64...`（長い）→ `/results/{uuid}`（短い）への移行
+7. **ファイル分割**: generate_dashboard.py（2,348行）/ generate_profile.py（1,130行）のモジュール分割
 
 ## Key Decisions
 - 2ピラー構造: Timeless Identity + Year Forecast
@@ -362,3 +366,5 @@
 | 27 | 2026-03-28 | **story mode+share card+相性診断+バグ修正**: Before: ストーリー/シェア/相性診断が未実装+const重複でスクリプト全死亡 → After: 3ページ新規作成+重複修正+SNSボタン追加。commits: b60af71, cdf2cba |
 | 28 | 2026-03-28 | **cross-project: section_nav migration**: self-insight変更なし（lib/scripts側でsection_navコンポーネント化） |
 | 29 | 2026-03-28 | **cross-project: 全HANDOFF履歴→SNSネタ一括生成**: 14プロジェクトのHANDOFF History抽出→topic_candidates.yaml 21件追加(027-047)。self-insight関連: topic-038(占いSaaS 3週間MVP), topic-040(Cloudflare Access OTP)。self-insightコード変更なし |
+| 30 | 2026-03-29 | **renderer.js本番品質化+取扱説明書ブランディング**: Before: renderer.jsがMVP品質(辞書/ナラティブなし)+story.htmlが「AI Self-Insight」ブランド → After: renderer.js +397行(PALACE/PHASE/DM辞書+SECTION_QUOTES追加)+story.html「あなたの取扱説明書」+セマンティックスライドラベル。commit: e80268e |
+| 31 | 2026-03-30 | **ステータス確認のみ**: Before: 前回セッション強制終了でcommit/push状態不明 → After: session-endフックがed3dd9aで全変更コミット済みを確認。未コミット変更なし。コード変更なし |
