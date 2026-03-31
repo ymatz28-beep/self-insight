@@ -1,11 +1,11 @@
 # Self-Insight — HANDOFF
 
-## [Constancy] 2026-03-30
+## [Constancy] 2026-03-31
 - [WARN] structural_reform: generate_dashboard.py is 2348 lines (threshold: 800). Consider splitting.
-- [WARN] post_change_testing: self-insight: 直近0時間以内に変更あり、テスト証跡なし（self-insight/.test_ok）
+- [WARN] post_change_testing: self-insight: 直近31時間以内に変更あり、テスト証跡なし（self-insight/.test_ok）
 
 ## Last Updated
-2026-03-30
+2026-03-31
 
 ## Completed (renderer.js本番品質化 + story/share-card「取扱説明書」ブランディング 2026-03-29)
 - **Before**: renderer.jsがMVP品質（辞書データ・ナラティブ・セクション引用句なし）。generate_dashboard.pyレベルの本番品質に未到達。story.htmlのブランド名が「AI Self-Insight」のままでスライドラベルが「SLIDE 1/5」等の番号表示。share-card.jsのSNS共有機能が限定的
@@ -368,3 +368,4 @@
 | 29 | 2026-03-28 | **cross-project: 全HANDOFF履歴→SNSネタ一括生成**: 14プロジェクトのHANDOFF History抽出→topic_candidates.yaml 21件追加(027-047)。self-insight関連: topic-038(占いSaaS 3週間MVP), topic-040(Cloudflare Access OTP)。self-insightコード変更なし |
 | 30 | 2026-03-29 | **renderer.js本番品質化+取扱説明書ブランディング**: Before: renderer.jsがMVP品質(辞書/ナラティブなし)+story.htmlが「AI Self-Insight」ブランド → After: renderer.js +397行(PALACE/PHASE/DM辞書+SECTION_QUOTES追加)+story.html「あなたの取扱説明書」+セマンティックスライドラベル。commit: e80268e |
 | 31 | 2026-03-30 | **ステータス確認のみ**: Before: 前回セッション強制終了でcommit/push状態不明 → After: session-endフックがed3dd9aで全変更コミット済みを確認。未コミット変更なし。コード変更なし |
+| 32 | 2026-03-31 | **cross-project: property-analyzer HANDOFF更新**: property-analyzerのマーケット品質改善セッション結果をHANDOF更新(bcbc99a)。self-insightコード変更なし |
