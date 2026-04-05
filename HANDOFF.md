@@ -1,8 +1,8 @@
 # Self-Insight — HANDOFF
 
-## [Constancy] 2026-04-02
+## [Constancy] 2026-04-05
 - [WARN] structural_reform: generate_dashboard.py is 2348 lines (threshold: 800). Consider splitting.
-- [WARN] post_change_testing: self-insight: 直近52時間以内に変更あり、テスト証跡なし（self-insight/.test_ok）
+- [WARN] post_change_testing: self-insight: 直近66時間以内に変更あり、テスト証跡なし（self-insight/.test_ok）
 
 ## Last Updated
 2026-03-31
