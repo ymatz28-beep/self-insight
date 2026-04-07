@@ -1,11 +1,28 @@
 # Self-Insight — HANDOFF
 
-## [Constancy] 2026-04-05
-- [WARN] structural_reform: generate_dashboard.py is 2348 lines (threshold: 800). Consider splitting.
-- [WARN] post_change_testing: self-insight: 直近66時間以内に変更あり、テスト証跡なし（self-insight/.test_ok）
+## [Constancy] 2026-04-07
+- [ERROR] structural_reform: [ESCALATED: 15d unresolved] generate_dashboard.py is 2348 lines (threshold: 800). Consider splitting.
+- [WARN] gnav_consistency: Gnav link order differs from SSOT in self-insight/index.html
+- [WARN] design_token_compliance: Line 165: hardcoded #4ade80 should be var(--green-light)
+- [WARN] design_token_compliance: Line 166: hardcoded #f87171 should be var(--red-light)
+- [WARN] design_token_compliance: Line 271: hardcoded #4ade80 should be var(--green-light)
+- [WARN] design_token_compliance: Line 413: hardcoded #9ca3af should be var(--text-secondary)
+- [WARN] design_token_compliance: Line 480: hardcoded #f87171 should be var(--red-light)
+- [WARN] design_token_compliance: Line 492: hardcoded #4ade80 should be var(--green-light)
+- [WARN] design_token_compliance: Line 611: hardcoded #3b82f6 should be var(--blue)
+- [WARN] design_token_compliance: Line 615: hardcoded #22c55e should be var(--green)
+- [WARN] design_token_compliance: Line 619: hardcoded #8b5cf6 should be var(--accent2)
+- [WARN] design_token_compliance: Line 623: hardcoded #ff6b35 should be var(--orange)
+- [WARN] design_token_compliance: Line 688: hardcoded #f87171 should be var(--red-light)
+- [WARN] design_token_compliance: Line 712: hardcoded #4ade80 should be var(--green-light)
+- [WARN] design_token_compliance: Line 717: hardcoded #f87171 should be var(--red-light)
+- [WARN] design_token_compliance: Line 882: hardcoded #6366f1 should be var(--accent)
+- [WARN] design_token_compliance: Line 883: hardcoded #22c55e should be var(--green)
+- [WARN] design_token_compliance: Line 884: hardcoded #eab308 should be var(--yellow)
+- [WARN] post_change_testing: self-insight: 直近41時間以内に変更あり、テスト証跡なし（self-insight/.test_ok）
 
 ## Last Updated
-2026-03-31
+2026-04-07
 
 ## Completed (renderer.js本番品質化 + story/share-card「取扱説明書」ブランディング 2026-03-29)
 - **Before**: renderer.jsがMVP品質（辞書データ・ナラティブ・セクション引用句なし）。generate_dashboard.pyレベルの本番品質に未到達。story.htmlのブランド名が「AI Self-Insight」のままでスライドラベルが「SLIDE 1/5」等の番号表示。share-card.jsのSNS共有機能が限定的
@@ -291,7 +308,7 @@
 - Edit分割方式でHTML変更（フルリライト禁止）
 - デプロイ先: GitHub Pages（Cloudflareではない。session #8で切替）。Cloudflareパスもdeploy_private.py SSoTに統合済み（fallback）
 - gnav SSoT = `lib/renderer.py` の `_private_nav`/`_public_nav`。ハードコードgnavは `check_gnav_consistency` で毎晩自動検証
-- Nav順序: Stock → Market Intel → Insight → Wealth → Action → Self-Insight → Health → Property → Travel
+- Nav順序（2026-04-06更新）: Primary: Stock → Market Intel → Cisco → Action → Property / Overflow: Wealth → Insight → Health → Travel → Newsletter → Bookmarks → SNS → Self-Insight
 - Self-InsightはGitHub Pages公開だが、Private navにのみ掲載（個人データのため）
 - Public→Private nav隔離: 2026-03-21監査で全Public HTML（12ファイル）にPrivate URL混入ゼロを実証。`renderer.py` の `scope` パラメータで自動分離される設計
 - **ナラティブ生成方針（session #17で確定）**: narratives.yamlは不要。generate_dashboard.pyがprofile.yamlの計算結果からプログラマティックにナラティブ（解説・インサイト・Cross Analysis）を生成する。どのユーザーでもYumaのindex.html相当のリッチな出力がゴール。LLM API依存なしで、テンプレート+ロジックで実現する
@@ -369,3 +386,4 @@
 | 30 | 2026-03-29 | **renderer.js本番品質化+取扱説明書ブランディング**: Before: renderer.jsがMVP品質(辞書/ナラティブなし)+story.htmlが「AI Self-Insight」ブランド → After: renderer.js +397行(PALACE/PHASE/DM辞書+SECTION_QUOTES追加)+story.html「あなたの取扱説明書」+セマンティックスライドラベル。commit: e80268e |
 | 31 | 2026-03-30 | **ステータス確認のみ**: Before: 前回セッション強制終了でcommit/push状態不明 → After: session-endフックがed3dd9aで全変更コミット済みを確認。未コミット変更なし。コード変更なし |
 | 32 | 2026-03-31 | **cross-project: property-analyzer HANDOFF更新**: property-analyzerのマーケット品質改善セッション結果をHANDOF更新(bcbc99a)。self-insightコード変更なし |
+| 33 | 2026-04-06 | **cross-project: Gnav Pattern B + Nav順序変更**: Before: Self-Insightはgnav全13項目フラット表示 → After: overflow ⋯ドロップダウンに配置(Primary 5: Stock/Market Intel/Cisco/Action/Property、Overflow 8にSelf-Insight含む)。iuma-privateトップページBento Gridリデザイン計画でSelf-Insight=Tier3(compact)。self-insightコード変更なし |
