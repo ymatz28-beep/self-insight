@@ -1,28 +1,16 @@
 # Self-Insight — HANDOFF
 
-## [Constancy] 2026-04-07
-- [ERROR] structural_reform: [ESCALATED: 15d unresolved] generate_dashboard.py is 2348 lines (threshold: 800). Consider splitting.
-- [WARN] gnav_consistency: Gnav link order differs from SSOT in self-insight/index.html
-- [WARN] design_token_compliance: Line 165: hardcoded #4ade80 should be var(--green-light)
-- [WARN] design_token_compliance: Line 166: hardcoded #f87171 should be var(--red-light)
-- [WARN] design_token_compliance: Line 271: hardcoded #4ade80 should be var(--green-light)
-- [WARN] design_token_compliance: Line 413: hardcoded #9ca3af should be var(--text-secondary)
-- [WARN] design_token_compliance: Line 480: hardcoded #f87171 should be var(--red-light)
-- [WARN] design_token_compliance: Line 492: hardcoded #4ade80 should be var(--green-light)
-- [WARN] design_token_compliance: Line 611: hardcoded #3b82f6 should be var(--blue)
-- [WARN] design_token_compliance: Line 615: hardcoded #22c55e should be var(--green)
-- [WARN] design_token_compliance: Line 619: hardcoded #8b5cf6 should be var(--accent2)
-- [WARN] design_token_compliance: Line 623: hardcoded #ff6b35 should be var(--orange)
-- [WARN] design_token_compliance: Line 688: hardcoded #f87171 should be var(--red-light)
-- [WARN] design_token_compliance: Line 712: hardcoded #4ade80 should be var(--green-light)
-- [WARN] design_token_compliance: Line 717: hardcoded #f87171 should be var(--red-light)
-- [WARN] design_token_compliance: Line 882: hardcoded #6366f1 should be var(--accent)
-- [WARN] design_token_compliance: Line 883: hardcoded #22c55e should be var(--green)
-- [WARN] design_token_compliance: Line 884: hardcoded #eab308 should be var(--yellow)
-- [WARN] post_change_testing: self-insight: 直近41時間以内に変更あり、テスト証跡なし（self-insight/.test_ok）
+## [Constancy] 2026-04-12
+- [ERROR] structural_reform: [ESCALATED: 20d unresolved] generate_dashboard.py is 2348 lines (threshold: 800). Consider splitting.
+- [ERROR] post_change_testing: [ESCALATED: 15d unresolved] self-insight: 直近117時間以内に変更あり、テスト証跡なし（self-insight/.test_ok）
 
 ## Last Updated
-2026-04-07
+2026-04-09
+
+## Completed (横断監査: フォント修正+CSS変数化+gnav nav-more 2026-04-09)
+- **Before**: form/story.htmlの.essence-kanjiがfont-family `'Noto Sans JP',serif`（禁止フォールバック）。index.htmlに5箇所のハードコードカラー（#f87171, #4ade80×2, #9ca3af）。gnavが13項目フラット表示のまま（nav-more未適用）
+- **After**: story.html serif→sans-serif修正。index.htmlの5色をCSS変数化（var(--red-light), var(--green-light)×3, var(--text-secondary)）。gnav nav-more overflow構造追加（Primary 5項目+⋯ドロップダウン8項目、Self-InsightはOverflowに配置）
+- **Commits**: 未コミット
 
 ## Completed (renderer.js本番品質化 + story/share-card「取扱説明書」ブランディング 2026-03-29)
 - **Before**: renderer.jsがMVP品質（辞書データ・ナラティブ・セクション引用句なし）。generate_dashboard.pyレベルの本番品質に未到達。story.htmlのブランド名が「AI Self-Insight」のままでスライドラベルが「SLIDE 1/5」等の番号表示。share-card.jsのSNS共有機能が限定的
@@ -387,3 +375,5 @@
 | 31 | 2026-03-30 | **ステータス確認のみ**: Before: 前回セッション強制終了でcommit/push状態不明 → After: session-endフックがed3dd9aで全変更コミット済みを確認。未コミット変更なし。コード変更なし |
 | 32 | 2026-03-31 | **cross-project: property-analyzer HANDOFF更新**: property-analyzerのマーケット品質改善セッション結果をHANDOF更新(bcbc99a)。self-insightコード変更なし |
 | 33 | 2026-04-06 | **cross-project: Gnav Pattern B + Nav順序変更**: Before: Self-Insightはgnav全13項目フラット表示 → After: overflow ⋯ドロップダウンに配置(Primary 5: Stock/Market Intel/Cisco/Action/Property、Overflow 8にSelf-Insight含む)。iuma-privateトップページBento Gridリデザイン計画でSelf-Insight=Tier3(compact)。self-insightコード変更なし |
+| 35 | 2026-04-09 | **cross-project: 横断監査フォント+CSS変数+gnav**: Before: story.html serif fallback+index.html 5色ハードコード+gnav nav-more未適用 → After: sans-serif修正+CSS変数化5箇所+nav-more overflow追加 |
+| 34 | 2026-04-07 | **cross-project: ローカルファースト化+idle_guard+Dead Man's Switch**: Before: property-patrol GHA実質Primary+kaizen-patrol plist 2日停止 → After: ローカルファースト+GHA条件付きフォールバック+idle_guard(lib新設)+Digest Status Bar+全ジョブ_NAME_JA日本語化。4リポ(property-analyzer/kaizen-agent/lib/scripts)HANDOFF更新。self-insightコード変更なし |

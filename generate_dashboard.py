@@ -12,9 +12,9 @@ def star_html(n, mx=5):
             f'<span style="color:var(--border);">{"★"*(mx-int(n))}</span>')
 
 def energy_color(e):
-    if e >= 70: return '#4ade80'
+    if e >= 70: return 'var(--accent-green-light)'
     if e >= 40: return '#facc15'
-    return '#f87171'
+    return 'var(--accent-red-light)'
 
 def satsukai_html(s):
     if not s: return '—'
@@ -213,7 +213,7 @@ def _hero(p, tier):
         <div class="hub-card-mini-summary">{hub2_summary}</div></div>
       </div>
       <div class="hub-card-mini" onclick="document.getElementById('blueprint').scrollIntoView({{behavior:'smooth'}});var c=document.querySelector('#blueprint').closest('.hub-card');if(c&&!c.classList.contains('expanded'))c.classList.add('expanded');">
-        <div class="hub-card-mini-icon" style="background:rgba(139,92,246,0.15);color:#c4b5fd">&#9829;</div>
+        <div class="hub-card-mini-icon" style="background:rgba(139,92,246,0.15);color:var(--accent-purple-light)">&#9829;</div>
         <div><div class="hub-card-mini-title">今日のアクション</div>
         <div class="hub-card-mini-summary">{hub3_summary}</div></div>
       </div>
@@ -318,13 +318,13 @@ def _this_month_guidance(p):
         energy_tone = '追い風'
         energy_desc = 'エネルギーが高く、積極的に動ける月'
         energy_icon_bg = 'rgba(34,197,94,0.15)'
-        energy_icon_color = '#4ade80'
+        energy_icon_color = 'var(--accent-green-light)'
         energy_icon = '&#9650;'  # up triangle
     elif avg_stars >= 3:
         energy_tone = '安定'
         energy_desc = '地固めと準備に適した月'
         energy_icon_bg = 'rgba(59,130,246,0.15)'
-        energy_icon_color = '#60a5fa'
+        energy_icon_color = 'var(--accent-blue-light)'
         energy_icon = '&#9654;'  # right triangle
     elif avg_stars >= 2:
         energy_tone = '慎重'
@@ -336,7 +336,7 @@ def _this_month_guidance(p):
         energy_tone = '充電'
         energy_desc = '休息と回復を最優先にする月'
         energy_icon_bg = 'rgba(239,68,68,0.15)'
-        energy_icon_color = '#f87171'
+        energy_icon_color = 'var(--accent-red-light)'
         energy_icon = '&#9724;'  # square
 
     # Generate personalized action items based on profile + fortune
@@ -370,7 +370,7 @@ def _this_month_guidance(p):
     cur_west = next((h for h in monthly_horo if h['month'] == current_month_num), None)
     west_tag = ''
     if cur_west:
-        west_tag = f'<span class="month-tag" style="background:rgba(139,92,246,0.15);color:#c4b5fd;border:1px solid rgba(139,92,246,0.3)">西洋: {cur_west["theme"]}</span>'
+        west_tag = f'<span class="month-tag" style="background:rgba(139,92,246,0.15);color:var(--accent-purple-light);border:1px solid rgba(139,92,246,0.3)">西洋: {cur_west["theme"]}</span>'
 
     # Mercury retrograde warning
     mercury_retro = wa.get('mercury_retrograde_2026', [])
@@ -424,12 +424,12 @@ def _mercury_retro_badge(mercury_retro, month_num):
 def _phase_color_py(rtype):
     """Return phase color dict for Python-side rendering."""
     if rtype == 'great':
-        return {'bg': 'rgba(34,197,94,0.12)', 'border': 'rgba(34,197,94,0.3)', 'color': '#4ade80'}
+        return {'bg': 'rgba(34,197,94,0.12)', 'border': 'rgba(34,197,94,0.3)', 'color': 'var(--accent-green-light)'}
     if rtype == 'good':
-        return {'bg': 'rgba(59,130,246,0.12)', 'border': 'rgba(59,130,246,0.3)', 'color': '#60a5fa'}
+        return {'bg': 'rgba(59,130,246,0.12)', 'border': 'rgba(59,130,246,0.3)', 'color': 'var(--accent-blue-light)'}
     if rtype == 'caution':
         return {'bg': 'rgba(234,179,8,0.12)', 'border': 'rgba(234,179,8,0.3)', 'color': '#facc15'}
-    return {'bg': 'rgba(239,68,68,0.12)', 'border': 'rgba(239,68,68,0.3)', 'color': '#f87171'}
+    return {'bg': 'rgba(239,68,68,0.12)', 'border': 'rgba(239,68,68,0.3)', 'color': 'var(--accent-red-light)'}
 
 
 # Nine Star Palace descriptions — what each palace means for *this month*
@@ -560,9 +560,9 @@ def _generate_monthly_actions(p, cur_month, avg_stars):
 
     domain_ja = {'work': '仕事', 'money': 'お金', 'health': '健康', 'romance': '人間関係'}
     domain_icons = {
-        'work': ('&#9733;', 'rgba(59,130,246,0.15)', '#60a5fa'),
+        'work': ('&#9733;', 'rgba(59,130,246,0.15)', 'var(--accent-blue-light)'),
         'money': ('&#9830;', 'rgba(201,168,76,0.15)', '#c9a84c'),
-        'health': ('&#9829;', 'rgba(34,197,94,0.15)', '#4ade80'),
+        'health': ('&#9829;', 'rgba(34,197,94,0.15)', 'var(--accent-green-light)'),
         'romance': ('&#9827;', 'rgba(244,114,182,0.15)', '#f472b6'),
     }
 
@@ -607,13 +607,13 @@ def _generate_monthly_actions(p, cur_month, avg_stars):
             actions.append({
                 'title': '繊細さのケアを最優先に',
                 'desc': 'エネルギーが低い月は、繊細な感覚が過敏になりがち。ネガティブな刺激を避け、自然の中で過ごす時間や、一人で内省する時間を意識的に確保する',
-                'icon': '&#9826;', 'icon_bg': 'rgba(139,92,246,0.15)', 'icon_color': '#c4b5fd',
+                'icon': '&#9826;', 'icon_bg': 'rgba(139,92,246,0.15)', 'icon_color': 'var(--accent-purple-light)',
             })
         else:
             actions.append({
                 'title': '繊細さを創造性に変換する',
                 'desc': '好調期の繊細さは、美しいものや深い体験から何倍もの充足を引き出す。アート・音楽・深い会話を意識的に取り入れて、感性を栄養にする',
-                'icon': '&#9826;', 'icon_bg': 'rgba(139,92,246,0.15)', 'icon_color': '#c4b5fd',
+                'icon': '&#9826;', 'icon_bg': 'rgba(139,92,246,0.15)', 'icon_color': 'var(--accent-purple-light)',
             })
     else:
         missing = p['four_pillars'].get('missing_elements', [])
@@ -940,8 +940,8 @@ def _personality(p, tier):
     sf = p.get('strengths_finder', {})
     sf_top5 = sf.get('top5', [])
 
-    domain_colors = {'Relationship Building':'#3b82f6','Strategic Thinking':'#22c55e',
-                     'Executing':'#8b5cf6','Influencing':'#ff6b35'}
+    domain_colors = {'Relationship Building':'var(--accent-blue)','Strategic Thinking':'var(--accent-green)',
+                     'Executing':'var(--accent-purple-dark)','Influencing':'#ff6b35'}
     tag_cls = {'Relationship Building':'tag-rb','Strategic Thinking':'tag-st',
                'Executing':'tag-ex','Influencing':'tag-inf'}
     interp = p.get('interpretations', {})
@@ -1057,23 +1057,23 @@ def _western_detail(p):
         desc_parts += f'<div style="font-size:12px;color:var(--text-secondary);line-height:1.7;margin-top:12px">{q_traits}</div>'
     if forecast:
         desc_parts += f'''<div class="insight-box" style="margin-top:12px;border-color:rgba(139,92,246,0.3);background:linear-gradient(135deg,rgba(139,92,246,0.08),rgba(99,102,241,0.04))">
-      <div class="insight-title" style="color:#c4b5fd">2026年 {west["sign"]}の運勢</div>
+      <div class="insight-title" style="color:var(--accent-purple-light)">2026年 {west["sign"]}の運勢</div>
       <p style="line-height:1.9;font-size:14px">{forecast}</p></div>'''
 
     # --- Transits card ---
     transits = wa.get('transits_2026', {})
     if transits:
         aspect_colors = {
-            'Trine': '#4ade80', 'Sextile': '#4ade80', 'Semisextile': '#60a5fa',
-            'Square': '#f87171', 'Opposition': '#f87171', 'Quincunx': '#facc15',
-            'Conjunction': '#c4b5fd',
+            'Trine': 'var(--accent-green-light)', 'Sextile': 'var(--accent-green-light)', 'Semisextile': 'var(--accent-blue-light)',
+            'Square': 'var(--accent-red-light)', 'Opposition': 'var(--accent-red-light)', 'Quincunx': '#facc15',
+            'Conjunction': 'var(--accent-purple-light)',
         }
         aspect_icons = {
             'Trine': '&#9651;', 'Sextile': '&#9734;', 'Semisextile': '&#8226;',
             'Square': '&#9633;', 'Opposition': '&#9675;', 'Quincunx': '&#8767;',
             'Conjunction': '&#9673;',
         }
-        transit_html = '<div style="margin-top:20px"><div class="insight-title" style="color:#c4b5fd;margin-bottom:8px">2026年 惑星の影響</div>'
+        transit_html = '<div style="margin-top:20px"><div class="insight-title" style="color:var(--accent-purple-light);margin-bottom:8px">2026年 惑星の影響</div>'
         transit_html += '<div style="font-size:12px;color:var(--text-muted);margin-bottom:12px;line-height:1.6">木星・土星・冥王星・天王星が今年あなたの太陽星座にどんな影響を与えるか。緑は追い風、黄色は調整期、赤は試練（成長のチャンス）。</div>'
         transit_html += '<div class="grid grid-2">'
         planet_ja = {'jupiter': '木星', 'saturn': '土星', 'pluto': '冥王星', 'uranus': '天王星'}
@@ -1124,7 +1124,7 @@ def _western_detail(p):
         west_energy = cur_west.get('energy', 0)
         west_color = energy_color(west_energy)
         desc_parts += f'''<div class="insight-box" style="margin-top:16px;border-color:rgba(139,92,246,0.3);background:linear-gradient(135deg,rgba(139,92,246,0.08),rgba(99,102,241,0.04))">
-      <div class="insight-title" style="color:#c4b5fd">{current_month_num}月の{west["sign"]}ホロスコープ — 「{cur_west["theme"]}」</div>
+      <div class="insight-title" style="color:var(--accent-purple-light)">{current_month_num}月の{west["sign"]}ホロスコープ — 「{cur_west["theme"]}」</div>
       <div style="display:flex;align-items:center;gap:12px;margin-bottom:8px">
         <div style="font-size:24px;font-weight:700;color:{west_color}">{west_energy}</div>
         <div style="font-size:11px;color:var(--text-muted)">西洋エネルギー /100</div>
@@ -1204,7 +1204,7 @@ def _divination(p):
     pcards += '<div class="pillar unknown"><div class="pillar-label">時柱</div><div class="kanji">？？</div><div class="reading">出生時刻不明</div><div class="element-badge" style="background:rgba(255,255,255,0.05);color:var(--text-muted)">未解放</div><div style="font-size:10px;color:var(--text-muted);margin-top:6px">晩年・子孫運</div></div>'
 
     el_bars = ''
-    el_colors = {'木':'#4ade80','火':'#f87171','土':'#facc15','金':'#94a3b8','水':'#60a5fa'}
+    el_colors = {'木':'var(--accent-green-light)','火':'var(--accent-red-light)','土':'#facc15','金':'#94a3b8','水':'var(--accent-blue-light)'}
     for el_name in ['木','火','土','金','水']:
         info = elements.get(el_name, {})
         pct = info.get('pct', 0)
@@ -1373,7 +1373,7 @@ def _forecast(p):
     # Chart legend: explain each line
     legend_items = [
         ('#6366f1', '九星気学', '9年周期。本命星の宮遷移による運気の波。社会的な運勢の流れを示す'),
-        ('#22c55e', '六星占術', '12年周期。大殺界を含む運命星の巡り。個人的な運気のバイオリズム'),
+        ('var(--accent-green)', '六星占術', '12年周期。大殺界を含む運命星の巡り。個人的な運気のバイオリズム'),
     ]
     if has_reigou:
         legend_items.append(('#eab308', '霊合合成', 'メイン星70% + サブ星30%の加重平均。霊合星人の実効的な運気スコア'))
@@ -1403,8 +1403,8 @@ def _forecast(p):
         }
         planet_ja = {'jupiter': '木星', 'saturn': '土星', 'pluto': '冥王星', 'uranus': '天王星'}
         aspect_colors = {
-            'Trine': '#4ade80', 'Sextile': '#4ade80', 'Semisextile': '#60a5fa',
-            'Square': '#f87171', 'Opposition': '#f87171', 'Quincunx': '#facc15',
+            'Trine': 'var(--accent-green-light)', 'Sextile': 'var(--accent-green-light)', 'Semisextile': 'var(--accent-blue-light)',
+            'Square': 'var(--accent-red-light)', 'Opposition': 'var(--accent-red-light)', 'Quincunx': '#facc15',
         }
         transit_items = ''
         for pk in ['jupiter', 'saturn', 'pluto', 'uranus']:
@@ -1418,7 +1418,7 @@ def _forecast(p):
                              f'<span style="color:{color};font-weight:600">{planet_ja.get(pk, pk)}</span>'
                              f'<span style="color:var(--text-muted)">{sign_display} {aspect}</span></span>')
         transit_summary = f'''<div style="margin-top:12px;padding:10px 14px;border-radius:8px;background:rgba(139,92,246,0.06);border:1px solid rgba(139,92,246,0.15)">
-      <div style="font-size:11px;color:#c4b5fd;margin-bottom:6px;font-weight:600">惑星トランジット</div>
+      <div style="font-size:11px;color:var(--accent-purple-light);margin-bottom:6px;font-weight:600">惑星トランジット</div>
       <div style="display:flex;flex-wrap:wrap;gap:4px">{transit_items}</div>
     </div>'''
 
@@ -1443,23 +1443,23 @@ def _year_theme(cur_comb, cur9, cur12, has_reigou, p):
         score = cur_comb['score']
         if score >= 70:
             theme = '攻めの年 — 種を蒔き、未来の収穫を設計する'
-            color = '#4ade80'
+            color = 'var(--accent-green-light)'
         elif score >= 50:
             theme = '布石の年 — 足場を固め、次の飛躍を準備する'
-            color = '#60a5fa'
+            color = 'var(--accent-blue-light)'
         elif score >= 30:
             theme = '守りの年 — 基盤を強化し、内面を充実させる'
             color = '#facc15'
         else:
             theme = '充電の年 — 回復に専念し、嵐が過ぎるのを待つ'
-            color = '#f87171'
+            color = 'var(--accent-red-light)'
     elif cur9:
         if cur9['energy'] >= 70:
             theme = '攻めの年 — 積極的にチャンスを掴みにいく'
-            color = '#4ade80'
+            color = 'var(--accent-green-light)'
         elif cur9['energy'] >= 40:
             theme = '布石の年 — 準備と基盤づくりに集中する'
-            color = '#60a5fa'
+            color = 'var(--accent-blue-light)'
         else:
             theme = '耐える年 — 守りを固め、次の好機を待つ'
             color = '#facc15'
@@ -1652,12 +1652,12 @@ def _monthly_guidance_data(p, m):
         energy_tone = '追い風'
         energy_desc = 'エネルギーが高く、積極的に動ける月'
         energy_icon_bg = 'rgba(34,197,94,0.15)'
-        energy_icon_color = '#4ade80'
+        energy_icon_color = 'var(--accent-green-light)'
     elif avg_stars >= 3:
         energy_tone = '安定'
         energy_desc = '地固めと準備に適した月'
         energy_icon_bg = 'rgba(59,130,246,0.15)'
-        energy_icon_color = '#60a5fa'
+        energy_icon_color = 'var(--accent-blue-light)'
     elif avg_stars >= 2:
         energy_tone = '慎重'
         energy_desc = '守りを固め、無理をしない月'
@@ -1667,7 +1667,7 @@ def _monthly_guidance_data(p, m):
         energy_tone = '充電'
         energy_desc = '休息と回復を最優先にする月'
         energy_icon_bg = 'rgba(239,68,68,0.15)'
-        energy_icon_color = '#f87171'
+        energy_icon_color = 'var(--accent-red-light)'
 
     narrative = _generate_monthly_narrative(p, m, avg_stars, energy_tone)
     actions = _generate_monthly_actions(p, m, avg_stars)
@@ -1768,10 +1768,10 @@ const currentMonth={current_month};
 const guidanceData={guidance_json};
 function starRating(n){{return'<span style="color:var(--yellow);">'+'★'.repeat(n)+'</span><span style="color:var(--border);">'+'★'.repeat(5-n)+'</span>';}}
 function phaseColor(t){{
-  if(t==='great')return{{bg:'rgba(34,197,94,0.12)',border:'rgba(34,197,94,0.3)',color:'#4ade80'}};
-  if(t==='good')return{{bg:'rgba(59,130,246,0.12)',border:'rgba(59,130,246,0.3)',color:'#60a5fa'}};
+  if(t==='great')return{{bg:'rgba(34,197,94,0.12)',border:'rgba(34,197,94,0.3)',color:'var(--accent-green-light)'}};
+  if(t==='good')return{{bg:'rgba(59,130,246,0.12)',border:'rgba(59,130,246,0.3)',color:'var(--accent-blue-light)'}};
   if(t==='caution')return{{bg:'rgba(234,179,8,0.12)',border:'rgba(234,179,8,0.3)',color:'#facc15'}};
-  return{{bg:'rgba(239,68,68,0.12)',border:'rgba(239,68,68,0.3)',color:'#f87171'}};
+  return{{bg:'rgba(239,68,68,0.12)',border:'rgba(239,68,68,0.3)',color:'var(--accent-red-light)'}};
 }}
 function buildGuidanceHtml(g){{
   if(!g)return'';
@@ -1808,7 +1808,7 @@ monthlyData.forEach((m,i)=>{{
       <div class="month-tags">
         <span class="month-tag" style="background:rgba(99,102,241,0.15);color:#a5b4fc">九星: ${{m.nineStarNote}}</span>
         <span class="month-tag" style="background:${{pc.bg}};color:${{pc.color}};border:1px solid ${{pc.border}}">六星: ${{m.rokuseiPhase}}</span>
-        ${{m.westernTheme ? '<span class="month-tag" style="background:rgba(139,92,246,0.15);color:#c4b5fd;border:1px solid rgba(139,92,246,0.3)">西洋: '+m.westernTheme+'</span>' : ''}}
+        ${{m.westernTheme ? '<span class="month-tag" style="background:rgba(139,92,246,0.15);color:var(--accent-purple-light);border:1px solid rgba(139,92,246,0.3)">西洋: '+m.westernTheme+'</span>' : ''}}
         ${{m.retroBadge || ''}}
       </div>
     </div>
@@ -1956,7 +1956,7 @@ new Chart(document.getElementById('chartOverlay'),{{
   type:'line',
   data:{{labels:{overlay_labels},datasets:[
     {{label:'九星気学',data:{nine_data},borderColor:'#6366f1',fill:false,tension:0.4,borderWidth:2,pointRadius:4,pointBackgroundColor:'#6366f1'}},
-    {{label:'六星占術',data:{twelve_data},borderColor:'#22c55e',fill:false,tension:0.4,borderWidth:2,pointRadius:4,pointBackgroundColor:'#22c55e'}},
+    {{label:'六星占術',data:{twelve_data},borderColor:'var(--accent-green)',fill:false,tension:0.4,borderWidth:2,pointRadius:4,pointBackgroundColor:'var(--accent-green)'}},
     {{label:'霊合合成',data:{comb_data},borderColor:'#eab308',fill:false,tension:0.4,borderWidth:2,borderDash:[6,3],pointRadius:4,pointBackgroundColor:'#eab308'}}
   ]}},
   options:{{responsive:true,maintainAspectRatio:false,animation:{{duration:1500,easing:'easeOutQuart'}},interaction:{{mode:'index',intersect:false}},
@@ -2273,17 +2273,17 @@ def generate_html(p, tier=2, show_gnav=False):
 
     # Action Blueprint
     if blueprint_content:
-        hub_sections += _hub_card('blueprint', '&#9829;', 'rgba(139,92,246,0.12)', '#c4b5fd',
+        hub_sections += _hub_card('blueprint', '&#9829;', 'rgba(139,92,246,0.12)', 'var(--accent-purple-light)',
                                   '明日からできること', bp_summary, blueprint_content)
 
     # Personality
     if personality_content:
-        hub_sections += _hub_card('personality', '&#9632;', 'rgba(59,130,246,0.12)', '#60a5fa',
+        hub_sections += _hub_card('personality', '&#9632;', 'rgba(59,130,246,0.12)', 'var(--accent-blue-light)',
                                   '内なる才能の設計図', '強み × 性格タイプ × 感受性',
                                   personality_content)
 
     # Divination
-    hub_sections += _hub_card('divination', '&#9679;', 'rgba(139,92,246,0.12)', '#c4b5fd',
+    hub_sections += _hub_card('divination', '&#9679;', 'rgba(139,92,246,0.12)', 'var(--accent-purple-light)',
                               '星が語ること', '四柱推命 × 九星気学 × 六星占術 × 西洋占星術',
                               divination_content)
 
@@ -2294,7 +2294,7 @@ def generate_html(p, tier=2, show_gnav=False):
 
     # Monthly — guidance is shown inline via JS buildGuidanceHtml() for the current month tab
     if monthly_content:
-        hub_sections += _hub_card('monthly', '&#9671;', 'rgba(59,130,246,0.12)', '#60a5fa',
+        hub_sections += _hub_card('monthly', '&#9671;', 'rgba(59,130,246,0.12)', 'var(--accent-blue-light)',
                                   '月間運勢フォーキャスト', month_summary,
                                   monthly_content)
 
