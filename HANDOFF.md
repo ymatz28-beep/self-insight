@@ -1,9 +1,8 @@
 # Self-Insight — HANDOFF
 
-## [Constancy] 2026-04-14
-- [ERROR] structural_reform: [ESCALATED: 22d unresolved] generate_dashboard.py is 2348 lines (threshold: 800). Consider splitting.
-- [WARN] design_token_compliance: Line 57: hardcoded #6366f1 should be var(--accent)
-- [ERROR] post_change_testing: [ESCALATED: 17d unresolved] self-insight: 直近4時間以内に変更あり、テスト証跡なし（self-insight/.test_ok）
+## [Constancy] 2026-04-15
+- [WARN] structural_reform: generate_dashboard.py is 2348 lines (threshold: 800). Consider splitting.
+- [WARN] post_change_testing: self-insight: 直近1時間以内に変更あり、テスト証跡なし（self-insight/.test_ok）
 
 ## Last Updated
 2026-04-09
