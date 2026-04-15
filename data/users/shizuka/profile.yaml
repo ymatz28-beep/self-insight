@@ -1,0 +1,388 @@
+# Self-Insight Profile — 手嶋 静
+# Generated: 2026-04-15
+
+identity:
+  name: 手嶋 静
+  birth_date: '1944-09-25'
+  birth_time: null
+  birth_place: 東京都
+  blood_type: AB
+  age: 81
+  sex: female
+personality:
+  mbti: null
+four_pillars:
+  year_pillar:
+    stem:
+      char: 甲
+      element: Wood
+      yin_yang: Yang
+      reading: きのえ
+    branch:
+      char: 申
+      animal: Monkey
+      element: Metal
+      reading: さる
+    full: 甲申
+  month_pillar:
+    stem:
+      char: 癸
+      element: Water
+      yin_yang: Yin
+      reading: みずのと
+    branch:
+      char: 酉
+      animal: Rooster
+      element: Metal
+      reading: とり
+    full: 癸酉
+  day_pillar:
+    stem:
+      char: 壬
+      element: Water
+      yin_yang: Yang
+      reading: みずのえ
+    branch:
+      char: 辰
+      animal: Dragon
+      element: Earth
+      reading: たつ
+    full: 壬辰
+  hour_pillar: null
+  day_master:
+    char: 壬
+    element: Water
+    yin_yang: Yang
+    description: 陽水 — 大海。広大な知恵と包容力
+  five_elements_balance:
+    木:
+      count: 1
+      pct: 17
+      source: 甲(年干)
+    火:
+      count: 0
+      pct: 0
+      source: なし（時柱で補完の可能性）
+    土:
+      count: 1
+      pct: 17
+      source: 辰(日支)
+    金:
+      count: 2
+      pct: 33
+      source: 申(年支)+酉(月支)
+    水:
+      count: 2
+      pct: 33
+      source: 癸(月干)+壬(日干)
+  missing_elements:
+  - 火
+  element_insight: 火(情熱・行動力)が欠如。意識的にこれらの要素を補う行動が有効
+nine_star_ki:
+  year_star:
+    number: 2
+    name: 二黒土星
+    element: Earth
+    direction: SW
+  month_star:
+    number: 4
+    name: 四緑木星
+    element: Wood
+    direction: SE
+  year_cycle:
+    center_star:
+      number: 1
+      name: 一白水星
+    position:
+      palace: 乾宮
+      direction: NW
+      meaning: 充実・実り
+  nine_year_cycle:
+  - year: 2024
+    palace: 巽宮
+    theme: 整備・信用
+    energy: 75
+  - year: 2025
+    palace: 中宮
+    theme: 絶頂・転機
+    energy: 100
+  - year: 2026
+    palace: 乾宮
+    theme: 充実・実り
+    energy: 90
+    current: true
+  - year: 2027
+    palace: 兌宮
+    theme: 悦び・収穫
+    energy: 80
+  - year: 2028
+    palace: 艮宮
+    theme: 停滞・自己改革
+    energy: 40
+  - year: 2029
+    palace: 離宮
+    theme: 注目・離別
+    energy: 70
+  - year: 2030
+    palace: 坎宮
+    theme: 厄・試練
+    energy: 30
+  - year: 2031
+    palace: 坤宮
+    theme: 変化・準備
+    energy: 45
+  - year: 2032
+    palace: 震宮
+    theme: 発展・始動
+    energy: 65
+rokusei:
+  main_star:
+    name: 火星人
+    polarity: +
+    reading: かせいじん プラス
+  reigou: false
+  twelve_year_cycle:
+  - year: 2024
+    phase: 立花
+    殺界: null
+    energy: 80
+  - year: 2025
+    phase: 健弱
+    殺界: 小殺界
+    energy: 35
+  - year: 2026
+    phase: 達成
+    殺界: null
+    energy: 90
+    current: true
+  - year: 2027
+    phase: 乱気
+    殺界: 中殺界
+    energy: 25
+  - year: 2028
+    phase: 再会
+    殺界: null
+    energy: 70
+  - year: 2029
+    phase: 財成
+    殺界: null
+    energy: 85
+  - year: 2030
+    phase: 安定
+    殺界: null
+    energy: 95
+  - year: 2031
+    phase: 陰影
+    殺界: 大殺界
+    energy: 15
+  - year: 2032
+    phase: 停止
+    殺界: 大殺界
+    energy: 10
+  - year: 2033
+    phase: 減退
+    殺界: 大殺界
+    energy: 20
+western_astrology:
+  sun_sign:
+    sign: Libra
+    symbol: ♎
+    element: Air
+    quality: Cardinal
+  ruling_planet: Venus
+  ascendant: null
+  moon_sign: null
+blood_type:
+  type: AB
+  population_pct: 10
+  traits:
+    strengths:
+    - 合理的思考と感性の共存
+    - 冷静な分析力
+    - 多角的視点
+    - 適応力
+    challenges:
+    - 二面性による迷い
+    - 感情の複雑さ
+    - 他者から理解されにくい
+monthly_fortune:
+- month: 1
+  nine_star:
+    palace: 兌宮
+    energy: 80
+    note: 大吉・好調
+  rokusei:
+    phase: 減退
+    satsukai: 大殺界
+    energy: 20
+    type: danger
+  domains:
+    work: 3
+    money: 2
+    health: 3
+    romance: 3
+- month: 2
+  nine_star:
+    palace: 艮宮
+    energy: 40
+    note: 吉凶混合
+  rokusei:
+    phase: 種子
+    satsukai: null
+    energy: 50
+    type: good
+  domains:
+    work: 3
+    money: 3
+    health: 3
+    romance: 3
+- month: 3
+  nine_star:
+    palace: 離宮
+    energy: 70
+    note: 上昇運
+  rokusei:
+    phase: 緑生
+    satsukai: null
+    energy: 65
+    type: good
+  domains:
+    work: 4
+    money: 4
+    health: 4
+    romance: 4
+- month: 4
+  nine_star:
+    palace: 坎宮
+    energy: 30
+    note: 中凶・注意
+  rokusei:
+    phase: 立花
+    satsukai: null
+    energy: 80
+    type: great
+  domains:
+    work: 3
+    money: 3
+    health: 3
+    romance: 3
+- month: 5
+  nine_star:
+    palace: 坤宮
+    energy: 45
+    note: 吉凶混合
+  rokusei:
+    phase: 健弱
+    satsukai: 小殺界
+    energy: 35
+    type: caution
+  domains:
+    work: 2
+    money: 1
+    health: 1
+    romance: 2
+- month: 6
+  nine_star:
+    palace: 震宮
+    energy: 65
+    note: 中吉・回復
+  rokusei:
+    phase: 達成
+    satsukai: null
+    energy: 90
+    type: great
+  domains:
+    work: 4
+    money: 4
+    health: 4
+    romance: 4
+- month: 7
+  nine_star:
+    palace: 巽宮
+    energy: 75
+    note: 上昇運
+  rokusei:
+    phase: 乱気
+    satsukai: 中殺界
+    energy: 25
+    type: caution
+  domains:
+    work: 3
+    money: 2
+    health: 3
+    romance: 3
+- month: 8
+  nine_star:
+    palace: 中宮
+    energy: 100
+    note: 大吉・最盛
+  rokusei:
+    phase: 再会
+    satsukai: null
+    energy: 70
+    type: good
+  domains:
+    work: 5
+    money: 5
+    health: 5
+    romance: 5
+- month: 9
+  nine_star:
+    palace: 乾宮
+    energy: 90
+    note: 大吉・最盛
+  rokusei:
+    phase: 財成
+    satsukai: null
+    energy: 85
+    type: great
+  domains:
+    work: 5
+    money: 5
+    health: 5
+    romance: 5
+- month: 10
+  nine_star:
+    palace: 兌宮
+    energy: 80
+    note: 大吉・好調
+  rokusei:
+    phase: 安定
+    satsukai: null
+    energy: 95
+    type: great
+  domains:
+    work: 5
+    money: 5
+    health: 5
+    romance: 5
+- month: 11
+  nine_star:
+    palace: 艮宮
+    energy: 40
+    note: 吉凶混合
+  rokusei:
+    phase: 陰影
+    satsukai: 大殺界
+    energy: 15
+    type: danger
+  domains:
+    work: 2
+    money: 1
+    health: 1
+    romance: 2
+- month: 12
+  nine_star:
+    palace: 離宮
+    energy: 70
+    note: 上昇運
+  rokusei:
+    phase: 停止
+    satsukai: 大殺界
+    energy: 10
+    type: danger
+  domains:
+    work: 2
+    money: 1
+    health: 2
+    romance: 2

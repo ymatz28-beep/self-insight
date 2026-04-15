@@ -11,3 +11,13 @@ users:
     public_id: 9a80ff88
     tier: 2
     gnav: false
+  shizuka:
+    public_id: 8c858d57
+    tier: 1
+    gnav: false
+    note: 母 1944-09-25 AB
+  ayako:
+    public_id: 11cf4757
+    tier: 1
+    gnav: false
+    note: 妹 1978-05-26 A
