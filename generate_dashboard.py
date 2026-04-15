@@ -12,9 +12,9 @@ def star_html(n, mx=5):
             f'<span style="color:var(--border);">{"★"*(mx-int(n))}</span>')
 
 def energy_color(e):
-    if e >= 70: return '#4ade80'
+    if e >= 70: return 'var(--accent-green-light)'
     if e >= 40: return '#facc15'
-    return '#f87171'
+    return 'var(--accent-red-light)'
 
 def satsukai_html(s):
     if not s: return '—'
@@ -168,19 +168,33 @@ def _hero(p, tier):
     # Hub card 1: Core Identity
     hub1_summary = f'{dm["char"]}火 × {ys["name"]} — {essence_sub}' if essence_sub else f'{dm["char"]}火 × {ys["name"]}'
 
-    # Hub card 2: Monthly fortune
+    # Hub card 2: Monthly fortune (九星宮 + 六星フェーズを併記して月間カードと整合)
     hub2_summary = ''
     if cur_month:
         domains = cur_month['domains']
         avg_stars = sum(domains.values()) / len(domains)
-        if avg_stars >= 4:
-            hub2_summary = f'{current_month_num}月 — 追い風。積極的に動ける'
-        elif avg_stars >= 3:
-            hub2_summary = f'{current_month_num}月 — 安定。地固めと準備の月'
-        elif avg_stars >= 2:
-            hub2_summary = f'{current_month_num}月 — 慎重に。守りを固める'
+        ns_palace = cur_month.get('nine_star', {}).get('palace', '')
+        rok_phase = cur_month.get('rokusei', {}).get('phase', '')
+        PALACE_TONE = {
+            '乾宮':'充実・実り','兌宮':'悦び・収穫','艮宮':'停滞・自己改革',
+            '離宮':'注目・離別','坎宮':'厄・試練','坤宮':'変化・準備',
+            '震宮':'発展・始動','巽宮':'整備・信用','中宮':'絶頂・転機',
+        }
+        palace_tone = PALACE_TONE.get(ns_palace, '')
+        if ns_palace and rok_phase:
+            hub2_summary = f'{current_month_num}月 — {ns_palace}（{palace_tone}）× 六星「{rok_phase}」'
+        elif ns_palace:
+            hub2_summary = f'{current_month_num}月 — {ns_palace}（{palace_tone}）'
         else:
-            hub2_summary = f'{current_month_num}月 — 充電。回復を優先する'
+            # fallback: domain avg
+            if avg_stars >= 4:
+                hub2_summary = f'{current_month_num}月 — 追い風。積極的に動ける'
+            elif avg_stars >= 3:
+                hub2_summary = f'{current_month_num}月 — 安定。地固めと準備の月'
+            elif avg_stars >= 2:
+                hub2_summary = f'{current_month_num}月 — 慎重に。守りを固める'
+            else:
+                hub2_summary = f'{current_month_num}月 — 充電。回復を優先する'
     else:
         hub2_summary = '月間運気データを読み込み中'
 
@@ -196,10 +210,11 @@ def _hero(p, tier):
     return f'''<section class="hero">
   <div class="hero-particles"></div>
   <div class="hero-content">
-    <div class="archetype-en">{archetype["en"]}</div>
+    {f'<div class="archetype-en">{archetype["en"]}</div>' if tier >= 2 else ''}
     <h1 class="archetype-name">{archetype["ja"]}</h1>
     <div class="hero-tagline">{tagline}</div>
     <div class="hero-name">{nickname}</div>
+    {_rarity_stats_bar(p)}
     <div class="stats">{stats}</div>
     <div class="hub-cards-grid">
       <div class="hub-card-mini" onclick="document.getElementById('core-identity').scrollIntoView({{behavior:'smooth'}});var c=document.querySelector('#core-identity').closest('.hub-card');if(c&&!c.classList.contains('expanded'))c.classList.add('expanded');">
@@ -213,7 +228,7 @@ def _hero(p, tier):
         <div class="hub-card-mini-summary">{hub2_summary}</div></div>
       </div>
       <div class="hub-card-mini" onclick="document.getElementById('blueprint').scrollIntoView({{behavior:'smooth'}});var c=document.querySelector('#blueprint').closest('.hub-card');if(c&&!c.classList.contains('expanded'))c.classList.add('expanded');">
-        <div class="hub-card-mini-icon" style="background:rgba(139,92,246,0.15);color:#c4b5fd">&#9829;</div>
+        <div class="hub-card-mini-icon" style="background:rgba(139,92,246,0.15);color:var(--accent-purple-light)">&#9829;</div>
         <div><div class="hub-card-mini-title">今日のアクション</div>
         <div class="hub-card-mini-summary">{hub3_summary}</div></div>
       </div>
@@ -240,7 +255,7 @@ def _get_essence_sub(dm, ys):
         '七赤金星': '言葉の力',
         '五黄土星': '中央の統率力',
         '一白水星': '知恵と柔軟性',
-        '二黒土星': '献身と安定',
+        '二黒土星': '母なる支える力',
         '三碧木星': '行動と成長',
         '四緑木星': '信用と調和',
         '六白金星': '権威と正義',
@@ -318,13 +333,13 @@ def _this_month_guidance(p):
         energy_tone = '追い風'
         energy_desc = 'エネルギーが高く、積極的に動ける月'
         energy_icon_bg = 'rgba(34,197,94,0.15)'
-        energy_icon_color = '#4ade80'
+        energy_icon_color = 'var(--accent-green-light)'
         energy_icon = '&#9650;'  # up triangle
     elif avg_stars >= 3:
         energy_tone = '安定'
         energy_desc = '地固めと準備に適した月'
         energy_icon_bg = 'rgba(59,130,246,0.15)'
-        energy_icon_color = '#60a5fa'
+        energy_icon_color = 'var(--accent-blue-light)'
         energy_icon = '&#9654;'  # right triangle
     elif avg_stars >= 2:
         energy_tone = '慎重'
@@ -336,7 +351,7 @@ def _this_month_guidance(p):
         energy_tone = '充電'
         energy_desc = '休息と回復を最優先にする月'
         energy_icon_bg = 'rgba(239,68,68,0.15)'
-        energy_icon_color = '#f87171'
+        energy_icon_color = 'var(--accent-red-light)'
         energy_icon = '&#9724;'  # square
 
     # Generate personalized action items based on profile + fortune
@@ -370,7 +385,7 @@ def _this_month_guidance(p):
     cur_west = next((h for h in monthly_horo if h['month'] == current_month_num), None)
     west_tag = ''
     if cur_west:
-        west_tag = f'<span class="month-tag" style="background:rgba(139,92,246,0.15);color:#c4b5fd;border:1px solid rgba(139,92,246,0.3)">西洋: {cur_west["theme"]}</span>'
+        west_tag = f'<span class="month-tag" style="background:rgba(139,92,246,0.15);color:var(--accent-purple-light);border:1px solid rgba(139,92,246,0.3)">西洋: {cur_west["theme"]}</span>'
 
     # Mercury retrograde warning
     mercury_retro = wa.get('mercury_retrograde_2026', [])
@@ -424,12 +439,12 @@ def _mercury_retro_badge(mercury_retro, month_num):
 def _phase_color_py(rtype):
     """Return phase color dict for Python-side rendering."""
     if rtype == 'great':
-        return {'bg': 'rgba(34,197,94,0.12)', 'border': 'rgba(34,197,94,0.3)', 'color': '#4ade80'}
+        return {'bg': 'rgba(34,197,94,0.12)', 'border': 'rgba(34,197,94,0.3)', 'color': 'var(--accent-green-light)'}
     if rtype == 'good':
-        return {'bg': 'rgba(59,130,246,0.12)', 'border': 'rgba(59,130,246,0.3)', 'color': '#60a5fa'}
+        return {'bg': 'rgba(59,130,246,0.12)', 'border': 'rgba(59,130,246,0.3)', 'color': 'var(--accent-blue-light)'}
     if rtype == 'caution':
         return {'bg': 'rgba(234,179,8,0.12)', 'border': 'rgba(234,179,8,0.3)', 'color': '#facc15'}
-    return {'bg': 'rgba(239,68,68,0.12)', 'border': 'rgba(239,68,68,0.3)', 'color': '#f87171'}
+    return {'bg': 'rgba(239,68,68,0.12)', 'border': 'rgba(239,68,68,0.3)', 'color': 'var(--accent-red-light)'}
 
 
 # Nine Star Palace descriptions — what each palace means for *this month*
@@ -560,9 +575,9 @@ def _generate_monthly_actions(p, cur_month, avg_stars):
 
     domain_ja = {'work': '仕事', 'money': 'お金', 'health': '健康', 'romance': '人間関係'}
     domain_icons = {
-        'work': ('&#9733;', 'rgba(59,130,246,0.15)', '#60a5fa'),
+        'work': ('&#9733;', 'rgba(59,130,246,0.15)', 'var(--accent-blue-light)'),
         'money': ('&#9830;', 'rgba(201,168,76,0.15)', '#c9a84c'),
-        'health': ('&#9829;', 'rgba(34,197,94,0.15)', '#4ade80'),
+        'health': ('&#9829;', 'rgba(34,197,94,0.15)', 'var(--accent-green-light)'),
         'romance': ('&#9827;', 'rgba(244,114,182,0.15)', '#f472b6'),
     }
 
@@ -607,13 +622,13 @@ def _generate_monthly_actions(p, cur_month, avg_stars):
             actions.append({
                 'title': '繊細さのケアを最優先に',
                 'desc': 'エネルギーが低い月は、繊細な感覚が過敏になりがち。ネガティブな刺激を避け、自然の中で過ごす時間や、一人で内省する時間を意識的に確保する',
-                'icon': '&#9826;', 'icon_bg': 'rgba(139,92,246,0.15)', 'icon_color': '#c4b5fd',
+                'icon': '&#9826;', 'icon_bg': 'rgba(139,92,246,0.15)', 'icon_color': 'var(--accent-purple-light)',
             })
         else:
             actions.append({
                 'title': '繊細さを創造性に変換する',
                 'desc': '好調期の繊細さは、美しいものや深い体験から何倍もの充足を引き出す。アート・音楽・深い会話を意識的に取り入れて、感性を栄養にする',
-                'icon': '&#9826;', 'icon_bg': 'rgba(139,92,246,0.15)', 'icon_color': '#c4b5fd',
+                'icon': '&#9826;', 'icon_bg': 'rgba(139,92,246,0.15)', 'icon_color': 'var(--accent-purple-light)',
             })
     else:
         missing = p['four_pillars'].get('missing_elements', [])
@@ -819,6 +834,124 @@ def _section_quote(key):
     return f'<div class="section-quote">"{q}"</div>'
 
 
+# === Auto-generated integrated insight (narratives.yaml が無いユーザー向けのフォールバック) ===
+# 生年月日+血液型+干支+日主+本命星+運命星+太陽星座から、4 段落の統合インサイトを合成
+
+DM_NARRATIVE_LONG = {
+    '甲': '大樹のように真っ直ぐ上へと伸びてゆく、力強い成長の気をお持ちです。何もないところから形を作っていく、開拓者の資質を生まれながらに授かっています。',
+    '乙': '柔らかくしなる蔓のような、しなやかな粘りをお持ちの方です。周囲と調和しながら、気づけば遠くまで広がっているような生き方が、あなたには自然と馴染みます。',
+    '丙': '太陽のような明朗で温かな発信の力を授かっています。場を明るくし、人を照らす天性のリーダー性を、控えめながらも内に秘めていらっしゃいます。',
+    '丁': 'ロウソクの炎のように、必要な方だけを静かに照らす繊細な光をお持ちです。激しくはないけれど、消えることのない火。そんな深い温もりをあなたは宿していらっしゃいます。',
+    '戊': '動かない山のような、どっしりとした安定感をお持ちです。周囲が揺れても芯がぶれず、自然と人から頼られるタイプでいらっしゃいます。',
+    '己': '田畑のように、人や物を育てる豊かな器をお持ちです。ご自身が目立つことよりも、誰かを実らせることに静かな喜びを見出されるお方です。',
+    '庚': '鋼の刃のような決断力と切れ味を授かっています。不要なものを見極めて切り捨て、真っ直ぐに前へ進む凛とした意志をお持ちです。',
+    '辛': '磨き上げられた宝石のような、繊細な美意識をお持ちです。細部への目と品位の高さが、あなたの魅力そのものとなっていらっしゃいます。',
+    '壬': '大河のような、広く深い包容力と流動性をお持ちの方です。人のお話を受け止め、流れに身を任せながら、最後には自然と良い道を見つけていかれる知恵の持ち主でいらっしゃいます。',
+    '癸': '雨露のように繊細に、静かに浸透していく力をお持ちです。目立たずとも、確実に周囲に良い影響を及ぼされるお方です。',
+}
+
+NS_NARRATIVE = {
+    '一白水星': '「水」の星をお持ちです。静かに浸透していく知恵と、場を柔らかく整える柔軟性が、あなたの表の顔となっていらっしゃいます。',
+    '二黒土星': '「大地」の星をお持ちです。派手さよりも堅実さを大切にされ、誰かを支える側に回ることに深い喜びを見出されるお方です。',
+    '三碧木星': '「雷」の星をお持ちです。発信力と推進力を授かり、動きながら道を切り拓いていくのが自然な生き方でいらっしゃいます。',
+    '四緑木星': '「風」の星をお持ちです。人と人のご縁を繋ぎ、信用を育てていく役目を担っていらっしゃいます。目立たずとも影響力の大きいお方です。',
+    '五黄土星': '「帝王」の星をお持ちです。中心に立ち、場を掌握する強い存在感を、生まれながらに授かっていらっしゃいます。',
+    '六白金星': '「天」の星をお持ちです。公正な判断と理想を追い求める、凛とした精神性がお有りです。',
+    '七赤金星': '「沢」の星をお持ちです。社交と言葉の力で場を華やかに楽しませる、天性の社交家でいらっしゃいます。',
+    '八白土星': '「山」の星をお持ちです。変化を乗り越える粘り強さと、じっくり蓄えていく力を授かっています。',
+    '九紫火星': '「火」の星をお持ちです。知性と美意識、そして物事を明らかにする鋭い洞察力が、あなたの持ち味でいらっしゃいます。',
+}
+
+ROKUSEI_NARRATIVE = {
+    '木星人': '伸び広がる木星人でいらっしゃいます。成長・拡張・挑戦が、あなたを健やかに保つエネルギー源となっています。',
+    '火星人': '燃え立つ火星人でいらっしゃいます。情熱と行動力の塊。じっとしていらっしゃると不調に傾きやすい、動いて整う方です。',
+    '土星人': '動かない土星人でいらっしゃいます。どっしりと構え、長距離走で最終的に勝つタイプの方です。',
+    '金星人': '磨かれた金星人でいらっしゃいます。洗練・美・優雅を重んじる、品位あるお方です。',
+    '水星人': '流れる水星人でいらっしゃいます。知恵と柔軟性で環境を読み解いていく才をお持ちです。',
+    '天王星人': '自由な天王星人でいらっしゃいます。型にはまらない独自路線を、生まれながらに選ばれる方です。',
+}
+
+WESTERN_NARRATIVE = {
+    'Aries':   '牡羊座（火・活動宮）— 先陣を切る開拓者',
+    'Taurus':  '牡牛座（土・不動宮）— 五感と安定を愛する人',
+    'Gemini':  '双子座（風・柔軟宮）— 情報と言葉の達人',
+    'Cancer':  '蟹座（水・活動宮）— 情と家族を大切にする包容力',
+    'Leo':     '獅子座（火・不動宮）— 中心に立つ華やかさ',
+    'Virgo':   '乙女座（土・柔軟宮）— 細部を整える職人肌',
+    'Libra':   '天秤座（風・活動宮）— バランスと美を重んじる調停者',
+    'Scorpio': '蠍座（水・不動宮）— 本質に迫る深掘り型',
+    'Sagittarius': '射手座（火・柔軟宮）— 自由と哲学を求める冒険家',
+    'Capricorn':   '山羊座（土・活動宮）— 長期戦で実績を積む人',
+    'Aquarius':    '水瓶座（風・不動宮）— 独自視点の革新者',
+    'Pisces':      '魚座（水・柔軟宮）— 感受性豊かな夢想家',
+}
+
+BT_NARRATIVE_LONG = {
+    'A':  '真面目・几帳面・計画的で、信頼をコツコツ積み上げていかれるタイプの方です（日本人の約 38%）',
+    'B':  '自由・独立心・独自路線を愛し、枠にはめられることを好まれないタイプの方です（日本人の約 22%）',
+    'O':  '人間好き・現実主義で大らか、場を温めるムードメーカーでいらっしゃるタイプの方です（日本人の約 31%）',
+    'AB': '合理と感性の両立。状況に応じて最適なモードを切り替えられる、適応力の高いタイプの方です（日本人の約 9%）',
+}
+
+def _auto_integrated_insight(p):
+    """narratives.yaml が無いユーザー向けに、4段落の統合インサイトを自動生成。"""
+    try:
+        dm = p['four_pillars']['day_master']
+        dm_char = dm.get('char', '')
+        dm_element = dm.get('element', '')
+        dm_yy = dm.get('yin_yang', '')
+        ns = p['nine_star_ki']['year_star']
+        ns_name = ns.get('name', '')
+        rok = p['rokusei']['main_star']
+        rok_name = rok.get('name', '')
+        reigou = p['rokusei'].get('reigou', False)
+        sun_sign = p['western_astrology']['sun_sign'].get('sign', '')
+        animal = p['four_pillars']['year_pillar']['branch'].get('animal', '')
+        animal_ja = {'Rat':'子','Ox':'丑','Tiger':'寅','Rabbit':'卯','Dragon':'辰','Snake':'巳',
+                     'Horse':'午','Goat':'未','Monkey':'申','Rooster':'酉','Dog':'戌','Pig':'亥'}.get(animal, animal)
+        bt = p.get('blood_type', {}).get('type', '')
+        missing = p['four_pillars'].get('missing_elements', [])
+        name = p.get('identity', {}).get('name', 'あなた')
+
+        dm_story = DM_NARRATIVE_LONG.get(dm_char, '')
+        ns_story = NS_NARRATIVE.get(ns_name, '')
+        rok_story = ROKUSEI_NARRATIVE.get(rok_name, '')
+        sun_story = WESTERN_NARRATIVE.get(sun_sign, '')
+        bt_story = BT_NARRATIVE_LONG.get(bt, '')
+        eto_story = ETO_GIST.get(animal, '')
+
+        # 段1: 日主 + 本命星 + 血液型
+        p1 = f'''{name}さんを一言で言い表すなら、四柱推命の日主が示す「<strong>{dm_char}日主</strong>」——{dm_story} そして、九星気学の本命星から見える社会に出た時のお顔は「<strong>{ns_name}</strong>」——{ns_story} 血液型は「<strong>{bt}型</strong>」で、{bt_story}。生年月日という揺るぎない事実だけから、{name}さんの核はこのように浮かび上がります。'''
+
+        # 段2: 西洋占星術 + 干支
+        p2 = f'''視点を変えて西洋占星術で見ると、あなたは <strong>{sun_story}</strong>。東洋の干支に目を向けると <strong>{animal_ja}年（{eto_story}）</strong>でいらっしゃいます。起源の全く違う 2 つの体系が、あなたの気質を別々の角度から描き出しているのです。東洋と西洋の読みが重なり合う場所に、<strong>「本当に変わらないあなたの軸」</strong>が静かに見えてまいります。'''
+
+        # 段3: 六星占術 (+ 霊合)
+        if reigou:
+            p3 = f'''さらに六星占術の視点を加えますと、あなたは <strong>{rok_name}（霊合星人）</strong>でいらっしゃいます。{rok_story} 霊合星人は日本人口のわずか 15% しかいない希少な体質で、2 つの運命星を同時に宿すため <strong>運気の振れ幅が一般の 2 倍</strong>と言われております。好調の時期は抜きん出て、不調の時期は深く沈む——そんなダイナミックなリズムが、あなたの人生を形作っていらっしゃるのです。'''
+        else:
+            p3 = f'''六星占術の視点を加えると、あなたは <strong>{rok_name}</strong>でいらっしゃいます。{rok_story} 12 年周期で運気が巡るため、「今の時期になさるべきこと・お控えになるべきこと」が明確に見えてくるのが、この体系ならではの強みでございます。'''
+
+        # 段4: 欠けている五行 + 運用アドバイス
+        if missing:
+            miss_str = '・'.join(missing)
+            miss_action = {
+                '木':'挑戦や拡張の行動',
+                '火':'情熱を込めた発信・人前に出る場面',
+                '土':'腰を据えた継続・コツコツ積み上げる時間',
+                '金':'決断と手放すこと・期限を設けること',
+                '水':'流動性・休息・柔軟にお受けになる姿勢',
+            }
+            actions = '、'.join(miss_action.get(m, '') for m in missing if m in miss_action)
+            p4 = f'''最後に、お気を付けいただきたい点を一つ。あなたの命式で欠けている五行は「<strong>{miss_str}</strong>」でいらっしゃいます。これは「弱点」ではございません。「<strong>意識的にお補いになると良い方向</strong>」と捉えていただければ幸いです。自然体では{actions}が後回しになりがちですので、予定や環境を整える形で仕組みになさると、あなたの本来の強みが最大限に活きてまいります。'''
+        else:
+            p4 = f'''五行の分布は美しくバランスが取れています。特定の要素が突出することも、欠けることもない整った命式でいらっしゃいます。言い換えますと、<strong>「どの方向にも振れる柔軟性」</strong>をお持ちで、状況に応じて様々なモードを自然に使い分けていかれるタイプの方です。'''
+
+        return [p1, p2, p3, p4]
+    except Exception as e:
+        return [f'統合インサイトの自動生成に失敗: {e}']
+
+
 def _core_identity(p):
     dm = p['four_pillars']['day_master']
     ys = p['nine_star_ki']['year_star']
@@ -827,6 +960,9 @@ def _core_identity(p):
 
     # Integrated insight box — first paragraph visible, rest collapsed
     insight_paras = interp.get('integrated_insight', [])
+    # narratives.yaml が無いユーザー向けのフォールバック: プロファイルから自動生成
+    if not insight_paras:
+        insight_paras = _auto_integrated_insight(p)
     insight_html = ''
     if insight_paras:
         first_p = f'<p style="line-height:1.9;font-size:14px;">{insight_paras[0]}</p>'
@@ -861,18 +997,35 @@ def _core_identity(p):
         axis_value = f'{t1_ja} × {t2_ja}'
         axis_sub = f'{sf_top5[0]["name"]}（{t1_ja}）+ {sf_top5[1]["name"]}（{t2_ja}）'
     else:
-        axis_value = '—'
-        axis_sub = ''
+        # Fallback: 干支の気質 × 日主の本質
+        animal_local = p['four_pillars']['year_pillar']['branch'].get('animal', '')
+        eto_gist_local = ETO_GIST.get(animal_local, '')
+        dm_char_local = dm.get('char', '')
+        dm_gist_local = DM_GIST.get(dm_char_local, '')
+        if eto_gist_local and dm_gist_local:
+            axis_value = f'{eto_gist_local} × {dm_char_local}の本質'
+            axis_sub = f'干支が示す気質 + 日主が示す判断軸'
+        else:
+            axis_value = '詳細は Tier 2 で'
+            axis_sub = '性格アンケートで明確化'
 
     # Duality
     bt = p['blood_type']
     ennea = p.get('personality', {}).get('enneagram', {})
     rok = p['rokusei']
-    etype = ennea.get('type', '?')
-    if rok.get('reigou'):
-        dual_sub = f'{bt["type"]}型 × 霊合星人 × エニアグラム {etype}'
+    etype = ennea.get('type', None)
+    reigou = rok.get('reigou', False)
+    # Tier 1 (エニアグラム未取得) は、霊合星人の有無で表現を変える
+    if etype:
+        if reigou:
+            dual_sub = f'{bt["type"]}型 × 霊合星人 × エニアグラム Type {etype}'
+        else:
+            dual_sub = f'{bt["type"]}型 × エニアグラム Type {etype}'
     else:
-        dual_sub = f'{bt["type"]}型 × エニアグラム {etype}'
+        if reigou:
+            dual_sub = f'{bt["type"]}型 × 霊合星人（二つの運命星）'
+        else:
+            dual_sub = f'{bt["type"]}型 × 陰陽のバランス'
     dual_value = _get_duality_value(bt, ennea, rok)
 
     # Watch Out
@@ -888,16 +1041,16 @@ def _core_identity(p):
   {_section_quote('core_identity')}
   {insight_html}
   <div class="grid grid-4" style="margin-top:16px">
-    <div class="card tc"><div class="card-label">Core Essence（本質）</div>
+    <div class="card tc"><div class="card-label">本質</div>
       <div class="card-value">{essence_value}</div>
       <div class="card-sub">{essence_sub}</div></div>
-    <div class="card tc"><div class="card-label">Strongest Axis（最強の軸）</div>
+    <div class="card tc"><div class="card-label">最強の軸</div>
       <div class="card-value">{axis_value}</div>
       <div class="card-sub">{axis_sub}</div></div>
-    <div class="card tc"><div class="card-label">Duality（二面性）</div>
+    <div class="card tc"><div class="card-label">二面性</div>
       <div class="card-value">{dual_value}</div>
       <div class="card-sub">{dual_sub}</div></div>
-    <div class="card tc"><div class="card-label">Watch Out（注意点）</div>
+    <div class="card tc"><div class="card-label">注意点</div>
       <div class="card-value" style="color:var(--yellow)">{watch_value}</div>
       <div class="card-sub">{watch_sub}</div></div>
   </div>
@@ -940,8 +1093,8 @@ def _personality(p, tier):
     sf = p.get('strengths_finder', {})
     sf_top5 = sf.get('top5', [])
 
-    domain_colors = {'Relationship Building':'#3b82f6','Strategic Thinking':'#22c55e',
-                     'Executing':'#8b5cf6','Influencing':'#ff6b35'}
+    domain_colors = {'Relationship Building':'var(--accent-blue)','Strategic Thinking':'var(--accent-green)',
+                     'Executing':'var(--accent-purple-dark)','Influencing':'#ff6b35'}
     tag_cls = {'Relationship Building':'tag-rb','Strategic Thinking':'tag-st',
                'Executing':'tag-ex','Influencing':'tag-inf'}
     interp = p.get('interpretations', {})
@@ -1057,23 +1210,23 @@ def _western_detail(p):
         desc_parts += f'<div style="font-size:12px;color:var(--text-secondary);line-height:1.7;margin-top:12px">{q_traits}</div>'
     if forecast:
         desc_parts += f'''<div class="insight-box" style="margin-top:12px;border-color:rgba(139,92,246,0.3);background:linear-gradient(135deg,rgba(139,92,246,0.08),rgba(99,102,241,0.04))">
-      <div class="insight-title" style="color:#c4b5fd">2026年 {west["sign"]}の運勢</div>
+      <div class="insight-title" style="color:var(--accent-purple-light)">2026年 {west["sign"]}の運勢</div>
       <p style="line-height:1.9;font-size:14px">{forecast}</p></div>'''
 
     # --- Transits card ---
     transits = wa.get('transits_2026', {})
     if transits:
         aspect_colors = {
-            'Trine': '#4ade80', 'Sextile': '#4ade80', 'Semisextile': '#60a5fa',
-            'Square': '#f87171', 'Opposition': '#f87171', 'Quincunx': '#facc15',
-            'Conjunction': '#c4b5fd',
+            'Trine': 'var(--accent-green-light)', 'Sextile': 'var(--accent-green-light)', 'Semisextile': 'var(--accent-blue-light)',
+            'Square': 'var(--accent-red-light)', 'Opposition': 'var(--accent-red-light)', 'Quincunx': '#facc15',
+            'Conjunction': 'var(--accent-purple-light)',
         }
         aspect_icons = {
             'Trine': '&#9651;', 'Sextile': '&#9734;', 'Semisextile': '&#8226;',
             'Square': '&#9633;', 'Opposition': '&#9675;', 'Quincunx': '&#8767;',
             'Conjunction': '&#9673;',
         }
-        transit_html = '<div style="margin-top:20px"><div class="insight-title" style="color:#c4b5fd;margin-bottom:8px">2026年 惑星の影響</div>'
+        transit_html = '<div style="margin-top:20px"><div class="insight-title" style="color:var(--accent-purple-light);margin-bottom:8px">2026年 惑星の影響</div>'
         transit_html += '<div style="font-size:12px;color:var(--text-muted);margin-bottom:12px;line-height:1.6">木星・土星・冥王星・天王星が今年あなたの太陽星座にどんな影響を与えるか。緑は追い風、黄色は調整期、赤は試練（成長のチャンス）。</div>'
         transit_html += '<div class="grid grid-2">'
         planet_ja = {'jupiter': '木星', 'saturn': '土星', 'pluto': '冥王星', 'uranus': '天王星'}
@@ -1124,7 +1277,7 @@ def _western_detail(p):
         west_energy = cur_west.get('energy', 0)
         west_color = energy_color(west_energy)
         desc_parts += f'''<div class="insight-box" style="margin-top:16px;border-color:rgba(139,92,246,0.3);background:linear-gradient(135deg,rgba(139,92,246,0.08),rgba(99,102,241,0.04))">
-      <div class="insight-title" style="color:#c4b5fd">{current_month_num}月の{west["sign"]}ホロスコープ — 「{cur_west["theme"]}」</div>
+      <div class="insight-title" style="color:var(--accent-purple-light)">{current_month_num}月の{west["sign"]}ホロスコープ — 「{cur_west["theme"]}」</div>
       <div style="display:flex;align-items:center;gap:12px;margin-bottom:8px">
         <div style="font-size:24px;font-weight:700;color:{west_color}">{west_energy}</div>
         <div style="font-size:11px;color:var(--text-muted)">西洋エネルギー /100</div>
@@ -1204,7 +1357,7 @@ def _divination(p):
     pcards += '<div class="pillar unknown"><div class="pillar-label">時柱</div><div class="kanji">？？</div><div class="reading">出生時刻不明</div><div class="element-badge" style="background:rgba(255,255,255,0.05);color:var(--text-muted)">未解放</div><div style="font-size:10px;color:var(--text-muted);margin-top:6px">晩年・子孫運</div></div>'
 
     el_bars = ''
-    el_colors = {'木':'#4ade80','火':'#f87171','土':'#facc15','金':'#94a3b8','水':'#60a5fa'}
+    el_colors = {'木':'var(--accent-green-light)','火':'var(--accent-red-light)','土':'#facc15','金':'#94a3b8','水':'var(--accent-blue-light)'}
     for el_name in ['木','火','土','金','水']:
         info = elements.get(el_name, {})
         pct = info.get('pct', 0)
@@ -1373,7 +1526,7 @@ def _forecast(p):
     # Chart legend: explain each line
     legend_items = [
         ('#6366f1', '九星気学', '9年周期。本命星の宮遷移による運気の波。社会的な運勢の流れを示す'),
-        ('#22c55e', '六星占術', '12年周期。大殺界を含む運命星の巡り。個人的な運気のバイオリズム'),
+        ('var(--accent-green)', '六星占術', '12年周期。大殺界を含む運命星の巡り。個人的な運気のバイオリズム'),
     ]
     if has_reigou:
         legend_items.append(('#eab308', '霊合合成', 'メイン星70% + サブ星30%の加重平均。霊合星人の実効的な運気スコア'))
@@ -1403,8 +1556,8 @@ def _forecast(p):
         }
         planet_ja = {'jupiter': '木星', 'saturn': '土星', 'pluto': '冥王星', 'uranus': '天王星'}
         aspect_colors = {
-            'Trine': '#4ade80', 'Sextile': '#4ade80', 'Semisextile': '#60a5fa',
-            'Square': '#f87171', 'Opposition': '#f87171', 'Quincunx': '#facc15',
+            'Trine': 'var(--accent-green-light)', 'Sextile': 'var(--accent-green-light)', 'Semisextile': 'var(--accent-blue-light)',
+            'Square': 'var(--accent-red-light)', 'Opposition': 'var(--accent-red-light)', 'Quincunx': '#facc15',
         }
         transit_items = ''
         for pk in ['jupiter', 'saturn', 'pluto', 'uranus']:
@@ -1418,7 +1571,7 @@ def _forecast(p):
                              f'<span style="color:{color};font-weight:600">{planet_ja.get(pk, pk)}</span>'
                              f'<span style="color:var(--text-muted)">{sign_display} {aspect}</span></span>')
         transit_summary = f'''<div style="margin-top:12px;padding:10px 14px;border-radius:8px;background:rgba(139,92,246,0.06);border:1px solid rgba(139,92,246,0.15)">
-      <div style="font-size:11px;color:#c4b5fd;margin-bottom:6px;font-weight:600">惑星トランジット</div>
+      <div style="font-size:11px;color:var(--accent-purple-light);margin-bottom:6px;font-weight:600">惑星トランジット</div>
       <div style="display:flex;flex-wrap:wrap;gap:4px">{transit_items}</div>
     </div>'''
 
@@ -1443,23 +1596,23 @@ def _year_theme(cur_comb, cur9, cur12, has_reigou, p):
         score = cur_comb['score']
         if score >= 70:
             theme = '攻めの年 — 種を蒔き、未来の収穫を設計する'
-            color = '#4ade80'
+            color = 'var(--accent-green-light)'
         elif score >= 50:
             theme = '布石の年 — 足場を固め、次の飛躍を準備する'
-            color = '#60a5fa'
+            color = 'var(--accent-blue-light)'
         elif score >= 30:
             theme = '守りの年 — 基盤を強化し、内面を充実させる'
             color = '#facc15'
         else:
             theme = '充電の年 — 回復に専念し、嵐が過ぎるのを待つ'
-            color = '#f87171'
+            color = 'var(--accent-red-light)'
     elif cur9:
         if cur9['energy'] >= 70:
             theme = '攻めの年 — 積極的にチャンスを掴みにいく'
-            color = '#4ade80'
+            color = 'var(--accent-green-light)'
         elif cur9['energy'] >= 40:
             theme = '布石の年 — 準備と基盤づくりに集中する'
-            color = '#60a5fa'
+            color = 'var(--accent-blue-light)'
         else:
             theme = '耐える年 — 守りを固め、次の好機を待つ'
             color = '#facc15'
@@ -1652,12 +1805,12 @@ def _monthly_guidance_data(p, m):
         energy_tone = '追い風'
         energy_desc = 'エネルギーが高く、積極的に動ける月'
         energy_icon_bg = 'rgba(34,197,94,0.15)'
-        energy_icon_color = '#4ade80'
+        energy_icon_color = 'var(--accent-green-light)'
     elif avg_stars >= 3:
         energy_tone = '安定'
         energy_desc = '地固めと準備に適した月'
         energy_icon_bg = 'rgba(59,130,246,0.15)'
-        energy_icon_color = '#60a5fa'
+        energy_icon_color = 'var(--accent-blue-light)'
     elif avg_stars >= 2:
         energy_tone = '慎重'
         energy_desc = '守りを固め、無理をしない月'
@@ -1667,7 +1820,7 @@ def _monthly_guidance_data(p, m):
         energy_tone = '充電'
         energy_desc = '休息と回復を最優先にする月'
         energy_icon_bg = 'rgba(239,68,68,0.15)'
-        energy_icon_color = '#f87171'
+        energy_icon_color = 'var(--accent-red-light)'
 
     narrative = _generate_monthly_narrative(p, m, avg_stars, energy_tone)
     actions = _generate_monthly_actions(p, m, avg_stars)
@@ -1768,10 +1921,10 @@ const currentMonth={current_month};
 const guidanceData={guidance_json};
 function starRating(n){{return'<span style="color:var(--yellow);">'+'★'.repeat(n)+'</span><span style="color:var(--border);">'+'★'.repeat(5-n)+'</span>';}}
 function phaseColor(t){{
-  if(t==='great')return{{bg:'rgba(34,197,94,0.12)',border:'rgba(34,197,94,0.3)',color:'#4ade80'}};
-  if(t==='good')return{{bg:'rgba(59,130,246,0.12)',border:'rgba(59,130,246,0.3)',color:'#60a5fa'}};
+  if(t==='great')return{{bg:'rgba(34,197,94,0.12)',border:'rgba(34,197,94,0.3)',color:'var(--accent-green-light)'}};
+  if(t==='good')return{{bg:'rgba(59,130,246,0.12)',border:'rgba(59,130,246,0.3)',color:'var(--accent-blue-light)'}};
   if(t==='caution')return{{bg:'rgba(234,179,8,0.12)',border:'rgba(234,179,8,0.3)',color:'#facc15'}};
-  return{{bg:'rgba(239,68,68,0.12)',border:'rgba(239,68,68,0.3)',color:'#f87171'}};
+  return{{bg:'rgba(239,68,68,0.12)',border:'rgba(239,68,68,0.3)',color:'var(--accent-red-light)'}};
 }}
 function buildGuidanceHtml(g){{
   if(!g)return'';
@@ -1808,7 +1961,7 @@ monthlyData.forEach((m,i)=>{{
       <div class="month-tags">
         <span class="month-tag" style="background:rgba(99,102,241,0.15);color:#a5b4fc">九星: ${{m.nineStarNote}}</span>
         <span class="month-tag" style="background:${{pc.bg}};color:${{pc.color}};border:1px solid ${{pc.border}}">六星: ${{m.rokuseiPhase}}</span>
-        ${{m.westernTheme ? '<span class="month-tag" style="background:rgba(139,92,246,0.15);color:#c4b5fd;border:1px solid rgba(139,92,246,0.3)">西洋: '+m.westernTheme+'</span>' : ''}}
+        ${{m.westernTheme ? '<span class="month-tag" style="background:rgba(139,92,246,0.15);color:var(--accent-purple-light);border:1px solid rgba(139,92,246,0.3)">西洋: '+m.westernTheme+'</span>' : ''}}
         ${{m.retroBadge || ''}}
       </div>
     </div>
@@ -1956,7 +2109,7 @@ new Chart(document.getElementById('chartOverlay'),{{
   type:'line',
   data:{{labels:{overlay_labels},datasets:[
     {{label:'九星気学',data:{nine_data},borderColor:'#6366f1',fill:false,tension:0.4,borderWidth:2,pointRadius:4,pointBackgroundColor:'#6366f1'}},
-    {{label:'六星占術',data:{twelve_data},borderColor:'#22c55e',fill:false,tension:0.4,borderWidth:2,pointRadius:4,pointBackgroundColor:'#22c55e'}},
+    {{label:'六星占術',data:{twelve_data},borderColor:'var(--accent-green)',fill:false,tension:0.4,borderWidth:2,pointRadius:4,pointBackgroundColor:'var(--accent-green)'}},
     {{label:'霊合合成',data:{comb_data},borderColor:'#eab308',fill:false,tension:0.4,borderWidth:2,borderDash:[6,3],pointRadius:4,pointBackgroundColor:'#eab308'}}
   ]}},
   options:{{responsive:true,maintainAspectRatio:false,animation:{{duration:1500,easing:'easeOutQuart'}},interaction:{{mode:'index',intersect:false}},
@@ -2194,6 +2347,197 @@ body::before{content:'';position:fixed;top:0;left:0;width:100%;height:100%;opaci
 .personality-summary{font-size:15px;color:var(--text-secondary);line-height:1.7;margin-bottom:20px;font-style:italic}
 .personality-locked{position:relative;min-height:300px;overflow:hidden;border-radius:var(--r-md)}
 .locked-skeleton{filter:blur(8px);opacity:0.3;padding:24px}
+
+/* === Tier 1 additions === */
+.eto-hero{display:grid;grid-template-columns:auto 1fr auto;gap:16px;align-items:center;background:linear-gradient(135deg,rgba(251,191,36,0.08),rgba(201,168,76,0.04));border:1px solid rgba(251,191,36,0.2);border-radius:var(--r-md);padding:18px 20px;margin-bottom:16px}
+.eto-emoji{font-size:48px;line-height:1}
+.eto-name .eto-title{font-size:18px;font-weight:700;color:#fff;margin-bottom:2px}
+.eto-name .eto-reading{font-size:12px;color:var(--text-secondary)}
+.eto-rarity{text-align:right;padding-left:12px;border-left:1px solid rgba(251,191,36,0.25)}
+.eto-rarity-label{font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:2px}
+.eto-rarity-value{font-size:15px;font-weight:700;color:#fbbf24;font-family:var(--font-mono)}
+.eto-narrative{margin-bottom:14px}
+.eto-narrative p{font-size:14px;line-height:1.85;color:#d1d5db;margin-bottom:10px}
+.eto-cross{background:rgba(99,102,241,0.06);border-left:3px solid var(--accent,#6366f1);border-radius:6px;padding:12px 14px;margin-top:10px}
+.eto-cross-label{font-size:11px;color:#c7d2fe;font-weight:600;letter-spacing:.08em;text-transform:uppercase;margin-bottom:6px}
+.eto-cross-body{font-size:14px;line-height:1.8;color:#e5e7eb}
+.eto-traits-row{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0 14px}
+.eto-trait{font-size:12px;background:rgba(251,191,36,0.12);border:1px solid rgba(251,191,36,0.25);color:#fde68a;padding:4px 10px;border-radius:14px;font-weight:500}
+.confidence-badge{font-size:12px;color:var(--text-secondary);background:rgba(99,102,241,0.06);border-left:3px solid rgba(99,102,241,0.4);padding:10px 12px;border-radius:6px;margin-top:14px;line-height:1.7}
+
+@media(max-width:600px){
+  .eto-hero{grid-template-columns:auto 1fr;grid-template-rows:auto auto;gap:12px}
+  .eto-rarity{grid-column:1/-1;text-align:left;padding-left:0;border-left:none;border-top:1px solid rgba(251,191,36,0.2);padding-top:10px}
+}
+
+.axes-stack{display:flex;flex-direction:column;gap:16px;margin:14px 0}
+.axis-card{background:var(--surface2);border:1px solid var(--border);border-radius:var(--r-md);padding:16px 18px}
+.axis-card-header{display:flex;align-items:center;gap:12px;margin-bottom:10px;flex-wrap:wrap}
+.axis-card-name{font-size:16px;font-weight:700;color:#fff;letter-spacing:.02em}
+.verdict-badge{font-size:11px;font-weight:700;padding:4px 10px;border-radius:14px;letter-spacing:.03em}
+.verdict-strong{background:rgba(34,197,94,0.15);color:#86efac;border:1px solid rgba(34,197,94,0.3)}
+.verdict-lean{background:rgba(251,191,36,0.12);color:#fde68a;border:1px solid rgba(251,191,36,0.3)}
+.verdict-split{background:rgba(148,163,184,0.12);color:var(--text-secondary);border:1px solid var(--border)}
+.axis-card-verdict{font-size:14px;color:#e5e7eb;line-height:1.85;margin-bottom:14px;padding:10px 12px;background:rgba(99,102,241,0.05);border-left:3px solid rgba(99,102,241,0.3);border-radius:6px}
+.axis-card-verdict strong{color:#fde68a}
+.axis-card-systems{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px}
+.axis-column{padding:10px 12px;border-radius:8px;background:rgba(255,255,255,0.02);border:1px solid var(--border)}
+.axis-column-dominant{background:rgba(34,197,94,0.06);border-color:rgba(34,197,94,0.2)}
+.axis-column-minority{background:rgba(255,255,255,0.02);opacity:0.85}
+.axis-column-title{font-size:12px;font-weight:600;color:var(--text-secondary);margin-bottom:6px}
+.axis-column-dominant .axis-column-title{color:#86efac}
+.axis-column-chips{display:flex;flex-wrap:wrap;gap:4px}
+.sys-chip{font-size:11px;padding:3px 9px;border-radius:12px;white-space:nowrap}
+.sys-chip-left,.sys-chip-right{background:rgba(99,102,241,0.08);color:#c7d2fe;border:1px solid rgba(99,102,241,0.2)}
+.axis-column-dominant .sys-chip{background:rgba(34,197,94,0.1);color:#86efac;border-color:rgba(34,197,94,0.25)}
+.axis-empty{font-size:11px;color:var(--text-muted);font-style:italic}
+.axis-outlier{font-size:13px;color:#e5e7eb;padding:10px 12px;background:rgba(251,191,36,0.06);border-left:3px solid rgba(251,191,36,0.4);border-radius:6px;line-height:1.8}
+.axis-outlier-label{font-size:10px;font-weight:700;color:#fde68a;letter-spacing:.08em;text-transform:uppercase;margin-right:6px}
+.axis-outlier strong{color:#fff}
+@media(max-width:600px){
+  .axis-card-systems{grid-template-columns:1fr}
+}
+.consensus-box{background:linear-gradient(135deg,rgba(34,197,94,0.08),rgba(99,102,241,0.04));border:1px solid rgba(34,197,94,0.25);border-radius:var(--r-md);padding:16px 18px;margin-top:16px}
+.consensus-box.subtle{background:rgba(255,255,255,0.03);border-color:var(--border)}
+.consensus-title{font-size:12px;font-weight:700;color:#86efac;letter-spacing:.08em;text-transform:uppercase;margin-bottom:8px}
+.consensus-box.subtle .consensus-title{color:var(--text-secondary)}
+.consensus-box ul{list-style:none;padding:0;margin:0}
+.consensus-box li{font-size:14px;line-height:1.9;color:#e5e7eb;padding-left:18px;position:relative}
+.consensus-box li::before{content:'✓';position:absolute;left:0;color:#86efac;font-weight:700}
+.consensus-box.subtle p{font-size:14px;line-height:1.8;color:var(--text-secondary);margin:0}
+.section-intro{font-size:14px;color:var(--text-secondary);line-height:1.85;margin-bottom:16px}
+.section-intro strong{color:#fff}
+
+@media(max-width:600px){
+  .axis-row{grid-template-columns:64px 1fr 64px;row-gap:6px}
+  .axis-count{grid-column:1/-1;text-align:center;font-size:11px}
+}
+
+/* === Strengths × Shadow (CliftonStrengths Shadow Side 型) === */
+.strengths-traps-grid{display:flex;flex-direction:column;gap:14px;margin:14px 0}
+.strength-pair{display:grid;grid-template-columns:1fr 32px 1fr;gap:10px;align-items:stretch;background:rgba(255,255,255,0.02);border:1px solid var(--border);border-radius:var(--r-md);overflow:hidden}
+.strength-side{padding:14px 16px;background:linear-gradient(135deg,rgba(34,197,94,0.05),rgba(34,197,94,0.01));border-right:1px solid var(--border)}
+.shadow-side{padding:14px 16px;background:linear-gradient(135deg,rgba(239,68,68,0.04),rgba(239,68,68,0.01))}
+.pair-label-pos{font-size:10px;font-weight:700;color:#86efac;letter-spacing:.08em;text-transform:uppercase;margin-bottom:6px}
+.pair-label-neg{font-size:10px;font-weight:700;color:#fca5a5;letter-spacing:.08em;text-transform:uppercase;margin-bottom:6px}
+.pair-body{font-size:14px;line-height:1.7;color:#e5e7eb}
+.pair-connector{display:flex;align-items:center;justify-content:center;font-size:18px;color:var(--text-muted);font-weight:700}
+.strength-extra{font-size:13px;line-height:1.8;color:var(--text-secondary);margin-top:12px;padding:10px 12px;background:rgba(99,102,241,0.05);border-left:3px solid rgba(99,102,241,0.3);border-radius:6px}
+.strength-extra strong{color:#c7d2fe}
+@media(max-width:600px){
+  .strength-pair{grid-template-columns:1fr;grid-template-rows:auto auto auto}
+  .strength-side{border-right:none;border-bottom:1px solid var(--border)}
+  .pair-connector{padding:6px 0}
+}
+
+/* === 組み合わせパターン（事実ベース・Twin Stats 主役化） === */
+.rarity-bar{background:linear-gradient(135deg,rgba(99,102,241,0.08),rgba(201,168,76,0.03));border:1px solid rgba(99,102,241,0.2);border-radius:var(--r-md);padding:20px 22px;margin:20px 0 16px}
+.rarity-badge-top{display:inline-block;font-size:10px;font-weight:700;padding:4px 12px;border-radius:16px;border:1px solid rgba(99,102,241,0.3);background:rgba(99,102,241,0.1);color:#a5b4fc;letter-spacing:.08em;text-transform:uppercase;margin-bottom:14px}
+.rarity-twin-stats{display:grid;grid-template-columns:1fr auto 1.3fr;gap:16px;align-items:center;padding:14px 10px;background:rgba(255,255,255,0.02);border-radius:10px;margin-bottom:14px}
+.rarity-single-stat{padding:14px 10px;background:rgba(255,255,255,0.02);border-radius:10px;margin-bottom:14px}
+.rarity-dual-geo{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px}
+.geo-stat{padding:16px 18px;background:rgba(255,255,255,0.02);border:1px solid var(--border);border-radius:10px;text-align:center}
+.geo-jp{background:linear-gradient(135deg,rgba(251,191,36,0.08),rgba(255,255,255,0.02));border-color:rgba(251,191,36,0.2)}
+.geo-world{background:linear-gradient(135deg,rgba(99,102,241,0.08),rgba(255,255,255,0.02));border-color:rgba(99,102,241,0.2)}
+.geo-label{font-size:12px;font-weight:700;color:var(--text-secondary);letter-spacing:.05em;margin-bottom:8px}
+.geo-jp .geo-label{color:#fde68a}
+.geo-world .geo-label{color:#c7d2fe}
+.geo-main{font-size:13px;color:var(--text-secondary);margin-bottom:6px}
+.geo-n{font-size:26px;font-weight:700;font-family:var(--font-mono);letter-spacing:-0.01em;color:#e4e4e7}
+.geo-jp .geo-n{color:#fde68a}
+.geo-world .geo-n{color:#c7d2fe}
+.geo-count{font-size:13px;color:#e4e4e7}
+.geo-count strong{font-size:18px;color:#fff;font-family:var(--font-mono)}
+.rarity-context-note{text-align:center;font-size:12px;color:var(--text-muted);margin-bottom:12px;font-style:italic}
+@media(max-width:600px){
+  .rarity-dual-geo{grid-template-columns:1fr;gap:10px}
+}
+.twin-stat{text-align:center}
+.twin-stat-hero{background:linear-gradient(135deg,rgba(251,191,36,0.08),rgba(99,102,241,0.04));padding:10px 14px;border-radius:10px;border:1px solid rgba(251,191,36,0.2)}
+.twin-stat-value{display:flex;align-items:baseline;justify-content:center;gap:4px}
+.twin-big{font-size:32px;font-weight:700;color:#e4e4e7;font-family:var(--font-mono);line-height:1.1;letter-spacing:-0.02em}
+.twin-stat-hero .twin-big{font-size:36px;color:#fde68a;background:linear-gradient(135deg,#fde68a,#a5b4fc);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.twin-unit{font-size:14px;color:var(--text-secondary);font-weight:500}
+.twin-stat-label{font-size:12px;color:#c7d2fe;margin-top:4px;font-weight:500}
+.twin-stat-sub{font-size:10px;color:var(--text-muted);margin-top:2px}
+.twin-divider{font-size:24px;color:var(--text-muted);opacity:0.4}
+@media(max-width:600px){
+  .rarity-twin-stats{grid-template-columns:1fr;gap:10px}
+  .twin-divider{display:none}
+  .twin-big{font-size:26px}
+  .twin-stat-hero .twin-big{font-size:30px}
+}
+.rarity-breakdown{display:grid;grid-template-columns:repeat(auto-fit,minmax(90px,1fr));gap:8px;padding-top:12px;border-top:1px solid var(--border)}
+.rarity-item{text-align:center;padding:10px 6px;background:rgba(255,255,255,0.02);border-radius:8px}
+.rarity-item-accent{background:rgba(201,168,76,0.06);border:1px solid rgba(201,168,76,0.2)}
+.rarity-value{font-size:20px;font-weight:700;color:#e4e4e7;font-family:var(--font-body);margin-bottom:4px}
+.rarity-item-accent .rarity-value{color:#fde68a;font-family:var(--font-mono);font-size:16px}
+.rarity-label{font-size:10px;color:var(--text-muted);line-height:1.5}
+.rarity-note{font-size:10px;color:var(--text-muted);margin-top:10px;padding-top:10px;border-top:1px dashed rgba(255,255,255,0.05);line-height:1.6;font-style:italic}
+.rarity-synthesis{font-size:14px;line-height:1.95;color:#e5e7eb;padding:14px 16px;margin:14px 0;background:linear-gradient(135deg,rgba(99,102,241,0.08),rgba(201,168,76,0.03));border-left:3px solid #a5b4fc;border-radius:8px}
+.rarity-synthesis strong{color:#fde68a;font-weight:600}
+.rarity-scale{margin-top:14px;padding-top:14px;border-top:1px dashed rgba(255,255,255,0.08)}
+.rarity-scale-title{font-size:13px;font-weight:600;color:#c7d2fe;margin-bottom:10px}
+.rarity-scale-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:8px}
+.scale-item{background:rgba(99,102,241,0.05);border:1px solid rgba(99,102,241,0.12);border-radius:8px;padding:10px 12px;text-align:center}
+.scale-n{font-size:20px;font-weight:700;color:#a5b4fc;font-family:var(--font-mono);letter-spacing:0.02em;margin-bottom:4px}
+.scale-ctx{font-size:10px;color:var(--text-muted);line-height:1.5}
+.rarity-scale-note{font-size:10px;color:var(--text-muted);margin-top:10px;font-style:italic;line-height:1.6}
+.rarity-sources{margin-top:14px;padding:12px 14px;background:rgba(255,255,255,0.02);border:1px dashed rgba(255,255,255,0.08);border-radius:8px}
+.rarity-sources-title{font-size:11px;font-weight:700;color:var(--text-secondary);letter-spacing:.05em;margin-bottom:8px}
+.rarity-sources ul{list-style:none;padding:0;margin:0}
+.rarity-sources li{font-size:11px;color:var(--text-muted);line-height:1.75;padding-left:14px;position:relative;margin-bottom:3px}
+.rarity-sources li::before{content:'•';position:absolute;left:0;color:var(--text-muted)}
+.rarity-sources a{color:#a5b4fc;text-decoration:underline dotted;text-decoration-thickness:1px;text-underline-offset:2px}
+.rarity-sources a:hover{color:#c7d2fe}
+
+/* === 用語ツールチップ === */
+abbr.term{text-decoration:none;border-bottom:1px dotted rgba(201,168,76,0.5);cursor:help;color:inherit;position:relative}
+abbr.term:hover,abbr.term:focus{border-bottom-color:#fde68a;border-bottom-style:solid;color:#fde68a;outline:none}
+abbr.term::after{content:attr(data-tip);position:absolute;left:50%;bottom:calc(100% + 8px);transform:translateX(-50%);background:#242836;color:#e5e7eb;padding:10px 14px;border-radius:8px;font-size:13px;font-weight:400;line-height:1.75;min-width:240px;max-width:340px;box-shadow:0 8px 24px rgba(0,0,0,0.5),0 0 0 1px rgba(201,168,76,0.3);opacity:0;pointer-events:none;transition:opacity .15s;z-index:50;white-space:normal;text-align:left;font-style:normal}
+abbr.term:hover::after,abbr.term:focus::after{opacity:1}
+@media(max-width:600px){
+  abbr.term::after{position:fixed;left:10px;right:10px;bottom:auto;top:auto;transform:none;max-width:none;min-width:0}
+  abbr.term:hover::after,abbr.term:focus::after{top:calc(100% + 4px);left:-8px;right:auto;transform:none}
+}
+
+/* === 用語ガイド（折りたたみ） === */
+.glossary-details{background:rgba(99,102,241,0.04);border:1px solid rgba(99,102,241,0.2);border-radius:var(--r-md);padding:12px 16px;margin:16px 0}
+.glossary-details summary{cursor:pointer;font-size:14px;color:#c7d2fe;list-style:none;padding:2px 0;user-select:none}
+.glossary-details summary::-webkit-details-marker{display:none}
+.glossary-details summary::before{content:'▸ ';color:#a5b4fc;margin-right:4px}
+.glossary-details[open] summary::before{content:'▾ '}
+.glossary-details[open] summary{margin-bottom:12px;padding-bottom:10px;border-bottom:1px solid rgba(99,102,241,0.15)}
+.glossary-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:10px}
+.glossary-item{padding:10px 12px;background:rgba(255,255,255,0.02);border-radius:8px}
+.glossary-term{font-size:14px;font-weight:700;color:#fde68a;margin-bottom:4px}
+.glossary-expl{font-size:12px;color:var(--text-secondary);line-height:1.75}
+.glossary-hint{font-size:11px;color:var(--text-muted);margin-top:10px;padding-top:10px;border-top:1px dashed rgba(99,102,241,0.15);line-height:1.7;font-style:italic}
+
+/* === Cross-Reference Insight === */
+.cross-section{margin:18px 0}
+.cross-section-label{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:700;letter-spacing:.03em;margin-bottom:12px;padding:8px 14px;border-radius:8px}
+.cross-section-label-agree{background:rgba(34,197,94,0.08);color:#86efac;border:1px solid rgba(34,197,94,0.2)}
+.cross-section-label-tension{background:rgba(251,191,36,0.08);color:#fbbf24;border:1px solid rgba(251,191,36,0.2)}
+.cross-label-emoji{font-size:16px}
+.cross-grid{display:flex;flex-direction:column;gap:12px}
+.cross-card{background:var(--surface2);border:1px solid var(--border);border-radius:var(--r-md);padding:14px 16px}
+.cross-agree{border-left:3px solid #22c55e}
+.cross-tension{border-left:3px solid #fbbf24}
+.cross-card-header{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.cross-marker-agree{font-size:10px;font-weight:700;padding:3px 8px;border-radius:10px;background:rgba(34,197,94,0.15);color:#86efac;letter-spacing:.08em}
+.cross-marker-tension{font-size:10px;font-weight:700;padding:3px 8px;border-radius:10px;background:rgba(251,191,36,0.15);color:#fbbf24;letter-spacing:.08em}
+.cross-card-title{font-size:15px;font-weight:600;color:#fff;flex:1}
+.cross-card-body{font-size:13px;color:var(--text-secondary);line-height:1.8;margin-bottom:10px}
+.cross-card-body strong{color:#c7d2fe;font-weight:600}
+.cross-card-insight{font-size:14px;color:#e5e7eb;line-height:1.85;padding:10px 12px;background:rgba(99,102,241,0.05);border-radius:6px}
+.cross-card-insight strong{color:#fde68a}
+.cross-empty{font-size:13px;color:var(--text-secondary);font-style:italic;padding:12px 14px;background:rgba(255,255,255,0.02);border-radius:8px;line-height:1.8}
+@media(max-width:600px){
+  .rarity-headline{gap:8px}
+  .rarity-headline-main{font-size:14px;width:100%}
+  .rarity-headline-main strong{font-size:20px}
+}
 .locked-row{height:16px;background:var(--surface2);border-radius:4px;margin-bottom:12px}
 .locked-row.short{width:60%}
 .locked-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:20px}
@@ -2207,7 +2551,872 @@ body::before{content:'';position:fixed;top:0;left:0;width:100%;height:100%;opaci
 </style>'''
 
 
-def _hub_card(section_id, icon, icon_bg, icon_color, title, summary, content, expanded=False):
+# === 専門用語ガイド（占術の用語を日常語で説明） ===
+GLOSSARY = {
+    '日主':       '四柱推命で、生まれた日から計算される「あなたの本体・判断の軸」。10種類（甲乙丙丁戊己庚辛壬癸）のどれか。西洋占星術の「太陽星座」に相当する最重要項目。',
+    '本命星':     '九星気学で、生まれ年から計算される「社会に出る時のあなたの顔」。9種類（一白水星〜九紫火星）のどれか。',
+    '月命星':     '九星気学で、生まれ月から計算される「内面のあなた」。本命星（社会的な顔）の裏で動いている気質。',
+    '運命星':     '六星占術で、生まれ年月日から計算される「人生の時期を司る星」。6種類（木・火・土・金・水・天王星人 × ±）。12年周期で運気が巡る。',
+    '霊合星人':   '六星占術で、2つの運命星を同時に持つ稀少体質（人口15%）。運気の振れ幅が一般の2倍で、良い時は倍、悪い時も倍という特徴。',
+    '太陽星座':   '西洋占星術で、生年月日から決まる12星座（牡羊〜魚）。あなたの基本的な気質・自我の方向性を示す。',
+    '五行':       '東洋占術の基礎理論。万物を「木・火・土・金・水」の 5 要素に分類。あなたの命式で欠けている要素は「意識的に補うべき方向」。',
+    '陰陽':       '東洋思想の基本。すべての物事が持つ 2 つの側面。陽=外向・動・表、陰=内向・静・裏。人間も必ずどちらかに傾く。',
+    '命式':       '四柱推命で、生年月日時から作られる「あなたの人生の設計図」。年柱・月柱・日柱・時柱の 4 本柱で構成される。',
+    '干支':       '生まれ年の 12 動物（子・丑・寅・卯・辰・巳・午・未・申・酉・戌・亥）。その人の直感的な気質アーキタイプ。',
+    '九星気学':   '日本で千年以上使われる運命学。9つの星 × 9 年周期で人生の流れを読む体系。',
+    '四柱推命':   '中国発祥の古典的な運命学。生まれた「年月日時」の 4 本の柱（= 四柱）から命式を作り、人生を読み解く体系。',
+    '六星占術':   '細木数子氏が大成させた日本の運命学。6 つの運命星 × 12 年周期で運気のピークと停滞を読む体系。',
+    '乾宮':       '九星気学の方位。<strong>充実・実りの時期</strong>。これまでの蓄積が形になる年。',
+    '兌宮':       '九星気学の方位。<strong>悦び・収穫の時期</strong>。楽しさと人間関係が広がる年。',
+    '艮宮':       '九星気学の方位。<strong>停滞・自己改革の時期</strong>。立ち止まって見直す年。',
+    '離宮':       '九星気学の方位。<strong>注目・離別の時期</strong>。目立つと同時に別れも起きやすい年。',
+    '坎宮':       '九星気学の方位。<strong>厄・試練の時期</strong>。表には出ず、静かに耐える年。',
+    '坤宮':       '九星気学の方位。<strong>変化・準備の時期</strong>。地固めして次の発展に備える年。',
+    '震宮':       '九星気学の方位。<strong>発展・始動の時期</strong>。新しいことを始めるのに向く年。',
+    '巽宮':       '九星気学の方位。<strong>整備・信用の時期</strong>。ネットワークと信頼を築く年。',
+    '中宮':       '九星気学の方位。<strong>絶頂・転機の時期</strong>。9年周期のピークで人生が大きく動く年。',
+    '種子':       '六星占術の12 フェーズのひとつ。<strong>新しいサイクルの始まり</strong>。種をまく年。',
+    '緑生':       '六星占術の12 フェーズのひとつ。<strong>芽が出る時期</strong>。挑戦に向く年。',
+    '立花':       '六星占術の12 フェーズのひとつ。<strong>花開く時期</strong>。目標が形になり始める年。',
+    '健弱':       '六星占術の12 フェーズのひとつ。<strong>少し踏ん張る時期（小殺界）</strong>。無理は禁物の年。',
+    '達成':       '六星占術の12 フェーズのひとつ。<strong>実りの時期</strong>。これまでの積み上げが結果になる年。',
+    '乱気':       '六星占術の12 フェーズのひとつ。<strong>揺らぎの時期（中殺界）</strong>。判断が鈍るので大決断は避ける年。',
+    '再会':       '六星占術の12 フェーズのひとつ。<strong>縁が戻る時期</strong>。過去の人脈が再起動する年。',
+    '財成':       '六星占術の12 フェーズのひとつ。<strong>財が育つ時期</strong>。収入・資産が育つ年。',
+    '安定':       '六星占術の12 フェーズのひとつ。<strong>落ち着く時期</strong>。地に足がつく穏やかな年。',
+    '陰影':       '六星占術の12 フェーズのひとつ。<strong>陰に入る時期（大殺界）</strong>。新規行動は控え、静かに過ごす年。',
+    '停止':       '六星占術の12 フェーズのひとつ。<strong>立ち止まる時期（大殺界）</strong>。内省と整理の年。',
+    '減退':       '六星占術の12 フェーズのひとつ。<strong>力を蓄える時期（大殺界）</strong>。次のサイクルに向けて充電する年。',
+    '大殺界':     '六星占術で、陰影・停止・減退の 3 年間。運気が最も低い時期で、新規事業・結婚・引っ越し等の大きな決断は避けるべき時期。',
+    '中殺界':     '六星占術の「乱気」期。判断が鈍りやすい 1 年。',
+    '小殺界':     '六星占術の「健弱」期。体力・気力が落ちやすい 1 年。',
+    'Yin':        '東洋思想の「陰」。内向・静・受動・思考のエネルギー。',
+    'Yang':       '東洋思想の「陽」。外向・動・能動・行動のエネルギー。',
+}
+
+def _glossary_tooltip(term, display=None):
+    """用語をホバー/タップで説明が出るタグに変換。"""
+    display = display if display else term
+    if term in GLOSSARY:
+        import html as _html
+        expl = _html.escape(GLOSSARY[term]).replace('&lt;strong&gt;', '').replace('&lt;/strong&gt;', '')
+        return f'<abbr class="term" data-tip="{expl}" tabindex="0">{display}</abbr>'
+    return display
+
+
+def _glossary_card():
+    """ダッシュボード上部に設置する「用語ガイド」折りたたみカード。"""
+    key_terms = ['日主', '本命星', '運命星', '霊合星人', '太陽星座', '五行', '陰陽', '干支', '四柱推命', '九星気学', '六星占術']
+    items = ''
+    for t in key_terms:
+        if t in GLOSSARY:
+            expl = GLOSSARY[t]
+            items += f'<div class="glossary-item"><div class="glossary-term">{t}</div><div class="glossary-expl">{expl}</div></div>'
+    return f'''
+<details class="glossary-details">
+  <summary><strong>📖 この資料の用語ガイド</strong> — クリックで展開（日主・本命星・運命星などの意味）</summary>
+  <div class="glossary-grid">{items}</div>
+  <p class="glossary-hint">本文中の <abbr class="term" data-tip="用語の上にマウスを乗せる、またはタップすると説明が出ます">点線付きの用語</abbr> は、ホバー or タップで説明が出ます。</p>
+</details>
+'''
+
+
+# === Tier 1 additions: 干支・血液型×干支・5体系整合マップ ===
+
+# 12支の性格アーキタイプ（干支占い統合・日常語）
+ETO_PROFILES = {
+    'Rat':     {'jp': '子', 'reading': 'ね',   'emoji': '🐭', 'title': '鼠年 — 観察の達人',
+                'traits': ['先読み', '情報通', '倹約と蓄積'],
+                'narrative': '場の空気を読む嗅覚と、小さな変化にいち早くお気づきになる力をお持ちです。表には出されませんが、誰よりも情報を集め、静かに先回りなさるタイプの方です。'},
+    'Ox':      {'jp': '丑', 'reading': 'うし',  'emoji': '🐂', 'title': '丑年 — 地力の人',
+                'traits': ['粘り強さ', '一貫性', '実直'],
+                'narrative': '一歩ずつ確実に進まれる底力をお持ちです。派手さはなくとも、最後まで残られるのはあなた。信用が資産になっていく、堅実な生き方の方でいらっしゃいます。'},
+    'Tiger':   {'jp': '寅', 'reading': 'とら',  'emoji': '🐅', 'title': '寅年 — 開拓者',
+                'traits': ['決断力', '突破力', '情熱'],
+                'narrative': '「とりあえずやってみる」の精神で道を開かれる方です。怖がる前に動けるのが、あなたの武器でいらっしゃいます。静かな場所より、未踏の現場で光を放たれます。'},
+    'Rabbit':  {'jp': '卯', 'reading': 'う',   'emoji': '🐇', 'title': '卯年 — 調整の名手',
+                'traits': ['気配り', '柔軟さ', '美意識'],
+                'narrative': '角を立てずに物事を前に進められる、天性の才をお持ちです。敵をお作りにならず、味方をお増やしになります。繊細な感性で場を整えられる方でいらっしゃいます。'},
+    'Dragon':  {'jp': '辰', 'reading': 'たつ', 'emoji': '🐉', 'title': '辰年 — 運を呼ぶ人',
+                'traits': ['華', 'ビジョン', '瞬発力'],
+                'narrative': '12支の中で唯一の架空の動物でいらっしゃいます。理想が高く、周囲を引き上げるお力をお持ちです。大きな夢を語られることが、そのまま仕事になっていかれる方です。'},
+    'Snake':   {'jp': '巳', 'reading': 'み',   'emoji': '🐍', 'title': '巳年 — 知恵の人',
+                'traits': ['洞察力', '集中力', '再生'],
+                'narrative': '静かに本質を見抜く目をお持ちです。お話になりませんが、すべてをお分かりになっていらっしゃいます。脱皮のように、何度でもご自身を作り直せる再生の力も授かっています。'},
+    'Horse':   {'jp': '午', 'reading': 'うま', 'emoji': '🐎', 'title': '午年 — 疾走者',
+                'traits': ['行動力', '明朗', '独立心'],
+                'narrative': '止まると不調になりやすく、動いて整うタイプの方でいらっしゃいます。人付き合いもオープンで、束縛よりも自由を選ばれる凛としたお姿がございます。'},
+    'Goat':    {'jp': '未', 'reading': 'ひつじ', 'emoji': '🐐', 'title': '未年 — 共生の人',
+                'traits': ['優しさ', '芸術性', '群れの中の個'],
+                'narrative': 'お一人よりも、誰かとご一緒のほうがお力が出る方でいらっしゃいます。温かい空気をお作りになる天才で、美しいものへの感受性があなたの武器でございます。'},
+    'Monkey':  {'jp': '申', 'reading': 'さる', 'emoji': '🐒', 'title': '申年 — 発想の人',
+                'traits': ['機転', '器用', '遊び心'],
+                'narrative': '状況が急変しても、即アドリブなさる頭の回転の速さをお持ちです。「楽しい」が基準で、笑いで場の雰囲気を変えていかれるお力がございます。'},
+    'Rooster': {'jp': '酉', 'reading': 'とり', 'emoji': '🐓', 'title': '酉年 — 整える人',
+                'traits': ['几帳面', '時間感覚', '表現力'],
+                'narrative': '細部まできちんとご覧になる目をお持ちです。時間と段取りに強く、言葉やビジュアルでお伝えになる職人肌の方でいらっしゃいます。'},
+    'Dog':     {'jp': '戌', 'reading': 'いぬ', 'emoji': '🐕', 'title': '戌年 — 信頼の人',
+                'traits': ['誠実', '忠誠心', '責任感'],
+                'narrative': '一度お信じになった相手には、最後まで尽くされる誠実さがございます。正義感が強く、筋をお通しになります。「この方なら任せられる」と言われる、信頼のお人柄です。'},
+    'Pig':     {'jp': '亥', 'reading': 'い',   'emoji': '🐗', 'title': '亥年 — 直進の人',
+                'traits': ['一途', '純粋さ', '推進力'],
+                'narrative': '一度お決めになったら、脇目もふらず進まれる方です。裏表のない真っ直ぐさが、周囲からの信頼を呼びます。お好きなものへの集中力は、誰にも負けません。'},
+}
+
+# 12支 × 血液型 の希少性（日本の分布: 干支12分の1 × 血液型 A40% B20% O30% AB10%）
+def _eto_bt_rarity(animal, blood_type):
+    # 日本赤十字社 公表値
+    bt_pct = {'A': 38.1, 'B': 21.8, 'O': 30.7, 'AB': 9.4}.get(blood_type, 0)
+    # 干支は約8.3%
+    combined = round(bt_pct * 8.33 / 100, 1)
+    return combined
+
+def _eto_bt_narrative(animal, blood_type):
+    """干支×血液型の掛け算で出る性格ナラティブ（24通り想定、代表的な組み合わせ）"""
+    tmpl = {
+        # 代表的なパターンだけ詳しく、残りは合成
+        ('Dragon', 'AB'): '理想家（辰）× 合理と感性の両立（AB）。ビジョンを語りながら冷静に構造設計する稀なタイプ。リーダーとアナリストを同時にこなす。',
+        ('Horse',  'A'):  '疾走する行動力（午）× 真面目で計画的（A）。「走りながら計画する」矛盾を両立。勢いと段取りが同居。',
+        ('Rooster','AB'): '整える人（酉）× 二面性（AB）。細部への目と大局観を両方持つ。表面的な会話が苦手で、本質を突く言葉を選ぶ職人。',
+        ('Rabbit', 'A'):  '調整力（卯）× 真面目（A）。周囲との衝突を避けながら計画を遂行する、「静かな実行者」。',
+        ('Tiger',  'B'):  '突破力（寅）× 自由奔放（B）。抑えが効かず、走り出したら止まらない。型を壊して新しい道を作るタイプ。',
+        ('Snake',  'AB'): '洞察の人（巳）× 合理×感性（AB）。口数は少ないが、発する一言が核心を突く。静かな戦略家。',
+        ('Dog',    'O'):  '信頼の人（戌）× 人間好き（O）。仲間を守るためなら動く。チームの精神的な柱になるタイプ。',
+        ('Ox',     'A'):  '地力（丑）× 真面目（A）。目立たないが結果を出す。長期戦で最後に勝つタイプ。',
+        ('Monkey', 'B'):  '発想（申）× 自由奔放（B）。ひらめきと行動が直結。ルーティン業務は苦痛、クリエイティブな現場で輝く。',
+        ('Goat',   'A'):  '共生（未）× 真面目（A）。人と人の間を繋ぎ、場を和ませながら着実に前進させる。サポート役として一流。',
+        ('Pig',    'O'):  '直進（亥）× 人間好き（O）。情に厚く、一度仲間と認めたら裏切らない。シンプルで強い人格。',
+        ('Rat',    'AB'): '観察力（子）× 二面性（AB）。人を読み、合理と感性を切り替えながら先手を打つ。情報の扱いが上手い。',
+    }
+    if (animal, blood_type) in tmpl:
+        return tmpl[(animal, blood_type)]
+    # 合成ベース: 干支trait + 血液型trait
+    eto = ETO_PROFILES.get(animal, {})
+    bt_hint = {
+        'A':  '真面目さと計画性',
+        'B':  '自由な発想と独自路線',
+        'O':  '人間好きと現実主義',
+        'AB': '合理と感性の両立',
+    }.get(blood_type, '')
+    traits = '・'.join(eto.get('traits', [])[:2])
+    return f'{eto.get("title","").split("—")[-1].strip()}（{traits}）× {bt_hint}。干支と血液型のこの組み合わせ特有の矛盾と強みが、あなたの個性を形作っています。'
+
+
+def _eto_section(p):
+    """干支 × 血液型の Tier 1 カード。 日常語・具体的・シェアしたくなる。"""
+    try:
+        year_br = p['four_pillars']['year_pillar']['branch']
+        animal = year_br.get('animal', '')
+        eto = ETO_PROFILES.get(animal, {})
+        bt = p.get('blood_type', {}).get('type', '')
+        rarity = _eto_bt_rarity(animal, bt)
+        narrative = _eto_bt_narrative(animal, bt)
+        traits_html = ''.join(
+            f'<span class="eto-trait">{t}</span>' for t in eto.get('traits', [])
+        )
+        return f'''
+<div class="eto-hero">
+  <div class="eto-emoji">{eto.get("emoji","")}</div>
+  <div class="eto-name">
+    <div class="eto-title">{eto.get("title","")}</div>
+    <div class="eto-reading">{eto.get("jp","")}（{eto.get("reading","")}年）× {bt}型</div>
+  </div>
+  <div class="eto-rarity">
+    <div class="eto-rarity-label">この組み合わせ</div>
+    <div class="eto-rarity-value">日本人の約 {rarity}%</div>
+  </div>
+</div>
+<div class="eto-narrative">
+  <p>{eto.get("narrative","")}</p>
+  <div class="eto-cross">
+    <div class="eto-cross-label">干支 × 血液型 の掛け算</div>
+    <div class="eto-cross-body">{narrative}</div>
+  </div>
+</div>
+<div class="eto-traits-row">{traits_html}</div>
+<div class="confidence-badge">この分析は、生年月日と血液型のみから導き出したものでございます。確度はおよそ 70% 程度。詳しい質問にお答えいただきますと、さらに鮮明に見えてまいります。</div>
+'''
+    except Exception as e:
+        return f'<p style="color:var(--text-muted)">干支セクションの生成に失敗: {e}</p>'
+
+
+# 5体系の指向軸マッピング（各軸で何体系が同じ方向を指すか）
+def _integration_map(p):
+    """5体系が示す『あなたの軸』を、どの体系がどちらを指すか明記して可視化。"""
+    try:
+        dm_element = p['four_pillars']['day_master'].get('element', '')
+        dm_yy = p['four_pillars']['day_master'].get('yin_yang', '')
+        ns_name = p['nine_star_ki']['year_star'].get('name', '')
+        rok_name = p['rokusei']['main_star'].get('name', '')
+        sun_sign = p['western_astrology']['sun_sign'].get('sign', '')
+        sun_element = p['western_astrology']['sun_sign'].get('element', '')
+        bt = p.get('blood_type', {}).get('type', '')
+
+        # 体系ごとに「どちらか」を判定
+        axes = []
+
+        # 軸1: 内向 ⇄ 外向
+        v1 = []
+        v1.append(('四柱推命', '日主', '内向' if dm_yy == 'Yin' else '外向'))
+        ns_inner = any(k in ns_name for k in ['一白水星', '二黒土星', '八白土星', '九紫火星'])
+        v1.append(('九星気学', '本命星', '内向' if ns_inner else '外向'))
+        rok_inner = any(k in rok_name for k in ['水星人', '土星人'])
+        rok_outer = any(k in rok_name for k in ['火星人', '木星人', '天王星人'])
+        if rok_inner or rok_outer:
+            v1.append(('六星占術', '運命星', '内向' if rok_inner else '外向'))
+        v1.append(('西洋占星術', '太陽星座', '内向' if sun_element in ['Water', 'Earth'] else '外向'))
+        v1.append(('血液型', f'{bt}型', '内向' if bt in ['A', 'AB'] else '外向'))
+        axes.append({
+            'name': '内向 ⇄ 外向',
+            'left': '内向',
+            'right': '外向',
+            'left_desc': '内側で処理・熟考・観察することに力が集まる',
+            'right_desc': '外に発信・行動・交流することに力が集まる',
+            'votes': v1,
+        })
+
+        # 軸2: 安定 ⇄ 変化
+        v2 = []
+        v2.append(('四柱推命', '日主', '安定' if dm_element in ['Earth', 'Metal'] else '変化'))
+        ns_stable = any(k in ns_name for k in ['二黒土星', '五黄土星', '八白土星', '六白金星', '七赤金星'])
+        v2.append(('九星気学', '本命星', '安定' if ns_stable else '変化'))
+        rok_stable = any(k in rok_name for k in ['土星人', '金星人'])
+        v2.append(('六星占術', '運命星', '安定' if rok_stable else '変化'))
+        v2.append(('西洋占星術', '太陽星座', '安定' if sun_element == 'Earth' else '変化'))
+        v2.append(('血液型', f'{bt}型', '安定' if bt == 'A' else '変化'))
+        axes.append({
+            'name': '安定 ⇄ 変化',
+            'left': '安定',
+            'right': '変化',
+            'left_desc': '同じ場所で積み上げる、継続で結果を出すタイプ',
+            'right_desc': '新しい刺激・移動・挑戦でエネルギーが湧くタイプ',
+            'votes': v2,
+        })
+
+        # 軸3: 思考 ⇄ 情動
+        v3 = []
+        v3.append(('四柱推命', '日主', '思考' if dm_element in ['Metal', 'Water'] else '情動'))
+        ns_think = any(k in ns_name for k in ['一白水星', '六白金星', '七赤金星'])
+        v3.append(('九星気学', '本命星', '思考' if ns_think else '情動'))
+        rok_think = any(k in rok_name for k in ['水星人', '金星人'])
+        v3.append(('六星占術', '運命星', '思考' if rok_think else '情動'))
+        v3.append(('西洋占星術', '太陽星座', '思考' if sun_element in ['Air', 'Earth'] else '情動'))
+        v3.append(('血液型', f'{bt}型', '思考' if bt == 'AB' else '情動'))
+        axes.append({
+            'name': '思考 ⇄ 情動',
+            'left': '思考',
+            'right': '情動',
+            'left_desc': '論理・分析・言語化で物事を捉える',
+            'right_desc': '直感・感情・身体感覚で物事を捉える',
+            'votes': v3,
+        })
+
+        # Render
+        axes_html = ''
+        strong_agreements = []
+
+        for a in axes:
+            left_systems = [f'<span class="sys-chip sys-chip-left">{sys_name}（{part}）</span>' for sys_name, part, d in a['votes'] if d == a['left']]
+            right_systems = [f'<span class="sys-chip sys-chip-right">{sys_name}（{part}）</span>' for sys_name, part, d in a['votes'] if d == a['right']]
+            left_n = len(left_systems)
+            right_n = len(right_systems)
+            total = left_n + right_n
+
+            if left_n > right_n:
+                dominant_dir = a['left']
+                dom_n = left_n
+                minority_dir = a['right']
+                min_n = right_n
+                dom_desc = a['left_desc']
+            else:
+                dominant_dir = a['right']
+                dom_n = right_n
+                minority_dir = a['left']
+                min_n = left_n
+                dom_desc = a['right_desc']
+
+            # 一致度ラベル
+            if dom_n >= 4:
+                verdict_badge = f'<span class="verdict-badge verdict-strong">強い合意: {dom_n}/{total} 体系が「{dominant_dir}」</span>'
+                verdict_text = f'<strong>{dom_n} つの体系</strong>が揃って「<strong>{dominant_dir}</strong>」を指していらっしゃいます。{dom_desc}——というのが、あなたの軸でございます。'
+                strong_agreements.append(f'「{dominant_dir}」軸で<strong>{dom_n}/{total}</strong>体系が一致')
+            elif dom_n == 3:
+                verdict_badge = f'<span class="verdict-badge verdict-lean">やや傾向あり: {dom_n}/{total} が「{dominant_dir}」</span>'
+                verdict_text = f'<strong>{dom_n} つの体系</strong>が「<strong>{dominant_dir}</strong>」、<strong>{min_n} つ</strong>が「{minority_dir}」を指していらっしゃいます。どちらかと言えば{dominant_dir}寄りですが、場面によっては{minority_dir}のモードも顔をお出しになる、二面性のある方でいらっしゃいます。'
+            else:
+                verdict_badge = f'<span class="verdict-badge verdict-split">割れている: {left_n} : {right_n}</span>'
+                verdict_text = f'<strong>体系間で意見が分かれる</strong>軸でございます。これは「どちらの状況にも対応できる柔軟性」の裏返しであり、あなたならではの固有の揺らぎと申せましょう。'
+
+            outlier_line = ''
+            if 1 <= min_n <= total - 1 and dom_n >= 3:
+                outlier_systems_list = [f'<strong>{sys_name}</strong>' for sys_name, part, d in a['votes'] if d == minority_dir]
+                outlier_line = f'<div class="axis-outlier"><span class="axis-outlier-label">ただし</span>{" と ".join(outlier_systems_list)} だけは「<strong>{minority_dir}</strong>」を指していらっしゃいます——これがあなたの隠れたお顔、固有の揺らぎポイントでございます。</div>'
+
+            axes_html += f'''
+<div class="axis-card">
+  <div class="axis-card-header">
+    <div class="axis-card-name">{a['name']}</div>
+    {verdict_badge}
+  </div>
+  <div class="axis-card-verdict">{verdict_text}</div>
+  <div class="axis-card-systems">
+    <div class="axis-column axis-column-{('dominant' if left_n >= right_n else 'minority')}">
+      <div class="axis-column-title">「{a['left']}」を指す（{left_n}体系）</div>
+      <div class="axis-column-chips">{''.join(left_systems) if left_systems else '<span class="axis-empty">なし</span>'}</div>
+    </div>
+    <div class="axis-column axis-column-{('dominant' if right_n > left_n else 'minority')}">
+      <div class="axis-column-title">「{a['right']}」を指す（{right_n}体系）</div>
+      <div class="axis-column-chips">{''.join(right_systems) if right_systems else '<span class="axis-empty">なし</span>'}</div>
+    </div>
+  </div>
+  {outlier_line}
+</div>
+'''
+
+        consensus_html = ''
+        if strong_agreements:
+            items = ''.join(f'<li>{c}</li>' for c in strong_agreements)
+            consensus_html = f'''
+<div class="consensus-box">
+  <div class="consensus-title">◇ 4つ以上の体系が口を揃えて言うこと</div>
+  <ul>{items}</ul>
+</div>'''
+        else:
+            consensus_html = '<div class="consensus-box subtle"><div class="consensus-title">どの軸も強い多数決にはなりませんでした</div><p>あなたは<strong>偏りの少ない「中道型」</strong>でいらっしゃいます。状況に応じて複数モードを自在にお使い分けになる、柔軟性のある方です。</p></div>'
+
+        return f'''
+<p class="section-intro">四柱推命・九星気学・六星占術・西洋占星術・血液型——起源の異なる 5 つの体系が、<strong>3 つの軸</strong>から「あなた」を独立に読み解いていらっしゃいます。<strong>多数決で見えてくる合意</strong>は高い確信度を示し、<strong>体系間で割れる軸</strong>はあなたならではの固有の揺らぎを示してまいります。</p>
+
+<div class="axes-stack">{axes_html}</div>
+
+{consensus_html}
+
+<div class="confidence-badge">この分析は、生年月日と血液型のみから導き出しており、確度はおよそ 75% でございます。性格アンケート（Tier 2）にお進みいただくと、心理学データが加わり、各軸の確度が 90% を超えてまいります。</div>
+'''
+    except Exception as e:
+        return f'<p style="color:var(--text-muted)">整合マップの生成に失敗: {e}</p>'
+
+
+# === Tier 1 addition: 強み/弱みの裏返し構造（Gallup CliftonStrengths Shadow Side パターン） ===
+
+# 日主（陰陽+五行）× 本命星 の組み合わせから、強み3 + その裏返しの罠3 を抽出
+# 全5体系のうち Tier 1 で使える「日主 / 本命星 / 運命星」から生成
+DM_STRENGTHS = {
+    # (element, yin_yang): { strengths: [...], shadows: [...] }
+    ('Wood', 'Yang'): {'strengths': ['向上心と成長意欲', '大局観とリーダーシップ', '真っ直ぐな意志'],
+                       'shadows':   ['独善に陥りやすい', '細部を見落とす', '折れにくく疲れを溜める']},
+    ('Wood', 'Yin'):  {'strengths': ['柔軟な対応力', '縁と調和を紡ぐ力', '根気強い粘り'],
+                       'shadows':   ['優柔不断になりがち', '周囲に合わせすぎる', '本音を言えず溜め込む']},
+    ('Fire', 'Yang'): {'strengths': ['明朗な発信力', '情熱と推進力', '場を照らす力'],
+                       'shadows':   ['感情が激しく燃え尽きやすい', '衝動で判断する', '自分を過大評価する']},
+    ('Fire', 'Yin'):  {'strengths': ['繊細な共感力', '本質を見抜く直感', '人を温める優しさ'],
+                       'shadows':   ['他人の感情に引きずられる', '環境の影響を受けやすい', '自己主張を控えすぎる']},
+    ('Earth', 'Yang'): {'strengths': ['どっしりした安定感', '信頼の厚さ', '包容力のある包み込む力'],
+                        'shadows':   ['変化を拒みやすい', '腰が重い', '融通が利かない']},
+    ('Earth', 'Yin'):  {'strengths': ['地道な努力と誠実さ', '細やかな気配り', '人を支える継続力'],
+                        'shadows':   ['抱え込みすぎて疲弊', '完璧主義で動けない', '自己犠牲の沼にハマる']},
+    ('Metal', 'Yang'): {'strengths': ['決断力と切り込み力', '公正な判断', '筋を通す一貫性'],
+                        'shadows':   ['冷徹に見える', '情を切り捨てすぎる', '頑固で譲らない']},
+    ('Metal', 'Yin'):  {'strengths': ['美意識と洗練', '言葉選びの繊細さ', '段取りと整える力'],
+                        'shadows':   ['批判的になりやすい', '完璧を求めすぎる', 'ネチネチした執着']},
+    ('Water', 'Yang'): {'strengths': ['広大な包容力', '流動性と適応力', '深い知恵と洞察'],
+                        'shadows':   ['方向性が定まらない', '境界線が曖昧', '情に流される']},
+    ('Water', 'Yin'):  {'strengths': ['深い思慮と忍耐', '静かな影響力', '繊細な洞察力'],
+                        'shadows':   ['内向きになりすぎる', '秘密主義に傾く', '気分が沈みやすい']},
+}
+
+NINE_STAR_BOOSTS = {
+    '一白水星': '知恵と柔軟性',
+    '二黒土星': '母なる支える力',
+    '三碧木星': '行動力と発信力',
+    '四緑木星': '縁と信用を育てる力',
+    '五黄土星': '中心に立つ王の器',
+    '六白金星': '公正な判断と理想',
+    '七赤金星': '社交と言葉の力',
+    '八白土星': '変化を乗り越える粘り',
+    '九紫火星': '知性と美意識',
+}
+
+def _strengths_traps_section(p):
+    """Gallup CliftonStrengths Shadow Side の構造をTier 1で再現。日主+本命星ベース。"""
+    try:
+        dm = p['four_pillars']['day_master']
+        elem = dm.get('element', '')
+        yy = dm.get('yin_yang', '')
+        dm_char = dm.get('char', '')
+        ns_name = p['nine_star_ki']['year_star'].get('name', '')
+        rok_name = p['rokusei']['main_star'].get('name', '')
+        reigou = p['rokusei'].get('reigou', False)
+        bt = p.get('blood_type', {}).get('type', '')
+
+        data = DM_STRENGTHS.get((elem, yy), {})
+        strengths = data.get('strengths', [])
+        shadows = data.get('shadows', [])
+        ns_boost = NINE_STAR_BOOSTS.get(ns_name, '')
+
+        # 強み/弱みのペアを並列で
+        pair_html = ''
+        for i, (s, t) in enumerate(zip(strengths, shadows), 1):
+            pair_html += f'''
+<div class="strength-pair">
+  <div class="strength-side">
+    <div class="pair-label-pos">強み {i}</div>
+    <div class="pair-body">{s}</div>
+  </div>
+  <div class="pair-connector">⇄</div>
+  <div class="shadow-side">
+    <div class="pair-label-neg">裏返しの罠</div>
+    <div class="pair-body">{t}</div>
+  </div>
+</div>
+'''
+
+        # 本命星ブースト + 霊合星人補足
+        extras = f'<p class="strength-extra"><strong>{ns_name}</strong>の「{ns_boost}」が、これらの強みを社会へお出しになる舞台装置となっていらっしゃいます。</p>' if ns_boost else ''
+        if reigou:
+            extras += '<p class="strength-extra"><strong>霊合星人</strong>という希少体質（人口15%）をお持ちのため、この強みと罠の振れ幅が一般の2倍と言われております。好調時は抜きん出て、不調時は深く沈む——そんな特徴がございます。</p>'
+        elif rok_name:
+            extras += f'<p class="strength-extra">六星占術の<strong>{rok_name}</strong>が、この強みを人生の時期に合わせて開花させてくださいます。</p>'
+
+        return f'''
+<p class="section-intro">「強み」と「罠」は、表裏一体のもの。Gallup CliftonStrengths の Shadow Side 理論を、あなたの<strong>生年月日＋血液型</strong>に適用いたしました。強みが暴走した時の落とし穴を先に知っておかれることが、賢明な自分運用への第一歩でございます。</p>
+<div class="strengths-traps-grid">{pair_html}</div>
+{extras}
+<div class="confidence-badge">この分析は、生年月日と血液型のみから導き出したもので、確度はおよそ 70% でございます。性格アンケート（Tier 2）にお答えいただくと、あなた個人の「強み序列」と「暴走しやすい順」が見えてまいります。</div>
+'''
+    except Exception as e:
+        return f'<p style="color:var(--text-muted)">強み/罠セクションの生成に失敗: {e}</p>'
+
+
+# === Tier 1 addition: 希少性統計バー（何人に1人のあなた？） ===
+# 血液型 × 干支 × 日主 のシンセシス一語
+BT_GIST = {
+    'A':  '几帳面と計画性',
+    'B':  '自由な発想と独立心',
+    'O':  '人間好きと現実主義',
+    'AB': '合理と感性の両立',
+}
+DM_GIST = {
+    '甲': '真っ直ぐ伸びる樹の推進力',
+    '乙': '柔らかく絡みつく蔓の粘り',
+    '丙': '太陽のような明朗な発信力',
+    '丁': 'ロウソクの炎のような繊細な照らし',
+    '戊': 'どっしりした山の安定感',
+    '己': '田畑のような育む器',
+    '庚': '鋼の刃のような切れ味',
+    '辛': '宝石のような磨かれた美意識',
+    '壬': '大河のような包容と流動',
+    '癸': '雨露のような浸透する知恵',
+}
+ETO_GIST = {
+    'Rat':'観察の達人','Ox':'地力の人','Tiger':'開拓者','Rabbit':'調整の名手',
+    'Dragon':'運を呼ぶ理想家','Snake':'知恵の人','Horse':'疾走者','Goat':'共生の人',
+    'Monkey':'発想の人','Rooster':'整える人','Dog':'信頼の人','Pig':'直進の人',
+}
+
+def _rarity_stats_bar(p):
+    """血液型×干支×日主の組み合わせを Aha モーメント化:
+    - 全480通り中の事実ベース分類
+    - 実生活スケール換算（大学学年・大企業・主要駅・中堅都市）
+    - 3体系シンセシス1行"""
+    try:
+        year_br = p['four_pillars']['year_pillar']['branch']
+        animal = year_br.get('animal', '')
+        animal_ja = {'Rat':'子','Ox':'丑','Tiger':'寅','Rabbit':'卯','Dragon':'辰','Snake':'巳',
+                     'Horse':'午','Goat':'未','Monkey':'申','Rooster':'酉','Dog':'戌','Pig':'亥'}.get(animal, animal)
+        bt = p.get('blood_type', {}).get('type', '')
+        dm_char = p['four_pillars']['day_master'].get('char', '')
+        reigou = p['rokusei'].get('reigou', False)
+        sun_sign_en = p['western_astrology']['sun_sign'].get('sign', '')
+        sun_symbol = p['western_astrology']['sun_sign'].get('symbol', '')
+        sun_sign_ja = {'Aries':'牡羊座','Taurus':'牡牛座','Gemini':'双子座','Cancer':'蟹座',
+                       'Leo':'獅子座','Virgo':'乙女座','Libra':'天秤座','Scorpio':'蠍座',
+                       'Sagittarius':'射手座','Capricorn':'山羊座','Aquarius':'水瓶座','Pisces':'魚座'}.get(sun_sign_en, sun_sign_en)
+
+        # 4 体系を掛け合わせた総組み合わせ数（血液型 × 干支 × 日主 × 太陽星座）
+        bt_kinds, eto_kinds, dm_kinds, sun_kinds = 4, 12, 10, 12
+        total_patterns = bt_kinds * eto_kinds * dm_kinds * sun_kinds  # = 5,760
+
+        # 血液型分布: 日本赤十字社 公表値
+        # 出典: https://www.jrc.or.jp/donation/about/type/
+        bt_pct_jp = {'A': 38.1, 'B': 21.8, 'O': 30.7, 'AB': 9.4}.get(bt, 9.4)
+        # 血液型分布: 世界平均 (American Red Cross / Stanford Blood Center 推定)
+        # 出典: https://www.redcrossblood.org/donate-blood/blood-types.html
+        bt_pct_world = {'A': 31.0, 'B': 16.0, 'O': 46.0, 'AB': 7.0}.get(bt, 7.0)
+
+        jp_fraction = (bt_pct_jp / 100) * (1/12) * (1/10) * (1/12)
+        world_fraction = (bt_pct_world / 100) * (1/12) * (1/10) * (1/12)
+        if jp_fraction <= 0:
+            return '<p style="color:var(--text-muted)">パターン分類の生成に失敗</p>'
+
+        one_in_n = int(round(1 / jp_fraction))
+        world_one_in_n = int(round(1 / world_fraction))
+        combined_fraction = jp_fraction  # backward-compat for other references below
+
+        # 実生活スケール換算セクションは 2026-04-16 にユーザー判断で削除 (出典不正確・意味不明瞭)
+        # 旧: 新宿駅・政令指定都市・東京都などへの人口換算。当時の参考値は過小/不正確だった
+        # 代替: Hero の 日本/世界 dual-geo 表示で十分な Aha moment が成立しているため不要
+
+        # 4体系シンセシス1行
+        bt_gist = BT_GIST.get(bt, '')
+        eto_gist = ETO_GIST.get(animal, '')
+        dm_gist = DM_GIST.get(dm_char, '')
+        sun_gist_map = {
+            'Aries':'先陣を切る開拓者','Taurus':'五感と安定を愛する人','Gemini':'情報と言葉の達人',
+            'Cancer':'情と家族の包容力','Leo':'中心に立つ華やかさ','Virgo':'細部を整える職人肌',
+            'Libra':'バランスと調和の人','Scorpio':'本質に迫る深掘り型','Sagittarius':'自由と哲学の冒険家',
+            'Capricorn':'長期戦の実績家','Aquarius':'独自視点の革新者','Pisces':'感受性豊かな夢想家',
+        }
+        sun_gist = sun_gist_map.get(sun_sign_en, '')
+        synthesis = ''
+        if bt_gist and eto_gist and dm_gist and sun_gist:
+            dm_term = _glossary_tooltip('日主', f'{dm_char}日主')
+            synthesis = f'<strong>{bt_gist}</strong>（{bt}型） × <strong>{eto_gist}</strong>（{animal_ja}年） × <strong>{dm_gist}</strong>（{dm_term}） × <strong>{sun_gist}</strong>（{sun_symbol} {sun_sign_ja}）——この 4 つが重なり合って生まれる、あなたならではの貴重なブレンドでございます。'
+
+        reigou_note = ''
+        if reigou:
+            reigou_note = '<div class="rarity-item rarity-item-accent"><div class="rarity-value">霊合</div><div class="rarity-label">霊合星人<br>（15%・稀少体質）</div></div>'
+
+        # 日本の総人口: 総務省統計局 人口推計（2026年4月概算値）
+        # 出典: https://www.stat.go.jp/data/jinsui/
+        JAPAN_POP = 123_480_000
+        japan_count = int(round(JAPAN_POP * jp_fraction))
+        # 世界総人口: 国連 World Population Prospects 2024 Revision（2026年推計）
+        # 出典: https://population.un.org/wpp/
+        WORLD_POP = 8_150_000_000
+        world_count = int(round(WORLD_POP * world_fraction))
+
+        # 出現率に応じた文脈ラベル
+        if one_in_n >= 10000:
+            context_label = '極めて稀少な組み合わせ'
+        elif one_in_n >= 3000:
+            context_label = '珍しい組み合わせ'
+        elif one_in_n >= 1000:
+            context_label = '少数派の組み合わせ'
+        else:
+            context_label = '比較的一般的な組み合わせ'
+
+        dm_tip = _glossary_tooltip('日主')
+        eto_tip = _glossary_tooltip('干支')
+        sun_tip = _glossary_tooltip('太陽星座')
+
+        return f'''
+<div class="rarity-bar">
+  <span class="rarity-badge-top">組み合わせ分類 × 日本人分布</span>
+  <div class="rarity-dual-geo">
+    <div class="geo-stat geo-jp">
+      <div class="geo-label">🇯🇵 日本</div>
+      <div class="geo-main"><span class="geo-n">{one_in_n:,}</span> 人に 1 人</div>
+      <div class="geo-count">= 約 <strong>{japan_count:,}</strong> 人</div>
+    </div>
+    <div class="geo-stat geo-world">
+      <div class="geo-label">🌏 世界</div>
+      <div class="geo-main"><span class="geo-n">{world_one_in_n:,}</span> 人に 1 人</div>
+      <div class="geo-count">= 約 <strong>{world_count:,}</strong> 人</div>
+    </div>
+  </div>
+  <div class="rarity-context-note">{context_label}</div>
+
+  <div class="rarity-synthesis">{synthesis}</div>
+
+  <div class="rarity-breakdown">
+    <div class="rarity-item"><div class="rarity-value">{bt}</div><div class="rarity-label">{bt}型<br>（4種中）</div></div>
+    <div class="rarity-item"><div class="rarity-value">{animal_ja}</div><div class="rarity-label">{animal_ja}年<br>（12種中）</div></div>
+    <div class="rarity-item"><div class="rarity-value">{dm_char}</div><div class="rarity-label">{dm_char}日主<br>（10種中）</div></div>
+    <div class="rarity-item"><div class="rarity-value" style="font-size:18px">{sun_symbol}</div><div class="rarity-label">{sun_sign_ja}<br>（12星座中）</div></div>
+    {reigou_note}
+  </div>
+
+  <!-- 旧: rarity-scale セクションは 2026-04-16 にユーザー判断で削除 (出典不正確・意味不明瞭) -->
+  <!-- 代替: Hero の 日本/世界 dual-geo 表示で十分な Aha moment が成立している -->
+
+
+  <div class="rarity-sources">
+    <div class="rarity-sources-title">📊 算出根拠</div>
+    <ul>
+      <li>血液型分布（日本）: <a href="https://www.jrc.or.jp/donation/about/type/" target="_blank" rel="noopener">日本赤十字社 血液事業本部</a> — A 38.1% / O 30.7% / B 21.8% / AB 9.4%</li>
+      <li>血液型分布（世界）: <a href="https://www.redcrossblood.org/donate-blood/blood-types.html" target="_blank" rel="noopener">American Red Cross / Stanford Blood Center</a> — O 46% / A 31% / B 16% / AB 7%</li>
+      <li>日本の総人口: <a href="https://www.stat.go.jp/data/jinsui/" target="_blank" rel="noopener">総務省統計局 人口推計</a>（2026年4月概算値 約 1億2,348万人）</li>
+      <li>世界の総人口: <a href="https://population.un.org/wpp/" target="_blank" rel="noopener">国連 World Population Prospects 2024</a>（2026年推計 約 81.5億人）</li>
+      <li>干支 12種 / 日主 10種 / 太陽星座 12種は、暦上の等分布を仮定</li>
+      <li>4 要素は互いに独立と仮定して同時発生確率を算出</li>
+    </ul>
+  </div>
+</div>
+'''
+    except Exception as e:
+        return f'<p style="color:var(--text-muted)">パターン分類の生成に失敗: {e}</p>'
+
+
+# === Tier 1 addition: Cross-Reference Insight（複数体系の一致点/矛盾点を明示） ===
+# 同じ方向を指す体系が多いほど「疑う余地がない」、割れている軸ほど「あなた固有の揺らぎ」
+def _cross_reference_insight(p):
+    """4-5体系の交差点から、単一体系では見えないインサイトを言語化。
+    - 強度の一致（複数体系が同じ結論） → 確信度の高い自己像
+    - 矛盾点（体系によって違う結論） → あなたの固有性・ユニークな揺らぎ"""
+    try:
+        dm = p['four_pillars']['day_master']
+        dm_char = dm.get('char', '')
+        dm_element = dm.get('element', '')
+        dm_yy = dm.get('yin_yang', '')
+        ns_name = p['nine_star_ki']['year_star'].get('name', '')
+        rok_name = p['rokusei']['main_star'].get('name', '')
+        reigou = p['rokusei'].get('reigou', False)
+        sun_sign = p['western_astrology']['sun_sign'].get('sign', '')
+        sun_element = p['western_astrology']['sun_sign'].get('element', '')  # Fire/Earth/Air/Water
+        animal = p['four_pillars']['year_pillar']['branch'].get('animal', '')
+        animal_ja = {'Rat':'子','Ox':'丑','Tiger':'寅','Rabbit':'卯','Dragon':'辰','Snake':'巳',
+                     'Horse':'午','Goat':'未','Monkey':'申','Rooster':'酉','Dog':'戌','Pig':'亥'}.get(animal, animal)
+        bt = p.get('blood_type', {}).get('type', '')
+        missing = p['four_pillars'].get('missing_elements', [])
+
+        # === 発見1: 多体系が同じ方向を指すポイント（強い合意） ===
+        agreements = []
+
+        # 火の要素が重なるか (太陽・情熱・行動)
+        fire_count = 0
+        if dm_element == 'Fire': fire_count += 1
+        if sun_element == 'Fire': fire_count += 1
+        if '火' in ns_name or '九紫火星' in ns_name: fire_count += 1
+        if rok_name in ['火星人']: fire_count += 1
+        if fire_count >= 2:
+            agreements.append({
+                'title': '火の性質が複数体系で重なる',
+                'bodies': f'四柱推命・西洋占星術・九星気学・六星占術のうち <strong>{fire_count} 体系</strong>が「火」要素を共有。',
+                'insight': '情熱・発信力・明るさが、あなたの軸となっていらっしゃいます。人前に立つ場面で、自然と光が当たるタイプの方でございます。',
+            })
+
+        # 水の要素（思考・内省・流動）
+        water_count = 0
+        if dm_element == 'Water': water_count += 1
+        if sun_element == 'Water': water_count += 1
+        if '水' in ns_name: water_count += 1
+        if rok_name == '水星人': water_count += 1
+        if water_count >= 2:
+            agreements.append({
+                'title': '水の性質が複数体系で重なる',
+                'bodies': f'思考と流動性の「水」が <strong>{water_count} 体系</strong>で共有。',
+                'insight': '考える時間の長さと、流れを読む力が、あなたの資質でいらっしゃいます。即断即決よりも熟慮型。静かな環境でこそ、最大のお力を発揮なさるタイプです。',
+            })
+
+        # 土の要素（安定・堅実・継続）
+        earth_count = 0
+        if dm_element == 'Earth': earth_count += 1
+        if sun_element == 'Earth': earth_count += 1
+        if '土星' in ns_name: earth_count += 1
+        if rok_name == '土星人': earth_count += 1
+        if earth_count >= 2:
+            agreements.append({
+                'title': '土の性質が複数体系で重なる',
+                'bodies': f'安定と堅実の「土」が <strong>{earth_count} 体系</strong>で共有。',
+                'insight': '周囲が揺れても自分は動かない、芯の強さをお持ちです。長距離走型で、急がば回れを自然体で実践なさることができる方でいらっしゃいます。',
+            })
+
+        # 風/金の要素（知性・言葉・社交）
+        metal_air_count = 0
+        if dm_element == 'Metal': metal_air_count += 1
+        if sun_element == 'Air': metal_air_count += 1
+        if '金星' in ns_name or '六白金星' in ns_name or '七赤金星' in ns_name: metal_air_count += 1
+        if rok_name == '金星人': metal_air_count += 1
+        if metal_air_count >= 2:
+            agreements.append({
+                'title': '金/風の性質が複数体系で重なる',
+                'bodies': f'知性と社交の「金／風」が <strong>{metal_air_count} 体系</strong>で共有。',
+                'insight': '言葉の切れ味と論理構成が、あなたの武器でいらっしゃいます。アイデアを他の方に伝えるフェーズで、最もお輝きになります。',
+            })
+
+        # 木（成長・向上・推進）
+        wood_count = 0
+        if dm_element == 'Wood': wood_count += 1
+        if '木星' in ns_name or '三碧木星' in ns_name or '四緑木星' in ns_name: wood_count += 1
+        if rok_name == '木星人': wood_count += 1
+        if wood_count >= 2:
+            agreements.append({
+                'title': '木の性質が複数体系で重なる',
+                'bodies': f'成長と伸長の「木」が <strong>{wood_count} 体系</strong>で共有。',
+                'insight': '止まると不調になりやすく、動きながら整うタイプでいらっしゃいます。チャレンジと拡張が、あなたを健やかに保つ源でございます。',
+            })
+
+        # 陰陽のバランス (Yin系/Yang系 の集中)
+        yin_count = 0
+        yang_count = 0
+        if dm_yy == 'Yin': yin_count += 1
+        else: yang_count += 1
+        if sun_element in ['Water', 'Earth']: yin_count += 1
+        else: yang_count += 1
+        if bt in ['A', 'AB']: yin_count += 1
+        else: yang_count += 1
+        if yin_count >= 3:
+            agreements.append({
+                'title': '陰の性質が 3 体系以上で一致',
+                'bodies': '四柱推命・西洋・血液型がすべて「陰」寄り。',
+                'insight': '外向的な場面でも、内側では観察・処理・熟考が静かに走っている、二層構造の方でいらっしゃいます。「静かに見える方ほど深く考えていらっしゃる」典型のお人柄です。',
+            })
+        if yang_count >= 3:
+            agreements.append({
+                'title': '陽の性質が 3 体系以上で一致',
+                'bodies': '四柱推命・西洋・血液型がすべて「陽」寄り。',
+                'insight': '外への発信・行動・表現が、あなたにとって自然なお振る舞いでございます。じっとなさっていると調子を崩しやすいので、動いて整えていかれる運用が最適です。',
+            })
+
+        # === 発見3: 普遍的な二層構造（誰にでも必ず言える体系交差） ===
+        layered = []
+        # 本命星 × 日主（社会の顔 × 内面の顔）
+        if ns_name and dm_char:
+            ns_short = ns_name
+            layered.append({
+                'title': f'本命星「{ns_short}」× 日主「{dm_char}」の二層構造',
+                'bodies': f'九星気学の<strong>{ns_short}</strong>が社会に出る時の顔。四柱推命の<strong>{dm_char}</strong>が内側で動いている本体。',
+                'insight': f'外から見えるあなたと、内側で動いているあなたは少し違っていらっしゃいます。この <strong>「外の自分 × 内の自分」のギャップ</strong>を自覚なさることが、疲れにくい生き方への第一歩でございます。',
+            })
+        # 干支 × 日主（直感キャラ × 本質）
+        if animal_ja and dm_char:
+            layered.append({
+                'title': f'{animal_ja}年（{ETO_GIST.get(animal,"")}）× {dm_char}日主（{DM_GIST.get(dm_char,"日主")}）',
+                'bodies': f'干支が示す<strong>生まれ持った気質</strong>と、日主が示す<strong>日々の判断の軸</strong>が重なる場所。',
+                'insight': f'周囲に対しては{ETO_GIST.get(animal, "その型")}として振る舞っていらっしゃりながら、重要な判断では{DM_GIST.get(dm_char, "日主の特性")}が働いていらっしゃいます。この使い分けが無意識にできていらっしゃるなら、それはあなたの強みの核と申せましょう。',
+            })
+        # 血液型 × 欠けている元素（補完すべき方向）
+        if bt and missing:
+            miss_str = '・'.join(missing)
+            miss_action = {
+                '木':'挑戦と拡張',
+                '火':'情熱と発信',
+                '土':'腰を据えた継続',
+                '金':'決断と切り捨て',
+                '水':'流動性と休息',
+            }
+            actions = '、'.join(miss_action.get(m, '') for m in missing if m in miss_action)
+            layered.append({
+                'title': f'{bt}型の基礎 × 欠けている五行（{miss_str}）',
+                'bodies': f'{bt}型の<strong>{BT_GIST.get(bt,"")}</strong>をベースに、五行では<strong>{miss_str}</strong>が不足。',
+                'insight': f'自然体ではうまく発揮されない「{actions}」を、意識的に予定へお入れになる運用が効果的でございます。欠けた要素は「弱点」ではなく、「意識なさると良い補完ポイント」とお考えください。',
+            })
+        # 運命星 × 2026年フェーズ（今の時期の読み）
+        try:
+            cycle12 = p['rokusei'].get('twelve_year_cycle', [])
+            cur_phase = next((c for c in cycle12 if c.get('current')), None)
+            if cur_phase and rok_name:
+                phase_name = cur_phase.get('phase', '')
+                phase_energy = cur_phase.get('energy', 0)
+                satsukai = cur_phase.get('殺界') or ''
+                phase_japanese = {
+                    '種子':'種をまく時期','緑生':'芽吹きの時期','立花':'花開く時期',
+                    '健弱':'少し踏ん張る時期','達成':'実りの時期','乱気':'揺らぎの時期',
+                    '再会':'縁が戻る時期','財成':'財が育つ時期','安定':'落ち着く時期',
+                    '陰影':'陰に入る時期','停止':'立ち止まる時期','減退':'力を蓄える時期',
+                }
+                phase_ja = phase_japanese.get(phase_name, phase_name)
+                phase_note = f'（{satsukai}）' if satsukai else ''
+                layered.append({
+                    'title': f'{rok_name}の 2026 年は「{phase_name}」{phase_note}',
+                    'bodies': f'12年周期の六星占術で、あなたは今「{phase_ja}」。エネルギー指数 <strong>{phase_energy}/100</strong>。',
+                    'insight': f'<strong>この1年のお立ち位置</strong>を知っておかれますと、無理に頑張られるべき時か、静かに整えていかれる時かが判断しやすくなります。九星気学の今年の運気と合わせて読まれると、さらに立体的にお見えになってまいります。',
+                })
+        except Exception:
+            pass
+
+        # === 発見2: 体系間の矛盾・揺らぎ ===
+        tensions = []
+        # 内向日主 × 外向血液型
+        if dm_yy == 'Yin' and bt in ['B', 'O']:
+            tensions.append({
+                'title': '内なる繊細さ × 外向きな振る舞い',
+                'bodies': f'日主「{dm_char}」（陰）は内省型。血液型「{bt}」（{BT_GIST.get(bt,"")}）は外向型。',
+                'insight': '外では明るく社交的でいらっしゃるのに、お一人になると急に静かになる——そんなギャップをお持ちです。周囲には「摑みどころがない」と映るかもしれませんが、ご本人にとっては自然なモードの切り替えなのでございます。',
+            })
+        if dm_yy == 'Yang' and bt == 'A':
+            tensions.append({
+                'title': '推進力 × 几帳面さ',
+                'bodies': f'日主「{dm_char}」（陽）は勢い。血液型「{bt}」は計画性。',
+                'insight': '「走りながら細かい段取りを詰める」という、稀有な矛盾をお持ちです。スピードと精度を同時にお出しになれますが、両立に疲れやすくもありますので、定期的に片方をお休ませになると良いでしょう。',
+            })
+        # 霊合星人（二重性そのもの）
+        if reigou:
+            tensions.append({
+                'title': '霊合星人という「二つの顔」',
+                'bodies': f'六星占術で <strong>{rok_name}</strong> にサブ星を持つ霊合星人（人口15%）。',
+                'insight': '状況によって全く違う人格モードが立ち上がるのが、霊合星人のあなたの特徴でいらっしゃいます。周囲は「あの時と印象が違っていた」と感じるかもしれませんが、ご本人にとってはどちらも本物の自分でいらっしゃるのです。使い分けを自覚なさると、場面ごとに最適なご自身をお選びいただけます。',
+            })
+        # 欠けている元素と重なる軸（自覚すべき盲点）
+        if '金' in missing and metal_air_count == 0:
+            tensions.append({
+                'title': '決断力（金）が全体系で弱い',
+                'bodies': '四柱推命で金が欠落、他体系でも「金/風」の補強がない。',
+                'insight': '決める・切る・引くといった「止める力」が、構造的に少し不足していらっしゃる傾向があります。意識して期限をお設けになる、あるいは第三者に決定をお委ねになる仕組みをお作りになると、自然に補えるでしょう。',
+            })
+        if '水' in missing and water_count == 0:
+            tensions.append({
+                'title': '柔軟性（水）が全体系で弱い',
+                'bodies': '四柱推命で水が欠落、他体系でも「水」の補強がない。',
+                'insight': '状況の変化をお受け入れになって自分を組み替える力が、構造的に少し不足していらっしゃる傾向があります。急なご予定変更で疲弊しやすいので、「想定外」をあらかじめバッファにお入れになる設計が効いてまいります。',
+            })
+        if '火' in missing and fire_count == 0:
+            tensions.append({
+                'title': '情熱（火）が全体系で弱い',
+                'bodies': '四柱推命で火が欠落、他体系でも「火」の補強がない。',
+                'insight': '自己発火なさるのがやや苦手で、外から刺激をお受けになって着火するタイプでいらっしゃいます。インスピレーション源（人・場・コンテンツ）を意識的に摂取なさる運用が、あなたには向いています。',
+            })
+
+        # Render
+        agreement_html = ''
+        # まず「多体系の元素合意」、次に普遍的な「二層構造」を混ぜる
+        combined_insights = agreements + layered
+        if combined_insights:
+            for a in combined_insights[:4]:  # 最大4件
+                agreement_html += f'''
+<div class="cross-card cross-agree">
+  <div class="cross-card-header">
+    <span class="cross-marker-agree">交差点</span>
+    <div class="cross-card-title">{a['title']}</div>
+  </div>
+  <div class="cross-card-body">{a['bodies']}</div>
+  <div class="cross-card-insight"><strong>だから、</strong>{a['insight']}</div>
+</div>
+'''
+        else:
+            agreement_html = '<p class="cross-empty">強い多数決の軸は見つかりませんでした。あなたは「どの側にも偏らない中道型」で、逆に言えば複数モードを柔軟に使える希少な人です。</p>'
+
+        tension_html = ''
+        if tensions:
+            for t in tensions[:3]:
+                tension_html += f'''
+<div class="cross-card cross-tension">
+  <div class="cross-card-header">
+    <span class="cross-marker-tension">揺らぎ</span>
+    <div class="cross-card-title">{t['title']}</div>
+  </div>
+  <div class="cross-card-body">{t['bodies']}</div>
+  <div class="cross-card-insight"><strong>つまり、</strong>{t['insight']}</div>
+</div>
+'''
+
+        return f'''
+<p class="section-intro">単一の占術だけでは見えてこない、<strong>体系を跨いだ共通点と矛盾点</strong>を抽出いたしました。複数の千年単位の体系が同じ方向を指している時、それは偶然ではないと申せましょう。逆に、体系間で結論が割れる軸こそが、あなたならではの<strong>固有の揺らぎ</strong>でございます。</p>
+
+<div class="cross-section">
+  <div class="cross-section-label cross-section-label-agree">
+    <span class="cross-label-emoji">◇</span>
+    複数体系が口を揃えて申し上げること — 高い確信度で見えてくる自己像
+  </div>
+  <div class="cross-grid">{agreement_html}</div>
+</div>
+
+{f'''<div class="cross-section">
+  <div class="cross-section-label cross-section-label-tension">
+    <span class="cross-label-emoji">⚖</span>
+    体系間で揺らぐポイント — あなたの固有性が現れる場所
+  </div>
+  <div class="cross-grid">{tension_html}</div>
+</div>''' if tensions else ''}
+
+<div class="confidence-badge">確度はおよそ 75%（生年月日と血液型ベースの分析）でございます。性格アンケート（Tier 2）にお進みいただくと、あなたの心理的パターンと占術データの交差点がさらに鮮明に浮かび上がってまいります。</div>
+'''
+    except Exception as e:
+        return f'<p style="color:var(--text-muted)">クロスリファレンスの生成に失敗: {e}</p>'
+
+
+def _hub_card(section_id, icon, icon_bg, icon_color, title, summary, content, expanded=True):
     """Wrap a section in a collapsible hub card."""
     exp_cls = ' expanded' if expanded else ''
     return f'''<div class="hub-card{exp_cls}" id="{section_id}-card">
@@ -2271,19 +3480,45 @@ def generate_html(p, tier=2, show_gnav=False):
     hub_sections += _hub_card('core-identity', '&#9733;', 'rgba(99,102,241,0.12)', '#a5b4fc',
                               'あなたの本質', core_summary, core_id_content)
 
+    # Tier 1 新規: 干支 × 血液型
+    try:
+        eto_animal = p['four_pillars']['year_pillar']['branch'].get('animal', '')
+        bt_type = p.get('blood_type', {}).get('type', '')
+        eto_title_jp = ETO_PROFILES.get(eto_animal, {}).get('jp', '')
+        eto_summary = f'{eto_title_jp}年 × {bt_type}型 — 日本人の希少組み合わせ'
+        hub_sections += _hub_card('eto-blood', '&#9775;', 'rgba(251,191,36,0.12)', 'var(--accent-amber-light)',
+                                  '干支 × 血液型', eto_summary, _eto_section(p))
+    except Exception:
+        pass
+
+    # Tier 1 新規: 5体系整合マップ
+    hub_sections += _hub_card('integration-map', '&#9881;', 'rgba(34,197,94,0.12)', '#86efac',
+                              '5つの体系が示す、あなたの軸', '多数決で浮かび上がる「本当のあなた」',
+                              _integration_map(p))
+
+    # Tier 1 新規: クロスリファレンス・インサイト（複数体系の一致/矛盾から深掘り）
+    hub_sections += _hub_card('cross-reference', '&#10021;', 'rgba(99,102,241,0.12)', '#a5b4fc',
+                              'クロスリファレンス・インサイト', '体系を跨いだ一致点と矛盾点から読む「あなた」',
+                              _cross_reference_insight(p))
+
+    # Tier 1 新規: 強み/罠の裏返し構造（CliftonStrengths Shadow Side パターン）
+    hub_sections += _hub_card('strengths-traps', '&#9876;', 'rgba(236,72,153,0.12)', '#f9a8d4',
+                              '強み × 裏返しの罠', 'あなたの強みが暴走した時の落とし穴',
+                              _strengths_traps_section(p))
+
     # Action Blueprint
     if blueprint_content:
-        hub_sections += _hub_card('blueprint', '&#9829;', 'rgba(139,92,246,0.12)', '#c4b5fd',
+        hub_sections += _hub_card('blueprint', '&#9829;', 'rgba(139,92,246,0.12)', 'var(--accent-purple-light)',
                                   '明日からできること', bp_summary, blueprint_content)
 
     # Personality
     if personality_content:
-        hub_sections += _hub_card('personality', '&#9632;', 'rgba(59,130,246,0.12)', '#60a5fa',
+        hub_sections += _hub_card('personality', '&#9632;', 'rgba(59,130,246,0.12)', 'var(--accent-blue-light)',
                                   '内なる才能の設計図', '強み × 性格タイプ × 感受性',
                                   personality_content)
 
     # Divination
-    hub_sections += _hub_card('divination', '&#9679;', 'rgba(139,92,246,0.12)', '#c4b5fd',
+    hub_sections += _hub_card('divination', '&#9679;', 'rgba(139,92,246,0.12)', 'var(--accent-purple-light)',
                               '星が語ること', '四柱推命 × 九星気学 × 六星占術 × 西洋占星術',
                               divination_content)
 
@@ -2294,7 +3529,7 @@ def generate_html(p, tier=2, show_gnav=False):
 
     # Monthly — guidance is shown inline via JS buildGuidanceHtml() for the current month tab
     if monthly_content:
-        hub_sections += _hub_card('monthly', '&#9671;', 'rgba(59,130,246,0.12)', '#60a5fa',
+        hub_sections += _hub_card('monthly', '&#9671;', 'rgba(59,130,246,0.12)', 'var(--accent-blue-light)',
                                   '月間運勢フォーキャスト', month_summary,
                                   monthly_content)
 
@@ -2311,7 +3546,7 @@ def generate_html(p, tier=2, show_gnav=False):
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>{archetype["ja"]} — {name}</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Noto+Sans+JP:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400..700&family=JetBrains+Mono:wght@500&family=Noto+Sans+JP:wght@400..700&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
 {CSS}
 </head>
@@ -2319,6 +3554,7 @@ def generate_html(p, tier=2, show_gnav=False):
 {gnav_html}
 <div class="container">
 {_hero(p, tier)}
+{_glossary_card()}
 {hub_sections}
 {_footer(tier)}
 </div>

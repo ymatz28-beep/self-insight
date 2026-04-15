@@ -229,6 +229,197 @@ body::before{content:'';position:fixed;top:0;left:0;width:100%;height:100%;opaci
 .personality-summary{font-size:15px;color:var(--text-secondary);line-height:1.7;margin-bottom:20px;font-style:italic}
 .personality-locked{position:relative;min-height:300px;overflow:hidden;border-radius:var(--r-md)}
 .locked-skeleton{filter:blur(8px);opacity:0.3;padding:24px}
+
+/* === Tier 1 additions === */
+.eto-hero{display:grid;grid-template-columns:auto 1fr auto;gap:16px;align-items:center;background:linear-gradient(135deg,rgba(251,191,36,0.08),rgba(201,168,76,0.04));border:1px solid rgba(251,191,36,0.2);border-radius:var(--r-md);padding:18px 20px;margin-bottom:16px}
+.eto-emoji{font-size:48px;line-height:1}
+.eto-name .eto-title{font-size:18px;font-weight:700;color:#fff;margin-bottom:2px}
+.eto-name .eto-reading{font-size:12px;color:var(--text-secondary)}
+.eto-rarity{text-align:right;padding-left:12px;border-left:1px solid rgba(251,191,36,0.25)}
+.eto-rarity-label{font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:2px}
+.eto-rarity-value{font-size:15px;font-weight:700;color:#fbbf24;font-family:var(--font-mono)}
+.eto-narrative{margin-bottom:14px}
+.eto-narrative p{font-size:14px;line-height:1.85;color:#d1d5db;margin-bottom:10px}
+.eto-cross{background:rgba(99,102,241,0.06);border-left:3px solid var(--accent,#6366f1);border-radius:6px;padding:12px 14px;margin-top:10px}
+.eto-cross-label{font-size:11px;color:#c7d2fe;font-weight:600;letter-spacing:.08em;text-transform:uppercase;margin-bottom:6px}
+.eto-cross-body{font-size:14px;line-height:1.8;color:#e5e7eb}
+.eto-traits-row{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0 14px}
+.eto-trait{font-size:12px;background:rgba(251,191,36,0.12);border:1px solid rgba(251,191,36,0.25);color:#fde68a;padding:4px 10px;border-radius:14px;font-weight:500}
+.confidence-badge{font-size:12px;color:var(--text-secondary);background:rgba(99,102,241,0.06);border-left:3px solid rgba(99,102,241,0.4);padding:10px 12px;border-radius:6px;margin-top:14px;line-height:1.7}
+
+@media(max-width:600px){
+  .eto-hero{grid-template-columns:auto 1fr;grid-template-rows:auto auto;gap:12px}
+  .eto-rarity{grid-column:1/-1;text-align:left;padding-left:0;border-left:none;border-top:1px solid rgba(251,191,36,0.2);padding-top:10px}
+}
+
+.axes-stack{display:flex;flex-direction:column;gap:16px;margin:14px 0}
+.axis-card{background:var(--surface2);border:1px solid var(--border);border-radius:var(--r-md);padding:16px 18px}
+.axis-card-header{display:flex;align-items:center;gap:12px;margin-bottom:10px;flex-wrap:wrap}
+.axis-card-name{font-size:16px;font-weight:700;color:#fff;letter-spacing:.02em}
+.verdict-badge{font-size:11px;font-weight:700;padding:4px 10px;border-radius:14px;letter-spacing:.03em}
+.verdict-strong{background:rgba(34,197,94,0.15);color:#86efac;border:1px solid rgba(34,197,94,0.3)}
+.verdict-lean{background:rgba(251,191,36,0.12);color:#fde68a;border:1px solid rgba(251,191,36,0.3)}
+.verdict-split{background:rgba(148,163,184,0.12);color:var(--text-secondary);border:1px solid var(--border)}
+.axis-card-verdict{font-size:14px;color:#e5e7eb;line-height:1.85;margin-bottom:14px;padding:10px 12px;background:rgba(99,102,241,0.05);border-left:3px solid rgba(99,102,241,0.3);border-radius:6px}
+.axis-card-verdict strong{color:#fde68a}
+.axis-card-systems{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px}
+.axis-column{padding:10px 12px;border-radius:8px;background:rgba(255,255,255,0.02);border:1px solid var(--border)}
+.axis-column-dominant{background:rgba(34,197,94,0.06);border-color:rgba(34,197,94,0.2)}
+.axis-column-minority{background:rgba(255,255,255,0.02);opacity:0.85}
+.axis-column-title{font-size:12px;font-weight:600;color:var(--text-secondary);margin-bottom:6px}
+.axis-column-dominant .axis-column-title{color:#86efac}
+.axis-column-chips{display:flex;flex-wrap:wrap;gap:4px}
+.sys-chip{font-size:11px;padding:3px 9px;border-radius:12px;white-space:nowrap}
+.sys-chip-left,.sys-chip-right{background:rgba(99,102,241,0.08);color:#c7d2fe;border:1px solid rgba(99,102,241,0.2)}
+.axis-column-dominant .sys-chip{background:rgba(34,197,94,0.1);color:#86efac;border-color:rgba(34,197,94,0.25)}
+.axis-empty{font-size:11px;color:var(--text-muted);font-style:italic}
+.axis-outlier{font-size:13px;color:#e5e7eb;padding:10px 12px;background:rgba(251,191,36,0.06);border-left:3px solid rgba(251,191,36,0.4);border-radius:6px;line-height:1.8}
+.axis-outlier-label{font-size:10px;font-weight:700;color:#fde68a;letter-spacing:.08em;text-transform:uppercase;margin-right:6px}
+.axis-outlier strong{color:#fff}
+@media(max-width:600px){
+  .axis-card-systems{grid-template-columns:1fr}
+}
+.consensus-box{background:linear-gradient(135deg,rgba(34,197,94,0.08),rgba(99,102,241,0.04));border:1px solid rgba(34,197,94,0.25);border-radius:var(--r-md);padding:16px 18px;margin-top:16px}
+.consensus-box.subtle{background:rgba(255,255,255,0.03);border-color:var(--border)}
+.consensus-title{font-size:12px;font-weight:700;color:#86efac;letter-spacing:.08em;text-transform:uppercase;margin-bottom:8px}
+.consensus-box.subtle .consensus-title{color:var(--text-secondary)}
+.consensus-box ul{list-style:none;padding:0;margin:0}
+.consensus-box li{font-size:14px;line-height:1.9;color:#e5e7eb;padding-left:18px;position:relative}
+.consensus-box li::before{content:'✓';position:absolute;left:0;color:#86efac;font-weight:700}
+.consensus-box.subtle p{font-size:14px;line-height:1.8;color:var(--text-secondary);margin:0}
+.section-intro{font-size:14px;color:var(--text-secondary);line-height:1.85;margin-bottom:16px}
+.section-intro strong{color:#fff}
+
+@media(max-width:600px){
+  .axis-row{grid-template-columns:64px 1fr 64px;row-gap:6px}
+  .axis-count{grid-column:1/-1;text-align:center;font-size:11px}
+}
+
+/* === Strengths × Shadow (CliftonStrengths Shadow Side 型) === */
+.strengths-traps-grid{display:flex;flex-direction:column;gap:14px;margin:14px 0}
+.strength-pair{display:grid;grid-template-columns:1fr 32px 1fr;gap:10px;align-items:stretch;background:rgba(255,255,255,0.02);border:1px solid var(--border);border-radius:var(--r-md);overflow:hidden}
+.strength-side{padding:14px 16px;background:linear-gradient(135deg,rgba(34,197,94,0.05),rgba(34,197,94,0.01));border-right:1px solid var(--border)}
+.shadow-side{padding:14px 16px;background:linear-gradient(135deg,rgba(239,68,68,0.04),rgba(239,68,68,0.01))}
+.pair-label-pos{font-size:10px;font-weight:700;color:#86efac;letter-spacing:.08em;text-transform:uppercase;margin-bottom:6px}
+.pair-label-neg{font-size:10px;font-weight:700;color:#fca5a5;letter-spacing:.08em;text-transform:uppercase;margin-bottom:6px}
+.pair-body{font-size:14px;line-height:1.7;color:#e5e7eb}
+.pair-connector{display:flex;align-items:center;justify-content:center;font-size:18px;color:var(--text-muted);font-weight:700}
+.strength-extra{font-size:13px;line-height:1.8;color:var(--text-secondary);margin-top:12px;padding:10px 12px;background:rgba(99,102,241,0.05);border-left:3px solid rgba(99,102,241,0.3);border-radius:6px}
+.strength-extra strong{color:#c7d2fe}
+@media(max-width:600px){
+  .strength-pair{grid-template-columns:1fr;grid-template-rows:auto auto auto}
+  .strength-side{border-right:none;border-bottom:1px solid var(--border)}
+  .pair-connector{padding:6px 0}
+}
+
+/* === 組み合わせパターン（事実ベース・Twin Stats 主役化） === */
+.rarity-bar{background:linear-gradient(135deg,rgba(99,102,241,0.08),rgba(201,168,76,0.03));border:1px solid rgba(99,102,241,0.2);border-radius:var(--r-md);padding:20px 22px;margin:20px 0 16px}
+.rarity-badge-top{display:inline-block;font-size:10px;font-weight:700;padding:4px 12px;border-radius:16px;border:1px solid rgba(99,102,241,0.3);background:rgba(99,102,241,0.1);color:#a5b4fc;letter-spacing:.08em;text-transform:uppercase;margin-bottom:14px}
+.rarity-twin-stats{display:grid;grid-template-columns:1fr auto 1.3fr;gap:16px;align-items:center;padding:14px 10px;background:rgba(255,255,255,0.02);border-radius:10px;margin-bottom:14px}
+.rarity-single-stat{padding:14px 10px;background:rgba(255,255,255,0.02);border-radius:10px;margin-bottom:14px}
+.rarity-dual-geo{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px}
+.geo-stat{padding:16px 18px;background:rgba(255,255,255,0.02);border:1px solid var(--border);border-radius:10px;text-align:center}
+.geo-jp{background:linear-gradient(135deg,rgba(251,191,36,0.08),rgba(255,255,255,0.02));border-color:rgba(251,191,36,0.2)}
+.geo-world{background:linear-gradient(135deg,rgba(99,102,241,0.08),rgba(255,255,255,0.02));border-color:rgba(99,102,241,0.2)}
+.geo-label{font-size:12px;font-weight:700;color:var(--text-secondary);letter-spacing:.05em;margin-bottom:8px}
+.geo-jp .geo-label{color:#fde68a}
+.geo-world .geo-label{color:#c7d2fe}
+.geo-main{font-size:13px;color:var(--text-secondary);margin-bottom:6px}
+.geo-n{font-size:26px;font-weight:700;font-family:var(--font-mono);letter-spacing:-0.01em;color:#e4e4e7}
+.geo-jp .geo-n{color:#fde68a}
+.geo-world .geo-n{color:#c7d2fe}
+.geo-count{font-size:13px;color:#e4e4e7}
+.geo-count strong{font-size:18px;color:#fff;font-family:var(--font-mono)}
+.rarity-context-note{text-align:center;font-size:12px;color:var(--text-muted);margin-bottom:12px;font-style:italic}
+@media(max-width:600px){
+  .rarity-dual-geo{grid-template-columns:1fr;gap:10px}
+}
+.twin-stat{text-align:center}
+.twin-stat-hero{background:linear-gradient(135deg,rgba(251,191,36,0.08),rgba(99,102,241,0.04));padding:10px 14px;border-radius:10px;border:1px solid rgba(251,191,36,0.2)}
+.twin-stat-value{display:flex;align-items:baseline;justify-content:center;gap:4px}
+.twin-big{font-size:32px;font-weight:700;color:#e4e4e7;font-family:var(--font-mono);line-height:1.1;letter-spacing:-0.02em}
+.twin-stat-hero .twin-big{font-size:36px;color:#fde68a;background:linear-gradient(135deg,#fde68a,#a5b4fc);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.twin-unit{font-size:14px;color:var(--text-secondary);font-weight:500}
+.twin-stat-label{font-size:12px;color:#c7d2fe;margin-top:4px;font-weight:500}
+.twin-stat-sub{font-size:10px;color:var(--text-muted);margin-top:2px}
+.twin-divider{font-size:24px;color:var(--text-muted);opacity:0.4}
+@media(max-width:600px){
+  .rarity-twin-stats{grid-template-columns:1fr;gap:10px}
+  .twin-divider{display:none}
+  .twin-big{font-size:26px}
+  .twin-stat-hero .twin-big{font-size:30px}
+}
+.rarity-breakdown{display:grid;grid-template-columns:repeat(auto-fit,minmax(90px,1fr));gap:8px;padding-top:12px;border-top:1px solid var(--border)}
+.rarity-item{text-align:center;padding:10px 6px;background:rgba(255,255,255,0.02);border-radius:8px}
+.rarity-item-accent{background:rgba(201,168,76,0.06);border:1px solid rgba(201,168,76,0.2)}
+.rarity-value{font-size:20px;font-weight:700;color:#e4e4e7;font-family:var(--font-body);margin-bottom:4px}
+.rarity-item-accent .rarity-value{color:#fde68a;font-family:var(--font-mono);font-size:16px}
+.rarity-label{font-size:10px;color:var(--text-muted);line-height:1.5}
+.rarity-note{font-size:10px;color:var(--text-muted);margin-top:10px;padding-top:10px;border-top:1px dashed rgba(255,255,255,0.05);line-height:1.6;font-style:italic}
+.rarity-synthesis{font-size:14px;line-height:1.95;color:#e5e7eb;padding:14px 16px;margin:14px 0;background:linear-gradient(135deg,rgba(99,102,241,0.08),rgba(201,168,76,0.03));border-left:3px solid #a5b4fc;border-radius:8px}
+.rarity-synthesis strong{color:#fde68a;font-weight:600}
+.rarity-scale{margin-top:14px;padding-top:14px;border-top:1px dashed rgba(255,255,255,0.08)}
+.rarity-scale-title{font-size:13px;font-weight:600;color:#c7d2fe;margin-bottom:10px}
+.rarity-scale-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:8px}
+.scale-item{background:rgba(99,102,241,0.05);border:1px solid rgba(99,102,241,0.12);border-radius:8px;padding:10px 12px;text-align:center}
+.scale-n{font-size:20px;font-weight:700;color:#a5b4fc;font-family:var(--font-mono);letter-spacing:0.02em;margin-bottom:4px}
+.scale-ctx{font-size:10px;color:var(--text-muted);line-height:1.5}
+.rarity-scale-note{font-size:10px;color:var(--text-muted);margin-top:10px;font-style:italic;line-height:1.6}
+.rarity-sources{margin-top:14px;padding:12px 14px;background:rgba(255,255,255,0.02);border:1px dashed rgba(255,255,255,0.08);border-radius:8px}
+.rarity-sources-title{font-size:11px;font-weight:700;color:var(--text-secondary);letter-spacing:.05em;margin-bottom:8px}
+.rarity-sources ul{list-style:none;padding:0;margin:0}
+.rarity-sources li{font-size:11px;color:var(--text-muted);line-height:1.75;padding-left:14px;position:relative;margin-bottom:3px}
+.rarity-sources li::before{content:'•';position:absolute;left:0;color:var(--text-muted)}
+.rarity-sources a{color:#a5b4fc;text-decoration:underline dotted;text-decoration-thickness:1px;text-underline-offset:2px}
+.rarity-sources a:hover{color:#c7d2fe}
+
+/* === 用語ツールチップ === */
+abbr.term{text-decoration:none;border-bottom:1px dotted rgba(201,168,76,0.5);cursor:help;color:inherit;position:relative}
+abbr.term:hover,abbr.term:focus{border-bottom-color:#fde68a;border-bottom-style:solid;color:#fde68a;outline:none}
+abbr.term::after{content:attr(data-tip);position:absolute;left:50%;bottom:calc(100% + 8px);transform:translateX(-50%);background:#242836;color:#e5e7eb;padding:10px 14px;border-radius:8px;font-size:13px;font-weight:400;line-height:1.75;min-width:240px;max-width:340px;box-shadow:0 8px 24px rgba(0,0,0,0.5),0 0 0 1px rgba(201,168,76,0.3);opacity:0;pointer-events:none;transition:opacity .15s;z-index:50;white-space:normal;text-align:left;font-style:normal}
+abbr.term:hover::after,abbr.term:focus::after{opacity:1}
+@media(max-width:600px){
+  abbr.term::after{position:fixed;left:10px;right:10px;bottom:auto;top:auto;transform:none;max-width:none;min-width:0}
+  abbr.term:hover::after,abbr.term:focus::after{top:calc(100% + 4px);left:-8px;right:auto;transform:none}
+}
+
+/* === 用語ガイド（折りたたみ） === */
+.glossary-details{background:rgba(99,102,241,0.04);border:1px solid rgba(99,102,241,0.2);border-radius:var(--r-md);padding:12px 16px;margin:16px 0}
+.glossary-details summary{cursor:pointer;font-size:14px;color:#c7d2fe;list-style:none;padding:2px 0;user-select:none}
+.glossary-details summary::-webkit-details-marker{display:none}
+.glossary-details summary::before{content:'▸ ';color:#a5b4fc;margin-right:4px}
+.glossary-details[open] summary::before{content:'▾ '}
+.glossary-details[open] summary{margin-bottom:12px;padding-bottom:10px;border-bottom:1px solid rgba(99,102,241,0.15)}
+.glossary-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:10px}
+.glossary-item{padding:10px 12px;background:rgba(255,255,255,0.02);border-radius:8px}
+.glossary-term{font-size:14px;font-weight:700;color:#fde68a;margin-bottom:4px}
+.glossary-expl{font-size:12px;color:var(--text-secondary);line-height:1.75}
+.glossary-hint{font-size:11px;color:var(--text-muted);margin-top:10px;padding-top:10px;border-top:1px dashed rgba(99,102,241,0.15);line-height:1.7;font-style:italic}
+
+/* === Cross-Reference Insight === */
+.cross-section{margin:18px 0}
+.cross-section-label{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:700;letter-spacing:.03em;margin-bottom:12px;padding:8px 14px;border-radius:8px}
+.cross-section-label-agree{background:rgba(34,197,94,0.08);color:#86efac;border:1px solid rgba(34,197,94,0.2)}
+.cross-section-label-tension{background:rgba(251,191,36,0.08);color:#fbbf24;border:1px solid rgba(251,191,36,0.2)}
+.cross-label-emoji{font-size:16px}
+.cross-grid{display:flex;flex-direction:column;gap:12px}
+.cross-card{background:var(--surface2);border:1px solid var(--border);border-radius:var(--r-md);padding:14px 16px}
+.cross-agree{border-left:3px solid #22c55e}
+.cross-tension{border-left:3px solid #fbbf24}
+.cross-card-header{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.cross-marker-agree{font-size:10px;font-weight:700;padding:3px 8px;border-radius:10px;background:rgba(34,197,94,0.15);color:#86efac;letter-spacing:.08em}
+.cross-marker-tension{font-size:10px;font-weight:700;padding:3px 8px;border-radius:10px;background:rgba(251,191,36,0.15);color:#fbbf24;letter-spacing:.08em}
+.cross-card-title{font-size:15px;font-weight:600;color:#fff;flex:1}
+.cross-card-body{font-size:13px;color:var(--text-secondary);line-height:1.8;margin-bottom:10px}
+.cross-card-body strong{color:#c7d2fe;font-weight:600}
+.cross-card-insight{font-size:14px;color:#e5e7eb;line-height:1.85;padding:10px 12px;background:rgba(99,102,241,0.05);border-radius:6px}
+.cross-card-insight strong{color:#fde68a}
+.cross-empty{font-size:13px;color:var(--text-secondary);font-style:italic;padding:12px 14px;background:rgba(255,255,255,0.02);border-radius:8px;line-height:1.8}
+@media(max-width:600px){
+  .rarity-headline{gap:8px}
+  .rarity-headline-main{font-size:14px;width:100%}
+  .rarity-headline-main strong{font-size:20px}
+}
 .locked-row{height:16px;background:var(--surface2);border-radius:4px;margin-bottom:12px}
 .locked-row.short{width:60%}
 .locked-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:20px}
@@ -247,10 +438,54 @@ body::before{content:'';position:fixed;top:0;left:0;width:100%;height:100%;opaci
 <section class="hero">
   <div class="hero-particles"></div>
   <div class="hero-content">
-    <div class="archetype-en">The Mountain</div>
+    
     <h1 class="archetype-name">不動の山の求道者</h1>
     <div class="hero-tagline">静かに燃える、唯一の存在</div>
     <div class="hero-name">太田 亜也子</div>
+    
+<div class="rarity-bar">
+  <span class="rarity-badge-top">組み合わせ分類 × 日本人分布</span>
+  <div class="rarity-dual-geo">
+    <div class="geo-stat geo-jp">
+      <div class="geo-label">🇯🇵 日本</div>
+      <div class="geo-main"><span class="geo-n">3,780</span> 人に 1 人</div>
+      <div class="geo-count">= 約 <strong>32,671</strong> 人</div>
+    </div>
+    <div class="geo-stat geo-world">
+      <div class="geo-label">🌏 世界</div>
+      <div class="geo-main"><span class="geo-n">4,645</span> 人に 1 人</div>
+      <div class="geo-count">= 約 <strong>1,754,514</strong> 人</div>
+    </div>
+  </div>
+  <div class="rarity-context-note">珍しい組み合わせ</div>
+
+  <div class="rarity-synthesis"><strong>几帳面と計画性</strong>（A型） × <strong>疾走者</strong>（午年） × <strong>どっしりした山の安定感</strong>（<abbr class="term" data-tip="四柱推命で、生まれた日から計算される「あなたの本体・判断の軸」。10種類（甲乙丙丁戊己庚辛壬癸）のどれか。西洋占星術の「太陽星座」に相当する最重要項目。" tabindex="0">戊日主</abbr>） × <strong>情報と言葉の達人</strong>（♊ 双子座）——この 4 つが重なり合って生まれる、あなたならではの貴重なブレンドでございます。</div>
+
+  <div class="rarity-breakdown">
+    <div class="rarity-item"><div class="rarity-value">A</div><div class="rarity-label">A型<br>（4種中）</div></div>
+    <div class="rarity-item"><div class="rarity-value">午</div><div class="rarity-label">午年<br>（12種中）</div></div>
+    <div class="rarity-item"><div class="rarity-value">戊</div><div class="rarity-label">戊日主<br>（10種中）</div></div>
+    <div class="rarity-item"><div class="rarity-value" style="font-size:18px">♊</div><div class="rarity-label">双子座<br>（12星座中）</div></div>
+    <div class="rarity-item rarity-item-accent"><div class="rarity-value">霊合</div><div class="rarity-label">霊合星人<br>（15%・稀少体質）</div></div>
+  </div>
+
+  <!-- 旧: rarity-scale セクションは 2026-04-16 にユーザー判断で削除 (出典不正確・意味不明瞭) -->
+  <!-- 代替: Hero の 日本/世界 dual-geo 表示で十分な Aha moment が成立している -->
+
+
+  <div class="rarity-sources">
+    <div class="rarity-sources-title">📊 算出根拠</div>
+    <ul>
+      <li>血液型分布（日本）: <a href="https://www.jrc.or.jp/donation/about/type/" target="_blank" rel="noopener">日本赤十字社 血液事業本部</a> — A 38.1% / O 30.7% / B 21.8% / AB 9.4%</li>
+      <li>血液型分布（世界）: <a href="https://www.redcrossblood.org/donate-blood/blood-types.html" target="_blank" rel="noopener">American Red Cross / Stanford Blood Center</a> — O 46% / A 31% / B 16% / AB 7%</li>
+      <li>日本の総人口: <a href="https://www.stat.go.jp/data/jinsui/" target="_blank" rel="noopener">総務省統計局 人口推計</a>（2026年4月概算値 約 1億2,348万人）</li>
+      <li>世界の総人口: <a href="https://population.un.org/wpp/" target="_blank" rel="noopener">国連 World Population Prospects 2024</a>（2026年推計 約 81.5億人）</li>
+      <li>干支 12種 / 日主 10種 / 太陽星座 12種は、暦上の等分布を仮定</li>
+      <li>4 要素は互いに独立と仮定して同時発生確率を算出</li>
+    </ul>
+  </div>
+</div>
+
     <div class="stats"><div class="stat-card"><div class="label">2026年</div><div class="value" style="color:#facc15">矛盾期 66</div></div></div>
     <div class="hub-cards-grid">
       <div class="hub-card-mini" onclick="document.getElementById('core-identity').scrollIntoView({behavior:'smooth'});var c=document.querySelector('#core-identity').closest('.hub-card');if(c&&!c.classList.contains('expanded'))c.classList.add('expanded');">
@@ -261,7 +496,7 @@ body::before{content:'';position:fixed;top:0;left:0;width:100%;height:100%;opaci
       <div class="hub-card-mini" onclick="document.getElementById('monthly').scrollIntoView({behavior:'smooth'});var c=document.querySelector('#monthly').closest('.hub-card');if(c&&!c.classList.contains('expanded'))c.classList.add('expanded');">
         <div class="hub-card-mini-icon" style="background:rgba(234,179,8,0.15);color:#facc15">&#9670;</div>
         <div><div class="hub-card-mini-title">今月の運気</div>
-        <div class="hub-card-mini-summary">4月 — 追い風。積極的に動ける</div></div>
+        <div class="hub-card-mini-summary">4月 — 震宮（発展・始動）× 六星「立花」</div></div>
       </div>
       <div class="hub-card-mini" onclick="document.getElementById('blueprint').scrollIntoView({behavior:'smooth'});var c=document.querySelector('#blueprint').closest('.hub-card');if(c&&!c.classList.contains('expanded'))c.classList.add('expanded');">
         <div class="hub-card-mini-icon" style="background:rgba(139,92,246,0.15);color:var(--accent-purple-light)">&#9829;</div>
@@ -271,7 +506,14 @@ body::before{content:'';position:fixed;top:0;left:0;width:100%;height:100%;opaci
     </div>
   </div>
 </section>
-<div class="hub-card" id="core-identity-card">
+
+<details class="glossary-details">
+  <summary><strong>📖 この資料の用語ガイド</strong> — クリックで展開（日主・本命星・運命星などの意味）</summary>
+  <div class="glossary-grid"><div class="glossary-item"><div class="glossary-term">日主</div><div class="glossary-expl">四柱推命で、生まれた日から計算される「あなたの本体・判断の軸」。10種類（甲乙丙丁戊己庚辛壬癸）のどれか。西洋占星術の「太陽星座」に相当する最重要項目。</div></div><div class="glossary-item"><div class="glossary-term">本命星</div><div class="glossary-expl">九星気学で、生まれ年から計算される「社会に出る時のあなたの顔」。9種類（一白水星〜九紫火星）のどれか。</div></div><div class="glossary-item"><div class="glossary-term">運命星</div><div class="glossary-expl">六星占術で、生まれ年月日から計算される「人生の時期を司る星」。6種類（木・火・土・金・水・天王星人 × ±）。12年周期で運気が巡る。</div></div><div class="glossary-item"><div class="glossary-term">霊合星人</div><div class="glossary-expl">六星占術で、2つの運命星を同時に持つ稀少体質（人口15%）。運気の振れ幅が一般の2倍で、良い時は倍、悪い時も倍という特徴。</div></div><div class="glossary-item"><div class="glossary-term">太陽星座</div><div class="glossary-expl">西洋占星術で、生年月日から決まる12星座（牡羊〜魚）。あなたの基本的な気質・自我の方向性を示す。</div></div><div class="glossary-item"><div class="glossary-term">五行</div><div class="glossary-expl">東洋占術の基礎理論。万物を「木・火・土・金・水」の 5 要素に分類。あなたの命式で欠けている要素は「意識的に補うべき方向」。</div></div><div class="glossary-item"><div class="glossary-term">陰陽</div><div class="glossary-expl">東洋思想の基本。すべての物事が持つ 2 つの側面。陽=外向・動・表、陰=内向・静・裏。人間も必ずどちらかに傾く。</div></div><div class="glossary-item"><div class="glossary-term">干支</div><div class="glossary-expl">生まれ年の 12 動物（子・丑・寅・卯・辰・巳・午・未・申・酉・戌・亥）。その人の直感的な気質アーキタイプ。</div></div><div class="glossary-item"><div class="glossary-term">四柱推命</div><div class="glossary-expl">中国発祥の古典的な運命学。生まれた「年月日時」の 4 本の柱（= 四柱）から命式を作り、人生を読み解く体系。</div></div><div class="glossary-item"><div class="glossary-term">九星気学</div><div class="glossary-expl">日本で千年以上使われる運命学。9つの星 × 9 年周期で人生の流れを読む体系。</div></div><div class="glossary-item"><div class="glossary-term">六星占術</div><div class="glossary-expl">細木数子氏が大成させた日本の運命学。6 つの運命星 × 12 年周期で運気のピークと停滞を読む体系。</div></div></div>
+  <p class="glossary-hint">本文中の <abbr class="term" data-tip="用語の上にマウスを乗せる、またはタップすると説明が出ます">点線付きの用語</abbr> は、ホバー or タップで説明が出ます。</p>
+</details>
+
+<div class="hub-card expanded" id="core-identity-card">
   <div class="hub-card-preview" onclick="this.parentElement.classList.toggle('expanded')">
     <div class="hub-card-icon" style="background:rgba(99,102,241,0.12);color:#a5b4fc">&#9733;</div>
     <div>
@@ -283,24 +525,282 @@ body::before{content:'';position:fixed;top:0;left:0;width:100%;height:100%;opaci
   <div class="hub-card-content">
     <section class="section" id="core-identity">
   <div class="section-quote">"あなたを一言で表すなら—"</div>
-  
+  <div class="insight-box" style="border-color:rgba(99,102,241,0.4);background:linear-gradient(135deg,rgba(99,102,241,0.12),rgba(139,92,246,0.08));">
+    <div class="insight-title" style="font-size:15px;">統合インサイト</div>
+    <p style="line-height:1.9;font-size:14px;">太田 亜也子さんを一言で言い表すなら、四柱推命の日主が示す「<strong>戊日主</strong>」——動かない山のような、どっしりとした安定感をお持ちです。周囲が揺れても芯がぶれず、自然と人から頼られるタイプでいらっしゃいます。 そして、九星気学の本命星から見える社会に出た時のお顔は「<strong>四緑木星</strong>」——「風」の星をお持ちです。人と人のご縁を繋ぎ、信用を育てていく役目を担っていらっしゃいます。目立たずとも影響力の大きいお方です。 血液型は「<strong>A型</strong>」で、真面目・几帳面・計画的で、信頼をコツコツ積み上げていかれるタイプの方です（日本人の約 38%）。生年月日という揺るぎない事実だけから、太田 亜也子さんの核はこのように浮かび上がります。</p>
+    <div class="collapsible-content" style="display:none"><p style="line-height:1.9;font-size:14px;margin-top:12px;">視点を変えて西洋占星術で見ると、あなたは <strong>双子座（風・柔軟宮）— 情報と言葉の達人</strong>。東洋の干支に目を向けると <strong>午年（疾走者）</strong>でいらっしゃいます。起源の全く違う 2 つの体系が、あなたの気質を別々の角度から描き出しているのです。東洋と西洋の読みが重なり合う場所に、<strong>「本当に変わらないあなたの軸」</strong>が静かに見えてまいります。</p><p style="line-height:1.9;font-size:14px;margin-top:12px;">さらに六星占術の視点を加えますと、あなたは <strong>火星人（霊合星人）</strong>でいらっしゃいます。燃え立つ火星人でいらっしゃいます。情熱と行動力の塊。じっとしていらっしゃると不調に傾きやすい、動いて整う方です。 霊合星人は日本人口のわずか 15% しかいない希少な体質で、2 つの運命星を同時に宿すため <strong>運気の振れ幅が一般の 2 倍</strong>と言われております。好調の時期は抜きん出て、不調の時期は深く沈む——そんなダイナミックなリズムが、あなたの人生を形作っていらっしゃるのです。</p><p style="line-height:1.9;font-size:14px;margin-top:12px;">最後に、お気を付けいただきたい点を一つ。あなたの命式で欠けている五行は「<strong>木・金</strong>」でいらっしゃいます。これは「弱点」ではございません。「<strong>意識的にお補いになると良い方向</strong>」と捉えていただければ幸いです。自然体では挑戦や拡張の行動、決断と手放すこと・期限を設けることが後回しになりがちですので、予定や環境を整える形で仕組みになさると、あなたの本来の強みが最大限に活きてまいります。</p></div>
+    <button class="collapse-toggle" onclick="this.previousElementSibling.style.display=this.previousElementSibling.style.display==='none'?'block':'none';this.textContent=this.previousElementSibling.style.display==='none'?'続きを読む':'閉じる'">続きを読む</button>
+  </div>
   <div class="grid grid-4" style="margin-top:16px">
-    <div class="card tc"><div class="card-label">Core Essence（本質）</div>
+    <div class="card tc"><div class="card-label">本質</div>
       <div class="card-value">戊土 × 四緑木星</div>
       <div class="card-sub">大地の安定 × 信用と調和</div></div>
-    <div class="card tc"><div class="card-label">Strongest Axis（最強の軸）</div>
-      <div class="card-value">—</div>
-      <div class="card-sub"></div></div>
-    <div class="card tc"><div class="card-label">Duality（二面性）</div>
+    <div class="card tc"><div class="card-label">最強の軸</div>
+      <div class="card-value">疾走者 × 戊の本質</div>
+      <div class="card-sub">干支が示す気質 + 日主が示す判断軸</div></div>
+    <div class="card tc"><div class="card-label">二面性</div>
       <div class="card-value">誠実 × 繊細</div>
-      <div class="card-sub">A型 × 霊合星人 × エニアグラム ?</div></div>
-    <div class="card tc"><div class="card-label">Watch Out（注意点）</div>
+      <div class="card-sub">A型 × 霊合星人（二つの運命星）</div></div>
+    <div class="card tc"><div class="card-label">注意点</div>
       <div class="card-value" style="color:var(--yellow)">木・金の欠如</div>
       <div class="card-sub">成長力・発展 × 決断力・収穫を意識的に補う</div></div>
   </div>
 </section>
   </div>
-</div><div class="hub-card" id="blueprint-card">
+</div><div class="hub-card expanded" id="eto-blood-card">
+  <div class="hub-card-preview" onclick="this.parentElement.classList.toggle('expanded')">
+    <div class="hub-card-icon" style="background:rgba(251,191,36,0.12);color:var(--accent-amber-light)">&#9775;</div>
+    <div>
+      <div class="hub-card-title">干支 × 血液型</div>
+      <div class="hub-card-summary">午年 × A型 — 日本人の希少組み合わせ</div>
+    </div>
+    <div class="hub-card-arrow"></div>
+  </div>
+  <div class="hub-card-content">
+    
+<div class="eto-hero">
+  <div class="eto-emoji">🐎</div>
+  <div class="eto-name">
+    <div class="eto-title">午年 — 疾走者</div>
+    <div class="eto-reading">午（うま年）× A型</div>
+  </div>
+  <div class="eto-rarity">
+    <div class="eto-rarity-label">この組み合わせ</div>
+    <div class="eto-rarity-value">日本人の約 3.2%</div>
+  </div>
+</div>
+<div class="eto-narrative">
+  <p>止まると不調になりやすく、動いて整うタイプの方でいらっしゃいます。人付き合いもオープンで、束縛よりも自由を選ばれる凛としたお姿がございます。</p>
+  <div class="eto-cross">
+    <div class="eto-cross-label">干支 × 血液型 の掛け算</div>
+    <div class="eto-cross-body">疾走する行動力（午）× 真面目で計画的（A）。「走りながら計画する」矛盾を両立。勢いと段取りが同居。</div>
+  </div>
+</div>
+<div class="eto-traits-row"><span class="eto-trait">行動力</span><span class="eto-trait">明朗</span><span class="eto-trait">独立心</span></div>
+<div class="confidence-badge">この分析は、生年月日と血液型のみから導き出したものでございます。確度はおよそ 70% 程度。詳しい質問にお答えいただきますと、さらに鮮明に見えてまいります。</div>
+
+  </div>
+</div><div class="hub-card expanded" id="integration-map-card">
+  <div class="hub-card-preview" onclick="this.parentElement.classList.toggle('expanded')">
+    <div class="hub-card-icon" style="background:rgba(34,197,94,0.12);color:#86efac">&#9881;</div>
+    <div>
+      <div class="hub-card-title">5つの体系が示す、あなたの軸</div>
+      <div class="hub-card-summary">多数決で浮かび上がる「本当のあなた」</div>
+    </div>
+    <div class="hub-card-arrow"></div>
+  </div>
+  <div class="hub-card-content">
+    
+<p class="section-intro">四柱推命・九星気学・六星占術・西洋占星術・血液型——起源の異なる 5 つの体系が、<strong>3 つの軸</strong>から「あなた」を独立に読み解いていらっしゃいます。<strong>多数決で見えてくる合意</strong>は高い確信度を示し、<strong>体系間で割れる軸</strong>はあなたならではの固有の揺らぎを示してまいります。</p>
+
+<div class="axes-stack">
+<div class="axis-card">
+  <div class="axis-card-header">
+    <div class="axis-card-name">内向 ⇄ 外向</div>
+    <span class="verdict-badge verdict-strong">強い合意: 4/5 体系が「外向」</span>
+  </div>
+  <div class="axis-card-verdict"><strong>4 つの体系</strong>が揃って「<strong>外向</strong>」を指していらっしゃいます。外に発信・行動・交流することに力が集まる——というのが、あなたの軸でございます。</div>
+  <div class="axis-card-systems">
+    <div class="axis-column axis-column-minority">
+      <div class="axis-column-title">「内向」を指す（1体系）</div>
+      <div class="axis-column-chips"><span class="sys-chip sys-chip-left">血液型（A型）</span></div>
+    </div>
+    <div class="axis-column axis-column-dominant">
+      <div class="axis-column-title">「外向」を指す（4体系）</div>
+      <div class="axis-column-chips"><span class="sys-chip sys-chip-right">四柱推命（日主）</span><span class="sys-chip sys-chip-right">九星気学（本命星）</span><span class="sys-chip sys-chip-right">六星占術（運命星）</span><span class="sys-chip sys-chip-right">西洋占星術（太陽星座）</span></div>
+    </div>
+  </div>
+  <div class="axis-outlier"><span class="axis-outlier-label">ただし</span><strong>血液型</strong> だけは「<strong>内向</strong>」を指していらっしゃいます——これがあなたの隠れたお顔、固有の揺らぎポイントでございます。</div>
+</div>
+
+<div class="axis-card">
+  <div class="axis-card-header">
+    <div class="axis-card-name">安定 ⇄ 変化</div>
+    <span class="verdict-badge verdict-lean">やや傾向あり: 3/5 が「変化」</span>
+  </div>
+  <div class="axis-card-verdict"><strong>3 つの体系</strong>が「<strong>変化</strong>」、<strong>2 つ</strong>が「安定」を指していらっしゃいます。どちらかと言えば変化寄りですが、場面によっては安定のモードも顔をお出しになる、二面性のある方でいらっしゃいます。</div>
+  <div class="axis-card-systems">
+    <div class="axis-column axis-column-minority">
+      <div class="axis-column-title">「安定」を指す（2体系）</div>
+      <div class="axis-column-chips"><span class="sys-chip sys-chip-left">四柱推命（日主）</span><span class="sys-chip sys-chip-left">血液型（A型）</span></div>
+    </div>
+    <div class="axis-column axis-column-dominant">
+      <div class="axis-column-title">「変化」を指す（3体系）</div>
+      <div class="axis-column-chips"><span class="sys-chip sys-chip-right">九星気学（本命星）</span><span class="sys-chip sys-chip-right">六星占術（運命星）</span><span class="sys-chip sys-chip-right">西洋占星術（太陽星座）</span></div>
+    </div>
+  </div>
+  <div class="axis-outlier"><span class="axis-outlier-label">ただし</span><strong>四柱推命</strong> と <strong>血液型</strong> だけは「<strong>安定</strong>」を指していらっしゃいます——これがあなたの隠れたお顔、固有の揺らぎポイントでございます。</div>
+</div>
+
+<div class="axis-card">
+  <div class="axis-card-header">
+    <div class="axis-card-name">思考 ⇄ 情動</div>
+    <span class="verdict-badge verdict-strong">強い合意: 4/5 体系が「情動」</span>
+  </div>
+  <div class="axis-card-verdict"><strong>4 つの体系</strong>が揃って「<strong>情動</strong>」を指していらっしゃいます。直感・感情・身体感覚で物事を捉える——というのが、あなたの軸でございます。</div>
+  <div class="axis-card-systems">
+    <div class="axis-column axis-column-minority">
+      <div class="axis-column-title">「思考」を指す（1体系）</div>
+      <div class="axis-column-chips"><span class="sys-chip sys-chip-left">西洋占星術（太陽星座）</span></div>
+    </div>
+    <div class="axis-column axis-column-dominant">
+      <div class="axis-column-title">「情動」を指す（4体系）</div>
+      <div class="axis-column-chips"><span class="sys-chip sys-chip-right">四柱推命（日主）</span><span class="sys-chip sys-chip-right">九星気学（本命星）</span><span class="sys-chip sys-chip-right">六星占術（運命星）</span><span class="sys-chip sys-chip-right">血液型（A型）</span></div>
+    </div>
+  </div>
+  <div class="axis-outlier"><span class="axis-outlier-label">ただし</span><strong>西洋占星術</strong> だけは「<strong>思考</strong>」を指していらっしゃいます——これがあなたの隠れたお顔、固有の揺らぎポイントでございます。</div>
+</div>
+</div>
+
+
+<div class="consensus-box">
+  <div class="consensus-title">◇ 4つ以上の体系が口を揃えて言うこと</div>
+  <ul><li>「外向」軸で<strong>4/5</strong>体系が一致</li><li>「情動」軸で<strong>4/5</strong>体系が一致</li></ul>
+</div>
+
+<div class="confidence-badge">この分析は、生年月日と血液型のみから導き出しており、確度はおよそ 75% でございます。性格アンケート（Tier 2）にお進みいただくと、心理学データが加わり、各軸の確度が 90% を超えてまいります。</div>
+
+  </div>
+</div><div class="hub-card expanded" id="cross-reference-card">
+  <div class="hub-card-preview" onclick="this.parentElement.classList.toggle('expanded')">
+    <div class="hub-card-icon" style="background:rgba(99,102,241,0.12);color:#a5b4fc">&#10021;</div>
+    <div>
+      <div class="hub-card-title">クロスリファレンス・インサイト</div>
+      <div class="hub-card-summary">体系を跨いだ一致点と矛盾点から読む「あなた」</div>
+    </div>
+    <div class="hub-card-arrow"></div>
+  </div>
+  <div class="hub-card-content">
+    
+<p class="section-intro">単一の占術だけでは見えてこない、<strong>体系を跨いだ共通点と矛盾点</strong>を抽出いたしました。複数の千年単位の体系が同じ方向を指している時、それは偶然ではないと申せましょう。逆に、体系間で結論が割れる軸こそが、あなたならではの<strong>固有の揺らぎ</strong>でございます。</p>
+
+<div class="cross-section">
+  <div class="cross-section-label cross-section-label-agree">
+    <span class="cross-label-emoji">◇</span>
+    複数体系が口を揃えて申し上げること — 高い確信度で見えてくる自己像
+  </div>
+  <div class="cross-grid">
+<div class="cross-card cross-agree">
+  <div class="cross-card-header">
+    <span class="cross-marker-agree">交差点</span>
+    <div class="cross-card-title">本命星「四緑木星」× 日主「戊」の二層構造</div>
+  </div>
+  <div class="cross-card-body">九星気学の<strong>四緑木星</strong>が社会に出る時の顔。四柱推命の<strong>戊</strong>が内側で動いている本体。</div>
+  <div class="cross-card-insight"><strong>だから、</strong>外から見えるあなたと、内側で動いているあなたは少し違っていらっしゃいます。この <strong>「外の自分 × 内の自分」のギャップ</strong>を自覚なさることが、疲れにくい生き方への第一歩でございます。</div>
+</div>
+
+<div class="cross-card cross-agree">
+  <div class="cross-card-header">
+    <span class="cross-marker-agree">交差点</span>
+    <div class="cross-card-title">午年（疾走者）× 戊日主（どっしりした山の安定感）</div>
+  </div>
+  <div class="cross-card-body">干支が示す<strong>生まれ持った気質</strong>と、日主が示す<strong>日々の判断の軸</strong>が重なる場所。</div>
+  <div class="cross-card-insight"><strong>だから、</strong>周囲に対しては疾走者として振る舞っていらっしゃりながら、重要な判断ではどっしりした山の安定感が働いていらっしゃいます。この使い分けが無意識にできていらっしゃるなら、それはあなたの強みの核と申せましょう。</div>
+</div>
+
+<div class="cross-card cross-agree">
+  <div class="cross-card-header">
+    <span class="cross-marker-agree">交差点</span>
+    <div class="cross-card-title">A型の基礎 × 欠けている五行（木・金）</div>
+  </div>
+  <div class="cross-card-body">A型の<strong>几帳面と計画性</strong>をベースに、五行では<strong>木・金</strong>が不足。</div>
+  <div class="cross-card-insight"><strong>だから、</strong>自然体ではうまく発揮されない「挑戦と拡張、決断と切り捨て」を、意識的に予定へお入れになる運用が効果的でございます。欠けた要素は「弱点」ではなく、「意識なさると良い補完ポイント」とお考えください。</div>
+</div>
+
+<div class="cross-card cross-agree">
+  <div class="cross-card-header">
+    <span class="cross-marker-agree">交差点</span>
+    <div class="cross-card-title">火星人の 2026 年は「達成」</div>
+  </div>
+  <div class="cross-card-body">12年周期の六星占術で、あなたは今「実りの時期」。エネルギー指数 <strong>90/100</strong>。</div>
+  <div class="cross-card-insight"><strong>だから、</strong><strong>この1年のお立ち位置</strong>を知っておかれますと、無理に頑張られるべき時か、静かに整えていかれる時かが判断しやすくなります。九星気学の今年の運気と合わせて読まれると、さらに立体的にお見えになってまいります。</div>
+</div>
+</div>
+</div>
+
+<div class="cross-section">
+  <div class="cross-section-label cross-section-label-tension">
+    <span class="cross-label-emoji">⚖</span>
+    体系間で揺らぐポイント — あなたの固有性が現れる場所
+  </div>
+  <div class="cross-grid">
+<div class="cross-card cross-tension">
+  <div class="cross-card-header">
+    <span class="cross-marker-tension">揺らぎ</span>
+    <div class="cross-card-title">推進力 × 几帳面さ</div>
+  </div>
+  <div class="cross-card-body">日主「戊」（陽）は勢い。血液型「A」は計画性。</div>
+  <div class="cross-card-insight"><strong>つまり、</strong>「走りながら細かい段取りを詰める」という、稀有な矛盾をお持ちです。スピードと精度を同時にお出しになれますが、両立に疲れやすくもありますので、定期的に片方をお休ませになると良いでしょう。</div>
+</div>
+
+<div class="cross-card cross-tension">
+  <div class="cross-card-header">
+    <span class="cross-marker-tension">揺らぎ</span>
+    <div class="cross-card-title">霊合星人という「二つの顔」</div>
+  </div>
+  <div class="cross-card-body">六星占術で <strong>火星人</strong> にサブ星を持つ霊合星人（人口15%）。</div>
+  <div class="cross-card-insight"><strong>つまり、</strong>状況によって全く違う人格モードが立ち上がるのが、霊合星人のあなたの特徴でいらっしゃいます。周囲は「あの時と印象が違っていた」と感じるかもしれませんが、ご本人にとってはどちらも本物の自分でいらっしゃるのです。使い分けを自覚なさると、場面ごとに最適なご自身をお選びいただけます。</div>
+</div>
+</div>
+</div>
+
+<div class="confidence-badge">確度はおよそ 75%（生年月日と血液型ベースの分析）でございます。性格アンケート（Tier 2）にお進みいただくと、あなたの心理的パターンと占術データの交差点がさらに鮮明に浮かび上がってまいります。</div>
+
+  </div>
+</div><div class="hub-card expanded" id="strengths-traps-card">
+  <div class="hub-card-preview" onclick="this.parentElement.classList.toggle('expanded')">
+    <div class="hub-card-icon" style="background:rgba(236,72,153,0.12);color:#f9a8d4">&#9876;</div>
+    <div>
+      <div class="hub-card-title">強み × 裏返しの罠</div>
+      <div class="hub-card-summary">あなたの強みが暴走した時の落とし穴</div>
+    </div>
+    <div class="hub-card-arrow"></div>
+  </div>
+  <div class="hub-card-content">
+    
+<p class="section-intro">「強み」と「罠」は、表裏一体のもの。Gallup CliftonStrengths の Shadow Side 理論を、あなたの<strong>生年月日＋血液型</strong>に適用いたしました。強みが暴走した時の落とし穴を先に知っておかれることが、賢明な自分運用への第一歩でございます。</p>
+<div class="strengths-traps-grid">
+<div class="strength-pair">
+  <div class="strength-side">
+    <div class="pair-label-pos">強み 1</div>
+    <div class="pair-body">どっしりした安定感</div>
+  </div>
+  <div class="pair-connector">⇄</div>
+  <div class="shadow-side">
+    <div class="pair-label-neg">裏返しの罠</div>
+    <div class="pair-body">変化を拒みやすい</div>
+  </div>
+</div>
+
+<div class="strength-pair">
+  <div class="strength-side">
+    <div class="pair-label-pos">強み 2</div>
+    <div class="pair-body">信頼の厚さ</div>
+  </div>
+  <div class="pair-connector">⇄</div>
+  <div class="shadow-side">
+    <div class="pair-label-neg">裏返しの罠</div>
+    <div class="pair-body">腰が重い</div>
+  </div>
+</div>
+
+<div class="strength-pair">
+  <div class="strength-side">
+    <div class="pair-label-pos">強み 3</div>
+    <div class="pair-body">包容力のある包み込む力</div>
+  </div>
+  <div class="pair-connector">⇄</div>
+  <div class="shadow-side">
+    <div class="pair-label-neg">裏返しの罠</div>
+    <div class="pair-body">融通が利かない</div>
+  </div>
+</div>
+</div>
+<p class="strength-extra"><strong>四緑木星</strong>の「縁と信用を育てる力」が、これらの強みを社会へお出しになる舞台装置となっていらっしゃいます。</p><p class="strength-extra"><strong>霊合星人</strong>という希少体質（人口15%）をお持ちのため、この強みと罠の振れ幅が一般の2倍と言われております。好調時は抜きん出て、不調時は深く沈む——そんな特徴がございます。</p>
+<div class="confidence-badge">この分析は、生年月日と血液型のみから導き出したもので、確度はおよそ 70% でございます。性格アンケート（Tier 2）にお答えいただくと、あなた個人の「強み序列」と「暴走しやすい順」が見えてまいります。</div>
+
+  </div>
+</div><div class="hub-card expanded" id="blueprint-card">
   <div class="hub-card-preview" onclick="this.parentElement.classList.toggle('expanded')">
     <div class="hub-card-icon" style="background:rgba(139,92,246,0.12);color:var(--accent-purple-light)">&#9829;</div>
     <div>
@@ -322,7 +822,7 @@ body::before{content:'';position:fixed;top:0;left:0;width:100%;height:100%;opaci
     </div></div>
 </div>
   </div>
-</div><div class="hub-card" id="personality-card">
+</div><div class="hub-card expanded" id="personality-card">
   <div class="hub-card-preview" onclick="this.parentElement.classList.toggle('expanded')">
     <div class="hub-card-icon" style="background:rgba(59,130,246,0.12);color:var(--accent-blue-light)">&#9632;</div>
     <div>
@@ -354,7 +854,7 @@ body::before{content:'';position:fixed;top:0;left:0;width:100%;height:100%;opaci
   </div>
 </section>
   </div>
-</div><div class="hub-card" id="divination-card">
+</div><div class="hub-card expanded" id="divination-card">
   <div class="hub-card-preview" onclick="this.parentElement.classList.toggle('expanded')">
     <div class="hub-card-icon" style="background:rgba(139,92,246,0.12);color:var(--accent-purple-light)">&#9679;</div>
     <div>
@@ -447,7 +947,7 @@ body::before{content:'';position:fixed;top:0;left:0;width:100%;height:100%;opaci
   <div class="unlock-banner">出生時刻を追加すると、時柱・アセンダント・月星座が解放されます</div>
 </section>
   </div>
-</div><div class="hub-card" id="forecast-2026-card">
+</div><div class="hub-card expanded" id="forecast-2026-card">
   <div class="hub-card-preview" onclick="this.parentElement.classList.toggle('expanded')">
     <div class="hub-card-icon" style="background:rgba(234,179,8,0.12);color:#facc15">&#9650;</div>
     <div>
@@ -487,7 +987,7 @@ body::before{content:'';position:fixed;top:0;left:0;width:100%;height:100%;opaci
   </div>
 </section>
   </div>
-</div><div class="hub-card" id="monthly-card">
+</div><div class="hub-card expanded" id="monthly-card">
   <div class="hub-card-preview" onclick="this.parentElement.classList.toggle('expanded')">
     <div class="hub-card-icon" style="background:rgba(59,130,246,0.12);color:var(--accent-blue-light)">&#9671;</div>
     <div>
@@ -580,7 +1080,7 @@ selectMonth(currentMonth);
 </div>
 <footer class="page-footer">
   <div>Self-Insight — Powered by AI × 東洋占術 × 心理学</div>
-  <div style="margin-top:4px;font-size:10px">Generated 2026-04-15</div>
+  <div style="margin-top:4px;font-size:10px">Generated 2026-04-16</div>
 </footer>
 </div>
 <script>

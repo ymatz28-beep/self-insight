@@ -1,11 +1,122 @@
 # Self-Insight — HANDOFF
 
-## [Constancy] 2026-03-30
-- [WARN] structural_reform: generate_dashboard.py is 2348 lines (threshold: 800). Consider splitting.
-- [WARN] post_change_testing: self-insight: 直近42時間以内に変更あり、テスト証跡なし（self-insight/.test_ok）
+## [Constancy] 2026-04-16
+- [WARN] structural_reform: generate_dashboard.py is 3500+ lines (threshold: 800). Consider splitting.
+- [WARN] post_change_testing: 直近 変更あり、テスト証跡なし（self-insight/.test_ok）
 
 ## Last Updated
-2026-03-28 (session #29 — cross-project: 全HANDOFF履歴→SNSネタ21件一括生成, self-insight変更なし)
+2026-04-16 Session — 家族3名反映 + iuma-private/insight/ 統合 + 競合127件調査 + 占い師型トーン統一 Phase 1
+
+## Completed (2026-04-16 Session — 大規模刷新)
+
+### 家族ユーザー追加
+- **data/users/shizuka/**: 手嶋 静（1944-09-25・AB型）Tier 1
+- **data/users/ayako/**: 太田 亜也子（1978-05-26・A型・霊合星人）Tier 1
+- **user_mapping.yaml**: shizuka=8c858d57 / ayako=11cf4757
+
+### 配信アーキテクチャ確定
+- 当初 `iuma-insight.pages.dev` を新規作成 → 越権として即削除
+- 正式配置: **iuma-private.pages.dev/insight/users/{public_id}/**（self-insight プロジェクトの一環として統合）
+- **stock-analyzer/scripts/deploy_private.py** に `build_insight()` 関数追加（`setup_dirs()` の subdir list に `"insight"` 追加、`build_insight()` で users/form/ を copytree、`main()` に呼び出し）
+
+### Tier 1 ダッシュボード機能 大幅拡張
+- **干支 × 血液型カード**: 12 動物アーキタイプ × 4 血液型のクロス narrative
+- **5 体系整合マップ**: 内向⇄外向 / 安定⇄変化 / 思考⇄情動 の 3 軸で各体系の投票を可視化（どの体系がどちらに票を入れるか明記版）
+- **強み × 裏返しの罠カード**: Gallup CliftonStrengths Shadow Side を日主×本命星で再現
+- **クロスリファレンス・インサイト**: 多体系の一致点 + 普遍的二層構造（本命星×日主、干支×日主、血液型×欠五行、今年のフェーズ）+ 揺らぎ（内向日主×外向血液型、霊合星人、欠元素の構造的盲点）
+- **希少性統計バー** → **Japan/World dual-geo 表示**（血液型 × 干支 × 日主 × 太陽星座 = 5,760 通り → 「X人に1人 = 日本に約 N 人 / 世界に約 M 人」）
+
+### 希少性計算の誠実化
+- 旧: "超レア"演出（バーナム効果）+ 計算 1 桁バグ
+- 新: 事実ベース表示 + 出典明記（日本赤十字社: A 38.1/O 30.7/B 21.8/AB 9.4% / 総務省統計局 人口推計 1.238 億 / ARC 世界分布 O 46/A 31/B 16/AB 7% / UN WPP 81.5 億）
+- 「実生活スケール換算」(トヨタ/新宿駅等)は **出典不正確・意味不明瞭として削除**
+
+### 専門用語ガイド統合
+- Hero 直下に `<details class="glossary-details">` で 11 主要用語（日主・本命星・運命星・霊合星人・太陽星座・五行・陰陽・干支・四柱推命・九星気学・六星占術）を折りたたみ表示
+- 本文中の用語に `<abbr class="term">` 点線下線 + ホバー/タップ tooltip
+
+### データ不整合6件修正
+1. BT_NARRATIVE_LONG の "日本人口10%" 文法崩壊 → 正しい文に書き直し
+2. クロスリファレンス narrative の DM_GIST 切り捨て `[:10]+'…'` 除去
+3. Summary cards の `—` と `エニアグラム ?` → Tier 1 フォールバック追加
+4. Core Essence / Strongest Axis / Duality / Watch Out 等の英語ラベル → 日本語化
+5. `<div class="archetype-en">` を Tier 2 以上のみ表示に（母・妹の "The Deep Current" 等削除）
+6. `essence_sub` の「献身と安定」が整合マップ軸「変化」と衝突 → 「母なる支える力」に変更
+
+### 競合調査 127件（5チーム並列）
+- **A 西洋占星術 25+**: Co-Star/CHANI/Pattern/Sanctuary/Nebula 等
+- **B 東洋占術 25+**: 水晶玉子/動物占い/六星占術/ZAPPALLAS/MIROR 等
+- **C 性格診断 25+**: 16Personalities/Enneagram/CliftonStrengths/Human Design 等
+- **D ライフログ 25+**: Reflectly/Finch/Moodfit/Calm/Rosebud 等
+- **E バイラル無料診断 25+**: BuzzFeed/エムグラム/姓名判断/ShindanMaker 等
+- 合計 **127件** をダッシュボードに反映
+
+### 占い師型 ③ トーン統一 Phase 1
+- 選定理由: 7 候補文体（勝間型/中島聡型/占い師型/コーチング型/心理学レポート型/文学詩的/取扱説明書型/箇条書き）を比較。ユーザー判断で「③ 占い師型 → A 読者別切替」順で採用
+- 置換対象: DM_NARRATIVE_LONG（10 干）/ NS_NARRATIVE（9 星）/ ROKUSEI_NARRATIVE（6 星）/ BT_NARRATIVE_LONG（4 型）/ ETO_PROFILES narrative（12 支）/ 統合インサイト 4 段落 / クロスリファレンス Agreement 6 件 + Tension 6 件 / 整合マップ verdict 3 分岐 / 強み×罠 intro + extras / 確度バッジ 4 箇所 / Hero synthesis
+- 未適用（Phase 1.5 候補）: DM_GIST / ETO_GIST 短縮版 / DM_STRENGTHS / 整合マップ left_desc・right_desc / _generate_monthly_narrative / generate_compatibility.py
+
+### 相性診断エンジン作成（未デプロイ）
+- **generate_compatibility.py** 新規作成: 血液型マトリクス + 西洋占星術（元素×アスペクト）+ 四柱推命（日主五行×陰陽）+ 干支（三合/六合/冲）の Tier 1 4体系統合スコア
+- 重み: bt 15% / 西洋 30% / 四柱推命 30% / 干支 25%
+- Tier 2（エニアグラム/HSP/ADHD/24SF/16A）はプレースホルダ
+- **実行・デプロイは未完**
+
+### 切替タイミング決定
+- A（読者別文体）への切替トリガー: ①フィードバック異議 ②β配布直前 ③多様性15人突破 ④有料化前
+- β配布前 MUST: A 完成
+
+## Next Actions（優先順）
+
+1. **3 名フィードバック収集**（1 週間窓）: 母・妹・Yuma がそれぞれ読み、占い師型トーンの違和感・内容精度・UI を評価
+2. **相性診断デプロイ**: generate_compatibility.py 動作確認 → 3 家族ペア（yuma↔shizuka, yuma↔ayako, shizuka↔ayako）生成 → `/insight/compat/{a}-{b}/` 配置 → 各個人ダッシュボードからリンク
+3. **Phase 1.5 占い師型残し**: DM_GIST / ETO_GIST / DM_STRENGTHS / 月間 narrative / compatibility narrative
+4. **16 Archetypes / 24 Strengths 自前開発**: 16P（NERIS）/ CliftonStrengths（Gallup）権利回避。VIA Character Strengths と Jungian Archetypes ベースで独自命名
+5. **シェアカード自動生成**（Canvas/CSS）: アーキタイプ名+希少性+キャッチ+ロゴ。バイラル装置 #1
+6. **A（読者別文体切替）実装**: profile.yaml に `tone_preference: fortune_teller / manual / report` 追加。generate_dashboard.py が切り替え
+7. **Cloudflare Access 保護確認**: iuma-private で既に Yuma only。母・妹がアクセスするなら allowlist 追加必要（現状未確認）
+8. **git commit + push**: 未コミット変更が大量（generate_dashboard.py 3500+行、generate_compatibility.py 新規、data/users/{shizuka,ayako}/）
+
+## Key Decisions
+- **配置**: self-insight プロジェクト内（iuma-private.pages.dev/insight/ 配下）。独立サイト化しない
+- **希少性表示**: バーナム効果演出廃止、公式データ（日本赤十字・総務省・UN）ベースの事実表示のみ
+- **トーン**: 占い師型③を一旦標準、フィードバック次第で読者別切替(A) へ。β配布前に A 完成必須
+- **Tier 2 personality 自前開発**: 16P/SF は商標権利回避のため独自分類設計（VIA+Jungian ベース）
+
+## Blockers
+- generate_dashboard.py 3,500+ 行で肥大化（ファイル分割が必要。現在 [WARN]）
+- 相性診断機能 generate_compatibility.py は作成済みだが未実行・未デプロイ
+- 母・妹が iuma-private を見るなら Access 設定確認が必要
+- Tier 2 用 16 Archetypes / 24 Strengths は未開発
+- 占い師型 Phase 1.5（残ナラ）未完
+
+## Environment
+- **venv**: `.venv/` (python3.14, PyYAML, Jinja2)
+- **Deploy staging**: `/tmp/iuma-private-project/public/insight/`
+- **Deploy target**: `iuma-private.pages.dev/insight/` (Cloudflare Pages, main branch)
+- **Legacy GH Pages**: `gh-pages` branch (ymatz28-beep/self-insight.git) — 旧配置として残存
+- **Deploy flow**: `stock-analyzer/scripts/deploy_private.py` の `build_insight()` が users/ + form/ を copytree
+- **CLI**:
+  - Profile gen: `python3 generate_profile.py --name "名前" --birth-date "YYYY-MM-DD" --blood-type AB --output data/users/{name}/profile.yaml`
+  - Dashboard gen: `python3 generate_dashboard.py --profile data/users/{name}/profile.yaml --output users/{pub_id}/index.html --tier 1|2 [--gnav]`
+  - Compatibility gen (未テスト): `python3 generate_compatibility.py --a profile_a.yaml --b profile_b.yaml --output users/compat/{pair}/index.html`
+
+## History (last 20)
+- **2026-04-16 session**: 家族3名追加 + iuma-private/insight/ 統合 + 競合127件調査 + 占い師型トーン統一 Phase 1 + データ不整合6件修正 + 相性診断エンジン作成（未デプロイ）+ 専門用語ガイド + Japan/World dual-geo 希少性表示 + クロスリファレンス/整合マップ/強み罠/干支×血液型 カード追加
+- **2026-04-09**: フォント修正+CSS変数化+gnav nav-more（未コミット）
+- **2026-03-29**: renderer.js本番品質化 + story/share-card「取扱説明書」ブランディング（self-insight `e80268e`, Projects root `ed3dd9a`）
+
+## Legacy History
+
+## Completed (横断監査: フォント修正+CSS変数化+gnav nav-more 2026-04-09)
+- **Before**: form/story.htmlの.essence-kanjiがfont-family `'Noto Sans JP',serif`（禁止フォールバック）。index.htmlに5箇所のハードコードカラー（#f87171, #4ade80×2, #9ca3af）。gnavが13項目フラット表示のまま（nav-more未適用）
+- **After**: story.html serif→sans-serif修正。index.htmlの5色をCSS変数化（var(--red-light), var(--green-light)×3, var(--text-secondary)）。gnav nav-more overflow構造追加（Primary 5項目+⋯ドロップダウン8項目、Self-InsightはOverflowに配置）
+- **Commits**: 未コミット
+
+## Completed (renderer.js本番品質化 + story/share-card「取扱説明書」ブランディング 2026-03-29)
+- **Before**: renderer.jsがMVP品質（辞書データ・ナラティブ・セクション引用句なし）。generate_dashboard.pyレベルの本番品質に未到達。story.htmlのブランド名が「AI Self-Insight」のままでスライドラベルが「SLIDE 1/5」等の番号表示。share-card.jsのSNS共有機能が限定的
+- **After**: renderer.js +397行net（659ins/262del）。PALACE_DESC(九星9宮)+PHASE_DESC(六星12フェーズ)+DM_NARRATIVE(日主10パターン)+WESTERN_NARRATIVE+SECTION_QUOTES辞書を追加し、generate_dashboard.py同等の本番品質に到達。story.htmlブランド名を「あなたの取扱説明書」に変更+スライドラベルをセマンティック化（YOUR ESSENCE/FIVE ELEMENTS/DESTINY STARS等）。share-card.js +33行改善。generate_dashboard.py -28行クリーンアップ。計6ファイル変更（693ins/262del）
+- **Commits**: self-insight `e80268e`, Projects root `ed3dd9a`（session recovery）
 
 ## Project Overview
 複数の占術（四柱推命・九星気学・六星占術・西洋占星術・干支）+ 独自性格分析SIPS（Big Five基盤の16 Archetypes+24 Strengths+Sensitivity Score）を統合した、徹底的にパーソナライズされた自己理解ダッシュボードサービス。有料SaaS展開を目指す。
@@ -271,14 +382,13 @@
 - [ ] **generate_dashboard.py / generate_profile.py 構造分割**: constancy警告（両ファイル500行超過）への対応。generate_dashboard.py 2,348行、generate_profile.py 1,130行
 
 ## Next Actions
-1. **🔥 「30秒で鳥肌」Tier 1即時体験の実装**: 生年月日のみ入力→即座にリッチな結果表示。renderer.jsをgenerate_dashboard.pyレベルに本番品質化（アーキタイプ名、折りたたみカード、Chart.js運気チャート、リッチナラティブ、ドメインカラー、レアリティバッジ）。バイラルループの起点
+1. **renderer.js動作テスト**: Tier 1即時体験（生年月日のみ→リッチ結果表示）の本番品質化は完了。ブラウザ実機テストで全辞書・ナラティブ・チャートが正常表示されるか確認
 2. **相性診断の動作テスト+バイラル機能強化**: compatibility.htmlのconst重複修正済み → 動作確認 + シェアカード→招待リンク→友達流入のバイラルループ検証
 3. **E2Eフロー完成**: フォーム送信→Google Sheets蓄積が未確認（no-cors修正済み、再テスト必要）
-4. **「取扱説明書」ブランディング反映**: Hero/CTA/OGPのコピーを「あなたの取扱説明書をAIが作ります」に統一
-5. **engine.js検証**: Yumaプロファイルで計算結果をPython版と照合（差異がないか）
-6. **SIPS実装**: Big Five 40問→16 Archetypes+24 Strengths導出ロジック、アーキタイプ/強みテーマ名称設計
-7. **短縮URL設計**: `form/#r=base64...`（長い）→ `/results/{uuid}`（短い）への移行
-8. **ファイル分割**: generate_dashboard.py（2,348行）/ generate_profile.py（1,130行）のモジュール分割
+4. **engine.js検証**: Yumaプロファイルで計算結果をPython版と照合（差異がないか）
+5. **SIPS実装**: Big Five 40問→16 Archetypes+24 Strengths導出ロジック、アーキタイプ/強みテーマ名称設計
+6. **短縮URL設計**: `form/#r=base64...`（長い）→ `/results/{uuid}`（短い）への移行
+7. **ファイル分割**: generate_dashboard.py（2,348行）/ generate_profile.py（1,130行）のモジュール分割
 
 ## Key Decisions
 - 2ピラー構造: Timeless Identity + Year Forecast
@@ -287,7 +397,7 @@
 - Edit分割方式でHTML変更（フルリライト禁止）
 - デプロイ先: GitHub Pages（Cloudflareではない。session #8で切替）。Cloudflareパスもdeploy_private.py SSoTに統合済み（fallback）
 - gnav SSoT = `lib/renderer.py` の `_private_nav`/`_public_nav`。ハードコードgnavは `check_gnav_consistency` で毎晩自動検証
-- Nav順序: Stock → Market Intel → Insight → Wealth → Action → Self-Insight → Health → Property → Travel
+- Nav順序（2026-04-06更新）: Primary: Stock → Market Intel → Cisco → Action → Property / Overflow: Wealth → Insight → Health → Travel → Newsletter → Bookmarks → SNS → Self-Insight
 - Self-InsightはGitHub Pages公開だが、Private navにのみ掲載（個人データのため）
 - Public→Private nav隔離: 2026-03-21監査で全Public HTML（12ファイル）にPrivate URL混入ゼロを実証。`renderer.py` の `scope` パラメータで自動分離される設計
 - **ナラティブ生成方針（session #17で確定）**: narratives.yamlは不要。generate_dashboard.pyがprofile.yamlの計算結果からプログラマティックにナラティブ（解説・インサイト・Cross Analysis）を生成する。どのユーザーでもYumaのindex.html相当のリッチな出力がゴール。LLM API依存なしで、テンプレート+ロジックで実現する
@@ -362,3 +472,9 @@
 | 27 | 2026-03-28 | **story mode+share card+相性診断+バグ修正**: Before: ストーリー/シェア/相性診断が未実装+const重複でスクリプト全死亡 → After: 3ページ新規作成+重複修正+SNSボタン追加。commits: b60af71, cdf2cba |
 | 28 | 2026-03-28 | **cross-project: section_nav migration**: self-insight変更なし（lib/scripts側でsection_navコンポーネント化） |
 | 29 | 2026-03-28 | **cross-project: 全HANDOFF履歴→SNSネタ一括生成**: 14プロジェクトのHANDOFF History抽出→topic_candidates.yaml 21件追加(027-047)。self-insight関連: topic-038(占いSaaS 3週間MVP), topic-040(Cloudflare Access OTP)。self-insightコード変更なし |
+| 30 | 2026-03-29 | **renderer.js本番品質化+取扱説明書ブランディング**: Before: renderer.jsがMVP品質(辞書/ナラティブなし)+story.htmlが「AI Self-Insight」ブランド → After: renderer.js +397行(PALACE/PHASE/DM辞書+SECTION_QUOTES追加)+story.html「あなたの取扱説明書」+セマンティックスライドラベル。commit: e80268e |
+| 31 | 2026-03-30 | **ステータス確認のみ**: Before: 前回セッション強制終了でcommit/push状態不明 → After: session-endフックがed3dd9aで全変更コミット済みを確認。未コミット変更なし。コード変更なし |
+| 32 | 2026-03-31 | **cross-project: property-analyzer HANDOFF更新**: property-analyzerのマーケット品質改善セッション結果をHANDOF更新(bcbc99a)。self-insightコード変更なし |
+| 33 | 2026-04-06 | **cross-project: Gnav Pattern B + Nav順序変更**: Before: Self-Insightはgnav全13項目フラット表示 → After: overflow ⋯ドロップダウンに配置(Primary 5: Stock/Market Intel/Cisco/Action/Property、Overflow 8にSelf-Insight含む)。iuma-privateトップページBento Gridリデザイン計画でSelf-Insight=Tier3(compact)。self-insightコード変更なし |
+| 35 | 2026-04-09 | **cross-project: 横断監査フォント+CSS変数+gnav**: Before: story.html serif fallback+index.html 5色ハードコード+gnav nav-more未適用 → After: sans-serif修正+CSS変数化5箇所+nav-more overflow追加 |
+| 34 | 2026-04-07 | **cross-project: ローカルファースト化+idle_guard+Dead Man's Switch**: Before: property-patrol GHA実質Primary+kaizen-patrol plist 2日停止 → After: ローカルファースト+GHA条件付きフォールバック+idle_guard(lib新設)+Digest Status Bar+全ジョブ_NAME_JA日本語化。4リポ(property-analyzer/kaizen-agent/lib/scripts)HANDOFF更新。self-insightコード変更なし |
