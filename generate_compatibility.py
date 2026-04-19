@@ -272,10 +272,10 @@ def overall_verdict(score):
     if score >= 75:
         return ('★★★★☆', '#86efac', '良い相性')
     if score >= 65:
-        return ('★★★☆☆', '#fde68a', '普通の相性')
+        return ('★★★☆☆', 'var(--accent-amber-pale)', '普通の相性')
     if score >= 55:
-        return ('★★☆☆☆', '#fbbf24', '摩擦が起きやすい相性')
-    return ('★☆☆☆☆', '#fca5a5', '注意が必要な相性')
+        return ('★★☆☆☆', 'var(--accent-amber-light)', '摩擦が起きやすい相性')
+    return ('★☆☆☆☆', 'var(--accent-red-pale)', '注意が必要な相性')
 
 
 # ========================================================================
@@ -482,9 +482,9 @@ def render_bk_item(system_name_ja, weight_pct, data, score_color_fn):
 
 def score_color(s):
     if s >= 80: return '#86efac'
-    if s >= 65: return '#fde68a'
-    if s >= 50: return '#fbbf24'
-    return '#fca5a5'
+    if s >= 65: return 'var(--accent-amber-pale)'
+    if s >= 50: return 'var(--accent-amber-light)'
+    return 'var(--accent-red-pale)'
 
 
 def build_insights(bt_d, west_d, fp_d, eto_d, total):

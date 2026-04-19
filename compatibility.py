@@ -673,7 +673,7 @@ def _compatibility_label(score: int) -> dict:
     if score >= 85:
         return {"label": "運命的な縁", "level": "exceptional", "color": "#c9a84c"}
     elif score >= 75:
-        return {"label": "非常に相性が良い", "level": "high", "color": "#22c55e"}
+        return {"label": "非常に相性が良い", "level": "high", "color": "var(--accent-green)"}
     elif score >= 60:
         return {"label": "相性は良好", "level": "good", "color": "#6366f1"}
     elif score >= 45:
@@ -681,7 +681,7 @@ def _compatibility_label(score: int) -> dict:
     elif score >= 30:
         return {"label": "努力が必要な相性", "level": "challenging", "color": "#ff6b35"}
     else:
-        return {"label": "成長の機会が多い関係", "level": "difficult", "color": "#ef4444"}
+        return {"label": "成長の機会が多い関係", "level": "difficult", "color": "var(--accent-red)"}
 
 
 def calculate_compatibility(p1: dict, p2: dict) -> dict:

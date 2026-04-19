@@ -1,8 +1,9 @@
 # Self-Insight — HANDOFF
 
-## [Constancy] 2026-04-16
-- [WARN] structural_reform: generate_dashboard.py is 3500+ lines (threshold: 800). Consider splitting.
-- [WARN] post_change_testing: 直近 変更あり、テスト証跡なし（self-insight/.test_ok）
+## [Constancy] 2026-04-19
+- [WARN] structural_reform: generate_dashboard.py is 3584 lines (threshold: 800). Consider splitting.
+- [WARN] gnav_consistency: Missing gnav link: Trading (/trading/)
+- [WARN] post_change_testing: self-insight: 直近13時間以内に変更あり、テスト証跡なし（self-insight/.test_ok）
 
 ## Last Updated
 2026-04-16 Session — 家族3名反映 + iuma-private/insight/ 統合 + 競合127件調査 + 占い師型トーン統一 Phase 1
