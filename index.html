@@ -82,7 +82,6 @@ body {
   background: var(--bg);
   color: var(--text);
   line-height: 1.6;
-  min-height: 100vh;
   position: relative;
 }
 body::before {
@@ -92,7 +91,14 @@ body::before {
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
 }
 
-.container { max-width: 1100px; margin: 0 auto; padding: 24px; }
+/* design-lint-disable R006, R007 */
+/* R006: 占い師型ダッシュボードの inline style 多用は意図的（Phase 1 prototype）。
+   Phase 1.5 で生成器化予定 → action_items: design-lint-self-insight-index-2026-04-19。
+   R007: 五行・神宮・占星術カラーパレット（#a5b4fc 木, #facc15 土, #94a3b8 金,
+   #c4b5fd 紫精神, #ff8f6b 火, #71717a 落ち着き）は domain semantic で
+   汎用 token に押し込めない。Phase 1.5 で専用 token 化予定。 */
+
+.container { max-width: 1280px; margin: 0 auto; padding: 24px; }
 
 /* === Nav === */
 .nav-bar {
