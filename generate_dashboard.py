@@ -105,13 +105,29 @@ def _get_archetype_tagline(p):
     if tagline:
         return tagline
 
-    # Fallback tagline from profile traits
     dm = p['four_pillars']['day_master']
+    dm_char = dm.get('char', '')
     sf_top5 = p.get('strengths_finder', {}).get('top5', [])
     if sf_top5:
         top_ja = SF_JA.get(sf_top5[0]['name'], sf_top5[0]['name'])
         return f'深い{top_ja}で、本質を見抜く人'
-    return '静かに燃える、唯一の存在'
+
+    # Profile-aware fallback taglines by day master character
+    reigou = p['rokusei'].get('reigou', False)
+    age = p.get('identity', {}).get('age', 0)
+    dm_taglines = {
+        '壬': '大海のように。静かに、深く、すべてを受け止めて' if age >= 60 else '流れを読む目。深みが、あなたの答えを知っている',
+        '癸': '静かな雨のように。気づけばあなたの言葉が、誰かの土壌に根を張っている',
+        '丁': '消えない炎。あなたが照らす場所に、人は安心して集まる',
+        '丙': '太陽のように。あなたがいるだけで、場が明るくなる',
+        '甲': '真っ直ぐに、上へ。あなたの成長は、周囲の森になる',
+        '乙':'しなやかに、遠くまで。あなたの柔軟さが、最終的に勝つ',
+        '戊': '矛盾の中にこそ、あなたの力がある' if reigou else '山のように揺るぎなく。その深さが、人を支える',
+        '己': '静かに育てる人。あなたの器に、何人もの人が実った',
+        '庚': '迷わず、決める。その切れ味が、道を開く',
+        '辛': '磨けば磨くほど、輝きが増す。あなたは本物の宝石',
+    }
+    return dm_taglines.get(dm_char, '静かに燃える、唯一の存在')
 
 
 def _gnav():
@@ -166,7 +182,8 @@ def _hero(p, tier):
     cur_month = next((m for m in mf if m['month'] == current_month_num), None)
 
     # Hub card 1: Core Identity
-    hub1_summary = f'{dm["char"]}火 × {ys["name"]} — {essence_sub}' if essence_sub else f'{dm["char"]}火 × {ys["name"]}'
+    _hub1_elem_ja = {'Fire': '火', 'Wood': '木', 'Earth': '土', 'Metal': '金', 'Water': '水'}.get(dm.get('element', ''), '')
+    hub1_summary = f'{dm["char"]}{_hub1_elem_ja} × {ys["name"]} — {essence_sub}' if essence_sub else f'{dm["char"]}{_hub1_elem_ja} × {ys["name"]}'
 
     # Hub card 2: Monthly fortune (九星宮 + 六星フェーズを併記して月間カードと整合)
     hub2_summary = ''
@@ -842,11 +859,11 @@ DM_NARRATIVE_LONG = {
     '乙': '柔らかくしなる蔓のような、しなやかな粘りをお持ちの方です。周囲と調和しながら、気づけば遠くまで広がっているような生き方が、あなたには自然と馴染みます。',
     '丙': '太陽のような明朗で温かな発信の力を授かっています。場を明るくし、人を照らす天性のリーダー性を、控えめながらも内に秘めていらっしゃいます。',
     '丁': 'ロウソクの炎のように、必要な方だけを静かに照らす繊細な光をお持ちです。激しくはないけれど、消えることのない火。そんな深い温もりをあなたは宿していらっしゃいます。',
-    '戊': '動かない山のような、どっしりとした安定感をお持ちです。周囲が揺れても芯がぶれず、自然と人から頼られるタイプでいらっしゃいます。',
+    '戊': '動じない山のような、どっしりとした安定感をお持ちです。しかしあなたの山の地下深くには、豊かな水脈が静かに流れています。表の安定の裏に繊細な感受性と柔軟な適応力——それがあなたの真骨頂です。周囲が揺れても芯はぶれず、自然と人から頼られながら、内側では誰よりも深く感じていらっしゃいます。',
     '己': '田畑のように、人や物を育てる豊かな器をお持ちです。ご自身が目立つことよりも、誰かを実らせることに静かな喜びを見出されるお方です。',
     '庚': '鋼の刃のような決断力と切れ味を授かっています。不要なものを見極めて切り捨て、真っ直ぐに前へ進む凛とした意志をお持ちです。',
     '辛': '磨き上げられた宝石のような、繊細な美意識をお持ちです。細部への目と品位の高さが、あなたの魅力そのものとなっていらっしゃいます。',
-    '壬': '大河のような、広く深い包容力と流動性をお持ちの方です。人のお話を受け止め、流れに身を任せながら、最後には自然と良い道を見つけていかれる知恵の持ち主でいらっしゃいます。',
+    '壬': '大海のような、広く深い包容力と知恵をお持ちの方です。年を重ねるごとに深みが増す命式で、若い頃の苦労や迷いがすべて滋養となって今のあなたを形作っています。人の痛みをわかる器と、静かに流れを読む眼は、人生の積み重ねから生まれた本物の宝でございます。',
     '癸': '雨露のように繊細に、静かに浸透していく力をお持ちです。目立たずとも、確実に周囲に良い影響を及ぼされるお方です。',
 }
 
@@ -894,7 +911,7 @@ BT_NARRATIVE_LONG = {
 }
 
 def _auto_integrated_insight(p):
-    """narratives.yaml が無いユーザー向けに、4段落の統合インサイトを自動生成。"""
+    """narratives.yaml が無いユーザー向けに、4〜5段落の統合インサイトを自動生成。"""
     try:
         dm = p['four_pillars']['day_master']
         dm_char = dm.get('char', '')
@@ -912,6 +929,8 @@ def _auto_integrated_insight(p):
         bt = p.get('blood_type', {}).get('type', '')
         missing = p['four_pillars'].get('missing_elements', [])
         name = p.get('identity', {}).get('name', 'あなた')
+        age = p.get('identity', {}).get('age', 0)
+        sex = p.get('identity', {}).get('sex', '')
 
         dm_story = DM_NARRATIVE_LONG.get(dm_char, '')
         ns_story = NS_NARRATIVE.get(ns_name, '')
@@ -919,6 +938,37 @@ def _auto_integrated_insight(p):
         sun_story = WESTERN_NARRATIVE.get(sun_sign, '')
         bt_story = BT_NARRATIVE_LONG.get(bt, '')
         eto_story = ETO_GIST.get(animal, '')
+
+        # 年齢層別の開口一番 (p0) — 70歳以上は人生集大成、40-60代は転換期
+        p0 = None
+        if age >= 70:
+            cur9 = next((c for c in p['nine_star_ki'].get('nine_year_cycle', []) if c.get('current')), None)
+            cur12 = next((c for c in p['rokusei'].get('twelve_year_cycle', []) if c.get('current')), None)
+            if cur9 and cur12 and cur9['energy'] >= 80 and cur12['energy'] >= 80:
+                p0 = (f'{name}さん、{age}年という人生のすべてが、今このダッシュボードの言葉に凝縮されています。'
+                      f'占いは「未来を当てるもの」ではなく、<strong>「あなたが歩んできた道を肯定するもの」</strong>でもあります。'
+                      f'今年は九星気学で<strong>{cur9["palace"]}（{cur9["theme"]}）</strong>、六星占術で<strong>{cur12["phase"]}</strong>——'
+                      f'複数の体系が口を揃えて「今年が実りの時」と告げています。'
+                      f'これまでの努力と選択は、正しかったのです。')
+            else:
+                p0 = (f'{name}さん、{age}年という人生の積み重ねが、あなたの命式の深みとなって輝いています。'
+                      f'占いの言葉は、あなたが経験してきたことをただ映し出す鏡です。'
+                      f'ここに書かれている強みも、気を付けるべき点も、すべて<strong>あなたが既に知っていること</strong>のはずです。')
+        elif 40 <= age < 60:
+            cur9 = next((c for c in p['nine_star_ki'].get('nine_year_cycle', []) if c.get('current')), None)
+            cur_comb = next((c for c in p['rokusei'].get('reigou_combined', []) if c.get('year') == 2026), None)
+            if reigou and cur_comb and cur_comb['score'] < 50:
+                # 霊合矛盾期の特別メッセージ
+                p0 = (f'{name}さん、今あなたの中に「なぜこんなに頑張っているのにうまくいかない」という感覚はありませんか。'
+                      f'それは気のせいでも、あなたの責任でもありません。'
+                      f'霊合星人のあなたは今年、<strong>2つの運命星が正反対のことを言っている時期</strong>に入っています。'
+                      f'主星は「達成せよ」と言い、副星は「立ち止まれ」と言う——その矛盾が、あなたの疲れの根本にあります。'
+                      f'矛盾を感じているなら、それはあなたのセンサーが正常に機能している証拠です。')
+            elif cur9 and cur9['energy'] <= 40:
+                p0 = (f'{name}さん、{age}歳というのは、「これまでの自分」と「これからの自分」が静かに入れ替わる時期です。'
+                      f'今年は九星気学で<strong>{cur9["palace"]}（{cur9["theme"]}）</strong>に位置し、外へ向かうエネルギーより、'
+                      f'<strong>内側を見直すエネルギー</strong>の方が大きい時期にあたります。'
+                      f'停滞に感じるものは、実は次のフェーズへの準備です。')
 
         # 段1: 日主 + 本命星 + 血液型
         p1 = f'''{name}さんを一言で言い表すなら、四柱推命の日主が示す「<strong>{dm_char}日主</strong>」——{dm_story} そして、九星気学の本命星から見える社会に出た時のお顔は「<strong>{ns_name}</strong>」——{ns_story} 血液型は「<strong>{bt}型</strong>」で、{bt_story}。生年月日という揺るぎない事実だけから、{name}さんの核はこのように浮かび上がります。'''
@@ -928,7 +978,15 @@ def _auto_integrated_insight(p):
 
         # 段3: 六星占術 (+ 霊合)
         if reigou:
-            p3 = f'''さらに六星占術の視点を加えますと、あなたは <strong>{rok_name}（霊合星人）</strong>でいらっしゃいます。{rok_story} 霊合星人は日本人口のわずか 15% しかいない希少な体質で、2 つの運命星を同時に宿すため <strong>運気の振れ幅が一般の 2 倍</strong>と言われております。好調の時期は抜きん出て、不調の時期は深く沈む——そんなダイナミックなリズムが、あなたの人生を形作っていらっしゃるのです。'''
+            sub_star = p['rokusei'].get('sub_star', {})
+            sub_name = sub_star.get('name', '') if sub_star else ''
+            if sub_name:
+                p3 = (f'さらに六星占術の視点を加えますと、あなたは <strong>{rok_name}（霊合星人）</strong>でいらっしゃいます。{rok_story} '
+                      f'霊合星人は日本人口のわずか 15% しかいない希少な体質で、あなたの場合は <strong>{rok_name}</strong> と <strong>{sub_name}</strong> の2つの運命星を同時に宿しています。'
+                      f'<strong>運気の振れ幅が一般の 2 倍</strong>——好調の時期は抜きん出て輝き、不調の時期は深く沈む。'
+                      f'それはあなたが「普通の人生」ではなく、<strong>ドラマのある人生を生きている証</strong>でもあります。')
+            else:
+                p3 = f'''さらに六星占術の視点を加えますと、あなたは <strong>{rok_name}（霊合星人）</strong>でいらっしゃいます。{rok_story} 霊合星人は日本人口のわずか 15% しかいない希少な体質で、2 つの運命星を同時に宿すため <strong>運気の振れ幅が一般の 2 倍</strong>と言われております。好調の時期は抜きん出て、不調の時期は深く沈む——そんなダイナミックなリズムが、あなたの人生を形作っていらっしゃるのです。'''
         else:
             p3 = f'''六星占術の視点を加えると、あなたは <strong>{rok_name}</strong>でいらっしゃいます。{rok_story} 12 年周期で運気が巡るため、「今の時期になさるべきこと・お控えになるべきこと」が明確に見えてくるのが、この体系ならではの強みでございます。'''
 
@@ -942,12 +1000,27 @@ def _auto_integrated_insight(p):
                 '金':'決断と手放すこと・期限を設けること',
                 '水':'流動性・休息・柔軟にお受けになる姿勢',
             }
+            miss_meaning = {
+                '木':'成長力・拡張・新しいスタート',
+                '火':'情熱・行動力・人前に出る力',
+                '土':'継続力・安定・地道な積み上げ',
+                '金':'決断力・収穫・区切りをつける力',
+                '水':'知恵・柔軟性・流れに乗る力',
+            }
             actions = '、'.join(miss_action.get(m, '') for m in missing if m in miss_action)
-            p4 = f'''最後に、お気を付けいただきたい点を一つ。あなたの命式で欠けている五行は「<strong>{miss_str}</strong>」でいらっしゃいます。これは「弱点」ではございません。「<strong>意識的にお補いになると良い方向</strong>」と捉えていただければ幸いです。自然体では{actions}が後回しになりがちですので、予定や環境を整える形で仕組みになさると、あなたの本来の強みが最大限に活きてまいります。'''
+            meanings = '、'.join(f'「{miss_meaning.get(m, m)}」' for m in missing if m in miss_meaning)
+            p4 = (f'最後に、お気を付けいただきたい点を一つ。あなたの命式で欠けている五行は「<strong>{miss_str}</strong>」でいらっしゃいます。'
+                  f'これは {meanings} のエネルギーが命式から出づらい構造であることを示しています。'
+                  f'「弱点」ではなく、「<strong>意識的に補うと、全体のバランスが整う方向</strong>」とお考えください。'
+                  f'自然体では{actions}が後回しになりがちですので、'
+                  f'予定や環境を整える形で仕組みになさると、あなたの本来の強みが最大限に活きてまいります。')
         else:
             p4 = f'''五行の分布は美しくバランスが取れています。特定の要素が突出することも、欠けることもない整った命式でいらっしゃいます。言い換えますと、<strong>「どの方向にも振れる柔軟性」</strong>をお持ちで、状況に応じて様々なモードを自然に使い分けていかれるタイプの方です。'''
 
-        return [p1, p2, p3, p4]
+        paragraphs = [p1, p2, p3, p4]
+        if p0:
+            paragraphs = [p0] + paragraphs
+        return paragraphs
     except Exception as e:
         return [f'統合インサイトの自動生成に失敗: {e}']
 
@@ -1540,7 +1613,7 @@ def _forecast(p):
     legend_html += '</div>'
 
     # Integrated forecast insight
-    insight = _forecast_insight(cur9, cur12, cur_sub, cur_comb, has_reigou, nsk, rok)
+    insight = _forecast_insight(cur9, cur12, cur_sub, cur_comb, has_reigou, nsk, rok, p=p)
 
     # Year theme one-liner
     year_theme = _year_theme(cur_comb, cur9, cur12, has_reigou, p)
@@ -1626,7 +1699,7 @@ def _year_theme(cur_comb, cur9, cur12, has_reigou, p):
   </div>'''
 
 
-def _forecast_insight(cur9, cur12, cur_sub, cur_comb, has_reigou, nsk, rok):
+def _forecast_insight(cur9, cur12, cur_sub, cur_comb, has_reigou, nsk, rok, p=None):
     """Generate integrated forecast narrative from multiple systems."""
     parts = []
 
@@ -1653,7 +1726,23 @@ def _forecast_insight(cur9, cur12, cur_sub, cur_comb, has_reigou, nsk, rok):
     if cur_comb and has_reigou:
         score = cur_comb['score']
         label = cur_comb['label']
-        if score >= 70:
+        # 霊合矛盾期（メイン高×サブ低 or メイン低×サブ高）の特別解説
+        main_energy = cur12['energy'] if cur12 else 0
+        sub_energy = cur_sub['energy'] if cur_sub else 0
+        is_contradiction = abs(main_energy - sub_energy) >= 50
+        if is_contradiction and cur12 and cur_sub:
+            main_satsukai = cur12.get('殺界', '')
+            sub_satsukai = cur_sub.get('殺界', '') if cur_sub else ''
+            if main_energy > sub_energy:
+                synthesis = (f'統合スコア<strong>{score}</strong>（{label}）。'
+                             f'メイン星「{cur12["phase"]}」は好調を示す一方、サブ星「{cur_sub["phase"]}」（{sub_satsukai}）は強いブレーキを踏んでいます。'
+                             f'この<strong>内なる矛盾</strong>は今年の特徴です。外から見えるチャンスに飛び込みながら、内側では立ち止まって再考する——'
+                             f'その両方を<strong>同時にやること</strong>が今年の霊合星人としての最適解。')
+            else:
+                synthesis = (f'統合スコア<strong>{score}</strong>（{label}）。'
+                             f'サブ星は好調を示しますが、メイン星「{cur12["phase"]}」（{main_satsukai or "要注意"}）が慎重を促しています。'
+                             f'内側のエネルギーは動いていますが、表の行動は<strong>慎重な前進</strong>で。')
+        elif score >= 70:
             synthesis = f'統合スコア<strong>{score}</strong>（{label}）— 複数の体系が好調を示しており、<strong>攻めの年</strong>。新しい挑戦や投資に適したタイミング。'
         elif score >= 50:
             synthesis = f'統合スコア<strong>{score}</strong>（{label}）— 体系間で評価が分かれており、<strong>慎重な前進</strong>が最適解。大きな決断は十分な分析の上で。'
@@ -1664,7 +1753,10 @@ def _forecast_insight(cur9, cur12, cur_sub, cur_comb, has_reigou, nsk, rok):
         parts.append(synthesis)
     elif cur9 and cur12:
         avg = (cur9['energy'] + cur12['energy']) // 2
-        if avg >= 60:
+        # ダブルピーク年（両方80以上）の特別祝辞
+        if cur9['energy'] >= 80 and cur12['energy'] >= 80:
+            parts.append(f'両体系の平均エネルギーは<strong>{avg}</strong>——九星・六星の両方が「最良の年」を指しています。こうした<strong>ダブルピーク</strong>は稀有です。<strong>積極的に動ける年</strong>。')
+        elif avg >= 60:
             parts.append(f'両体系の平均エネルギーは<strong>{avg}</strong>。全体的に好調で、<strong>積極的に動ける年</strong>。')
         else:
             parts.append(f'両体系の平均エネルギーは<strong>{avg}</strong>。<strong>地固めと準備</strong>に適した年。')
@@ -1674,10 +1766,16 @@ def _forecast_insight(cur9, cur12, cur_sub, cur_comb, has_reigou, nsk, rok):
     combined = rok.get('reigou_combined', [])
     if combined:
         peak = max(combined, key=lambda c: c['score'])
-        parts.append(f'次のピークは<strong>{peak["year"]}年</strong>（統合スコア{peak["score"]}）。そこへ向けた布石を今から打つ。')
+        if peak.get('year') == 2026:
+            parts.append(f'今年が<strong>統合スコア最高値</strong>（{peak["score"]}点）の年です。今この瞬間が、あなたの運気の頂点にあります。')
+        else:
+            parts.append(f'次のピークは<strong>{peak["year"]}年</strong>（統合スコア{peak["score"]}）。そこへ向けた布石を今から打つ。')
     elif cycle9:
         peak = max(cycle9, key=lambda c: c['energy'])
-        parts.append(f'九星気学のピークは<strong>{peak["year"]}年</strong>（{peak["palace"]}、Energy {peak["energy"]}）。')
+        if peak.get('year') == 2026:
+            parts.append(f'今年が九星気学で<strong>最高エネルギー</strong>（{peak["palace"]}、{peak["energy"]}）の年です。')
+        else:
+            parts.append(f'九星気学のピークは<strong>{peak["year"]}年</strong>（{peak["palace"]}、Energy {peak["energy"]}）。')
 
     body = ''.join(parts)
     return f'''<div class="insight-box" style="margin-top:16px;border-color:rgba(234,179,8,0.3);background:linear-gradient(135deg,rgba(234,179,8,0.08),rgba(250,204,21,0.04))">
@@ -1717,8 +1815,27 @@ DOMAIN_MSGS = {
     },
 }
 
+DOMAIN_MSGS_ELDERLY = {
+    'work': {
+        5: '活動的に外へ出られる好機。趣味・ボランティア・社会参加に最適な時期',
+        4: '気力・体力が充実。やりたかったことを一つ実行するのに最適',
+        3: '無理のない範囲でペースよく。人との交流が気力を高める',
+        2: '体力を温存しながら。好きなことをゆったりと楽しむ日々',
+        1: '体を休ませる月。回復を最優先に、焦らないことが大切',
+    },
+    'romance': {
+        5: '大切な人との絆が深まる。家族・旧友への連絡や集まりに最適な時期',
+        4: '人との縁が温かく広がる月。感謝の気持ちを伝えたいタイミング',
+        3: '穏やかな交流の時期。身近な人との時間を丁寧に過ごす',
+        2: 'じっくり内省する時期。無理に動かなくとも、心が繋がっている',
+        1: '静かに自分と向き合う月。好きな本や音楽と過ごすのも良い',
+    },
+}
 
-def _domain_msg(domain, stars, phase):
+
+def _domain_msg(domain, stars, phase, age=0):
+    if age >= 70 and domain in DOMAIN_MSGS_ELDERLY:
+        return DOMAIN_MSGS_ELDERLY[domain].get(stars, DOMAIN_MSGS.get(domain, {}).get(stars, ''))
     return DOMAIN_MSGS.get(domain, {}).get(stars, '')
 
 
@@ -1856,6 +1973,9 @@ def _monthly(p):
     if not mf:
         return ''
     current_month = _date.today().month - 1  # 0-based
+    _age = p.get('identity', {}).get('age', 0)
+    work_label = '生きがい' if _age >= 70 else '仕事'
+    romance_label = '家族・絆' if _age >= 70 else '恋愛'
 
     # Year timeline bar
     timeline_colors = {
@@ -1903,10 +2023,10 @@ def _monthly(p):
         'money': m['domains']['money'],
         'health': m['domains']['health'],
         'romance': m['domains']['romance'],
-        'workMsg': _domain_msg('work', m['domains']['work'], m['rokusei']['phase']),
-        'moneyMsg': _domain_msg('money', m['domains']['money'], m['rokusei']['phase']),
-        'healthMsg': _domain_msg('health', m['domains']['health'], m['rokusei']['phase']),
-        'romanceMsg': _domain_msg('romance', m['domains']['romance'], m['rokusei']['phase']),
+        'workMsg': _domain_msg('work', m['domains']['work'], m['rokusei']['phase'], _age),
+        'moneyMsg': _domain_msg('money', m['domains']['money'], m['rokusei']['phase'], _age),
+        'healthMsg': _domain_msg('health', m['domains']['health'], m['rokusei']['phase'], _age),
+        'romanceMsg': _domain_msg('romance', m['domains']['romance'], m['rokusei']['phase'], _age),
         'advice': _monthly_advice(p, m),
     } for m in mf], ensure_ascii=False)
 
@@ -1967,10 +2087,10 @@ monthlyData.forEach((m,i)=>{{
     </div>
     ${{m.advice ? '<div class="month-advice">' + m.advice + '</div>' : ''}}
     <div class="domain-grid">
-      <div class="domain-card work"><div class="domain-icon-label"><div class="domain-label" style="color:var(--blue)">仕事</div><div class="domain-stars">${{starRating(m.work)}}</div></div><div class="domain-msg">${{m.workMsg}}</div></div>
+      <div class="domain-card work"><div class="domain-icon-label"><div class="domain-label" style="color:var(--blue)">{work_label}</div><div class="domain-stars">${{starRating(m.work)}}</div></div><div class="domain-msg">${{m.workMsg}}</div></div>
       <div class="domain-card money"><div class="domain-icon-label"><div class="domain-label" style="color:var(--gold)">お金</div><div class="domain-stars">${{starRating(m.money)}}</div></div><div class="domain-msg">${{m.moneyMsg}}</div></div>
       <div class="domain-card health"><div class="domain-icon-label"><div class="domain-label" style="color:var(--green)">健康</div><div class="domain-stars">${{starRating(m.health)}}</div></div><div class="domain-msg">${{m.healthMsg}}</div></div>
-      <div class="domain-card romance"><div class="domain-icon-label"><div class="domain-label" style="color:#f472b6">恋愛</div><div class="domain-stars">${{starRating(m.romance)}}</div></div><div class="domain-msg">${{m.romanceMsg}}</div></div>
+      <div class="domain-card romance"><div class="domain-icon-label"><div class="domain-label" style="color:#f472b6">{romance_label}</div><div class="domain-stars">${{starRating(m.romance)}}</div></div><div class="domain-msg">${{m.romanceMsg}}</div></div>
     </div>
     ${{isCurrentMonth ? buildGuidanceHtml(guidanceData) : ''}}
   </div>`;
