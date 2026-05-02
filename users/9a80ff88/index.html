@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>静かな炎の求道者 — 周平</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Noto+Sans+JP:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400..700&family=JetBrains+Mono:wght@500&family=Noto+Sans+JP:wght@400..700&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
 <style>
 :root{--bg:#0f1117;--surface:#1a1d27;--surface2:#242836;--border:#2d3348;--border-light:#3d4460;
@@ -229,6 +229,197 @@ body::before{content:'';position:fixed;top:0;left:0;width:100%;height:100%;opaci
 .personality-summary{font-size:15px;color:var(--text-secondary);line-height:1.7;margin-bottom:20px;font-style:italic}
 .personality-locked{position:relative;min-height:300px;overflow:hidden;border-radius:var(--r-md)}
 .locked-skeleton{filter:blur(8px);opacity:0.3;padding:24px}
+
+/* === Tier 1 additions === */
+.eto-hero{display:grid;grid-template-columns:auto 1fr auto;gap:16px;align-items:center;background:linear-gradient(135deg,rgba(251,191,36,0.08),rgba(201,168,76,0.04));border:1px solid rgba(251,191,36,0.2);border-radius:var(--r-md);padding:18px 20px;margin-bottom:16px}
+.eto-emoji{font-size:48px;line-height:1}
+.eto-name .eto-title{font-size:18px;font-weight:700;color:#fff;margin-bottom:2px}
+.eto-name .eto-reading{font-size:12px;color:var(--text-secondary)}
+.eto-rarity{text-align:right;padding-left:12px;border-left:1px solid rgba(251,191,36,0.25)}
+.eto-rarity-label{font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:2px}
+.eto-rarity-value{font-size:15px;font-weight:700;color:#fbbf24;font-family:var(--font-mono)}
+.eto-narrative{margin-bottom:14px}
+.eto-narrative p{font-size:14px;line-height:1.85;color:#d1d5db;margin-bottom:10px}
+.eto-cross{background:rgba(99,102,241,0.06);border-left:3px solid var(--accent,#6366f1);border-radius:6px;padding:12px 14px;margin-top:10px}
+.eto-cross-label{font-size:11px;color:#c7d2fe;font-weight:600;letter-spacing:.08em;text-transform:uppercase;margin-bottom:6px}
+.eto-cross-body{font-size:14px;line-height:1.8;color:#e5e7eb}
+.eto-traits-row{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0 14px}
+.eto-trait{font-size:12px;background:rgba(251,191,36,0.12);border:1px solid rgba(251,191,36,0.25);color:#fde68a;padding:4px 10px;border-radius:14px;font-weight:500}
+.confidence-badge{font-size:12px;color:var(--text-secondary);background:rgba(99,102,241,0.06);border-left:3px solid rgba(99,102,241,0.4);padding:10px 12px;border-radius:6px;margin-top:14px;line-height:1.7}
+
+@media(max-width:600px){
+  .eto-hero{grid-template-columns:auto 1fr;grid-template-rows:auto auto;gap:12px}
+  .eto-rarity{grid-column:1/-1;text-align:left;padding-left:0;border-left:none;border-top:1px solid rgba(251,191,36,0.2);padding-top:10px}
+}
+
+.axes-stack{display:flex;flex-direction:column;gap:16px;margin:14px 0}
+.axis-card{background:var(--surface2);border:1px solid var(--border);border-radius:var(--r-md);padding:16px 18px}
+.axis-card-header{display:flex;align-items:center;gap:12px;margin-bottom:10px;flex-wrap:wrap}
+.axis-card-name{font-size:16px;font-weight:700;color:#fff;letter-spacing:.02em}
+.verdict-badge{font-size:11px;font-weight:700;padding:4px 10px;border-radius:14px;letter-spacing:.03em}
+.verdict-strong{background:rgba(34,197,94,0.15);color:#86efac;border:1px solid rgba(34,197,94,0.3)}
+.verdict-lean{background:rgba(251,191,36,0.12);color:#fde68a;border:1px solid rgba(251,191,36,0.3)}
+.verdict-split{background:rgba(148,163,184,0.12);color:var(--text-secondary);border:1px solid var(--border)}
+.axis-card-verdict{font-size:14px;color:#e5e7eb;line-height:1.85;margin-bottom:14px;padding:10px 12px;background:rgba(99,102,241,0.05);border-left:3px solid rgba(99,102,241,0.3);border-radius:6px}
+.axis-card-verdict strong{color:#fde68a}
+.axis-card-systems{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px}
+.axis-column{padding:10px 12px;border-radius:8px;background:rgba(255,255,255,0.02);border:1px solid var(--border)}
+.axis-column-dominant{background:rgba(34,197,94,0.06);border-color:rgba(34,197,94,0.2)}
+.axis-column-minority{background:rgba(255,255,255,0.02);opacity:0.85}
+.axis-column-title{font-size:12px;font-weight:600;color:var(--text-secondary);margin-bottom:6px}
+.axis-column-dominant .axis-column-title{color:#86efac}
+.axis-column-chips{display:flex;flex-wrap:wrap;gap:4px}
+.sys-chip{font-size:11px;padding:3px 9px;border-radius:12px;white-space:nowrap}
+.sys-chip-left,.sys-chip-right{background:rgba(99,102,241,0.08);color:#c7d2fe;border:1px solid rgba(99,102,241,0.2)}
+.axis-column-dominant .sys-chip{background:rgba(34,197,94,0.1);color:#86efac;border-color:rgba(34,197,94,0.25)}
+.axis-empty{font-size:11px;color:var(--text-muted);font-style:italic}
+.axis-outlier{font-size:13px;color:#e5e7eb;padding:10px 12px;background:rgba(251,191,36,0.06);border-left:3px solid rgba(251,191,36,0.4);border-radius:6px;line-height:1.8}
+.axis-outlier-label{font-size:10px;font-weight:700;color:#fde68a;letter-spacing:.08em;text-transform:uppercase;margin-right:6px}
+.axis-outlier strong{color:#fff}
+@media(max-width:600px){
+  .axis-card-systems{grid-template-columns:1fr}
+}
+.consensus-box{background:linear-gradient(135deg,rgba(34,197,94,0.08),rgba(99,102,241,0.04));border:1px solid rgba(34,197,94,0.25);border-radius:var(--r-md);padding:16px 18px;margin-top:16px}
+.consensus-box.subtle{background:rgba(255,255,255,0.03);border-color:var(--border)}
+.consensus-title{font-size:12px;font-weight:700;color:#86efac;letter-spacing:.08em;text-transform:uppercase;margin-bottom:8px}
+.consensus-box.subtle .consensus-title{color:var(--text-secondary)}
+.consensus-box ul{list-style:none;padding:0;margin:0}
+.consensus-box li{font-size:14px;line-height:1.9;color:#e5e7eb;padding-left:18px;position:relative}
+.consensus-box li::before{content:'✓';position:absolute;left:0;color:#86efac;font-weight:700}
+.consensus-box.subtle p{font-size:14px;line-height:1.8;color:var(--text-secondary);margin:0}
+.section-intro{font-size:14px;color:var(--text-secondary);line-height:1.85;margin-bottom:16px}
+.section-intro strong{color:#fff}
+
+@media(max-width:600px){
+  .axis-row{grid-template-columns:64px 1fr 64px;row-gap:6px}
+  .axis-count{grid-column:1/-1;text-align:center;font-size:11px}
+}
+
+/* === Strengths × Shadow (CliftonStrengths Shadow Side 型) === */
+.strengths-traps-grid{display:flex;flex-direction:column;gap:14px;margin:14px 0}
+.strength-pair{display:grid;grid-template-columns:1fr 32px 1fr;gap:10px;align-items:stretch;background:rgba(255,255,255,0.02);border:1px solid var(--border);border-radius:var(--r-md);overflow:hidden}
+.strength-side{padding:14px 16px;background:linear-gradient(135deg,rgba(34,197,94,0.05),rgba(34,197,94,0.01));border-right:1px solid var(--border)}
+.shadow-side{padding:14px 16px;background:linear-gradient(135deg,rgba(239,68,68,0.04),rgba(239,68,68,0.01))}
+.pair-label-pos{font-size:10px;font-weight:700;color:#86efac;letter-spacing:.08em;text-transform:uppercase;margin-bottom:6px}
+.pair-label-neg{font-size:10px;font-weight:700;color:#fca5a5;letter-spacing:.08em;text-transform:uppercase;margin-bottom:6px}
+.pair-body{font-size:14px;line-height:1.7;color:#e5e7eb}
+.pair-connector{display:flex;align-items:center;justify-content:center;font-size:18px;color:var(--text-muted);font-weight:700}
+.strength-extra{font-size:13px;line-height:1.8;color:var(--text-secondary);margin-top:12px;padding:10px 12px;background:rgba(99,102,241,0.05);border-left:3px solid rgba(99,102,241,0.3);border-radius:6px}
+.strength-extra strong{color:#c7d2fe}
+@media(max-width:600px){
+  .strength-pair{grid-template-columns:1fr;grid-template-rows:auto auto auto}
+  .strength-side{border-right:none;border-bottom:1px solid var(--border)}
+  .pair-connector{padding:6px 0}
+}
+
+/* === 組み合わせパターン（事実ベース・Twin Stats 主役化） === */
+.rarity-bar{background:linear-gradient(135deg,rgba(99,102,241,0.08),rgba(201,168,76,0.03));border:1px solid rgba(99,102,241,0.2);border-radius:var(--r-md);padding:20px 22px;margin:20px 0 16px}
+.rarity-badge-top{display:inline-block;font-size:10px;font-weight:700;padding:4px 12px;border-radius:16px;border:1px solid rgba(99,102,241,0.3);background:rgba(99,102,241,0.1);color:#a5b4fc;letter-spacing:.08em;text-transform:uppercase;margin-bottom:14px}
+.rarity-twin-stats{display:grid;grid-template-columns:1fr auto 1.3fr;gap:16px;align-items:center;padding:14px 10px;background:rgba(255,255,255,0.02);border-radius:10px;margin-bottom:14px}
+.rarity-single-stat{padding:14px 10px;background:rgba(255,255,255,0.02);border-radius:10px;margin-bottom:14px}
+.rarity-dual-geo{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px}
+.geo-stat{padding:16px 18px;background:rgba(255,255,255,0.02);border:1px solid var(--border);border-radius:10px;text-align:center}
+.geo-jp{background:linear-gradient(135deg,rgba(251,191,36,0.08),rgba(255,255,255,0.02));border-color:rgba(251,191,36,0.2)}
+.geo-world{background:linear-gradient(135deg,rgba(99,102,241,0.08),rgba(255,255,255,0.02));border-color:rgba(99,102,241,0.2)}
+.geo-label{font-size:12px;font-weight:700;color:var(--text-secondary);letter-spacing:.05em;margin-bottom:8px}
+.geo-jp .geo-label{color:#fde68a}
+.geo-world .geo-label{color:#c7d2fe}
+.geo-main{font-size:13px;color:var(--text-secondary);margin-bottom:6px}
+.geo-n{font-size:26px;font-weight:700;font-family:var(--font-mono);letter-spacing:-0.01em;color:#e4e4e7}
+.geo-jp .geo-n{color:#fde68a}
+.geo-world .geo-n{color:#c7d2fe}
+.geo-count{font-size:13px;color:#e4e4e7}
+.geo-count strong{font-size:18px;color:#fff;font-family:var(--font-mono)}
+.rarity-context-note{text-align:center;font-size:12px;color:var(--text-muted);margin-bottom:12px;font-style:italic}
+@media(max-width:600px){
+  .rarity-dual-geo{grid-template-columns:1fr;gap:10px}
+}
+.twin-stat{text-align:center}
+.twin-stat-hero{background:linear-gradient(135deg,rgba(251,191,36,0.08),rgba(99,102,241,0.04));padding:10px 14px;border-radius:10px;border:1px solid rgba(251,191,36,0.2)}
+.twin-stat-value{display:flex;align-items:baseline;justify-content:center;gap:4px}
+.twin-big{font-size:32px;font-weight:700;color:#e4e4e7;font-family:var(--font-mono);line-height:1.1;letter-spacing:-0.02em}
+.twin-stat-hero .twin-big{font-size:36px;color:#fde68a;background:linear-gradient(135deg,#fde68a,#a5b4fc);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.twin-unit{font-size:14px;color:var(--text-secondary);font-weight:500}
+.twin-stat-label{font-size:12px;color:#c7d2fe;margin-top:4px;font-weight:500}
+.twin-stat-sub{font-size:10px;color:var(--text-muted);margin-top:2px}
+.twin-divider{font-size:24px;color:var(--text-muted);opacity:0.4}
+@media(max-width:600px){
+  .rarity-twin-stats{grid-template-columns:1fr;gap:10px}
+  .twin-divider{display:none}
+  .twin-big{font-size:26px}
+  .twin-stat-hero .twin-big{font-size:30px}
+}
+.rarity-breakdown{display:grid;grid-template-columns:repeat(auto-fit,minmax(90px,1fr));gap:8px;padding-top:12px;border-top:1px solid var(--border)}
+.rarity-item{text-align:center;padding:10px 6px;background:rgba(255,255,255,0.02);border-radius:8px}
+.rarity-item-accent{background:rgba(201,168,76,0.06);border:1px solid rgba(201,168,76,0.2)}
+.rarity-value{font-size:20px;font-weight:700;color:#e4e4e7;font-family:var(--font-body);margin-bottom:4px}
+.rarity-item-accent .rarity-value{color:#fde68a;font-family:var(--font-mono);font-size:16px}
+.rarity-label{font-size:10px;color:var(--text-muted);line-height:1.5}
+.rarity-note{font-size:10px;color:var(--text-muted);margin-top:10px;padding-top:10px;border-top:1px dashed rgba(255,255,255,0.05);line-height:1.6;font-style:italic}
+.rarity-synthesis{font-size:14px;line-height:1.95;color:#e5e7eb;padding:14px 16px;margin:14px 0;background:linear-gradient(135deg,rgba(99,102,241,0.08),rgba(201,168,76,0.03));border-left:3px solid #a5b4fc;border-radius:8px}
+.rarity-synthesis strong{color:#fde68a;font-weight:600}
+.rarity-scale{margin-top:14px;padding-top:14px;border-top:1px dashed rgba(255,255,255,0.08)}
+.rarity-scale-title{font-size:13px;font-weight:600;color:#c7d2fe;margin-bottom:10px}
+.rarity-scale-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:8px}
+.scale-item{background:rgba(99,102,241,0.05);border:1px solid rgba(99,102,241,0.12);border-radius:8px;padding:10px 12px;text-align:center}
+.scale-n{font-size:20px;font-weight:700;color:#a5b4fc;font-family:var(--font-mono);letter-spacing:0.02em;margin-bottom:4px}
+.scale-ctx{font-size:10px;color:var(--text-muted);line-height:1.5}
+.rarity-scale-note{font-size:10px;color:var(--text-muted);margin-top:10px;font-style:italic;line-height:1.6}
+.rarity-sources{margin-top:14px;padding:12px 14px;background:rgba(255,255,255,0.02);border:1px dashed rgba(255,255,255,0.08);border-radius:8px}
+.rarity-sources-title{font-size:11px;font-weight:700;color:var(--text-secondary);letter-spacing:.05em;margin-bottom:8px}
+.rarity-sources ul{list-style:none;padding:0;margin:0}
+.rarity-sources li{font-size:11px;color:var(--text-muted);line-height:1.75;padding-left:14px;position:relative;margin-bottom:3px}
+.rarity-sources li::before{content:'•';position:absolute;left:0;color:var(--text-muted)}
+.rarity-sources a{color:#a5b4fc;text-decoration:underline dotted;text-decoration-thickness:1px;text-underline-offset:2px}
+.rarity-sources a:hover{color:#c7d2fe}
+
+/* === 用語ツールチップ === */
+abbr.term{text-decoration:none;border-bottom:1px dotted rgba(201,168,76,0.5);cursor:help;color:inherit;position:relative}
+abbr.term:hover,abbr.term:focus{border-bottom-color:#fde68a;border-bottom-style:solid;color:#fde68a;outline:none}
+abbr.term::after{content:attr(data-tip);position:absolute;left:50%;bottom:calc(100% + 8px);transform:translateX(-50%);background:#242836;color:#e5e7eb;padding:10px 14px;border-radius:8px;font-size:13px;font-weight:400;line-height:1.75;min-width:240px;max-width:340px;box-shadow:0 8px 24px rgba(0,0,0,0.5),0 0 0 1px rgba(201,168,76,0.3);opacity:0;pointer-events:none;transition:opacity .15s;z-index:50;white-space:normal;text-align:left;font-style:normal}
+abbr.term:hover::after,abbr.term:focus::after{opacity:1}
+@media(max-width:600px){
+  abbr.term::after{position:fixed;left:10px;right:10px;bottom:auto;top:auto;transform:none;max-width:none;min-width:0}
+  abbr.term:hover::after,abbr.term:focus::after{top:calc(100% + 4px);left:-8px;right:auto;transform:none}
+}
+
+/* === 用語ガイド（折りたたみ） === */
+.glossary-details{background:rgba(99,102,241,0.04);border:1px solid rgba(99,102,241,0.2);border-radius:var(--r-md);padding:12px 16px;margin:16px 0}
+.glossary-details summary{cursor:pointer;font-size:14px;color:#c7d2fe;list-style:none;padding:2px 0;user-select:none}
+.glossary-details summary::-webkit-details-marker{display:none}
+.glossary-details summary::before{content:'▸ ';color:#a5b4fc;margin-right:4px}
+.glossary-details[open] summary::before{content:'▾ '}
+.glossary-details[open] summary{margin-bottom:12px;padding-bottom:10px;border-bottom:1px solid rgba(99,102,241,0.15)}
+.glossary-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:10px}
+.glossary-item{padding:10px 12px;background:rgba(255,255,255,0.02);border-radius:8px}
+.glossary-term{font-size:14px;font-weight:700;color:#fde68a;margin-bottom:4px}
+.glossary-expl{font-size:12px;color:var(--text-secondary);line-height:1.75}
+.glossary-hint{font-size:11px;color:var(--text-muted);margin-top:10px;padding-top:10px;border-top:1px dashed rgba(99,102,241,0.15);line-height:1.7;font-style:italic}
+
+/* === Cross-Reference Insight === */
+.cross-section{margin:18px 0}
+.cross-section-label{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:700;letter-spacing:.03em;margin-bottom:12px;padding:8px 14px;border-radius:8px}
+.cross-section-label-agree{background:rgba(34,197,94,0.08);color:#86efac;border:1px solid rgba(34,197,94,0.2)}
+.cross-section-label-tension{background:rgba(251,191,36,0.08);color:#fbbf24;border:1px solid rgba(251,191,36,0.2)}
+.cross-label-emoji{font-size:16px}
+.cross-grid{display:flex;flex-direction:column;gap:12px}
+.cross-card{background:var(--surface2);border:1px solid var(--border);border-radius:var(--r-md);padding:14px 16px}
+.cross-agree{border-left:3px solid #22c55e}
+.cross-tension{border-left:3px solid #fbbf24}
+.cross-card-header{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.cross-marker-agree{font-size:10px;font-weight:700;padding:3px 8px;border-radius:10px;background:rgba(34,197,94,0.15);color:#86efac;letter-spacing:.08em}
+.cross-marker-tension{font-size:10px;font-weight:700;padding:3px 8px;border-radius:10px;background:rgba(251,191,36,0.15);color:#fbbf24;letter-spacing:.08em}
+.cross-card-title{font-size:15px;font-weight:600;color:#fff;flex:1}
+.cross-card-body{font-size:13px;color:var(--text-secondary);line-height:1.8;margin-bottom:10px}
+.cross-card-body strong{color:#c7d2fe;font-weight:600}
+.cross-card-insight{font-size:14px;color:#e5e7eb;line-height:1.85;padding:10px 12px;background:rgba(99,102,241,0.05);border-radius:6px}
+.cross-card-insight strong{color:#fde68a}
+.cross-empty{font-size:13px;color:var(--text-secondary);font-style:italic;padding:12px 14px;background:rgba(255,255,255,0.02);border-radius:8px;line-height:1.8}
+@media(max-width:600px){
+  .rarity-headline{gap:8px}
+  .rarity-headline-main{font-size:14px;width:100%}
+  .rarity-headline-main strong{font-size:20px}
+}
 .locked-row{height:16px;background:var(--surface2);border-radius:4px;margin-bottom:12px}
 .locked-row.short{width:60%}
 .locked-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:20px}
@@ -240,6 +431,7 @@ body::before{content:'';position:fixed;top:0;left:0;width:100%;height:100%;opaci
 .locked-cta{display:inline-block;padding:12px 28px;background:var(--accent);color:white;border-radius:var(--r-md);font-size:14px;font-weight:600;text-decoration:none;transition:opacity .2s}
 .locked-cta:hover{opacity:0.85}
 </style>
+
 </head>
 <body>
 
@@ -251,6 +443,50 @@ body::before{content:'';position:fixed;top:0;left:0;width:100%;height:100%;opaci
     <h1 class="archetype-name">静かな炎の求道者</h1>
     <div class="hero-tagline">太陽のような温かさで人を照らし、中心で全体を統合するリーダー</div>
     <div class="hero-name">周平</div>
+    
+<div class="rarity-bar">
+  <span class="rarity-badge-top">組み合わせ分類 × 日本人分布</span>
+  <div class="rarity-dual-geo">
+    <div class="geo-stat geo-jp">
+      <div class="geo-label">🇯🇵 日本</div>
+      <div class="geo-main"><span class="geo-n">3,780</span> 人に 1 人</div>
+      <div class="geo-count">= 約 <strong>32,671</strong> 人</div>
+    </div>
+    <div class="geo-stat geo-world">
+      <div class="geo-label">🌏 世界</div>
+      <div class="geo-main"><span class="geo-n">4,645</span> 人に 1 人</div>
+      <div class="geo-count">= 約 <strong>1,754,514</strong> 人</div>
+    </div>
+  </div>
+  <div class="rarity-context-note">珍しい組み合わせ</div>
+
+  <div class="rarity-synthesis"><strong>几帳面と計画性</strong>（A型） × <strong>直進の人</strong>（亥年） × <strong>ロウソクの炎のような繊細な照らし</strong>（<abbr class="term" data-tip="四柱推命で、生まれた日から計算される「あなたの本体・判断の軸」。10種類（甲乙丙丁戊己庚辛壬癸）のどれか。西洋占星術の「太陽星座」に相当する最重要項目。" tabindex="0">丁日主</abbr>） × <strong>中心に立つ華やかさ</strong>（♌ 獅子座）——この 4 つが重なり合って生まれる、あなたならではの貴重なブレンドでございます。</div>
+
+  <div class="rarity-breakdown">
+    <div class="rarity-item"><div class="rarity-value">A</div><div class="rarity-label">A型<br>（4種中）</div></div>
+    <div class="rarity-item"><div class="rarity-value">亥</div><div class="rarity-label">亥年<br>（12種中）</div></div>
+    <div class="rarity-item"><div class="rarity-value">丁</div><div class="rarity-label">丁日主<br>（10種中）</div></div>
+    <div class="rarity-item"><div class="rarity-value" style="font-size:18px">♌</div><div class="rarity-label">獅子座<br>（12星座中）</div></div>
+    <div class="rarity-item rarity-item-accent"><div class="rarity-value">霊合</div><div class="rarity-label">霊合星人<br>（15%・稀少体質）</div></div>
+  </div>
+
+  <!-- 旧: rarity-scale セクションは 2026-04-16 にユーザー判断で削除 (出典不正確・意味不明瞭) -->
+  <!-- 代替: Hero の 日本/世界 dual-geo 表示で十分な Aha moment が成立している -->
+
+
+  <div class="rarity-sources">
+    <div class="rarity-sources-title">📊 算出根拠</div>
+    <ul>
+      <li>血液型分布（日本）: <a href="https://www.jrc.or.jp/donation/about/type/" target="_blank" rel="noopener">日本赤十字社 血液事業本部</a> — A 38.1% / O 30.7% / B 21.8% / AB 9.4%</li>
+      <li>血液型分布（世界）: <a href="https://www.redcrossblood.org/donate-blood/blood-types.html" target="_blank" rel="noopener">American Red Cross / Stanford Blood Center</a> — O 46% / A 31% / B 16% / AB 7%</li>
+      <li>日本の総人口: <a href="https://www.stat.go.jp/data/jinsui/" target="_blank" rel="noopener">総務省統計局 人口推計</a>（2026年4月概算値 約 1億2,348万人）</li>
+      <li>世界の総人口: <a href="https://population.un.org/wpp/" target="_blank" rel="noopener">国連 World Population Prospects 2024</a>（2026年推計 約 81.5億人）</li>
+      <li>干支 12種 / 日主 10種 / 太陽星座 12種は、暦上の等分布を仮定</li>
+      <li>4 要素は互いに独立と仮定して同時発生確率を算出</li>
+    </ul>
+  </div>
+</div>
+
     <div class="stats"><div class="stat-card"><div class="label">2026年</div><div class="value" style="color:#facc15">矛盾期 64</div></div></div>
     <div class="hub-cards-grid">
       <div class="hub-card-mini" onclick="document.getElementById('core-identity').scrollIntoView({behavior:'smooth'});var c=document.querySelector('#core-identity').closest('.hub-card');if(c&&!c.classList.contains('expanded'))c.classList.add('expanded');">
@@ -261,17 +497,24 @@ body::before{content:'';position:fixed;top:0;left:0;width:100%;height:100%;opaci
       <div class="hub-card-mini" onclick="document.getElementById('monthly').scrollIntoView({behavior:'smooth'});var c=document.querySelector('#monthly').closest('.hub-card');if(c&&!c.classList.contains('expanded'))c.classList.add('expanded');">
         <div class="hub-card-mini-icon" style="background:rgba(234,179,8,0.15);color:#facc15">&#9670;</div>
         <div><div class="hub-card-mini-title">今月の運気</div>
-        <div class="hub-card-mini-summary">3月 — 追い風。積極的に動ける</div></div>
+        <div class="hub-card-mini-summary">5月 — 中宮（絶頂・転機）× 六星「再会」</div></div>
       </div>
       <div class="hub-card-mini" onclick="document.getElementById('blueprint').scrollIntoView({behavior:'smooth'});var c=document.querySelector('#blueprint').closest('.hub-card');if(c&&!c.classList.contains('expanded'))c.classList.add('expanded');">
-        <div class="hub-card-mini-icon" style="background:rgba(139,92,246,0.15);color:#c4b5fd">&#9829;</div>
+        <div class="hub-card-mini-icon" style="background:rgba(139,92,246,0.15);color:var(--accent-purple-light)">&#9829;</div>
         <div><div class="hub-card-mini-title">今日のアクション</div>
         <div class="hub-card-mini-summary">自分の本質を活かす行動指針</div></div>
       </div>
     </div>
   </div>
 </section>
-<div class="hub-card" id="core-identity-card">
+
+<details class="glossary-details">
+  <summary><strong>📖 この資料の用語ガイド</strong> — クリックで展開（日主・本命星・運命星などの意味）</summary>
+  <div class="glossary-grid"><div class="glossary-item"><div class="glossary-term">日主</div><div class="glossary-expl">四柱推命で、生まれた日から計算される「あなたの本体・判断の軸」。10種類（甲乙丙丁戊己庚辛壬癸）のどれか。西洋占星術の「太陽星座」に相当する最重要項目。</div></div><div class="glossary-item"><div class="glossary-term">本命星</div><div class="glossary-expl">九星気学で、生まれ年から計算される「社会に出る時のあなたの顔」。9種類（一白水星〜九紫火星）のどれか。</div></div><div class="glossary-item"><div class="glossary-term">運命星</div><div class="glossary-expl">六星占術で、生まれ年月日から計算される「人生の時期を司る星」。6種類（木・火・土・金・水・天王星人 × ±）。12年周期で運気が巡る。</div></div><div class="glossary-item"><div class="glossary-term">霊合星人</div><div class="glossary-expl">六星占術で、2つの運命星を同時に持つ稀少体質（人口15%）。運気の振れ幅が一般の2倍で、良い時は倍、悪い時も倍という特徴。</div></div><div class="glossary-item"><div class="glossary-term">太陽星座</div><div class="glossary-expl">西洋占星術で、生年月日から決まる12星座（牡羊〜魚）。あなたの基本的な気質・自我の方向性を示す。</div></div><div class="glossary-item"><div class="glossary-term">五行</div><div class="glossary-expl">東洋占術の基礎理論。万物を「木・火・土・金・水」の 5 要素に分類。あなたの命式で欠けている要素は「意識的に補うべき方向」。</div></div><div class="glossary-item"><div class="glossary-term">陰陽</div><div class="glossary-expl">東洋思想の基本。すべての物事が持つ 2 つの側面。陽=外向・動・表、陰=内向・静・裏。人間も必ずどちらかに傾く。</div></div><div class="glossary-item"><div class="glossary-term">干支</div><div class="glossary-expl">生まれ年の 12 動物（子・丑・寅・卯・辰・巳・午・未・申・酉・戌・亥）。その人の直感的な気質アーキタイプ。</div></div><div class="glossary-item"><div class="glossary-term">四柱推命</div><div class="glossary-expl">中国発祥の古典的な運命学。生まれた「年月日時」の 4 本の柱（= 四柱）から命式を作り、人生を読み解く体系。</div></div><div class="glossary-item"><div class="glossary-term">九星気学</div><div class="glossary-expl">日本で千年以上使われる運命学。9つの星 × 9 年周期で人生の流れを読む体系。</div></div><div class="glossary-item"><div class="glossary-term">六星占術</div><div class="glossary-expl">細木数子氏が大成させた日本の運命学。6 つの運命星 × 12 年周期で運気のピークと停滞を読む体系。</div></div></div>
+  <p class="glossary-hint">本文中の <abbr class="term" data-tip="用語の上にマウスを乗せる、またはタップすると説明が出ます">点線付きの用語</abbr> は、ホバー or タップで説明が出ます。</p>
+</details>
+
+<div class="hub-card expanded" id="core-identity-card">
   <div class="hub-card-preview" onclick="this.parentElement.classList.toggle('expanded')">
     <div class="hub-card-icon" style="background:rgba(99,102,241,0.12);color:#a5b4fc">&#9733;</div>
     <div>
@@ -290,24 +533,268 @@ body::before{content:'';position:fixed;top:0;left:0;width:100%;height:100%;opaci
     <button class="collapse-toggle" onclick="this.previousElementSibling.style.display=this.previousElementSibling.style.display==='none'?'block':'none';this.textContent=this.previousElementSibling.style.display==='none'?'続きを読む':'閉じる'">続きを読む</button>
   </div>
   <div class="grid grid-4" style="margin-top:16px">
-    <div class="card tc"><div class="card-label">Core Essence（本質）</div>
+    <div class="card tc"><div class="card-label">本質</div>
       <div class="card-value">丁火 × 五黄土星</div>
       <div class="card-sub">静かな炎 × 中央の統率力</div></div>
-    <div class="card tc"><div class="card-label">Strongest Axis（最強の軸）</div>
-      <div class="card-value">—</div>
-      <div class="card-sub"></div></div>
-    <div class="card tc"><div class="card-label">Duality（二面性）</div>
+    <div class="card tc"><div class="card-label">最強の軸</div>
+      <div class="card-value">直進の人 × 丁の本質</div>
+      <div class="card-sub">干支が示す気質 + 日主が示す判断軸</div></div>
+    <div class="card tc"><div class="card-label">二面性</div>
       <div class="card-value">誠実 × 繊細</div>
-      <div class="card-sub">A型 × 霊合星人 × エニアグラム 2</div></div>
-    <div class="card tc"><div class="card-label">Watch Out（注意点）</div>
+      <div class="card-sub">A型 × 霊合星人 × エニアグラム Type 2</div></div>
+    <div class="card tc"><div class="card-label">注意点</div>
       <div class="card-value" style="color:var(--yellow)">土の欠如</div>
       <div class="card-sub">安定・信頼を意識的に補う</div></div>
   </div>
 </section>
   </div>
-</div><div class="hub-card" id="blueprint-card">
+</div><div class="hub-card expanded" id="eto-blood-card">
   <div class="hub-card-preview" onclick="this.parentElement.classList.toggle('expanded')">
-    <div class="hub-card-icon" style="background:rgba(139,92,246,0.12);color:#c4b5fd">&#9829;</div>
+    <div class="hub-card-icon" style="background:rgba(251,191,36,0.12);color:var(--accent-amber-light)">&#9775;</div>
+    <div>
+      <div class="hub-card-title">干支 × 血液型</div>
+      <div class="hub-card-summary">亥年 × A型 — 日本人の希少組み合わせ</div>
+    </div>
+    <div class="hub-card-arrow"></div>
+  </div>
+  <div class="hub-card-content">
+    
+<div class="eto-hero">
+  <div class="eto-emoji">🐗</div>
+  <div class="eto-name">
+    <div class="eto-title">亥年 — 直進の人</div>
+    <div class="eto-reading">亥（い年）× A型</div>
+  </div>
+  <div class="eto-rarity">
+    <div class="eto-rarity-label">この組み合わせ</div>
+    <div class="eto-rarity-value">日本人の約 3.2%</div>
+  </div>
+</div>
+<div class="eto-narrative">
+  <p>一度お決めになったら、脇目もふらず進まれる方です。裏表のない真っ直ぐさが、周囲からの信頼を呼びます。お好きなものへの集中力は、誰にも負けません。</p>
+  <div class="eto-cross">
+    <div class="eto-cross-label">干支 × 血液型 の掛け算</div>
+    <div class="eto-cross-body">直進の人（一途・純粋さ）× 真面目さと計画性。干支と血液型のこの組み合わせ特有の矛盾と強みが、あなたの個性を形作っています。</div>
+  </div>
+</div>
+<div class="eto-traits-row"><span class="eto-trait">一途</span><span class="eto-trait">純粋さ</span><span class="eto-trait">推進力</span></div>
+<div class="confidence-badge">この分析は、生年月日と血液型のみから導き出したものでございます。確度はおよそ 70% 程度。詳しい質問にお答えいただきますと、さらに鮮明に見えてまいります。</div>
+
+  </div>
+</div><div class="hub-card expanded" id="integration-map-card">
+  <div class="hub-card-preview" onclick="this.parentElement.classList.toggle('expanded')">
+    <div class="hub-card-icon" style="background:rgba(34,197,94,0.12);color:#86efac">&#9881;</div>
+    <div>
+      <div class="hub-card-title">5つの体系が示す、あなたの軸</div>
+      <div class="hub-card-summary">多数決で浮かび上がる「本当のあなた」</div>
+    </div>
+    <div class="hub-card-arrow"></div>
+  </div>
+  <div class="hub-card-content">
+    
+<p class="section-intro">四柱推命・九星気学・六星占術・西洋占星術・血液型——起源の異なる 5 つの体系が、<strong>3 つの軸</strong>から「あなた」を独立に読み解いていらっしゃいます。<strong>多数決で見えてくる合意</strong>は高い確信度を示し、<strong>体系間で割れる軸</strong>はあなたならではの固有の揺らぎを示してまいります。</p>
+
+<div class="axes-stack">
+<div class="axis-card">
+  <div class="axis-card-header">
+    <div class="axis-card-name">内向 ⇄ 外向</div>
+    <span class="verdict-badge verdict-lean">やや傾向あり: 3/5 が「内向」</span>
+  </div>
+  <div class="axis-card-verdict"><strong>3 つの体系</strong>が「<strong>内向</strong>」、<strong>2 つ</strong>が「外向」を指していらっしゃいます。どちらかと言えば内向寄りですが、場面によっては外向のモードも顔をお出しになる、二面性のある方でいらっしゃいます。</div>
+  <div class="axis-card-systems">
+    <div class="axis-column axis-column-dominant">
+      <div class="axis-column-title">「内向」を指す（3体系）</div>
+      <div class="axis-column-chips"><span class="sys-chip sys-chip-left">四柱推命（日主）</span><span class="sys-chip sys-chip-left">六星占術（運命星）</span><span class="sys-chip sys-chip-left">血液型（A型）</span></div>
+    </div>
+    <div class="axis-column axis-column-minority">
+      <div class="axis-column-title">「外向」を指す（2体系）</div>
+      <div class="axis-column-chips"><span class="sys-chip sys-chip-right">九星気学（本命星）</span><span class="sys-chip sys-chip-right">西洋占星術（太陽星座）</span></div>
+    </div>
+  </div>
+  <div class="axis-outlier"><span class="axis-outlier-label">ただし</span><strong>九星気学</strong> と <strong>西洋占星術</strong> だけは「<strong>外向</strong>」を指していらっしゃいます——これがあなたの隠れたお顔、固有の揺らぎポイントでございます。</div>
+</div>
+
+<div class="axis-card">
+  <div class="axis-card-header">
+    <div class="axis-card-name">安定 ⇄ 変化</div>
+    <span class="verdict-badge verdict-lean">やや傾向あり: 3/5 が「安定」</span>
+  </div>
+  <div class="axis-card-verdict"><strong>3 つの体系</strong>が「<strong>安定</strong>」、<strong>2 つ</strong>が「変化」を指していらっしゃいます。どちらかと言えば安定寄りですが、場面によっては変化のモードも顔をお出しになる、二面性のある方でいらっしゃいます。</div>
+  <div class="axis-card-systems">
+    <div class="axis-column axis-column-dominant">
+      <div class="axis-column-title">「安定」を指す（3体系）</div>
+      <div class="axis-column-chips"><span class="sys-chip sys-chip-left">九星気学（本命星）</span><span class="sys-chip sys-chip-left">六星占術（運命星）</span><span class="sys-chip sys-chip-left">血液型（A型）</span></div>
+    </div>
+    <div class="axis-column axis-column-minority">
+      <div class="axis-column-title">「変化」を指す（2体系）</div>
+      <div class="axis-column-chips"><span class="sys-chip sys-chip-right">四柱推命（日主）</span><span class="sys-chip sys-chip-right">西洋占星術（太陽星座）</span></div>
+    </div>
+  </div>
+  <div class="axis-outlier"><span class="axis-outlier-label">ただし</span><strong>四柱推命</strong> と <strong>西洋占星術</strong> だけは「<strong>変化</strong>」を指していらっしゃいます——これがあなたの隠れたお顔、固有の揺らぎポイントでございます。</div>
+</div>
+
+<div class="axis-card">
+  <div class="axis-card-header">
+    <div class="axis-card-name">思考 ⇄ 情動</div>
+    <span class="verdict-badge verdict-strong">強い合意: 5/5 体系が「情動」</span>
+  </div>
+  <div class="axis-card-verdict"><strong>5 つの体系</strong>が揃って「<strong>情動</strong>」を指していらっしゃいます。直感・感情・身体感覚で物事を捉える——というのが、あなたの軸でございます。</div>
+  <div class="axis-card-systems">
+    <div class="axis-column axis-column-minority">
+      <div class="axis-column-title">「思考」を指す（0体系）</div>
+      <div class="axis-column-chips"><span class="axis-empty">なし</span></div>
+    </div>
+    <div class="axis-column axis-column-dominant">
+      <div class="axis-column-title">「情動」を指す（5体系）</div>
+      <div class="axis-column-chips"><span class="sys-chip sys-chip-right">四柱推命（日主）</span><span class="sys-chip sys-chip-right">九星気学（本命星）</span><span class="sys-chip sys-chip-right">六星占術（運命星）</span><span class="sys-chip sys-chip-right">西洋占星術（太陽星座）</span><span class="sys-chip sys-chip-right">血液型（A型）</span></div>
+    </div>
+  </div>
+  
+</div>
+</div>
+
+
+<div class="consensus-box">
+  <div class="consensus-title">◇ 4つ以上の体系が口を揃えて言うこと</div>
+  <ul><li>「情動」軸で<strong>5/5</strong>体系が一致</li></ul>
+</div>
+
+<div class="confidence-badge">この分析は、生年月日と血液型のみから導き出しており、確度はおよそ 75% でございます。性格アンケート（Tier 2）にお進みいただくと、心理学データが加わり、各軸の確度が 90% を超えてまいります。</div>
+
+  </div>
+</div><div class="hub-card expanded" id="cross-reference-card">
+  <div class="hub-card-preview" onclick="this.parentElement.classList.toggle('expanded')">
+    <div class="hub-card-icon" style="background:rgba(99,102,241,0.12);color:#a5b4fc">&#10021;</div>
+    <div>
+      <div class="hub-card-title">クロスリファレンス・インサイト</div>
+      <div class="hub-card-summary">体系を跨いだ一致点と矛盾点から読む「あなた」</div>
+    </div>
+    <div class="hub-card-arrow"></div>
+  </div>
+  <div class="hub-card-content">
+    
+<p class="section-intro">単一の占術だけでは見えてこない、<strong>体系を跨いだ共通点と矛盾点</strong>を抽出いたしました。複数の千年単位の体系が同じ方向を指している時、それは偶然ではないと申せましょう。逆に、体系間で結論が割れる軸こそが、あなたならではの<strong>固有の揺らぎ</strong>でございます。</p>
+
+<div class="cross-section">
+  <div class="cross-section-label cross-section-label-agree">
+    <span class="cross-label-emoji">◇</span>
+    複数体系が口を揃えて申し上げること — 高い確信度で見えてくる自己像
+  </div>
+  <div class="cross-grid">
+<div class="cross-card cross-agree">
+  <div class="cross-card-header">
+    <span class="cross-marker-agree">交差点</span>
+    <div class="cross-card-title">火の性質が複数体系で重なる</div>
+  </div>
+  <div class="cross-card-body">四柱推命・西洋占星術・九星気学・六星占術のうち <strong>2 体系</strong>が「火」要素を共有。</div>
+  <div class="cross-card-insight"><strong>だから、</strong>情熱・発信力・明るさが、あなたの軸となっていらっしゃいます。人前に立つ場面で、自然と光が当たるタイプの方でございます。</div>
+</div>
+
+<div class="cross-card cross-agree">
+  <div class="cross-card-header">
+    <span class="cross-marker-agree">交差点</span>
+    <div class="cross-card-title">土の性質が複数体系で重なる</div>
+  </div>
+  <div class="cross-card-body">安定と堅実の「土」が <strong>2 体系</strong>で共有。</div>
+  <div class="cross-card-insight"><strong>だから、</strong>周囲が揺れても自分は動かない、芯の強さをお持ちです。長距離走型で、急がば回れを自然体で実践なさることができる方でいらっしゃいます。</div>
+</div>
+
+<div class="cross-card cross-agree">
+  <div class="cross-card-header">
+    <span class="cross-marker-agree">交差点</span>
+    <div class="cross-card-title">本命星「五黄土星」× 日主「丁」の二層構造</div>
+  </div>
+  <div class="cross-card-body">九星気学の<strong>五黄土星</strong>が社会に出る時の顔。四柱推命の<strong>丁</strong>が内側で動いている本体。</div>
+  <div class="cross-card-insight"><strong>だから、</strong>外から見えるあなたと、内側で動いているあなたは少し違っていらっしゃいます。この <strong>「外の自分 × 内の自分」のギャップ</strong>を自覚なさることが、疲れにくい生き方への第一歩でございます。</div>
+</div>
+
+<div class="cross-card cross-agree">
+  <div class="cross-card-header">
+    <span class="cross-marker-agree">交差点</span>
+    <div class="cross-card-title">亥年（直進の人）× 丁日主（ロウソクの炎のような繊細な照らし）</div>
+  </div>
+  <div class="cross-card-body">干支が示す<strong>生まれ持った気質</strong>と、日主が示す<strong>日々の判断の軸</strong>が重なる場所。</div>
+  <div class="cross-card-insight"><strong>だから、</strong>周囲に対しては直進の人として振る舞っていらっしゃりながら、重要な判断ではロウソクの炎のような繊細な照らしが働いていらっしゃいます。この使い分けが無意識にできていらっしゃるなら、それはあなたの強みの核と申せましょう。</div>
+</div>
+</div>
+</div>
+
+<div class="cross-section">
+  <div class="cross-section-label cross-section-label-tension">
+    <span class="cross-label-emoji">⚖</span>
+    体系間で揺らぐポイント — あなたの固有性が現れる場所
+  </div>
+  <div class="cross-grid">
+<div class="cross-card cross-tension">
+  <div class="cross-card-header">
+    <span class="cross-marker-tension">揺らぎ</span>
+    <div class="cross-card-title">霊合星人という「二つの顔」</div>
+  </div>
+  <div class="cross-card-body">六星占術で <strong>土星人</strong> にサブ星を持つ霊合星人（人口15%）。</div>
+  <div class="cross-card-insight"><strong>つまり、</strong>状況によって全く違う人格モードが立ち上がるのが、霊合星人のあなたの特徴でいらっしゃいます。周囲は「あの時と印象が違っていた」と感じるかもしれませんが、ご本人にとってはどちらも本物の自分でいらっしゃるのです。使い分けを自覚なさると、場面ごとに最適なご自身をお選びいただけます。</div>
+</div>
+</div>
+</div>
+
+<div class="confidence-badge">確度はおよそ 75%（生年月日と血液型ベースの分析）でございます。性格アンケート（Tier 2）にお進みいただくと、あなたの心理的パターンと占術データの交差点がさらに鮮明に浮かび上がってまいります。</div>
+
+  </div>
+</div><div class="hub-card expanded" id="strengths-traps-card">
+  <div class="hub-card-preview" onclick="this.parentElement.classList.toggle('expanded')">
+    <div class="hub-card-icon" style="background:rgba(236,72,153,0.12);color:#f9a8d4">&#9876;</div>
+    <div>
+      <div class="hub-card-title">強み × 裏返しの罠</div>
+      <div class="hub-card-summary">あなたの強みが暴走した時の落とし穴</div>
+    </div>
+    <div class="hub-card-arrow"></div>
+  </div>
+  <div class="hub-card-content">
+    
+<p class="section-intro">「強み」と「罠」は、表裏一体のもの。Gallup CliftonStrengths の Shadow Side 理論を、あなたの<strong>生年月日＋血液型</strong>に適用いたしました。強みが暴走した時の落とし穴を先に知っておかれることが、賢明な自分運用への第一歩でございます。</p>
+<div class="strengths-traps-grid">
+<div class="strength-pair">
+  <div class="strength-side">
+    <div class="pair-label-pos">強み 1</div>
+    <div class="pair-body">繊細な共感力</div>
+  </div>
+  <div class="pair-connector">⇄</div>
+  <div class="shadow-side">
+    <div class="pair-label-neg">裏返しの罠</div>
+    <div class="pair-body">他人の感情に引きずられる</div>
+  </div>
+</div>
+
+<div class="strength-pair">
+  <div class="strength-side">
+    <div class="pair-label-pos">強み 2</div>
+    <div class="pair-body">本質を見抜く直感</div>
+  </div>
+  <div class="pair-connector">⇄</div>
+  <div class="shadow-side">
+    <div class="pair-label-neg">裏返しの罠</div>
+    <div class="pair-body">環境の影響を受けやすい</div>
+  </div>
+</div>
+
+<div class="strength-pair">
+  <div class="strength-side">
+    <div class="pair-label-pos">強み 3</div>
+    <div class="pair-body">人を温める優しさ</div>
+  </div>
+  <div class="pair-connector">⇄</div>
+  <div class="shadow-side">
+    <div class="pair-label-neg">裏返しの罠</div>
+    <div class="pair-body">自己主張を控えすぎる</div>
+  </div>
+</div>
+</div>
+<p class="strength-extra"><strong>五黄土星</strong>の「中心に立つ王の器」が、これらの強みを社会へお出しになる舞台装置となっていらっしゃいます。</p><p class="strength-extra"><strong>霊合星人</strong>という希少体質（人口15%）をお持ちのため、この強みと罠の振れ幅が一般の2倍と言われております。好調時は抜きん出て、不調時は深く沈む——そんな特徴がございます。</p>
+<div class="confidence-badge">この分析は、生年月日と血液型のみから導き出したもので、確度はおよそ 70% でございます。性格アンケート（Tier 2）にお答えいただくと、あなた個人の「強み序列」と「暴走しやすい順」が見えてまいります。</div>
+
+  </div>
+</div><div class="hub-card expanded" id="blueprint-card">
+  <div class="hub-card-preview" onclick="this.parentElement.classList.toggle('expanded')">
+    <div class="hub-card-icon" style="background:rgba(139,92,246,0.12);color:var(--accent-purple-light)">&#9829;</div>
     <div>
       <div class="hub-card-title">明日からできること</div>
       <div class="hub-card-summary">自分の本質を活かす行動指針</div>
@@ -327,9 +814,9 @@ body::before{content:'';position:fixed;top:0;left:0;width:100%;height:100%;opaci
     </div></div>
 </div>
   </div>
-</div><div class="hub-card" id="personality-card">
+</div><div class="hub-card expanded" id="personality-card">
   <div class="hub-card-preview" onclick="this.parentElement.classList.toggle('expanded')">
-    <div class="hub-card-icon" style="background:rgba(59,130,246,0.12);color:#60a5fa">&#9632;</div>
+    <div class="hub-card-icon" style="background:rgba(59,130,246,0.12);color:var(--accent-blue-light)">&#9632;</div>
     <div>
       <div class="hub-card-title">内なる才能の設計図</div>
       <div class="hub-card-summary">強み × 性格タイプ × 感受性</div>
@@ -343,9 +830,9 @@ body::before{content:'';position:fixed;top:0;left:0;width:100%;height:100%;opaci
   
 </section>
   </div>
-</div><div class="hub-card" id="divination-card">
+</div><div class="hub-card expanded" id="divination-card">
   <div class="hub-card-preview" onclick="this.parentElement.classList.toggle('expanded')">
-    <div class="hub-card-icon" style="background:rgba(139,92,246,0.12);color:#c4b5fd">&#9679;</div>
+    <div class="hub-card-icon" style="background:rgba(139,92,246,0.12);color:var(--accent-purple-light)">&#9679;</div>
     <div>
       <div class="hub-card-title">星が語ること</div>
       <div class="hub-card-summary">四柱推命 × 九星気学 × 六星占術 × 西洋占星術</div>
@@ -377,11 +864,11 @@ body::before{content:'';position:fixed;top:0;left:0;width:100%;height:100%;opaci
     <strong style="color:var(--text)">日主（にっしゅ）: 丁火（Yin火 / ひのと）</strong> — あなたの生まれ持った本質。ロウソクの炎。静かで温かく人を照らす。強い意志を内に秘め、感受性豊かで人の心の機微を感じ取る。丙火（太陽）のような自己主張ではなく、暗闇の中で必要な人にだけ光を届ける繊細な存在。五行で木が50%と最も多く、日主の丁火に絶えず薪を供給する構造 — エネルギッシュだが燃え尽きリスクにも注意。</div>
   <div style="margin-top:8px;font-size:12px;color:var(--text-secondary);line-height:1.7"><strong style="color:var(--text)">年柱（乙亥）</strong>: 陰の草花（乙）と亥（猪・水）の組み合わせ。社会に対して柔軟で控えめな印象を与えるが、内面に水のような深い知恵と直感力を秘める。先祖から受け継いだ「穏やかに、しかし止まらない推進力」。<br><strong style="color:var(--text)">月柱（甲申）</strong>: 大木（甲）と申（猿・金）の組み合わせ。キャリアの柱に真っすぐな大木の誠実さと、猿の器用さ・知恵が同居。仕事では正道を歩みつつも機転が利く。甲木は日主の丁火を燃やす薪 — 仕事が情熱の燃料になる配置。<br><strong style="color:var(--text)">日柱（丁卯）</strong>: 本質は陰火（丁）と卯（兎・木）。兎の穏やかさと木のエネルギーに支えられた炎 — 木が火を生む「相生」の関係で、エネルギーが尽きない構造。直感力が鋭く、人の心を照らす使命を持つ。<br></div>
   <div class="element-bar" style="margin-top:12px"><div class="element-col">
-      <div class="element-pct" style="color:#4ade80">50%</div>
-      <div class="element-fill" style="height:50%;background:#4ade80"></div>
+      <div class="element-pct" style="color:var(--accent-green-light)">50%</div>
+      <div class="element-fill" style="height:50%;background:var(--accent-green-light)"></div>
       <div class="element-name">木</div></div><div class="element-col">
-      <div class="element-pct" style="color:#f87171">17%</div>
-      <div class="element-fill" style="height:17%;background:#f87171"></div>
+      <div class="element-pct" style="color:var(--accent-red-light)">17%</div>
+      <div class="element-fill" style="height:17%;background:var(--accent-red-light)"></div>
       <div class="element-name">火</div></div><div class="element-col">
       <div class="element-pct" style="color:#facc15">0%</div>
       <div class="element-fill" style="height:2%;background:#facc15"></div>
@@ -389,8 +876,8 @@ body::before{content:'';position:fixed;top:0;left:0;width:100%;height:100%;opaci
       <div class="element-pct" style="color:#94a3b8">17%</div>
       <div class="element-fill" style="height:17%;background:#94a3b8"></div>
       <div class="element-name">金</div></div><div class="element-col">
-      <div class="element-pct" style="color:#60a5fa">17%</div>
-      <div class="element-fill" style="height:17%;background:#60a5fa"></div>
+      <div class="element-pct" style="color:var(--accent-blue-light)">17%</div>
+      <div class="element-fill" style="height:17%;background:var(--accent-blue-light)"></div>
       <div class="element-name">水</div></div></div>
   <div style="font-size:12px;color:var(--yellow);margin-top:8px">欠如: 土 — 土(安定・信頼)が欠如。意識的にこれらの要素を補う行動が有効</div>
   </div>
@@ -420,7 +907,7 @@ body::before{content:'';position:fixed;top:0;left:0;width:100%;height:100%;opaci
   <div style="background:rgba(234,179,8,0.08);border:1px solid rgba(234,179,8,0.2);border-radius:var(--r-sm);padding:12px;text-align:center;margin-top:12px">
       <div style="font-size:13px;color:var(--yellow);font-weight:600">霊合星人</div>
       <div style="font-size:12px;color:var(--text-secondary);margin-top:6px;line-height:1.7;text-align:left">あなたは霊合星人として、土星人の堅実さと天王星人の革新性という相反する性質を同時に持っています。全人口の約16%が該当し、あなたの運気の振れ幅は通常の2倍。2026年はメイン星（土星人）が財成で好調ですが、サブ星（天王星人）が陰影で大殺界入り — 矛盾する運気が同時進行します。表面的には好調に見えても、内面で不安定さを感じやすい年。2028年からはメイン星も大殺界に入るため、2026-2027年はあなたにとって重要な準備期間です。</div></div>
-  <div style="margin-top:12px"><table class="cycle-table"><thead><tr><th>年</th><th>メイン</th><th>サブ</th><th>殺界</th><th>運気</th></tr></thead><tbody><tr><td>2024</td><td>乱気</td><td>財成</td><td><span class="satsukai chu">中殺界</span></td><td><span style="color:#f87171">25</span></td></tr><tr><td>2025</td><td>再会</td><td>安定</td><td>—</td><td><span style="color:#4ade80">70</span></td></tr><tr class="current"><td>2026</td><td>財成</td><td>陰影</td><td>—</td><td><span style="color:#4ade80">85</span></td></tr><tr><td>2027</td><td>安定</td><td>停止</td><td>—</td><td><span style="color:#4ade80">95</span></td></tr><tr><td>2028</td><td>陰影</td><td>減退</td><td><span class="satsukai dai">大殺界</span></td><td><span style="color:#f87171">15</span></td></tr><tr><td>2029</td><td>停止</td><td>種子</td><td><span class="satsukai dai">大殺界</span></td><td><span style="color:#f87171">10</span></td></tr><tr><td>2030</td><td>減退</td><td>緑生</td><td><span class="satsukai dai">大殺界</span></td><td><span style="color:#f87171">20</span></td></tr><tr><td>2031</td><td>種子</td><td>立花</td><td>—</td><td><span style="color:#facc15">50</span></td></tr><tr><td>2032</td><td>緑生</td><td>健弱</td><td>—</td><td><span style="color:#facc15">65</span></td></tr><tr><td>2033</td><td>立花</td><td>達成</td><td>—</td><td><span style="color:#4ade80">80</span></td></tr></tbody></table></div>
+  <div style="margin-top:12px"><table class="cycle-table"><thead><tr><th>年</th><th>メイン</th><th>サブ</th><th>殺界</th><th>運気</th></tr></thead><tbody><tr><td>2024</td><td>乱気</td><td>財成</td><td><span class="satsukai chu">中殺界</span></td><td><span style="color:var(--accent-red-light)">25</span></td></tr><tr><td>2025</td><td>再会</td><td>安定</td><td>—</td><td><span style="color:var(--accent-green-light)">70</span></td></tr><tr class="current"><td>2026</td><td>財成</td><td>陰影</td><td>—</td><td><span style="color:var(--accent-green-light)">85</span></td></tr><tr><td>2027</td><td>安定</td><td>停止</td><td>—</td><td><span style="color:var(--accent-green-light)">95</span></td></tr><tr><td>2028</td><td>陰影</td><td>減退</td><td><span class="satsukai dai">大殺界</span></td><td><span style="color:var(--accent-red-light)">15</span></td></tr><tr><td>2029</td><td>停止</td><td>種子</td><td><span class="satsukai dai">大殺界</span></td><td><span style="color:var(--accent-red-light)">10</span></td></tr><tr><td>2030</td><td>減退</td><td>緑生</td><td><span class="satsukai dai">大殺界</span></td><td><span style="color:var(--accent-red-light)">20</span></td></tr><tr><td>2031</td><td>種子</td><td>立花</td><td>—</td><td><span style="color:#facc15">50</span></td></tr><tr><td>2032</td><td>緑生</td><td>健弱</td><td>—</td><td><span style="color:#facc15">65</span></td></tr><tr><td>2033</td><td>立花</td><td>達成</td><td>—</td><td><span style="color:var(--accent-green-light)">80</span></td></tr></tbody></table></div>
   </div>
 
   <div class="accordion-header" onclick="toggleAccordion(this)"><h3 class="sub-title" style="border-top:none;padding-top:0;margin:0">西洋占星術</h3></div>
@@ -435,19 +922,19 @@ body::before{content:'';position:fixed;top:0;left:0;width:100%;height:100%;opaci
       <div class='typo-desc' style='margin-top:8px'>火のエレメント — 情熱、行動力、直感。エネルギッシュで存在感がある</div></div><div class="card"><div class="card-label">デカン（第2区）</div>
       <div class="card-value">Jupiter</div>
       <div class='typo-desc' style='margin-top:8px'>獅子座の輝きに木星の拡大力が加わる。寛大さ・楽観性・教育者としての資質</div></div></div><div style="font-size:12px;color:var(--text-secondary);line-height:1.7;margin-top:12px">不動宮（Fixed）— 安定した意志と忍耐力。一度始めたら最後までやり遂げる。頑固な面もある</div><div class="insight-box" style="margin-top:12px;border-color:rgba(139,92,246,0.3);background:linear-gradient(135deg,rgba(139,92,246,0.08),rgba(99,102,241,0.04))">
-      <div class="insight-title" style="color:#c4b5fd">2026年 Leoの運勢</div>
-      <p style="line-height:1.9;font-size:14px">太陽星座の獅子座にとって2026年は「自己表現の再定義」の年。これまで他者のために使ってきたエネルギーを、自分自身の創造性や自己実現に向ける転機。特に夏至以降、本来の輝きを取り戻すチャンスが訪れる</p></div><div style="margin-top:20px"><div class="insight-title" style="color:#c4b5fd;margin-bottom:8px">2026年 惑星の影響</div><div style="font-size:12px;color:var(--text-muted);margin-bottom:12px;line-height:1.6">木星・土星・冥王星・天王星が今年あなたの太陽星座にどんな影響を与えるか。緑は追い風、黄色は調整期、赤は試練（成長のチャンス）。</div><div class="grid grid-2"><div class="card" style="border-left:3px solid #60a5fa">
+      <div class="insight-title" style="color:var(--accent-purple-light)">2026年 Leoの運勢</div>
+      <p style="line-height:1.9;font-size:14px">太陽星座の獅子座にとって2026年は「自己表現の再定義」の年。これまで他者のために使ってきたエネルギーを、自分自身の創造性や自己実現に向ける転機。特に夏至以降、本来の輝きを取り戻すチャンスが訪れる</p></div><div style="margin-top:20px"><div class="insight-title" style="color:var(--accent-purple-light);margin-bottom:8px">2026年 惑星の影響</div><div style="font-size:12px;color:var(--text-muted);margin-bottom:12px;line-height:1.6">木星・土星・冥王星・天王星が今年あなたの太陽星座にどんな影響を与えるか。緑は追い風、黄色は調整期、赤は試練（成長のチャンス）。</div><div class="grid grid-2"><div class="card" style="border-left:3px solid var(--accent-blue-light)">
         <div class="card-label">木星 in 蟹座</div>
-        <div class="card-value" style="font-size:16px;color:#60a5fa">微調整</div>
-        <div class="typo-desc" style="margin-top:6px;font-size:12px">木星が蟹座でセミセクスタイル — 繊細な感性の成長。身近な人への愛情が深まる</div></div><div class="card" style="border-left:3px solid #4ade80">
+        <div class="card-value" style="font-size:16px;color:var(--accent-blue-light)">微調整</div>
+        <div class="typo-desc" style="margin-top:6px;font-size:12px">木星が蟹座でセミセクスタイル — 繊細な感性の成長。身近な人への愛情が深まる</div></div><div class="card" style="border-left:3px solid var(--accent-green-light)">
         <div class="card-label">土星 in 牡羊座</div>
-        <div class="card-value" style="font-size:16px;color:#4ade80">追い風</div>
-        <div class="typo-desc" style="margin-top:6px;font-size:12px">土星が牡羊座でトライン — リーダーシップに構造と安定をもたらす。努力が認められる年</div></div><div class="card" style="border-left:3px solid #f87171">
+        <div class="card-value" style="font-size:16px;color:var(--accent-green-light)">追い風</div>
+        <div class="typo-desc" style="margin-top:6px;font-size:12px">土星が牡羊座でトライン — リーダーシップに構造と安定をもたらす。努力が認められる年</div></div><div class="card" style="border-left:3px solid var(--accent-red-light)">
         <div class="card-label">冥王星 in 水瓶座</div>
-        <div class="card-value" style="font-size:16px;color:#f87171">対峙</div>
-        <div class="typo-desc" style="margin-top:6px;font-size:12px">冥王星が水瓶座でオポジション — 自己と他者の関係の根本的変容。パワーダイナミクスの再定義</div></div><div class="card" style="border-left:3px solid #4ade80">
+        <div class="card-value" style="font-size:16px;color:var(--accent-red-light)">対峙</div>
+        <div class="typo-desc" style="margin-top:6px;font-size:12px">冥王星が水瓶座でオポジション — 自己と他者の関係の根本的変容。パワーダイナミクスの再定義</div></div><div class="card" style="border-left:3px solid var(--accent-green-light)">
         <div class="card-label">天王星 in 双子座</div>
-        <div class="card-value" style="font-size:16px;color:#4ade80">好機</div>
+        <div class="card-value" style="font-size:16px;color:var(--accent-green-light)">好機</div>
         <div class="typo-desc" style="margin-top:6px;font-size:12px">天王星が双子座でセクスタイル — コミュニケーションに革新。新しい表現方法の発見</div></div></div></div><div style="margin-top:20px"><div class="insight-title" style="color:#fb923c;margin-bottom:8px">&#9888; 2026年 水星逆行</div><div style="font-size:12px;color:var(--text-muted);margin-bottom:12px;line-height:1.6">水星逆行中はコミュニケーションの行き違い、契約トラブル、電子機器の不具合が起きやすい時期。重要な契約や大きな買い物はこの期間を避けるのが無難。</div><div class="grid grid-3"><div class="card" style="border-left:3px solid rgba(251,146,60,0.5)">
         <div class="card-label">第1回</div>
         <div class="card-value" style="font-size:14px">2/26-3/20</div>
@@ -461,18 +948,18 @@ body::before{content:'';position:fixed;top:0;left:0;width:100%;height:100%;opaci
         <div class="card-value" style="font-size:14px">10/24-11/13</div>
         <div class="card-sub">蠍座（Scorpio）</div>
         <div class="typo-desc" style="margin-top:6px;font-size:12px">深い関係性の再評価。隠れていた感情が表面化する可能性</div></div></div></div><div class="insight-box" style="margin-top:16px;border-color:rgba(139,92,246,0.3);background:linear-gradient(135deg,rgba(139,92,246,0.08),rgba(99,102,241,0.04))">
-      <div class="insight-title" style="color:#c4b5fd">3月のLeoホロスコープ — 「変容と再生」</div>
+      <div class="insight-title" style="color:var(--accent-purple-light)">5月のLeoホロスコープ — 「キャリアの飛躍」</div>
       <div style="display:flex;align-items:center;gap:12px;margin-bottom:8px">
-        <div style="font-size:24px;font-weight:700;color:#facc15">55</div>
+        <div style="font-size:24px;font-weight:700;color:var(--accent-green-light)">85</div>
         <div style="font-size:11px;color:var(--text-muted)">西洋エネルギー /100</div>
       </div>
-      <p style="line-height:1.9;font-size:14px">水星逆行。深層心理と向き合う時期。手放すことで得るものがある</p></div>
+      <p style="line-height:1.9;font-size:14px">土星のトラインが効く。リーダーシップを発揮し、地位が向上</p></div>
   </div>
 
   <div class="unlock-banner">出生時刻を追加すると、時柱・アセンダント・月星座が解放されます</div>
 </section>
   </div>
-</div><div class="hub-card" id="forecast-2026-card">
+</div><div class="hub-card expanded" id="forecast-2026-card">
   <div class="hub-card-preview" onclick="this.parentElement.classList.toggle('expanded')">
     <div class="hub-card-icon" style="background:rgba(234,179,8,0.12);color:#facc15">&#9650;</div>
     <div>
@@ -486,7 +973,7 @@ body::before{content:'';position:fixed;top:0;left:0;width:100%;height:100%;opaci
   <div class="section-quote">"未来は決まっていない。しかし、流れは見える"</div>
   <div class="year-theme-banner">
     <div class="year-theme-label">2026年のテーマ</div>
-    <div class="year-theme-text" style="color:#60a5fa">布石の年 — 足場を固め、次の飛躍を準備する</div>
+    <div class="year-theme-text" style="color:var(--accent-blue-light)">布石の年 — 足場を固め、次の飛躍を準備する</div>
   </div>
   <div class="grid grid-4"><div class="card tc"><div class="card-label">九星気学</div>
       <div class="card-value">離宮</div><div class="card-sub">注目・離別</div></div><div class="card tc"><div class="card-label">六星占術（メイン）</div>
@@ -495,15 +982,15 @@ body::before{content:'';position:fixed;top:0;left:0;width:100%;height:100%;opaci
       <div class="card-value" style="color:#facc15">64</div>
       <div class="card-sub">矛盾期</div></div></div>
   <div style="margin-top:12px;padding:10px 14px;border-radius:8px;background:rgba(139,92,246,0.06);border:1px solid rgba(139,92,246,0.15)">
-      <div style="font-size:11px;color:#c4b5fd;margin-bottom:6px;font-weight:600">惑星トランジット</div>
-      <div style="display:flex;flex-wrap:wrap;gap:4px"><span style="display:inline-flex;align-items:center;gap:4px;margin-right:12px;font-size:12px"><span style="color:#60a5fa;font-weight:600">木星</span><span style="color:var(--text-muted)">蟹座 Semisextile</span></span><span style="display:inline-flex;align-items:center;gap:4px;margin-right:12px;font-size:12px"><span style="color:#4ade80;font-weight:600">土星</span><span style="color:var(--text-muted)">牡羊座 Trine</span></span><span style="display:inline-flex;align-items:center;gap:4px;margin-right:12px;font-size:12px"><span style="color:#f87171;font-weight:600">冥王星</span><span style="color:var(--text-muted)">水瓶座 Opposition</span></span><span style="display:inline-flex;align-items:center;gap:4px;margin-right:12px;font-size:12px"><span style="color:#4ade80;font-weight:600">天王星</span><span style="color:var(--text-muted)">双子座 Sextile</span></span></div>
+      <div style="font-size:11px;color:var(--accent-purple-light);margin-bottom:6px;font-weight:600">惑星トランジット</div>
+      <div style="display:flex;flex-wrap:wrap;gap:4px"><span style="display:inline-flex;align-items:center;gap:4px;margin-right:12px;font-size:12px"><span style="color:var(--accent-blue-light);font-weight:600">木星</span><span style="color:var(--text-muted)">蟹座 Semisextile</span></span><span style="display:inline-flex;align-items:center;gap:4px;margin-right:12px;font-size:12px"><span style="color:var(--accent-green-light);font-weight:600">土星</span><span style="color:var(--text-muted)">牡羊座 Trine</span></span><span style="display:inline-flex;align-items:center;gap:4px;margin-right:12px;font-size:12px"><span style="color:var(--accent-red-light);font-weight:600">冥王星</span><span style="color:var(--text-muted)">水瓶座 Opposition</span></span><span style="display:inline-flex;align-items:center;gap:4px;margin-right:12px;font-size:12px"><span style="color:var(--accent-green-light);font-weight:600">天王星</span><span style="color:var(--text-muted)">双子座 Sextile</span></span></div>
     </div>
   <div class="chart-wrap"><canvas id="chartOverlay" height="280"></canvas></div>
   <div class="chart-legend"><div class="chart-legend-item">
       <span class="chart-legend-line" style="background:#6366f1"></span>
       <div><span class="chart-legend-label">九星気学</span>
       <span class="chart-legend-desc">9年周期。本命星の宮遷移による運気の波。社会的な運勢の流れを示す</span></div></div><div class="chart-legend-item">
-      <span class="chart-legend-line" style="background:#22c55e"></span>
+      <span class="chart-legend-line" style="background:var(--accent-green)"></span>
       <div><span class="chart-legend-label">六星占術</span>
       <span class="chart-legend-desc">12年周期。大殺界を含む運命星の巡り。個人的な運気のバイオリズム</span></div></div><div class="chart-legend-item">
       <span class="chart-legend-line" style="background:#eab308"></span>
@@ -511,16 +998,16 @@ body::before{content:'';position:fixed;top:0;left:0;width:100%;height:100%;opaci
       <span class="chart-legend-desc">メイン星70% + サブ星30%の加重平均。霊合星人の実効的な運気スコア</span></div></div></div>
   <div class="insight-box" style="margin-top:16px;border-color:rgba(234,179,8,0.3);background:linear-gradient(135deg,rgba(234,179,8,0.08),rgba(250,204,21,0.04))">
     <div class="insight-title" style="color:var(--yellow)">統合フォーキャスト</div>
-    <p style="line-height:1.9;font-size:14px">九星気学では<strong>離宮</strong>（注目・離別）に位置し、エネルギーは<strong>70</strong>。六星占術のメイン星は<strong>財成</strong>（Energy 85）で好調期。一方、霊合サブ星は<strong>陰影</strong>（大殺界）で逆風。統合スコア<strong>64</strong>（矛盾期）— 体系間で評価が分かれており、<strong>慎重な前進</strong>が最適解。大きな決断は十分な分析の上で。次のピークは<strong>2033年</strong>（統合スコア83）。そこへ向けた布石を今から打つ。</p>
+    <p style="line-height:1.9;font-size:14px">九星気学では<strong>離宮</strong>（注目・離別）に位置し、エネルギーは<strong>70</strong>。六星占術のメイン星は<strong>財成</strong>（Energy 85）で好調期。一方、霊合サブ星は<strong>陰影</strong>（大殺界）で逆風。統合スコア<strong>64</strong>（矛盾期）。メイン星「財成」は好調を示す一方、サブ星「陰影」（大殺界）は強いブレーキを踏んでいます。この<strong>内なる矛盾</strong>は今年の特徴です。外から見えるチャンスに飛び込みながら、内側では立ち止まって再考する——その両方を<strong>同時にやること</strong>が今年の霊合星人としての最適解。次のピークは<strong>2033年</strong>（統合スコア83）。そこへ向けた布石を今から打つ。</p>
   </div>
 </section>
   </div>
-</div><div class="hub-card" id="monthly-card">
+</div><div class="hub-card expanded" id="monthly-card">
   <div class="hub-card-preview" onclick="this.parentElement.classList.toggle('expanded')">
-    <div class="hub-card-icon" style="background:rgba(59,130,246,0.12);color:#60a5fa">&#9671;</div>
+    <div class="hub-card-icon" style="background:rgba(59,130,246,0.12);color:var(--accent-blue-light)">&#9671;</div>
     <div>
       <div class="hub-card-title">月間運勢フォーキャスト</div>
-      <div class="hub-card-summary">3月 — 追い風の月</div>
+      <div class="hub-card-summary">5月 — 充電の月</div>
     </div>
     <div class="hub-card-arrow"></div>
   </div>
@@ -532,14 +1019,14 @@ body::before{content:'';position:fixed;top:0;left:0;width:100%;height:100%;opaci
 </section>
 <script>
 const monthlyData=[{"month": "1月", "monthNum": 1, "nineStarNote": "中凶・注意", "nineStarEnergy": 30, "rokuseiPhase": "立花", "rokuseiType": "great", "westernTheme": "健康と習慣の見直し", "westernEnergy": 60, "retroBadge": "", "work": 3, "money": 3, "health": 3, "romance": 3, "workMsg": "普通ペース。地道な積み重ねが後に効いてくる", "moneyMsg": "収支トントン。計画的な支出管理が重要", "healthMsg": "可もなく不可もなく。睡眠の質に注意を払う", "romanceMsg": "平穏な時期。既存の関係を大切にする", "advice": "坎宮の影響で内省と忍耐の時期。表面的には停滞感があるが、内面の成長が進む。六星占術「立花」— 才能や魅力が開花する時期。クリエイティブな活動に最適。西洋占星術のテーマ「健康と習慣の見直し」— 日常のルーティンを再構築。体のケアが運気の基盤になる"}, {"month": "2月", "monthNum": 2, "nineStarNote": "吉凶混合", "nineStarEnergy": 45, "rokuseiPhase": "健弱", "rokuseiType": "caution", "westernTheme": "パートナーシップ", "westernEnergy": 70, "retroBadge": "<span class=\"month-tag\" style=\"background:rgba(251,146,60,0.18);color:#fb923c;border:1px solid rgba(251,146,60,0.4)\">&#9888; 水星逆行 in Pisces (2/26-3/20)</span>", "work": 2, "money": 1, "health": 1, "romance": 2, "workMsg": "停滞感あり。焦らず基礎固めに集中", "moneyMsg": "金運低迷。守りの姿勢で乗り切る。衝動買い厳禁", "healthMsg": "体調管理に細心の注意。無理なスケジュールは避ける", "romanceMsg": "すれ違いが起きやすい。丁寧な対話を心がける", "advice": "充電を最優先にする月。坤宮（受容と準備の時期。土台をしっかり固め、次の飛躍に備える）。六星占術「健弱」— 小殺界。体調や気力にムラが出やすい。無理は禁物。西洋占星術のテーマ「パートナーシップ」— 他者との関係に光が当たる。対等な関係の構築"}, {"month": "3月", "monthNum": 3, "nineStarNote": "中吉・回復", "nineStarEnergy": 65, "rokuseiPhase": "達成", "rokuseiType": "great", "westernTheme": "変容と再生", "westernEnergy": 55, "retroBadge": "<span class=\"month-tag\" style=\"background:rgba(251,146,60,0.18);color:#fb923c;border:1px solid rgba(251,146,60,0.4)\">&#9888; 水星逆行 in Pisces (2/26-3/20)</span>", "work": 4, "money": 4, "health": 4, "romance": 4, "workMsg": "順調に進む。チャンスを逃さず着実に成果を積む", "moneyMsg": "堅実な収入が見込める。無駄遣いを避ければ蓄積できる", "healthMsg": "概ね良好。規則正しい生活を維持して好調を保つ", "romanceMsg": "良好な関係が築ける。コミュニケーションが円滑", "advice": "震宮（行動力が高まり、新しいスタートを切りやすい時期）に位置する好調月。六星占術「達成」— 努力が成果として実を結ぶ時期。目標達成に全力を。西洋占星術のテーマ「変容と再生」— 水星逆行。深層心理と向き合う時期。手放すことで得るものがある"}, {"month": "4月", "monthNum": 4, "nineStarNote": "上昇運", "nineStarEnergy": 75, "rokuseiPhase": "乱気", "rokuseiType": "caution", "westernTheme": "冒険と学び", "westernEnergy": 80, "retroBadge": "", "work": 3, "money": 2, "health": 3, "romance": 3, "workMsg": "普通ペース。地道な積み重ねが後に効いてくる", "moneyMsg": "予想外の出費に注意。大きな買い物は延期が吉", "healthMsg": "可もなく不可もなく。睡眠の質に注意を払う", "romanceMsg": "平穏な時期。既存の関係を大切にする", "advice": "エネルギーが低下しやすい月。九星気学では巽宮（人脈と信用が拡大する時期。情報が集まりやすい）。六星占術で「乱気」— 中殺界。判断力が鈍りやすい。衝動的な決断を避ける。大きな決断は控えるのが賢明。欠如要素「土」の影響が出やすいので意識的にケアを。西洋占星術のテーマ「冒険と学び」— 逆行明けで視野が広がる。新しい知識・文化・哲学との出会い"}, {"month": "5月", "monthNum": 5, "nineStarNote": "大吉・最盛", "nineStarEnergy": 100, "rokuseiPhase": "再会", "rokuseiType": "good", "westernTheme": "キャリアの飛躍", "westernEnergy": 85, "retroBadge": "", "work": 5, "money": 5, "health": 5, "romance": 5, "workMsg": "全力投球で成果が出る時期。新プロジェクトの立ち上げに最適", "moneyMsg": "金運好調。投資・交渉に良い時期。大きな判断も可", "healthMsg": "体調絶好調。新しい運動習慣を始めるチャンス", "romanceMsg": "人間関係が最も輝く時期。新しい出会いも深い絆も", "advice": "中宮（年間で最もエネルギーが集中する中心位置。影響力が最大化）に位置する好調月。六星占術「再会」— 過去のつながりが復活する時期。旧友や以前の経験が価値を持つ。西洋占星術のテーマ「キャリアの飛躍」— 土星のトラインが効く。リーダーシップを発揮し、地位が向上"}, {"month": "6月", "monthNum": 6, "nineStarNote": "大吉・最盛", "nineStarEnergy": 90, "rokuseiPhase": "財成", "rokuseiType": "great", "westernTheme": "コミュニティ", "westernEnergy": 75, "retroBadge": "<span class=\"month-tag\" style=\"background:rgba(251,146,60,0.18);color:#fb923c;border:1px solid rgba(251,146,60,0.4)\">&#9888; 水星逆行 in Cancer (6/29-7/23)</span>", "work": 5, "money": 5, "health": 5, "romance": 5, "workMsg": "全力投球で成果が出る時期。新プロジェクトの立ち上げに最適", "moneyMsg": "金運好調。投資・交渉に良い時期。大きな判断も可", "healthMsg": "体調絶好調。新しい運動習慣を始めるチャンス", "romanceMsg": "人間関係が最も輝く時期。新しい出会いも深い絆も", "advice": "乾宮（目上の人や権威者からの後押しが得やすい時期）に位置する好調月。六星占術「財成」— 財運が充実する時期。投資や資産形成に追い風。西洋占星術のテーマ「コミュニティ」— 友人・同僚との絆が深まる。チームでの成果が出やすい"}, {"month": "7月", "monthNum": 7, "nineStarNote": "大吉・好調", "nineStarEnergy": 80, "rokuseiPhase": "安定", "rokuseiType": "great", "westernTheme": "内省の時期", "westernEnergy": 50, "retroBadge": "<span class=\"month-tag\" style=\"background:rgba(251,146,60,0.18);color:#fb923c;border:1px solid rgba(251,146,60,0.4)\">&#9888; 水星逆行 in Cancer (6/29-7/23)</span>", "work": 5, "money": 5, "health": 5, "romance": 5, "workMsg": "全力投球で成果が出る時期。新プロジェクトの立ち上げに最適", "moneyMsg": "金運好調。投資・交渉に良い時期。大きな判断も可", "healthMsg": "体調絶好調。新しい運動習慣を始めるチャンス", "romanceMsg": "人間関係が最も輝く時期。新しい出会いも深い絆も", "advice": "兌宮（悦びと収穫の時期。社交的なイベントが好結果を生む）に位置する好調月。六星占術「安定」— 最も安定した運気。大きな決断や長期計画に最適。西洋占星術のテーマ「内省の時期」— 水星逆行 in 蟹座。感情の整理。外に出るより内面を磨く"}, {"month": "8月", "monthNum": 8, "nineStarNote": "吉凶混合", "nineStarEnergy": 40, "rokuseiPhase": "陰影", "rokuseiType": "danger", "westernTheme": "誕生月のパワー", "westernEnergy": 90, "retroBadge": "", "work": 2, "money": 1, "health": 1, "romance": 2, "workMsg": "停滞感あり。焦らず基礎固めに集中", "moneyMsg": "金運低迷。守りの姿勢で乗り切る。衝動買い厳禁", "healthMsg": "体調管理に細心の注意。無理なスケジュールは避ける", "romanceMsg": "すれ違いが起きやすい。丁寧な対話を心がける", "advice": "充電を最優先にする月。艮宮（変化のタイミング。過去の蓄積を見直し、方向転換に適した時期）。六星占術「陰影」— 大殺界の入口。慎重に行動し、新規の大きな契約は避ける。西洋占星術のテーマ「誕生月のパワー」— 太陽が獅子座入り。年間最高のエネルギー。新しいスタートに最適"}, {"month": "9月", "monthNum": 9, "nineStarNote": "上昇運", "nineStarEnergy": 70, "rokuseiPhase": "停止", "rokuseiType": "danger", "westernTheme": "経済の整理", "westernEnergy": 70, "retroBadge": "", "work": 2, "money": 1, "health": 2, "romance": 2, "workMsg": "停滞感あり。焦らず基礎固めに集中", "moneyMsg": "金運低迷。守りの姿勢で乗り切る。衝動買い厳禁", "healthMsg": "疲れが出やすい。休息を意識的に増やす", "romanceMsg": "すれ違いが起きやすい。丁寧な対話を心がける", "advice": "充電を最優先にする月。離宮（注目を集めやすい時期。自己表現と発信が効果的）。六星占術「停止」— 大殺界の中心。じっと耐え、現状維持を最優先に。西洋占星術のテーマ「経済の整理」— 財務の見直し。投資や貯蓄の計画を立てる好機"}, {"month": "10月", "monthNum": 10, "nineStarNote": "中凶・注意", "nineStarEnergy": 30, "rokuseiPhase": "減退", "rokuseiType": "danger", "westernTheme": "学びと探究", "westernEnergy": 75, "retroBadge": "<span class=\"month-tag\" style=\"background:rgba(251,146,60,0.18);color:#fb923c;border:1px solid rgba(251,146,60,0.4)\">&#9888; 水星逆行 in Scorpio (10/24-11/13)</span>", "work": 2, "money": 1, "health": 1, "romance": 2, "workMsg": "停滞感あり。焦らず基礎固めに集中", "moneyMsg": "金運低迷。守りの姿勢で乗り切る。衝動買い厳禁", "healthMsg": "体調管理に細心の注意。無理なスケジュールは避ける", "romanceMsg": "すれ違いが起きやすい。丁寧な対話を心がける", "advice": "充電を最優先にする月。坎宮（内省と忍耐の時期。表面的には停滞感があるが、内面の成長が進む）。六星占術「減退」— 大殺界の出口。少しずつ回復するが、まだ油断は禁物。西洋占星術のテーマ「学びと探究」— 知的好奇心が高まる。資格取得や専門スキルの習得に最適"}, {"month": "11月", "monthNum": 11, "nineStarNote": "吉凶混合", "nineStarEnergy": 45, "rokuseiPhase": "種子", "rokuseiType": "good", "westernTheme": "キャリアの収穫", "westernEnergy": 80, "retroBadge": "<span class=\"month-tag\" style=\"background:rgba(251,146,60,0.18);color:#fb923c;border:1px solid rgba(251,146,60,0.4)\">&#9888; 水星逆行 in Scorpio (10/24-11/13)</span>", "work": 3, "money": 3, "health": 3, "romance": 3, "workMsg": "普通ペース。地道な積み重ねが後に効いてくる", "moneyMsg": "収支トントン。計画的な支出管理が重要", "healthMsg": "可もなく不可もなく。睡眠の質に注意を払う", "romanceMsg": "平穏な時期。既存の関係を大切にする", "advice": "坤宮の影響で受容と準備の時期。土台をしっかり固め、次の飛躍に備える。六星占術「種子」— 新しい種をまく時期。将来の芽を育てるスタート地点。西洋占星術のテーマ「キャリアの収穫」— 水星逆行の影響は軽微。年間の仕事の成果が認められる"}, {"month": "12月", "monthNum": 12, "nineStarNote": "中吉・回復", "nineStarEnergy": 65, "rokuseiPhase": "緑生", "rokuseiType": "good", "westernTheme": "友情と希望", "westernEnergy": 70, "retroBadge": "", "work": 4, "money": 4, "health": 4, "romance": 4, "workMsg": "順調に進む。チャンスを逃さず着実に成果を積む", "moneyMsg": "堅実な収入が見込める。無駄遣いを避ければ蓄積できる", "healthMsg": "概ね良好。規則正しい生活を維持して好調を保つ", "romanceMsg": "良好な関係が築ける。コミュニケーションが円滑", "advice": "震宮（行動力が高まり、新しいスタートを切りやすい時期）に位置する好調月。六星占術「緑生」— 芽が伸び始める成長期。学びと実験に適した時期。西洋占星術のテーマ「友情と希望」— 年末に向けて人間関係が温かくなる。来年のビジョンを描く"}];
-const currentMonth=2;
-const guidanceData={"energyTone": "追い風", "energyDesc": "エネルギーが高く、積極的に動ける月", "energyBg": "rgba(34,197,94,0.15)", "energyColor": "#4ade80", "narrative": "3月、九星気学では震宮に入り、行動力が高まり、新しいスタートを切りやすい時期。六星占術では「達成」— 努力が成果として実を結ぶ時期。目標達成に全力を。西洋占星術では「変容と再生」のテーマが強まる月。水星逆行。深層心理と向き合う時期。手放すことで得るものがある", "actionsHtml": "<div class=\"guidance-action\"><div class=\"guidance-action-icon\" style=\"background:rgba(59,130,246,0.15);color:#60a5fa\">&#9733;</div><div><div class=\"guidance-action-title\">仕事に注力する</div><div class=\"guidance-action-desc\">仕事運が好調。新しいプロジェクトの提案や、後回しにしていた重要タスクに着手するベストタイミング</div></div></div><div class=\"guidance-action\"><div class=\"guidance-action-icon\" style=\"background:rgba(139,92,246,0.15);color:#c4b5fd\">&#9826;</div><div><div class=\"guidance-action-title\">繊細さを創造性に変換する</div><div class=\"guidance-action-desc\">好調期の繊細さは、美しいものや深い体験から何倍もの充足を引き出す。アート・音楽・深い会話を意識的に取り入れて、感性を栄養にする</div></div></div>", "watchHtml": ""};
+const currentMonth=4;
+const guidanceData={"energyTone": "追い風", "energyDesc": "エネルギーが高く、積極的に動ける月", "energyBg": "rgba(34,197,94,0.15)", "energyColor": "var(--accent-green-light)", "narrative": "5月、九星気学では中宮に入り、年間で最もエネルギーが集中する中心位置。影響力が最大化。六星占術では「再会」— 過去のつながりが復活する時期。旧友や以前の経験が価値を持つ。西洋占星術では「キャリアの飛躍」のテーマが強まる月。土星のトラインが効く。リーダーシップを発揮し、地位が向上", "actionsHtml": "<div class=\"guidance-action\"><div class=\"guidance-action-icon\" style=\"background:rgba(244,114,182,0.15);color:#f472b6\">&#9827;</div><div><div class=\"guidance-action-title\">人間関係に注力する</div><div class=\"guidance-action-desc\">人間関係が良好。新しい出会いにオープンに、既存の関係も深まるタイミング</div></div></div><div class=\"guidance-action\"><div class=\"guidance-action-icon\" style=\"background:rgba(139,92,246,0.15);color:var(--accent-purple-light)\">&#9826;</div><div><div class=\"guidance-action-title\">繊細さを創造性に変換する</div><div class=\"guidance-action-desc\">好調期の繊細さは、美しいものや深い体験から何倍もの充足を引き出す。アート・音楽・深い会話を意識的に取り入れて、感性を栄養にする</div></div></div>", "watchHtml": ""};
 function starRating(n){return'<span style="color:var(--yellow);">'+'★'.repeat(n)+'</span><span style="color:var(--border);">'+'★'.repeat(5-n)+'</span>';}
 function phaseColor(t){
-  if(t==='great')return{bg:'rgba(34,197,94,0.12)',border:'rgba(34,197,94,0.3)',color:'#4ade80'};
-  if(t==='good')return{bg:'rgba(59,130,246,0.12)',border:'rgba(59,130,246,0.3)',color:'#60a5fa'};
+  if(t==='great')return{bg:'rgba(34,197,94,0.12)',border:'rgba(34,197,94,0.3)',color:'var(--accent-green-light)'};
+  if(t==='good')return{bg:'rgba(59,130,246,0.12)',border:'rgba(59,130,246,0.3)',color:'var(--accent-blue-light)'};
   if(t==='caution')return{bg:'rgba(234,179,8,0.12)',border:'rgba(234,179,8,0.3)',color:'#facc15'};
-  return{bg:'rgba(239,68,68,0.12)',border:'rgba(239,68,68,0.3)',color:'#f87171'};
+  return{bg:'rgba(239,68,68,0.12)',border:'rgba(239,68,68,0.3)',color:'var(--accent-red-light)'};
 }
 function buildGuidanceHtml(g){
   if(!g)return'';
@@ -576,7 +1063,7 @@ monthlyData.forEach((m,i)=>{
       <div class="month-tags">
         <span class="month-tag" style="background:rgba(99,102,241,0.15);color:#a5b4fc">九星: ${m.nineStarNote}</span>
         <span class="month-tag" style="background:${pc.bg};color:${pc.color};border:1px solid ${pc.border}">六星: ${m.rokuseiPhase}</span>
-        ${m.westernTheme ? '<span class="month-tag" style="background:rgba(139,92,246,0.15);color:#c4b5fd;border:1px solid rgba(139,92,246,0.3)">西洋: '+m.westernTheme+'</span>' : ''}
+        ${m.westernTheme ? '<span class="month-tag" style="background:rgba(139,92,246,0.15);color:var(--accent-purple-light);border:1px solid rgba(139,92,246,0.3)">西洋: '+m.westernTheme+'</span>' : ''}
         ${m.retroBadge || ''}
       </div>
     </div>
@@ -608,7 +1095,7 @@ selectMonth(currentMonth);
 </div>
 <footer class="page-footer">
   <div>Self-Insight — Powered by AI × 東洋占術 × 心理学</div>
-  <div style="margin-top:4px;font-size:10px">Generated 2026-03-23</div>
+  <div style="margin-top:4px;font-size:10px">Generated 2026-05-02</div>
 </footer>
 </div>
 <script>
@@ -616,7 +1103,7 @@ new Chart(document.getElementById('chartOverlay'),{
   type:'line',
   data:{labels:["2024", "2025", "2026", "2027", "2028", "2029", "2030", "2031", "2032", "2033"],datasets:[
     {label:'九星気学',data:[80, 40, 70, 30, 45, 65, 75, 100, 90, null],borderColor:'#6366f1',fill:false,tension:0.4,borderWidth:2,pointRadius:4,pointBackgroundColor:'#6366f1'},
-    {label:'六星占術',data:[25, 70, 85, 95, 15, 10, 20, 50, 65, 80],borderColor:'#22c55e',fill:false,tension:0.4,borderWidth:2,pointRadius:4,pointBackgroundColor:'#22c55e'},
+    {label:'六星占術',data:[25, 70, 85, 95, 15, 10, 20, 50, 65, 80],borderColor:'var(--accent-green)',fill:false,tension:0.4,borderWidth:2,pointRadius:4,pointBackgroundColor:'var(--accent-green)'},
     {label:'霊合合成',data:[43, 78, 64, 70, 16, 22, 34, 59, 56, 83],borderColor:'#eab308',fill:false,tension:0.4,borderWidth:2,borderDash:[6,3],pointRadius:4,pointBackgroundColor:'#eab308'}
   ]},
   options:{responsive:true,maintainAspectRatio:false,animation:{duration:1500,easing:'easeOutQuart'},interaction:{mode:'index',intersect:false},

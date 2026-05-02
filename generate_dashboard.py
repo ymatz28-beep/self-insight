@@ -2670,6 +2670,42 @@ abbr.term:hover::after,abbr.term:focus::after{opacity:1}
 .locked-cta:hover{opacity:0.85}
 </style>'''
 
+# === Female theme override ===
+CSS_FEMALE = '''<style>
+/* Female theme — bright, soft, warm */
+:root{
+  --bg:#faf7f3;--surface:#ffffff;--surface2:#fdf0f4;
+  --border:#ead5d8;--border-light:#f0e3e6;
+  --accent:#c2556e;--accent2:#a855a0;
+  --text:#2c1a20;--text-secondary:#7a5464;--text-muted:#a07a88;
+}
+body{background:var(--bg);color:var(--text)}
+body::before{opacity:0.01}
+.hero{background:linear-gradient(135deg,#f8e6ed,#fce4ec,#f0dde8)!important;background-size:200% 200%!important;border:1px solid rgba(194,85,110,0.2)!important}
+.hero-particles::before{background:rgba(194,85,110,0.2);box-shadow:180px 40px 0 rgba(194,85,110,0.1),320px -20px 0 rgba(168,85,160,0.08),450px 60px 0 1px rgba(194,85,110,0.06)}
+.hero-particles::after{background:rgba(168,85,160,0.15);box-shadow:-200px -30px 0 rgba(194,85,110,0.1),-100px 20px 0 1px rgba(168,85,160,0.06)}
+.archetype-en{color:rgba(150,50,80,0.75)}
+.archetype-name{color:#3a0f1f;text-shadow:0 0 40px rgba(194,85,110,0.15),0 0 80px rgba(194,85,110,0.06)}
+.hero-tagline{color:rgba(58,15,31,0.72)}
+.hero-name{color:rgba(58,15,31,0.78)}
+.hero-name::before,.hero-name::after{background:rgba(194,85,110,0.3)}
+.hub-card-mini{background:rgba(0,0,0,0.04);border:1px solid rgba(0,0,0,0.08)}
+.hub-card-mini:hover{background:rgba(0,0,0,0.06)}
+.hub-card-mini-title{color:#3a0f1f}
+.hub-card-mini-summary{color:rgba(58,15,31,0.5)}
+.stat-card{background:rgba(0,0,0,0.04)}
+.chip{background:rgba(0,0,0,0.06);color:var(--text-secondary);border:1px solid rgba(0,0,0,0.1)}
+.chip.hl{background:rgba(194,85,110,0.12);color:#a03050;border-color:rgba(194,85,110,0.25)}
+.hub-card-preview:hover{background:rgba(0,0,0,0.02)}
+.site-header{background:rgba(250,247,243,0.92)!important;border-bottom:1px solid var(--border)}
+.site-nav a{color:#7a5464}
+.site-nav a:hover,.site-nav a[aria-current=page]{background:rgba(0,0,0,0.06);color:#2c1a20}
+.nav-bar{background:rgba(250,247,243,0.96)!important;border-bottom:1px solid var(--border)}
+.nav-bar a{color:var(--text-muted)}
+.nav-bar a:hover,.nav-bar a.active{color:var(--accent);background:rgba(194,85,110,0.08)}
+.nav-toggle-label span,.nav-toggle-label span::before,.nav-toggle-label span::after{background:#7a5464}
+</style>'''
+
 
 # === 専門用語ガイド（占術の用語を日常語で説明） ===
 GLOSSARY = {
@@ -3557,6 +3593,7 @@ def _hub_card(section_id, icon, icon_bg, icon_color, title, summary, content, ex
 def generate_html(p, tier=2, show_gnav=False):
     name = p['identity']['name']
     archetype = _get_archetype(p)
+    gender_css = CSS_FEMALE if p.get('identity', {}).get('sex', 'male') == 'female' else ''
     gnav_html = _gnav() if show_gnav else ''
 
     # Generate all sections
@@ -3669,6 +3706,7 @@ def generate_html(p, tier=2, show_gnav=False):
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400..700&family=JetBrains+Mono:wght@500&family=Noto+Sans+JP:wght@400..700&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
 {CSS}
+{gender_css}
 </head>
 <body>
 {gnav_html}
