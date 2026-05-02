@@ -1,12 +1,11 @@
 # Self-Insight — HANDOFF
 
-## [Constancy] 2026-04-19
-- [WARN] structural_reform: generate_dashboard.py is 3584 lines (threshold: 800). Consider splitting.
-- [WARN] gnav_consistency: Missing gnav link: Trading (/trading/)
-- [WARN] post_change_testing: self-insight: 直近13時間以内に変更あり、テスト証跡なし（self-insight/.test_ok）
+## [Constancy] 2026-05-02
+- [ERROR] structural_reform: [ESCALATED: 17d unresolved] generate_dashboard.py is 3584 lines (threshold: 800). Consider splitting.
+- [WARN] post_change_testing: self-insight: 直近3時間以内に変更あり、テスト証跡なし（self-insight/.test_ok）
 
 ## Last Updated
-2026-04-16 Session — 家族3名反映 + iuma-private/insight/ 統合 + 競合127件調査 + 占い師型トーン統一 Phase 1
+2026-05-02 Session — 競合・ユーザーニーズ調査完了 + 年齢対応型ナラティブ深化（母・妹ダッシュボード再生成）
 
 ## Completed (2026-04-16 Session — 大規模刷新)
 
@@ -118,6 +117,8 @@
 - **Before**: renderer.jsがMVP品質（辞書データ・ナラティブ・セクション引用句なし）。generate_dashboard.pyレベルの本番品質に未到達。story.htmlのブランド名が「AI Self-Insight」のままでスライドラベルが「SLIDE 1/5」等の番号表示。share-card.jsのSNS共有機能が限定的
 - **After**: renderer.js +397行net（659ins/262del）。PALACE_DESC(九星9宮)+PHASE_DESC(六星12フェーズ)+DM_NARRATIVE(日主10パターン)+WESTERN_NARRATIVE+SECTION_QUOTES辞書を追加し、generate_dashboard.py同等の本番品質に到達。story.htmlブランド名を「あなたの取扱説明書」に変更+スライドラベルをセマンティック化（YOUR ESSENCE/FIVE ELEMENTS/DESTINY STARS等）。share-card.js +33行改善。generate_dashboard.py -28行クリーンアップ。計6ファイル変更（693ins/262del）
 - **Commits**: self-insight `e80268e`, Projects root `ed3dd9a`（session recovery）
+## Last Updated
+2026-03-25 (session #25 — x-bookmarks/sns-autoセッション。self-insightコード変更なし、戦略的位置づけ確定)
 
 ## Project Overview
 複数の占術（四柱推命・九星気学・六星占術・西洋占星術・干支）+ 独自性格分析SIPS（Big Five基盤の16 Archetypes+24 Strengths+Sensitivity Score）を統合した、徹底的にパーソナライズされた自己理解ダッシュボードサービス。有料SaaS展開を目指す。
@@ -390,6 +391,11 @@
 5. **SIPS実装**: Big Five 40問→16 Archetypes+24 Strengths導出ロジック、アーキタイプ/強みテーマ名称設計
 6. **短縮URL設計**: `form/#r=base64...`（長い）→ `/results/{uuid}`（短い）への移行
 7. **ファイル分割**: generate_dashboard.py（2,348行）/ generate_profile.py（1,130行）のモジュール分割
+6. **engine.js検証**: Yumaプロファイルで計算結果をPython版と照合（差異がないか）
+7. **ファイル分割**: generate_dashboard.py（2,084行）/ generate_profile.py（1,130行）のモジュール分割（constancy threshold超過）
+8. **改善アイデア: humanizer-jaパイプライン統合** — self-insightのインサイト文を記事化する際、humanizer-jaで人間品質に変換（sns-autoセッションで実証済み: Note記事2本生成成功）。SaaSローンチ時のコンテンツマーケティング基盤になる
+
+> **戦略的順序（2026-03-25確定）**: self-insight SaaSローンチはX/Noteで最初の2ドメイン（健康 or AI）確立後。SaaS基盤整備中はE2Eフロー完成+SIPS実装+renderer.js品質化を進める
 
 ## Key Decisions
 - 2ピラー構造: Timeless Identity + Year Forecast
@@ -431,6 +437,8 @@
 - **ファネル転換（session #27ブレスト 2026-03-28）**: 12分フォーム入口 → 「30秒で鳥肌体験→シェアカード→友達流入」バイラルループ。生年月日だけで即Tier 1結果表示。相性診断でバイラル係数>1を狙う
 - **ポジショニング転換（session #27ブレスト 2026-03-28）**: 「統合ダッシュボード」→「あなたの取扱説明書をAIが作ります」。機能ではなくメタファーで売る
 - **価格転換（session #27ブレスト 2026-03-28）**: 全部サブスク → Tier 2は買い切り¥980（16Personalities $9が証明済み）。月額サブスクはTier 3のみに集中
+- **SNS/マネタイズ戦略における位置づけ確定（2026-03-25）**: self-insightは4ドメイン（健康/仕事/資産/パーソナルインサイト）の「パーソナルインサイト」ドメインとして位置づけ。コンテンツ3軸の差別化柱「AI×セルフインサイト」の実体。SaaS展開がマネタイズ最終形態
+- **3者戦略議論の結論（2026-03-25）**: マーケター+批判者+反論者全員一致で「AI×ボディメイク」がYumaの最大差別化だが、self-insightは他にないユニーク性。5ドメイン同時展開は禁止→最大2つで始め、self-insightはSaaS基盤が整ってからローンチ
 
 ## Blockers
 - **API 502障害**: session #10, #12で計5時間以上の障害。大規模ファイル生成（Agent）が特に脆弱。回避策: Agent使用を最小化し、Edit分割方式で段階的変更
@@ -479,3 +487,4 @@
 | 33 | 2026-04-06 | **cross-project: Gnav Pattern B + Nav順序変更**: Before: Self-Insightはgnav全13項目フラット表示 → After: overflow ⋯ドロップダウンに配置(Primary 5: Stock/Market Intel/Cisco/Action/Property、Overflow 8にSelf-Insight含む)。iuma-privateトップページBento Gridリデザイン計画でSelf-Insight=Tier3(compact)。self-insightコード変更なし |
 | 35 | 2026-04-09 | **cross-project: 横断監査フォント+CSS変数+gnav**: Before: story.html serif fallback+index.html 5色ハードコード+gnav nav-more未適用 → After: sans-serif修正+CSS変数化5箇所+nav-more overflow追加 |
 | 34 | 2026-04-07 | **cross-project: ローカルファースト化+idle_guard+Dead Man's Switch**: Before: property-patrol GHA実質Primary+kaizen-patrol plist 2日停止 → After: ローカルファースト+GHA条件付きフォールバック+idle_guard(lib新設)+Digest Status Bar+全ジョブ_NAME_JA日本語化。4リポ(property-analyzer/kaizen-agent/lib/scripts)HANDOFF更新。self-insightコード変更なし |
+| 25 | 2026-03-25 | **x-bookmarks/sns-autoセッション**: self-insightが4ドメインの「パーソナルインサイト」+コンテンツ差別化柱「AI×セルフインサイト」として戦略的位置づけ確定。42名インフルエンサーbio調査→プロフ方向性決定。self-insightコード変更なし |
