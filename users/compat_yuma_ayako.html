@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Yuma Tejima × 太田 亜也子 相性診断 — Self-Insight</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400..700&family=JetBrains+Mono:wght@500&family=Noto+Sans+JP:wght@400..700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0f1117;--surface:#1a1d27;--surface2:#242836;
+  --border:#2d3348;--border-light:#3d4460;
+  --text:#e4e4e7;--text-secondary:#9ca3af;--text-muted:#7c8293;
+  --gold:#c9a84c;--accent:#6366f1;
+  --green:#22c55e;--red:#ef4444;--yellow:#eab308;--amber:#fbbf24;--blue:#3b82f6;
+  --font-body:'Inter','Noto Sans JP',sans-serif;
+  --font-mono:'JetBrains Mono',monospace;
+  --radius-md:10px;--radius-lg:14px;--radius-xl:16px;
+  --gnav-height:52px;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{font-size:16px}
+body{font-family:var(--font-body);background:var(--bg);color:var(--text);line-height:1.8;padding-bottom:80px;min-height:100vh}
+.container{max-width:820px;margin:0 auto;padding:0 18px}
+.top-nav{height:var(--gnav-height);background:rgba(15,17,23,.85);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100;display:flex;align-items:center}
+.top-nav-inner{max-width:820px;margin:0 auto;padding:0 18px;width:100%;display:flex;align-items:center;justify-content:space-between}
+.brand{font-weight:700;font-size:14px;color:var(--text);display:flex;align-items:center;gap:8px;text-decoration:none}
+.brand::before{content:"◆";color:var(--gold);font-size:12px}
+
+.hero{background:linear-gradient(135deg,#1e1b4b,#4c1d95,#1e1b4b);border-radius:var(--radius-xl);padding:32px 24px;margin:24px 0;border:1px solid var(--border)}
+.hero-badge{display:inline-block;font-size:10px;font-weight:700;padding:4px 12px;border-radius:16px;border:1px solid rgba(251,191,36,0.3);background:rgba(251,191,36,0.1);color:#fde68a;letter-spacing:.08em;text-transform:uppercase;margin-bottom:14px}
+.hero h1{font-size:clamp(22px,3vw,28px);font-weight:700;line-height:1.4;margin-bottom:16px}
+.hero-pair{display:grid;grid-template-columns:1fr auto 1fr;gap:12px;align-items:center;margin:18px 0}
+.pair-person{text-align:center;padding:14px 10px;background:rgba(255,255,255,0.04);border-radius:10px;border:1px solid var(--border)}
+.pair-name{font-size:17px;font-weight:700;color:#fff;margin-bottom:4px}
+.pair-meta{font-size:11px;color:var(--text-secondary);line-height:1.5}
+.pair-cross{font-size:28px;color:var(--gold);font-weight:300}
+
+.score-gauge{background:rgba(255,255,255,0.03);border-radius:12px;padding:22px 20px;margin:18px 0;text-align:center;border:1px solid var(--border)}
+.score-gauge-label{font-size:11px;font-weight:700;color:var(--text-secondary);letter-spacing:.08em;text-transform:uppercase;margin-bottom:8px}
+.score-gauge-value{font-size:52px;font-weight:700;font-family:var(--font-mono);line-height:1;margin-bottom:6px}
+.score-gauge-stars{font-size:18px;color:var(--amber);margin-bottom:6px;letter-spacing:3px}
+.score-gauge-verdict{font-size:14px;color:var(--text-secondary)}
+.score-bar{height:8px;border-radius:4px;background:var(--surface2);margin:14px 0 4px;overflow:hidden}
+.score-bar-fill{height:100%;border-radius:4px;transition:width .6s}
+
+section.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:22px;margin-bottom:18px}
+section.card h2{font-size:19px;font-weight:700;margin-bottom:14px;padding-bottom:10px;border-bottom:1px solid var(--border)}
+section.card p{color:#d1d5db;margin-bottom:12px;font-size:14px;line-height:1.85}
+section.card strong{color:#fff}
+.intro-p{font-size:13px;color:var(--text-secondary);line-height:1.85;margin-bottom:14px}
+
+.breakdown-grid{display:flex;flex-direction:column;gap:14px;margin:14px 0}
+.bk-item{background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:14px 16px}
+.bk-head{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px;flex-wrap:wrap;gap:8px}
+.bk-title{font-size:15px;font-weight:700;color:#fff}
+.bk-weight{font-size:10px;color:var(--text-muted);letter-spacing:.05em;text-transform:uppercase}
+.bk-score-row{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.bk-labels{flex:1;font-size:12px;color:var(--text-secondary)}
+.bk-labels strong{color:#c7d2fe;font-weight:500}
+.bk-score{font-size:22px;font-weight:700;font-family:var(--font-mono);letter-spacing:-0.02em}
+.bk-narrative{font-size:13px;color:#d1d5db;line-height:1.85;padding:10px 12px;background:rgba(99,102,241,0.05);border-left:3px solid rgba(99,102,241,0.3);border-radius:6px;margin-top:8px}
+
+.tier2-locked{background:linear-gradient(135deg,rgba(99,102,241,0.05),rgba(255,255,255,0.02));border:1px dashed rgba(99,102,241,0.3);border-radius:10px;padding:16px 18px;margin-top:18px}
+.tier2-label{font-size:10px;font-weight:700;color:#a5b4fc;letter-spacing:.08em;text-transform:uppercase;margin-bottom:8px}
+.tier2-title{font-size:15px;font-weight:700;color:#fff;margin-bottom:8px}
+.tier2-systems{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
+.tier2-chip{font-size:11px;padding:3px 10px;border-radius:12px;background:rgba(255,255,255,0.04);border:1px solid var(--border);color:var(--text-secondary)}
+.tier2-note{font-size:12px;color:var(--text-muted);line-height:1.75}
+
+.callouts-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:16px}
+.callout{padding:14px 16px;border-radius:10px;border:1px solid;border-left-width:3px}
+.callout-good{background:rgba(34,197,94,0.06);border-color:rgba(34,197,94,0.25)}
+.callout-watch{background:rgba(251,191,36,0.06);border-color:rgba(251,191,36,0.25)}
+.callout-title{font-size:11px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;margin-bottom:8px}
+.callout-good .callout-title{color:#86efac}
+.callout-watch .callout-title{color:#fbbf24}
+.callout-body{font-size:13px;color:#d1d5db;line-height:1.85}
+
+.sources-note{font-size:10px;color:var(--text-muted);margin-top:16px;padding-top:12px;border-top:1px dashed rgba(255,255,255,0.08);line-height:1.7;font-style:italic}
+
+.signoff{text-align:center;color:var(--text-muted);font-size:13px;padding:32px 0 0}
+
+@media(max-width:600px){
+  .hero-pair{grid-template-columns:1fr}
+  .pair-cross{text-align:center;padding:6px 0}
+  .callouts-grid{grid-template-columns:1fr}
+  .score-gauge-value{font-size:44px}
+}
+</style>
+</head>
+<body>
+<nav class="top-nav"><div class="top-nav-inner"><a href="/insight/" class="brand">iUMA Self-Insight</a><span style="font-size:11px;color:var(--text-muted)">相性診断</span></div></nav>
+<main class="container">
+
+<div class="hero">
+  <div class="hero-badge">Tier 1 相性診断 — 4体系統合</div>
+  <h1>Yuma Tejima × 太田 亜也子</h1>
+  <div class="hero-pair">
+    <div class="pair-person">
+      <div class="pair-name">Yuma Tejima</div>
+      <div class="pair-meta">AB型 / 卯年 / 丁日主 / 蠍座</div>
+    </div>
+    <div class="pair-cross">×</div>
+    <div class="pair-person">
+      <div class="pair-name">太田 亜也子</div>
+      <div class="pair-meta">A型 / 午年 / 戊日主 / 双子座</div>
+    </div>
+  </div>
+
+  <div class="score-gauge">
+    <div class="score-gauge-label">統合相性スコア（4体系加重平均）</div>
+    <div class="score-gauge-value" style="color:var(--accent-amber-pale)">70<span style="font-size:20px;color:var(--text-secondary)">/100</span></div>
+    <div class="score-gauge-stars">★★★☆☆</div>
+    <div class="score-gauge-verdict">普通の相性</div>
+    <div class="score-bar"><div class="score-bar-fill" style="width:70%;background:linear-gradient(to right,var(--accent-amber-pale),#a5b4fc)"></div></div>
+  </div>
+</div>
+
+<section class="card">
+  <h2>📊 体系別ブレイクダウン</h2>
+  <p class="intro-p">4つの独立した体系が、それぞれ別の角度から Yuma Tejima と 太田 亜也子 の相性を読み解いています。重み付きの統合スコアが上の数値です。</p>
+
+  <div class="breakdown-grid">
+    
+<div class="bk-item">
+  <div class="bk-head">
+    <div class="bk-title">血液型 相性</div>
+    <div class="bk-weight">重み 15%</div>
+  </div>
+  <div class="bk-score-row">
+    <div class="bk-labels"><strong>AB型</strong> × <strong>A型</strong></div>
+    <div class="bk-score" style="color:var(--accent-amber-pale)">75<span style="font-size:13px;color:var(--text-muted)">/100</span></div>
+  </div>
+  <div class="score-bar"><div class="score-bar-fill" style="width:75%;background:var(--accent-amber-pale)"></div></div>
+  <div class="bk-narrative">A の堅実さを AB が冷静に支える。会話が通じやすいコンビ</div>
+</div>
+
+    
+<div class="bk-item">
+  <div class="bk-head">
+    <div class="bk-title">西洋占星術 相性（元素 × アスペクト）</div>
+    <div class="bk-weight">重み 30%</div>
+  </div>
+  <div class="bk-score-row">
+    <div class="bk-labels"><strong>蠍座</strong> × <strong>双子座</strong></div>
+    <div class="bk-score" style="color:var(--accent-amber-light)">55<span style="font-size:13px;color:var(--text-muted)">/100</span></div>
+  </div>
+  <div class="score-bar"><div class="score-bar-fill" style="width:55%;background:var(--accent-amber-light)"></div></div>
+  <div class="bk-narrative">蠍座（Water）× 双子座（Air）= クインカンクス。論理 vs 感情。話が噛み合わない時期もある。違和感の解消に努力が必要</div>
+</div>
+
+    
+<div class="bk-item">
+  <div class="bk-head">
+    <div class="bk-title">四柱推命 相性（日主五行 × 陰陽）</div>
+    <div class="bk-weight">重み 30%</div>
+  </div>
+  <div class="bk-score-row">
+    <div class="bk-labels"><strong>丁（Fire）</strong> × <strong>戊（Earth）</strong></div>
+    <div class="bk-score" style="color:#86efac">85<span style="font-size:13px;color:var(--text-muted)">/100</span></div>
+  </div>
+  <div class="score-bar"><div class="score-bar-fill" style="width:85%;background:#86efac"></div></div>
+  <div class="bk-narrative">日主 丁（Fire・Yin） × 戊（Earth・Yang）: 相生（Fire → Earth）。Fire が Earth を育てる関係。流れが自然。陰陽は陰陽が相補的。違いが摩擦と魅力の両方を生む</div>
+</div>
+
+    
+<div class="bk-item">
+  <div class="bk-head">
+    <div class="bk-title">干支 相性（三合・六合・冲）</div>
+    <div class="bk-weight">重み 25%</div>
+  </div>
+  <div class="bk-score-row">
+    <div class="bk-labels"><strong>卯年</strong> × <strong>午年</strong></div>
+    <div class="bk-score" style="color:var(--accent-amber-pale)">68<span style="font-size:13px;color:var(--text-muted)">/100</span></div>
+  </div>
+  <div class="score-bar"><div class="score-bar-fill" style="width:68%;background:var(--accent-amber-pale)"></div></div>
+  <div class="bk-narrative">卯年 × 午年 = 中立。特別な縁の組み合わせではないが、普通に付き合える距離感</div>
+</div>
+
+  </div>
+</section>
+
+<section class="card">
+  <h2>💡 この関係で起きやすいこと</h2>
+  <div class="callouts-grid">
+    <div class="callout callout-good">
+      <div class="callout-title">◎ 噛み合う場面</div>
+      <div class="callout-body"><strong>四柱推命</strong>で 85点の合意が支え。互いの強みを活かせる場面では相性よく機能する。</div>
+    </div>
+    <div class="callout callout-watch">
+      <div class="callout-title">⚠ 注意すべき場面</div>
+      <div class="callout-body"><strong>西洋占星術</strong>で 55点と摩擦点あり。価値観のズレがここから起きやすいので、互いの違いを言語化して尊重する運用が鍵。</div>
+    </div>
+  </div>
+</section>
+
+<section class="card">
+  <h2>🔒 Tier 2 相性（解放予定）</h2>
+  <p class="intro-p">4体系に心理学的パラメータを追加すると、相性の精度はさらに上がります。両者ともに性格アンケート（Tier 2）を完了すると、以下 5 体系の相性が解放されます:</p>
+  <div class="tier2-locked">
+    <div class="tier2-label">未解放（両者のTier 2完了で解放）</div>
+    <div class="tier2-title">心理学的相性 5 体系</div>
+    <div class="tier2-systems">
+      <span class="tier2-chip">エニアグラム相性</span>
+      <span class="tier2-chip">HSP 相性</span>
+      <span class="tier2-chip">ADHD傾向 相性</span>
+      <span class="tier2-chip">24 Strengths 相性（自前開発中）</span>
+      <span class="tier2-chip">16 Archetypes 相性（自前開発中）</span>
+    </div>
+    <div class="tier2-note">4 + 5 = 9 体系統合で精度が桁違いに上がります。現在の Tier 1 スコアが「確度 60-70%」に対し、Tier 2 フル解放で「確度 90% 超」を目指します。</div>
+  </div>
+</section>
+
+<section class="card">
+  <h2>📚 算出根拠</h2>
+  <div class="sources-note">
+    <p>• 血液型相性: 日本の伝統的組み合わせ表。文化的参考値であり、科学的根拠は限定的（参考: 心理学研究では統計的相関は小さいとされる）</p>
+    <p>• 西洋占星術相性: 元素（火/地/風/水）の親和性 + アスペクト（星座間の角度距離）。Astro.com / Cafe Astrology 等で用いられる古典的手法</p>
+    <p>• 四柱推命相性: 日主五行の相生（generating）/ 相剋（controlling）/ 同元素関係 + 陰陽の補完性。中国古典《命理》に基づく</p>
+    <p>• 干支相性: 三合（最強）/ 六合（調和）/ 冲（対立）の伝統的関係。東洋占術の標準</p>
+    <p>• 統合スコア重み: 血液型 15% / 西洋 30% / 四柱推命 30% / 干支 25%</p>
+  </div>
+</section>
+
+<p class="signoff">iUMA Self-Insight · Compatibility v0.1 · 2026-04-16</p>
+
+</main></body></html>
