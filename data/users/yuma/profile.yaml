@@ -8,6 +8,7 @@ identity:
   birth_place: "兵庫県尼崎市"
   blood_type: AB
   age: 50  # as of 2026
+  sex: male
 
 # === CliftonStrengths 34 ===
 strengths_finder:
