@@ -1,8 +1,8 @@
 # Self-Insight — HANDOFF
 
-## [Constancy] 2026-05-02
-- [ERROR] structural_reform: [ESCALATED: 17d unresolved] generate_dashboard.py is 3584 lines (threshold: 800). Consider splitting.
-- [WARN] post_change_testing: self-insight: 直近3時間以内に変更あり、テスト証跡なし（self-insight/.test_ok）
+## [Constancy] 2026-05-03
+- [ERROR] structural_reform: [ESCALATED: 18d unresolved] generate_dashboard.py is 3852 lines (threshold: 800). Consider splitting.
+- [WARN] post_change_testing: self-insight: 直近7時間以内に変更あり、テスト証跡なし（self-insight/.test_ok）
 
 ## Last Updated
 2026-05-02 Session — 競合・ユーザーニーズ調査完了 + 年齢対応型ナラティブ深化（母・妹ダッシュボード再生成）
