@@ -529,41 +529,41 @@ def _generate_monthly_narrative(p, cur_month, avg_stars, energy_tone):
     # Opening — connect palace/phase specifics to month energy
     if avg_stars >= 4:
         if nine_palace:
-            parts.append(f'{month_num}月、九星気学では{nine_palace}に入り、{palace_desc}。')
-        parts.append(f'六星占術では「{rok_phase}」— {phase_desc}。' if phase_desc else f'六星占術では「{rok_phase}」。')
+            parts.append(f'{month_num}月、九星気学ではあなたは{nine_palace}へと入られ、{palace_desc}のお時期でございます。')
+        parts.append(f'六星占術では「{rok_phase}」——{phase_desc}のお時期でございます。' if phase_desc else f'六星占術では「{rok_phase}」のお時期でございます。')
         if top_strength:
-            parts.append(f'{top_strength}（{top_ja}）を全開にして、この好調の波に乗ってください。')
+            parts.append(f'この好機の波に乗られ、{top_strength}（{top_ja}）をお持ちのあなたの本領を、今こそ存分に発揮なさる時でございます。')
     elif avg_stars >= 3:
         if nine_palace:
-            parts.append(f'{month_num}月は{nine_palace}（{palace_desc}）に位置する月。')
-        parts.append(f'六星占術では「{rok_phase}」ですが、{phase_desc}。' if phase_desc else '')
+            parts.append(f'{month_num}月は{nine_palace}（{palace_desc}）に位置するお月でございます。')
+        parts.append(f'六星占術では「{rok_phase}」——{phase_desc}のお時期でございます。' if phase_desc else '')
         if top_strength:
-            parts.append(f'{top_strength}（{top_ja}）を活かしつつ、着実に一歩ずつ前進する意識を。')
+            parts.append(f'{top_strength}（{top_ja}）という持ち前の資質をお活かしになりながら、着実に一歩ずつお進みになることが肝要でございます。')
     elif avg_stars >= 2:
-        parts.append(f'{month_num}月は守りを固めて内面を充実させる月です。')
+        parts.append(f'{month_num}月は、守りを固め、内側を静かに満たされるお月でございます。')
         if nine_palace:
-            parts.append(f'九星気学では{nine_palace}（{palace_desc}）。')
+            parts.append(f'九星気学では{nine_palace}（{palace_desc}）の位置にあたり、外よりも内へと目を向けるお時期でございます。')
         if phase_desc:
-            parts.append(f'六星占術は「{rok_phase}」— {phase_desc}。')
+            parts.append(f'六星占術は「{rok_phase}」——{phase_desc}のお時期でございます。')
         if missing:
             missing_str = '・'.join(str(m) for m in missing)
-            parts.append(f'五行で欠如している「{missing_str}」の要素を意識的に補うのが特に有効なタイミングです。')
+            parts.append(f'五行で欠けておられる「{missing_str}」の気を意識的に補ってみてください——今はとりわけその力が深く根付くお時期でございます。')
     else:
-        parts.append(f'{month_num}月は、無理をせず回復に専念する月です。')
+        parts.append(f'{month_num}月は、無理をなさらず、静かに回復の時間を大切になさるべきお月でございます。')
         if nine_palace:
-            parts.append(f'九星気学では{nine_palace}（{palace_desc}）。')
+            parts.append(f'九星気学では{nine_palace}（{palace_desc}）の位置でございます。')
         if phase_desc:
-            parts.append(f'六星占術は「{rok_phase}」— {phase_desc}。')
-        parts.append('この時期に充電したエネルギーが、次の好調期で花開きます。')
+            parts.append(f'六星占術は「{rok_phase}」——{phase_desc}のお時期でございます。')
+        parts.append('今この時期にお蓄えになった力は、必ず次の好機の季節に花開いてまいります。')
         if ennea:
             stress = ennea.get('stress_direction', '')
             etype = ennea.get('type', '')
             if stress:
-                parts.append(f'エニアグラムType {etype}はストレス下でType {stress}に退行しやすいので、意識的にリラックスの時間を確保してください。')
+                parts.append(f'エニアグラムType {etype}のあなたは、ストレス下でType {stress}の方向へ引き寄せられやすうございます——意識的に心を休める時間をお取りになることを、強くお勧めいたします。')
 
     # Append western astrology theme when available
     if west_theme and west_focus:
-        parts.append(f'西洋占星術では「{west_theme}」のテーマが強まる月。{west_focus}')
+        parts.append(f'西洋占星術では「{west_theme}」のテーマが深まるお月でございます。{west_focus}')
 
     return ''.join(parts)
 
@@ -3036,8 +3036,8 @@ def _integration_map(p):
             'name': '内向 ⇄ 外向',
             'left': '内向',
             'right': '外向',
-            'left_desc': '内側で処理・熟考・観察することに力が集まる',
-            'right_desc': '外に発信・行動・交流することに力が集まる',
+            'left_desc': '内なる世界で深く処理し、熟考と観察にこそ力をお持ちの御方でいらっしゃいます',
+            'right_desc': '外の世界へ発信し、行動と交流の中にこそ力が湧き上がる御方でいらっしゃいます',
             'votes': v1,
         })
 
@@ -3054,8 +3054,8 @@ def _integration_map(p):
             'name': '安定 ⇄ 変化',
             'left': '安定',
             'right': '変化',
-            'left_desc': '同じ場所で積み上げる、継続で結果を出すタイプ',
-            'right_desc': '新しい刺激・移動・挑戦でエネルギーが湧くタイプ',
+            'left_desc': '同じ場所で積み重ね、継続の中にこそ結果を見出す御方でございます',
+            'right_desc': '新しい刺激や移動、挑戦の中でこそエネルギーが満ちてくる御方でございます',
             'votes': v2,
         })
 
@@ -3072,8 +3072,8 @@ def _integration_map(p):
             'name': '思考 ⇄ 情動',
             'left': '思考',
             'right': '情動',
-            'left_desc': '論理・分析・言語化で物事を捉える',
-            'right_desc': '直感・感情・身体感覚で物事を捉える',
+            'left_desc': '論理と分析、言語化によって物事を明晰に捉えていらっしゃいます',
+            'right_desc': '直感と感情、身体の声で物事を深く感じ取っていらっしゃいます',
             'votes': v3,
         })
 
@@ -3169,26 +3169,26 @@ def _integration_map(p):
 # 全5体系のうち Tier 1 で使える「日主 / 本命星 / 運命星」から生成
 DM_STRENGTHS = {
     # (element, yin_yang): { strengths: [...], shadows: [...] }
-    ('Wood', 'Yang'): {'strengths': ['向上心と成長意欲', '大局観とリーダーシップ', '真っ直ぐな意志'],
-                       'shadows':   ['独善に陥りやすい', '細部を見落とす', '折れにくく疲れを溜める']},
-    ('Wood', 'Yin'):  {'strengths': ['柔軟な対応力', '縁と調和を紡ぐ力', '根気強い粘り'],
-                       'shadows':   ['優柔不断になりがち', '周囲に合わせすぎる', '本音を言えず溜め込む']},
-    ('Fire', 'Yang'): {'strengths': ['明朗な発信力', '情熱と推進力', '場を照らす力'],
-                       'shadows':   ['感情が激しく燃え尽きやすい', '衝動で判断する', '自分を過大評価する']},
-    ('Fire', 'Yin'):  {'strengths': ['繊細な共感力', '本質を見抜く直感', '人を温める優しさ'],
-                       'shadows':   ['他人の感情に引きずられる', '環境の影響を受けやすい', '自己主張を控えすぎる']},
-    ('Earth', 'Yang'): {'strengths': ['どっしりした安定感', '信頼の厚さ', '包容力のある包み込む力'],
-                        'shadows':   ['変化を拒みやすい', '腰が重い', '融通が利かない']},
-    ('Earth', 'Yin'):  {'strengths': ['地道な努力と誠実さ', '細やかな気配り', '人を支える継続力'],
-                        'shadows':   ['抱え込みすぎて疲弊', '完璧主義で動けない', '自己犠牲の沼にハマる']},
-    ('Metal', 'Yang'): {'strengths': ['決断力と切り込み力', '公正な判断', '筋を通す一貫性'],
-                        'shadows':   ['冷徹に見える', '情を切り捨てすぎる', '頑固で譲らない']},
-    ('Metal', 'Yin'):  {'strengths': ['美意識と洗練', '言葉選びの繊細さ', '段取りと整える力'],
-                        'shadows':   ['批判的になりやすい', '完璧を求めすぎる', 'ネチネチした執着']},
-    ('Water', 'Yang'): {'strengths': ['広大な包容力', '流動性と適応力', '深い知恵と洞察'],
-                        'shadows':   ['方向性が定まらない', '境界線が曖昧', '情に流される']},
-    ('Water', 'Yin'):  {'strengths': ['深い思慮と忍耐', '静かな影響力', '繊細な洞察力'],
-                        'shadows':   ['内向きになりすぎる', '秘密主義に傾く', '気分が沈みやすい']},
+    ('Wood', 'Yang'): {'strengths': ['果てなき向上心と成長の意欲', '鳥瞰するような大局観とリーダーシップ', '曲がることを知らない真っ直ぐな意志'],
+                       'shadows':   ['視野が狭まり独善に陥りやすい', '急ぎすぎて細部を見落とす', '折れを知らず疲労を溜め込む']},
+    ('Wood', 'Yin'):  {'strengths': ['場に溶け込む柔軟な対応力', '縁と調和を丁寧に紡ぐ力', 'しなやかで根気強い粘り'],
+                       'shadows':   ['決めきれず優柔不断になりがち', '周囲に合わせすぎて自分を失う', '本音を言えず内に溜め込む']},
+    ('Fire', 'Yang'): {'strengths': ['場を照らす明朗な発信力', '燃え盛る情熱と推進力', '人の心を動かす表現の力'],
+                       'shadows':   ['炎のように燃え尽きやすい', '衝動で物事を判断してしまう', '自己評価が高くなりすぎる']},
+    ('Fire', 'Yin'):  {'strengths': ['相手の心に寄り添う繊細な共感力', '本質を瞬時に見抜く直感', '静かに人を温める優しさ'],
+                       'shadows':   ['他人の感情に引きずられやすい', '環境の波に敏感すぎる', '自己主張を控えすぎてしまう']},
+    ('Earth', 'Yang'): {'strengths': ['揺るぎないどっしりとした安定感', '人から厚く信頼される実直さ', '大きく包み込む包容力'],
+                        'shadows':   ['変化を受け入れるのに時間がかかる', '腰が重く動き出しが遅い', '一度決めたら融通が利かない']},
+    ('Earth', 'Yin'):  {'strengths': ['地道に積み重ねる誠実な努力', '目配りが利く細やかな気配り', '人を長く支え続ける継続力'],
+                        'shadows':   ['抱え込みすぎて疲弊しやすい', '完璧を求めすぎて動けなくなる', '自己犠牲の沼に入り込みやすい']},
+    ('Metal', 'Yang'): {'strengths': ['迷わず切り込む決断力', '公平で揺るぎない判断力', '筋を最後まで通す一貫性'],
+                        'shadows':   ['感情を切り捨て冷徹に見える', '情よりも原則を優先しすぎる', '自分の信念を曲げられない頑固さ']},
+    ('Metal', 'Yin'):  {'strengths': ['磨かれた美意識と洗練された感覚', '言葉を丁寧に選ぶ繊細さ', '物事を整然と整える段取り力'],
+                        'shadows':   ['基準が高く批判的になりやすい', '完璧を求めすぎる傾向', '細部への執着が尾を引く']},
+    ('Water', 'Yang'): {'strengths': ['海のような広大な包容力', '状況に応じて変容する流動性', '時代を読む深い洞察と知恵'],
+                        'shadows':   ['方向性が定まらず揺れやすい', '境界線が曖昧で流されやすい', '情に引っ張られる']},
+    ('Water', 'Yin'):  {'strengths': ['静かに深く考え続ける思慮と忍耐', '表に出ない静かな影響力', '細部まで感じ取る繊細な洞察力'],
+                        'shadows':   ['内向きになりすぎてこもりやすい', '秘密主義が強くなりやすい', '気分が沈んで浮上しにくい']},
 }
 
 NINE_STAR_BOOSTS = {
@@ -3263,21 +3263,21 @@ BT_GIST = {
     'AB': '合理と感性の両立',
 }
 DM_GIST = {
-    '甲': '真っ直ぐ伸びる樹の推進力',
-    '乙': '柔らかく絡みつく蔓の粘り',
-    '丙': '太陽のような明朗な発信力',
-    '丁': 'ロウソクの炎のような繊細な照らし',
-    '戊': 'どっしりした山の安定感',
-    '己': '田畑のような育む器',
-    '庚': '鋼の刃のような切れ味',
-    '辛': '宝石のような磨かれた美意識',
-    '壬': '大河のような包容と流動',
-    '癸': '雨露のような浸透する知恵',
+    '甲': '天へ真っ直ぐ伸びる大樹の推進力',
+    '乙': '蔓のように絡みつく柔の粘り強さ',
+    '丙': '燦々と輝く太陽の明朗な発信力',
+    '丁': '揺れるろうそくの炎の繊細な照射力',
+    '戊': '泰然とした大山の安定と包容力',
+    '己': '実りを育む田畑の深い器',
+    '庚': '研ぎ澄まされた鋼刃の決断の切れ味',
+    '辛': '磨き上げられた宝玉の美意識と洗練',
+    '壬': '万物を抱く大河の包容と流動',
+    '癸': '大地に染み渡る雨露の浸透する知恵',
 }
 ETO_GIST = {
-    'Rat':'観察の達人','Ox':'地力の人','Tiger':'開拓者','Rabbit':'調整の名手',
-    'Dragon':'運を呼ぶ理想家','Snake':'知恵の人','Horse':'疾走者','Goat':'共生の人',
-    'Monkey':'発想の人','Rooster':'整える人','Dog':'信頼の人','Pig':'直進の人',
+    'Rat':'機を読む観察の達人','Ox':'地道に積む地力の人','Tiger':'無畏の開拓者','Rabbit':'縁を結ぶ調整の名手',
+    'Dragon':'天運を呼び込む理想家','Snake':'深謀を秘める知恵者','Horse':'自由に駆ける疾走者','Goat':'和を紡ぐ共生の人',
+    'Monkey':'奇才を宿す発想の人','Rooster':'美しく整える人','Dog':'義を貫く信頼の人','Pig':'実直に突き進む人',
 }
 
 def _rarity_stats_bar(p):
