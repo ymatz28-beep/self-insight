@@ -434,7 +434,34 @@ abbr.term:hover::after,abbr.term:focus::after{opacity:1}
 
 </head>
 <body>
-
+<header class="site-header">
+  <input type="checkbox" id="nav-toggle" class="nav-toggle" aria-label="Toggle navigation">
+  <label for="nav-toggle" class="nav-toggle-label"><span></span></label>
+  <nav class="site-nav">
+    <a href="https://iuma-private.pages.dev/stock/portfolio.html">Stock</a>
+    <a href="https://iuma-private.pages.dev/stock/market-intel.html">Market Intel</a>
+    <a href="https://iuma-private.pages.dev/cisco/">Cisco</a>
+    <a href="https://iuma-private.pages.dev/action/">Action</a>
+    <a href="https://ymatz28-beep.github.io/property-report/">Property</a>
+    <div class="nav-more">
+      <button class="nav-more-btn" aria-label="More pages" onclick="this.parentElement.classList.toggle('open')">⋯</button>
+      <div class="nav-more-menu">
+    <a href="https://iuma-private.pages.dev/wealth/dashboard.html">Wealth</a>
+    <a href="https://iuma-private.pages.dev/trading/">Trading</a>
+    <a href="https://iuma-private.pages.dev/intel/">Insight</a>
+    <a href="https://iuma-private.pages.dev/health/">Health</a>
+    <a href="https://iuma-family.pages.dev/">Medical</a>
+    <a href="https://ymatz28-beep.github.io/trip-planner/">Travel</a>
+    <a href="https://iuma-private.pages.dev/newsletter/">Newsletter</a>
+    <a href="https://iuma-private.pages.dev/bookmarks/">Bookmarks</a>
+    <a href="https://iuma-private.pages.dev/bookmarks/decide.html">判定</a>
+    <a href="https://iuma-private.pages.dev/sns/">SNS</a>
+    <a href="https://iuma-private.pages.dev/monetize/">Monetize</a>
+    <a href="https://ymatz28-beep.github.io/self-insight/" aria-current="page">Self-Insight</a>
+      </div>
+    </div>
+  </nav>
+</header>
 <div class="container">
 <section class="hero">
   <div class="hero-particles"></div>
@@ -1111,7 +1138,7 @@ selectMonth(currentMonth);
 </div>
 <footer class="page-footer">
   <div>Self-Insight — Powered by AI × 東洋占術 × 心理学</div>
-  <div style="margin-top:4px;font-size:10px">Generated 2026-05-06</div>
+  <div style="margin-top:4px;font-size:10px">Generated 2026-05-07</div>
 </footer>
 </div>
 <script>

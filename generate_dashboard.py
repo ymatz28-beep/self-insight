@@ -2814,6 +2814,11 @@ abbr.term:hover,abbr.term:focus{color:#8c6820!important}
 [style*="color:#94a3b8"]{color:#555!important}
 [style*="color:#f9a8d4"]{color:#b0445f!important}
 [style*="color:#d1d5db"]{color:#2c1a20!important}
+/* Hardcoded #fff overrides missing from base CSS */
+.eto-name .eto-title{color:#2c1a20!important}
+.axis-card-name{color:#2c1a20!important}
+.section-intro strong{color:#2c1a20!important}
+.cross-card-title{color:#2c1a20!important}
 </style>'''
 
 
