@@ -167,13 +167,19 @@ def _hero(p, tier):
                  f'<div class="stat-sub">六星占術 統合スコア（0〜100）</div>'
                  f'</div>')
     else:
-        # Fallback: use nine star cycle
+        # Fallback: average nine star + rokusei energies
         nsk = p.get('nine_star_ki', {})
         cur9 = next((c for c in nsk.get('nine_year_cycle', []) if c.get('current')), None)
-        if cur9:
+        cur6 = next((c for c in rok.get('twelve_year_cycle', []) if c.get('current')), None)
+        if cur9 or cur6:
+            e9 = cur9['energy'] if cur9 else 0
+            e6 = cur6['energy'] if cur6 else 0
+            avg_score = round((e9 + e6) / 2) if (cur9 and cur6) else (e9 or e6)
+            phase_label = cur6['phase'] if cur6 else (cur9['palace'] if cur9 else '')
             stats = (f'<div class="stat-card">'
-                     f'<div class="label">2026年</div>'
-                     f'<div class="value" style="color:{energy_color(cur9["energy"])}">{cur9["palace"]}</div>'
+                     f'<div class="label">2026年 運気スコア</div>'
+                     f'<div class="value" style="color:{energy_color(avg_score)}">{phase_label} {avg_score}</div>'
+                     f'<div class="stat-sub">九星×六星 平均スコア（0〜100）</div>'
                      f'</div>')
 
     # Hub card summaries
@@ -2873,6 +2879,7 @@ GLOSSARY = {
     '陰影':       '六星占術の12 フェーズのひとつ。<strong>陰に入る時期（大殺界）</strong>。新規行動は控え、静かに過ごす年。',
     '停止':       '六星占術の12 フェーズのひとつ。<strong>立ち止まる時期（大殺界）</strong>。内省と整理の年。',
     '減退':       '六星占術の12 フェーズのひとつ。<strong>力を蓄える時期（大殺界）</strong>。次のサイクルに向けて充電する年。',
+    '矛盾期':     '霊合星人の統合スコアが示す状態。メイン星とサブ星の運気が大きく相反している年。チャンスとブレーキが同時に働くため、行動の使い分けが鍵になる。',
     '大殺界':     '六星占術で、陰影・停止・減退の 3 年間。運気が最も低い時期で、新規事業・結婚・引っ越し等の大きな決断は避けるべき時期。',
     '中殺界':     '六星占術の「乱気」期。判断が鈍りやすい 1 年。',
     '小殺界':     '六星占術の「健弱」期。体力・気力が落ちやすい 1 年。',
