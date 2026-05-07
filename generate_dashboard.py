@@ -1457,9 +1457,9 @@ def _divination(p):
     el5_ja = {'Metal':'金','Fire':'火','Earth':'土','Water':'水','Wood':'木'}
     dir_ja = {'N':'北','S':'南','E':'東','W':'西','NE':'北東','NW':'北西','SE':'南東','SW':'南西','C':'中央'}
     nsk_cards = f'''<div class="grid grid-3">
-    <div class="card"><div class="card-label">本命星（年星）— あなたの根幹</div>
+    <div class="card"><div class="card-label">{_glossary_tooltip('本命星', '本命星（年星）— あなたの根幹')}</div>
       <div class="card-value">{ys["name"]}</div><div class="card-sub">{el5_ja.get(ys["element"],ys["element"])}（{ys["element"]}）/ {dir_ja.get(ys["direction"],ys["direction"])}（{ys["direction"]}）</div></div>
-    <div class="card"><div class="card-label">月命星 — 内面の性格</div>
+    <div class="card"><div class="card-label">{_glossary_tooltip('月命星', '月命星 — 内面の性格')}</div>
       <div class="card-value">{ms["name"]}</div><div class="card-sub">{el5_ja.get(ms["element"],ms["element"])}（{ms["element"]}）/ {dir_ja.get(ms["direction"],ms["direction"])}（{ms["direction"]}）</div></div>'''
     if cur9:
         nsk_cards += f'''<div class="card"><div class="card-label">2026年 宮位置 — 今年の運気</div>
@@ -1468,11 +1468,11 @@ def _divination(p):
 
     cur12 = next((c for c in rok.get('twelve_year_cycle', []) if c.get('current')), None)
     rok_cards = f'''<div class="grid grid-3">
-    <div class="card"><div class="card-label">運命星</div>
+    <div class="card"><div class="card-label">{_glossary_tooltip('運命星')}</div>
       <div class="card-value">{rok["main_star"]["name"]}({rok["main_star"]["polarity"]})</div>
       <div class="card-sub">{rok["main_star"]["reading"]}</div></div>'''
     if rok.get('reigou') and rok.get('sub_star'):
-        rok_cards += f'''<div class="card"><div class="card-label">霊合サブ星</div>
+        rok_cards += f'''<div class="card"><div class="card-label">{_glossary_tooltip('霊合星人', '霊合サブ星')}</div>
       <div class="card-value">{rok["sub_star"]["name"]}({rok["sub_star"]["polarity"]})</div>
       <div class="card-sub">{rok["sub_star"]["reading"]}</div></div>'''
     if cur12:
@@ -3813,12 +3813,14 @@ def generate_html(p, tier=2, show_gnav=False):
 
     # Divination
     hub_sections += _hub_card('divination', '&#9679;', 'rgba(139,92,246,0.12)', 'var(--accent-purple-light)',
-                              '星が語ること', '四柱推命 × 九星気学 × 六星占術 × 西洋占星術',
+                              '星が語ること',
+                              f'{_glossary_tooltip("四柱推命")} × {_glossary_tooltip("九星気学")} × {_glossary_tooltip("六星占術")} × {_glossary_tooltip("太陽星座", "西洋占星術")}',
                               divination_content)
 
     # Forecast
     hub_sections += _hub_card('forecast-2026', '&#9650;', 'rgba(234,179,8,0.12)', '#facc15',
-                              '2026年 — いま、あなたはどこにいるか', '九星気学 × 六星占術が示す年間の流れ',
+                              '2026年 — いま、あなたはどこにいるか',
+                              f'{_glossary_tooltip("九星気学")} × {_glossary_tooltip("六星占術")}が示す年間の流れ',
                               forecast_content)
 
     # Monthly — guidance is shown inline via JS buildGuidanceHtml() for the current month tab
