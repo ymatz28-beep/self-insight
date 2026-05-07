@@ -162,8 +162,9 @@ def _hero(p, tier):
         score = cur_comb['score']
         label = cur_comb.get('label', '')
         stats = (f'<div class="stat-card">'
-                 f'<div class="label">2026年</div>'
+                 f'<div class="label">2026年 運気スコア</div>'
                  f'<div class="value" style="color:{energy_color(score)}">{label} {score}</div>'
+                 f'<div class="stat-sub">六星占術 統合スコア（0〜100）</div>'
                  f'</div>')
     else:
         # Fallback: use nine star cycle
@@ -2279,16 +2280,16 @@ body::before{content:'';position:fixed;top:0;left:0;width:100%;height:100%;opaci
 .nav-bar::-webkit-scrollbar{display:none}
 .nav-bar a{color:var(--text-muted);text-decoration:none;font-size:12px;font-weight:500;padding:14px 16px;white-space:nowrap;transition:color .2s,background .2s;border-radius:var(--r-sm)}
 .nav-bar a:hover,.nav-bar a.active{color:var(--accent);background:rgba(99,102,241,0.12)}
-.hero{background:linear-gradient(135deg,#1e1b4b,#312e81,#1e1b4b);background-size:200% 200%;animation:heroShift 12s ease-in-out infinite;border-radius:var(--r-xl);padding:32px 32px;margin-bottom:28px;border:1px solid var(--border);overflow:hidden;position:relative;text-align:center}
+.hero{background:linear-gradient(135deg,#1e1b4b,#312e81,#1e1b4b);background-size:200% 200%;animation:heroShift 12s ease-in-out infinite;border-radius:var(--r-xl);padding:20px 24px;margin-bottom:20px;border:1px solid var(--border);overflow:hidden;position:relative;text-align:center}
 @keyframes heroShift{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
 .hero-content{position:relative;z-index:2}
 .hero-particles{display:none}
-.archetype-en{font-size:13px;font-weight:500;color:rgba(165,180,252,0.7);text-transform:uppercase;letter-spacing:3px;margin-bottom:8px}
-.archetype-name{font-size:clamp(24px,4vw,32px);font-weight:700;color:#e0e7ff;margin-bottom:8px;text-shadow:0 0 40px rgba(99,102,241,0.4),0 0 80px rgba(99,102,241,0.15);line-height:1.3}
-.hero-tagline{font-size:clamp(14px,2vw,16px);font-style:italic;color:rgba(224,231,255,0.7);margin-bottom:12px;line-height:1.6}
-.hero-name{font-size:16px;font-weight:500;color:rgba(224,231,255,0.75);letter-spacing:2.5px;margin-bottom:28px;text-transform:uppercase}
-.hero-name::before,.hero-name::after{content:'';display:inline-block;width:24px;height:1px;background:rgba(165,180,252,0.3);vertical-align:middle;margin:0 12px}
-.hub-cards-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-top:24px;text-align:left}
+.archetype-en{font-size:12px;font-weight:500;color:rgba(165,180,252,0.7);text-transform:uppercase;letter-spacing:3px;margin-bottom:4px}
+.archetype-name{font-size:clamp(20px,3.5vw,26px);font-weight:700;color:#e0e7ff;margin-bottom:4px;text-shadow:0 0 40px rgba(99,102,241,0.4),0 0 80px rgba(99,102,241,0.15);line-height:1.2}
+.hero-tagline{font-size:clamp(13px,1.8vw,14px);font-style:italic;color:rgba(224,231,255,0.7);margin-bottom:6px;line-height:1.5}
+.hero-name{font-size:14px;font-weight:500;color:rgba(224,231,255,0.75);letter-spacing:2.5px;margin-bottom:12px;text-transform:uppercase}
+.hero-name::before,.hero-name::after{content:'';display:inline-block;width:20px;height:1px;background:rgba(165,180,252,0.3);vertical-align:middle;margin:0 8px}
+.hub-cards-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:8px;margin-top:12px;text-align:left}
 .hub-card-mini{display:flex;align-items:center;gap:12px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:var(--r-md);padding:14px 16px;cursor:pointer;transition:transform .2s,background .2s}
 .hub-card-mini:hover{transform:translateY(-2px);background:rgba(255,255,255,0.09)}
 .hub-card-mini-icon{width:36px;height:36px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
@@ -3405,10 +3406,10 @@ def _rarity_stats_bar(p):
   <div class="rarity-synthesis">{synthesis}</div>
 
   <div class="rarity-breakdown">
-    <div class="rarity-item"><div class="rarity-value">{bt}</div><div class="rarity-label">{bt}型<br>（4種中）</div></div>
-    <div class="rarity-item"><div class="rarity-value">{animal_ja}</div><div class="rarity-label">{animal_ja}年<br>（12種中）</div></div>
-    <div class="rarity-item"><div class="rarity-value">{dm_char}</div><div class="rarity-label">{dm_char}日主<br>（10種中）</div></div>
-    <div class="rarity-item"><div class="rarity-value" style="font-size:18px">{sun_symbol}</div><div class="rarity-label">{sun_sign_ja}<br>（12星座中）</div></div>
+    <div class="rarity-item"><div class="rarity-value">{bt}</div><div class="rarity-label">{bt}型<br><span style="font-size:9px;color:var(--text-muted)">血液型（4種中）</span></div></div>
+    <div class="rarity-item"><div class="rarity-value">{animal_ja}</div><div class="rarity-label">{animal_ja}年<br><span style="font-size:9px;color:var(--text-muted)">{eto_tip}（12種中）</span></div></div>
+    <div class="rarity-item"><div class="rarity-value">{dm_char}</div><div class="rarity-label">{dm_char}{dm_tip}<br><span style="font-size:9px;color:var(--text-muted)">生日の気質（10種中）</span></div></div>
+    <div class="rarity-item"><div class="rarity-value" style="font-size:18px">{sun_symbol}</div><div class="rarity-label">{sun_sign_ja}<br><span style="font-size:9px;color:var(--text-muted)">{sun_tip}（12星座中）</span></div></div>
     {reigou_note}
   </div>
 
