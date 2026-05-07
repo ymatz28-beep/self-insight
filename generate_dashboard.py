@@ -2627,14 +2627,9 @@ body::before{content:'';position:fixed;top:0;left:0;width:100%;height:100%;opaci
 .rarity-sources a:hover{color:#c7d2fe}
 
 /* === 用語ツールチップ === */
-abbr.term{text-decoration:none;border-bottom:1px dotted rgba(201,168,76,0.5);cursor:help;color:inherit;position:relative}
+abbr.term{text-decoration:none;border-bottom:1px dotted rgba(201,168,76,0.5);cursor:help;color:inherit}
 abbr.term:hover,abbr.term:focus{border-bottom-color:#fde68a;border-bottom-style:solid;color:#fde68a;outline:none}
-abbr.term::after{content:attr(data-tip);position:absolute;left:50%;bottom:calc(100% + 8px);transform:translateX(-50%);background:#242836;color:#e5e7eb;padding:10px 14px;border-radius:8px;font-size:13px;font-weight:400;line-height:1.75;min-width:240px;max-width:340px;box-shadow:0 8px 24px rgba(0,0,0,0.5),0 0 0 1px rgba(201,168,76,0.3);opacity:0;pointer-events:none;transition:opacity .15s;z-index:50;white-space:normal;text-align:left;font-style:normal}
-abbr.term:hover::after,abbr.term:focus::after{opacity:1}
-@media(max-width:600px){
-  abbr.term::after{position:fixed;left:10px;right:10px;bottom:auto;top:auto;transform:none;max-width:none;min-width:0}
-  abbr.term:hover::after,abbr.term:focus::after{top:calc(100% + 4px);left:-8px;right:auto;transform:none}
-}
+#gloss-tip{position:fixed;z-index:9999;background:#242836;color:#e5e7eb;padding:10px 14px;border-radius:8px;font-size:13px;font-weight:400;line-height:1.75;max-width:320px;box-shadow:0 8px 24px rgba(0,0,0,0.5),0 0 0 1px rgba(201,168,76,0.3);pointer-events:none;white-space:normal;text-align:left;font-style:normal;opacity:0;transition:opacity .15s;display:none}
 
 /* === 用語ガイド（折りたたみ） === */
 .glossary-details{background:rgba(99,102,241,0.04);border:1px solid rgba(99,102,241,0.2);border-radius:var(--r-md);padding:12px 16px;margin:16px 0}
@@ -2767,7 +2762,7 @@ body::before{opacity:0.01}
 .glossary-term{color:#8c6820!important}
 /* Abbr tooltips */
 abbr.term{border-bottom-color:rgba(176,68,95,0.4)!important}
-abbr.term::after{background:#fdf5f7!important;color:#2c1a20!important;box-shadow:0 8px 24px rgba(0,0,0,0.15),0 0 0 1px rgba(176,68,95,0.2)!important}
+#gloss-tip{background:#fdf5f7!important;color:#2c1a20!important;box-shadow:0 8px 24px rgba(0,0,0,0.15),0 0 0 1px rgba(176,68,95,0.2)!important}
 /* Inline color overrides for dynamic elements */
 [style*="color:#a5b4fc"]{color:#7b3f8a!important}
 [style*="color:#facc15"]{color:#8c6820!important}
@@ -3856,6 +3851,43 @@ def generate_html(p, tier=2, show_gnav=False):
 {_footer(tier)}
 </div>
 {_charts_js(p)}
+<div id="gloss-tip"></div>
+<script>
+(function(){{
+  var tip=document.getElementById('gloss-tip');
+  var active=null;
+  function show(el){{
+    var txt=el.getAttribute('data-tip');
+    if(!txt)return;
+    tip.textContent=txt;
+    tip.style.display='block';
+    tip.style.opacity='0';
+    var r=el.getBoundingClientRect();
+    var vw=window.innerWidth,vh=window.innerHeight;
+    var tw=Math.min(320,vw-20);
+    tip.style.maxWidth=tw+'px';
+    // position above element, fallback below
+    var top=r.top-tip.offsetHeight-10;
+    if(top<8)top=r.bottom+8;
+    var left=r.left+(r.width/2)-(tw/2);
+    if(left<8)left=8;
+    if(left+tw>vw-8)left=vw-tw-8;
+    tip.style.top=top+'px';
+    tip.style.left=left+'px';
+    tip.style.opacity='1';
+    active=el;
+  }}
+  function hide(){{tip.style.opacity='0';tip.style.display='none';active=null;}}
+  document.querySelectorAll('abbr.term').forEach(function(el){{
+    el.addEventListener('mouseenter',function(){{show(el);}});
+    el.addEventListener('mouseleave',hide);
+    el.addEventListener('focus',function(){{show(el);}});
+    el.addEventListener('blur',hide);
+    el.addEventListener('click',function(e){{e.stopPropagation();if(active===el)hide();else show(el);}});
+  }});
+  document.addEventListener('click',function(){{if(active)hide();}});
+}})();
+</script>
 </body>
 </html>'''
 
