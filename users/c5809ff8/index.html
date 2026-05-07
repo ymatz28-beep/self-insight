@@ -5,13 +5,13 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>静かな炎の共鳴者 — Yuma Tejima</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400..700&family=JetBrains+Mono:wght@500&family=Noto+Sans+JP:wght@400..700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400..700&family=JetBrains+Mono:wght@500&family=Noto+Sans+JP:wght@400..700&family=Cormorant+Garamond:wght@400;600;700&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
 <style>
 :root{--bg:#0f1117;--surface:#1a1d27;--surface2:#242836;--border:#2d3348;--border-light:#3d4460;
   --accent:#6366f1;--accent2:#8b5cf6;--blue:#3b82f6;--green:#22c55e;--red:#ef4444;--yellow:#eab308;--gold:#c9a84c;
   --text:#e4e4e7;--text-secondary:#9ca3af;--text-muted:#7c8293;
-  --font-body:'Inter','Noto Sans JP',sans-serif;--font-mono:'JetBrains Mono',monospace;
+  --font-body:'Inter','Noto Sans JP',sans-serif;--font-mono:'JetBrains Mono',monospace;--font-display:'Cormorant Garamond',serif;--font-heading:'Inter',sans-serif;
   --r-sm:6px;--r-md:10px;--r-lg:14px;--r-xl:16px;--gnav-height:52px}
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
 html{font-size:16px;scroll-behavior:smooth;scroll-padding-top:60px}
@@ -23,23 +23,26 @@ body::before{content:'';position:fixed;top:0;left:0;width:100%;height:100%;opaci
 .site-nav a{color:#71717a;text-decoration:none;font-size:13px;font-weight:500;padding:6px 14px;border-radius:6px;transition:background .15s,color .15s;font-family:var(--font-body)}
 .site-nav a:hover,.site-nav a[aria-current=page]{background:rgba(255,255,255,0.065);color:#f5f5f7}
 .nav-toggle{display:none}
-.nav-toggle-label{display:none;cursor:pointer;width:44px;height:44px;align-items:center;justify-content:center}
-.nav-toggle-label span,.nav-toggle-label span::before,.nav-toggle-label span::after{display:block;background:#9ca3af;height:2px;width:20px;border-radius:2px;position:relative;transition:all .3s}
+.nav-toggle-label{display:none;cursor:pointer;width:44px;height:44px;align-items:center;justify-content:center;padding:8px}
+.nav-toggle-label span,.nav-toggle-label span::before,.nav-toggle-label span::after{display:block;background:#f5f5f7;height:2px;width:20px;border-radius:2px;position:relative;transition:all .3s}
 .nav-toggle-label span::before,.nav-toggle-label span::after{content:'';position:absolute}
 .nav-toggle-label span::before{top:-6px}
 .nav-toggle-label span::after{top:6px}
+.nav-more{position:relative}
+.nav-more-btn{color:#71717a;font-size:18px;font-weight:700;letter-spacing:2px;padding:6px 12px;border-radius:6px;cursor:pointer;background:none;border:none;transition:background .15s,color .15s;line-height:1}
+.nav-more-btn:hover{background:rgba(255,255,255,0.065);color:#f5f5f7}
+.nav-more-menu{display:none;position:absolute;right:0;top:calc(100% + 8px);background:rgba(22,24,31,0.97);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:1px solid rgba(255,255,255,0.1);border-radius:10px;padding:6px;min-width:180px;box-shadow:0 12px 40px rgba(0,0,0,0.4);max-height:calc(100vh - 76px);overflow-y:auto;overscroll-behavior:contain}
+.nav-more-menu a{display:block;padding:10px 14px;border-radius:6px;color:#9ca3af;text-decoration:none;font-size:13px;font-weight:500;transition:background .15s,color .15s;white-space:nowrap}
+.nav-more-menu a:hover,.nav-more-menu a[aria-current=page]{background:rgba(255,255,255,0.065);color:#f5f5f7}
+.nav-more.open .nav-more-menu{display:block}
 .nav-bar{position:sticky;top:52px;z-index:90;background:rgba(15,17,23,0.92);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:0 24px;display:flex;justify-content:center;gap:4px;overflow-x:auto;scrollbar-width:none}
 .nav-bar::-webkit-scrollbar{display:none}
 .nav-bar a{color:var(--text-muted);text-decoration:none;font-size:12px;font-weight:500;padding:14px 16px;white-space:nowrap;transition:color .2s,background .2s;border-radius:var(--r-sm)}
 .nav-bar a:hover,.nav-bar a.active{color:var(--accent);background:rgba(99,102,241,0.12)}
-.hero{background:linear-gradient(135deg,#1e1b4b,#312e81,#1e1b4b);background-size:200% 200%;animation:heroShift 12s ease-in-out infinite;border-radius:var(--r-xl);padding:48px 32px;margin-bottom:32px;border:1px solid var(--border);overflow:hidden;position:relative;text-align:center}
+.hero{background:linear-gradient(135deg,#1e1b4b,#312e81,#1e1b4b);background-size:200% 200%;animation:heroShift 12s ease-in-out infinite;border-radius:var(--r-xl);padding:32px 32px;margin-bottom:28px;border:1px solid var(--border);overflow:hidden;position:relative;text-align:center}
 @keyframes heroShift{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
 .hero-content{position:relative;z-index:2}
-.hero-particles{position:absolute;top:0;left:0;width:100%;height:100%;overflow:hidden;z-index:1}
-.hero-particles::before,.hero-particles::after{content:'';position:absolute;border-radius:50%;animation:float 8s infinite ease-in-out}
-.hero-particles::before{width:3px;height:3px;background:rgba(165,180,252,0.3);top:20%;left:15%;animation-delay:0s;box-shadow:180px 40px 0 rgba(165,180,252,0.15),320px -20px 0 rgba(196,181,253,0.12),450px 60px 0 1px rgba(99,102,241,0.1)}
-.hero-particles::after{width:2px;height:2px;background:rgba(196,181,253,0.25);top:60%;left:75%;animation-delay:3s;box-shadow:-200px -30px 0 rgba(99,102,241,0.15),-100px 20px 0 1px rgba(165,180,252,0.1)}
-@keyframes float{0%,100%{transform:translateY(0) scale(1);opacity:0.3}50%{transform:translateY(-30px) scale(1.5);opacity:0.8}}
+.hero-particles{display:none}
 .archetype-en{font-size:13px;font-weight:500;color:rgba(165,180,252,0.7);text-transform:uppercase;letter-spacing:3px;margin-bottom:8px}
 .archetype-name{font-size:clamp(24px,4vw,32px);font-weight:700;color:#e0e7ff;margin-bottom:8px;text-shadow:0 0 40px rgba(99,102,241,0.4),0 0 80px rgba(99,102,241,0.15);line-height:1.3}
 .hero-tagline{font-size:clamp(14px,2vw,16px);font-style:italic;color:rgba(224,231,255,0.7);margin-bottom:12px;line-height:1.6}
@@ -67,8 +70,8 @@ body::before{content:'';position:fixed;top:0;left:0;width:100%;height:100%;opaci
 .stats{display:flex;gap:24px;flex-wrap:wrap;justify-content:center}
 .stat-card{background:rgba(255,255,255,0.05);border-radius:var(--r-md);padding:12px 20px;backdrop-filter:blur(10px)}
 .stat-card .label{font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.5px}
-.stat-card .value{font-size:20px;font-weight:700;font-family:var(--font-mono);margin-top:2px}
-.section{margin-bottom:40px;opacity:0;transform:translateY(20px);transition:opacity 0.6s ease,transform 0.6s ease}
+.stat-card .value{font-size:24px;font-weight:700;font-family:var(--font-display);margin-top:2px}
+.section{margin-bottom:40px;opacity:0;transform:translateY(8px);transition:opacity 0.4s ease,transform 0.4s ease}
 .section.visible{opacity:1;transform:translateY(0)}
 .hub-card-content .section{margin-bottom:0;opacity:1;transform:none;transition:none}
 .section-title{font-size:clamp(16px,2vw,22px);font-weight:700;margin-bottom:20px;padding-left:12px;border-left:3px solid var(--accent)}
@@ -209,21 +212,24 @@ body::before{content:'';position:fixed;top:0;left:0;width:100%;height:100%;opaci
 .top5-item[style*=cursor]:hover{background:rgba(255,255,255,0.03);border-radius:var(--r-sm)}
 @media(max-width:768px){.grid{grid-template-columns:1fr}.pillar-grid{grid-template-columns:repeat(2,1fr)}.domain-grid{grid-template-columns:1fr}.guidance-actions-grid{grid-template-columns:1fr}.blueprint-grid{grid-template-columns:1fr}.hub-cards-grid{grid-template-columns:1fr}}
 @media(max-width:640px){
-  .nav-toggle-label{display:inline-flex}
-  .site-header{flex-wrap:wrap;gap:8px;padding:8px 12px;height:auto}
-  .site-nav{display:none;width:100%;flex-direction:column;gap:4px;padding-top:8px}
+  .nav-toggle-label{display:flex;align-items:center;justify-content:center;min-width:44px;min-height:44px}
+  .site-nav{display:none;flex-direction:column;align-items:stretch;gap:0;position:absolute;top:52px;left:0;right:0;z-index:200;background:rgba(22,24,31,0.95);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid rgba(255,255,255,0.08);padding:8px 0;max-height:calc(100vh - 52px);overflow-y:auto;overscroll-behavior:contain}
+  .site-nav a{padding:12px 24px;border-radius:0;font-size:14px}
   .nav-toggle:checked~.site-nav{display:flex}
-  .nav-toggle:checked+.nav-toggle-label span{background:transparent}
-  .nav-toggle:checked+.nav-toggle-label span::before{top:0;transform:rotate(45deg)}
-  .nav-toggle:checked+.nav-toggle-label span::after{top:0;transform:rotate(-45deg)}
-  .site-nav a{padding:8px 12px;font-size:12px;min-height:44px}
+  .nav-toggle:checked~.nav-toggle-label span{background:transparent}
+  .nav-toggle:checked~.nav-toggle-label span::before{top:0;transform:rotate(45deg)}
+  .nav-toggle:checked~.nav-toggle-label span::after{top:0;transform:rotate(-45deg)}
+  .nav-more{display:contents}
+  .nav-more-btn{display:none}
+  .nav-more-menu{display:contents!important;position:static;background:none;border:none;box-shadow:none;padding:0;min-width:auto}
+  .nav-more-menu a{padding:12px 24px;border-radius:0;font-size:14px;color:#71717a}
   .container{padding:12px}
-  .hero{padding:28px 16px;border-radius:var(--r-md)}
+  .hero{padding:16px 16px;border-radius:var(--r-md)}
   .hub-card-preview{padding:16px}
   .hub-card-content{padding:0 16px}
   .hub-card.expanded .hub-card-content{padding:0 16px 16px}
   .stats{gap:8px}.stat-card{padding:8px 12px}
-  .stat-card .value{font-size:16px}
+  .stat-card .value{font-size:18px}
   .pillar .kanji{font-size:22px}
 }
 .personality-summary{font-size:15px;color:var(--text-secondary);line-height:1.7;margin-bottom:20px;font-style:italic}
@@ -330,7 +336,7 @@ body::before{content:'';position:fixed;top:0;left:0;width:100%;height:100%;opaci
 .geo-world .geo-n{color:#c7d2fe}
 .geo-count{font-size:13px;color:#e4e4e7}
 .geo-count strong{font-size:18px;color:#fff;font-family:var(--font-mono)}
-.rarity-context-note{text-align:center;font-size:12px;color:var(--text-muted);margin-bottom:12px;font-style:italic}
+.rarity-context-note{text-align:left;font-size:12px;color:var(--text-muted);margin-bottom:12px;font-style:italic}
 @media(max-width:600px){
   .rarity-dual-geo{grid-template-columns:1fr;gap:10px}
 }
@@ -356,8 +362,8 @@ body::before{content:'';position:fixed;top:0;left:0;width:100%;height:100%;opaci
 .rarity-item-accent .rarity-value{color:#fde68a;font-family:var(--font-mono);font-size:16px}
 .rarity-label{font-size:10px;color:var(--text-muted);line-height:1.5}
 .rarity-note{font-size:10px;color:var(--text-muted);margin-top:10px;padding-top:10px;border-top:1px dashed rgba(255,255,255,0.05);line-height:1.6;font-style:italic}
-.rarity-synthesis{font-size:14px;line-height:1.95;color:#e5e7eb;padding:14px 16px;margin:14px 0;background:linear-gradient(135deg,rgba(99,102,241,0.08),rgba(201,168,76,0.03));border-left:3px solid #a5b4fc;border-radius:8px}
-.rarity-synthesis strong{color:#fde68a;font-weight:600}
+.rarity-synthesis{font-size:14px;line-height:1.95;color:#e5e7eb;padding:14px 16px;margin:14px 0;background:linear-gradient(135deg,rgba(99,102,241,0.08),rgba(201,168,76,0.03));border-left:3px solid #a5b4fc;border-radius:8px;text-align:left}
+.rarity-synthesis strong{color:var(--gold);font-weight:600}
 .rarity-scale{margin-top:14px;padding-top:14px;border-top:1px dashed rgba(255,255,255,0.08)}
 .rarity-scale-title{font-size:13px;font-weight:600;color:#c7d2fe;margin-bottom:10px}
 .rarity-scale-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:8px}
@@ -365,7 +371,7 @@ body::before{content:'';position:fixed;top:0;left:0;width:100%;height:100%;opaci
 .scale-n{font-size:20px;font-weight:700;color:#a5b4fc;font-family:var(--font-mono);letter-spacing:0.02em;margin-bottom:4px}
 .scale-ctx{font-size:10px;color:var(--text-muted);line-height:1.5}
 .rarity-scale-note{font-size:10px;color:var(--text-muted);margin-top:10px;font-style:italic;line-height:1.6}
-.rarity-sources{margin-top:14px;padding:12px 14px;background:rgba(255,255,255,0.02);border:1px dashed rgba(255,255,255,0.08);border-radius:8px}
+.rarity-sources{margin-top:14px;padding:12px 14px;background:rgba(255,255,255,0.02);border:1px dashed rgba(255,255,255,0.08);border-radius:8px;text-align:left}
 .rarity-sources-title{font-size:11px;font-weight:700;color:var(--text-secondary);letter-spacing:.05em;margin-bottom:8px}
 .rarity-sources ul{list-style:none;padding:0;margin:0}
 .rarity-sources li{font-size:11px;color:var(--text-muted);line-height:1.75;padding-left:14px;position:relative;margin-bottom:3px}
@@ -430,6 +436,7 @@ abbr.term:hover::after,abbr.term:focus::after{opacity:1}
 .locked-desc{font-size:13px;color:var(--text-secondary);line-height:1.6;max-width:360px;margin-bottom:20px}
 .locked-cta{display:inline-block;padding:12px 28px;background:var(--accent);color:white;border-radius:var(--r-md);font-size:14px;font-weight:600;text-decoration:none;transition:opacity .2s}
 .locked-cta:hover{opacity:0.85}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:0.01ms!important;animation-iteration-count:1!important;transition-duration:0.01ms!important}}
 </style>
 
 </head>
@@ -461,12 +468,12 @@ abbr.term:hover::after,abbr.term:focus::after{opacity:1}
       </div>
     </div>
   </nav>
-</header>
+</header><script>document.addEventListener("click",function(e){var m=document.querySelector(".nav-more");if(m&&!m.contains(e.target))m.classList.remove("open");});</script>
 <div class="container">
 <section class="hero">
   <div class="hero-particles"></div>
   <div class="hero-content">
-    
+    <div class="archetype-en">The Silent Flame</div>
     <h1 class="archetype-name">静かな炎の共鳴者</h1>
     <div class="hero-tagline">静かな炎で人を照らし、言葉で変容を導く人</div>
     <div class="hero-name">Yuma Tejima</div>
@@ -856,25 +863,57 @@ abbr.term:hover::after,abbr.term:focus::after{opacity:1}
   </div>
   <div class="hub-card-content">
     <section class="section" id="personality">
-  <div class="personality-locked">
-    <div class="locked-skeleton">
-      <div class="locked-row"></div>
-      <div class="locked-row short"></div>
-      <div class="locked-row"></div>
-      <div class="locked-grid">
-        <div class="locked-box"></div>
-        <div class="locked-box"></div>
-        <div class="locked-box"></div>
-        <div class="locked-box"></div>
+  <div class="section-quote">"才能は、使い方を知ったとき初めて力になる"</div>
+  <div class="personality-summary">「共感性」と「内省」を軸に、個性派としての深みを持つ</div>
+  <div class="grid"><div class="card">
+      <div class="card-title"><span class="icon">&#9733;</span> あなたの TOP 5 強み</div>
+      <ul class="top5-list"><li class="top5-item" onclick="var d=this.querySelector('.sf-desc-collapsible');if(d){{d.style.display=d.style.display==='none'?'block':'none'}}" style="cursor:pointer"><span class="rank">1</span>
+          <div><div class="sf-name">Empathy <span style="font-size:12px;color:var(--text-secondary);font-weight:400">（共感性）</span></div>
+          <div class="sf-domain"><span class="tag tag-rb">Relationship Building</span></div><div class="sf-desc-collapsible" style="display:none;font-size:12px;color:var(--text-secondary);line-height:1.6;margin-top:6px">他者の感情を「推測」するのではなく「体感」する。言語化されていない不安や喜びを直感的に察知し、その人が本当に求めていることを理解する力。チームリーダーとしての最大の武器であり、サービス設計においてユーザーの痛みを自分事として感じられるPMFの源泉。</div></div></li><li class="top5-item" onclick="var d=this.querySelector('.sf-desc-collapsible');if(d){{d.style.display=d.style.display==='none'?'block':'none'}}" style="cursor:pointer"><span class="rank">2</span>
+          <div><div class="sf-name">Intellection <span style="font-size:12px;color:var(--text-secondary);font-weight:400">（内省）</span></div>
+          <div class="sf-domain"><span class="tag tag-st">Strategic Thinking</span></div><div class="sf-desc-collapsible" style="display:none;font-size:12px;color:var(--text-secondary);line-height:1.6;margin-top:6px">思考することそのものが活動。1人の時間に頭の中で概念を回し、深い洞察に到達する。表面的な情報交換ではなく、哲学的な問いや構造的な分析を好む。このダッシュボード自体が、Intellectionが駆動する「自己を体系的に理解したい」という欲求の産物。</div></div></li><li class="top5-item" onclick="var d=this.querySelector('.sf-desc-collapsible');if(d){{d.style.display=d.style.display==='none'?'block':'none'}}" style="cursor:pointer"><span class="rank">3</span>
+          <div><div class="sf-name">Deliberative <span style="font-size:12px;color:var(--text-secondary);font-weight:400">（慎重さ）</span></div>
+          <div class="sf-domain"><span class="tag tag-ex">Executing</span></div><div class="sf-desc-collapsible" style="display:none;font-size:12px;color:var(--text-secondary);line-height:1.6;margin-top:6px">リスクを事前に感知し、慎重に選択肢を評価する。衝動的な判断を避け、深い分析に基づいて確実な意思決定をする力。投資判断や事業設計において、見えないリスクを察知する「守りの強み」。ただし行動の遅れにつながるリスクもある。</div></div></li><li class="top5-item" onclick="var d=this.querySelector('.sf-desc-collapsible');if(d){{d.style.display=d.style.display==='none'?'block':'none'}}" style="cursor:pointer"><span class="rank">4</span>
+          <div><div class="sf-name">Connectedness <span style="font-size:12px;color:var(--text-secondary);font-weight:400">（運命思考）</span></div>
+          <div class="sf-domain"><span class="tag tag-rb">Relationship Building</span></div><div class="sf-desc-collapsible" style="display:none;font-size:12px;color:var(--text-secondary);line-height:1.6;margin-top:6px">万物のつながりを直感的に感じ取る。一見無関係に見える出来事やアイデアの間に隠れた関連性を見出す力。占術と心理学と確率論を統合する発想、複数プロジェクト間のシナジーを設計する力の源泉。偶然を必然として捉える世界観。</div></div></li><li class="top5-item" onclick="var d=this.querySelector('.sf-desc-collapsible');if(d){{d.style.display=d.style.display==='none'?'block':'none'}}" style="cursor:pointer"><span class="rank">5</span>
+          <div><div class="sf-name">Maximizer <span style="font-size:12px;color:var(--text-secondary);font-weight:400">（最上志向）</span></div>
+          <div class="sf-domain"><span class="tag tag-inf">Influencing</span></div><div class="sf-desc-collapsible" style="display:none;font-size:12px;color:var(--text-secondary);line-height:1.6;margin-top:6px">「平均を良く」するのではなく「良いを最高に」引き上げる。弱みの修正より強みの極大化を追求する。3S原則（Simple, Scalable, Sustainable）の設計思想そのものがMaximizerの発露。「もっと良くできないか？」が止まらない性質。</div></div></li></ul>
+      <div style="font-size:11px;color:var(--text-muted);margin-top:12px">主要な強みの分野: Strategic Thinking (戦略的思考) | 受験日: 2015-05-12</div>
+    </div>
+    <div class="card">
+      <div class="card-title"><span class="icon">&#9632;</span> 強みの傾向</div>
+      <div style="margin-top:8px"><div class="domain-bar">
+          <div class="domain-header"><span>Relationship Building（人間関係構築）</span><span style="font-family:var(--font-mono)">4 / 10</span></div>
+          <div class="domain-track"><div class="domain-fill" style="width:40%;background:var(--accent-blue)"></div></div></div><div class="domain-bar">
+          <div class="domain-header"><span>Strategic Thinking（戦略的思考）</span><span style="font-family:var(--font-mono)">3 / 10</span></div>
+          <div class="domain-track"><div class="domain-fill" style="width:30%;background:var(--accent-green)"></div></div></div><div class="domain-bar">
+          <div class="domain-header"><span>Executing（実行力）</span><span style="font-family:var(--font-mono)">2 / 10</span></div>
+          <div class="domain-track"><div class="domain-fill" style="width:20%;background:var(--accent-purple-dark)"></div></div></div><div class="domain-bar">
+          <div class="domain-header"><span>Influencing（影響力）</span><span style="font-family:var(--font-mono)">1 / 10</span></div>
+          <div class="domain-track"><div class="domain-fill" style="width:10%;background:#ff6b35"></div></div></div></div>
+      <div style="margin-top:24px">
+        <div class="card-title" style="font-size:13px"><span class="icon">&#9830;</span> あなたの性格タイプ</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:4px">
+          <div class="typo-cell"><div class="typo-label">エニアグラム</div>
+            <div class="typo-value">Type 4</div><div class="typo-sub">個性派</div>
+            <div class='typo-desc'>自己表現とアイデンティティの探求者。「自分だけの世界観」を持ち、平凡であることを嫌う。健全時はType 1（改革者）に向かい原則と美学を融合。ストレス時はType 2（奉仕者）に向かい、自分を犠牲にして他者に尽くしすぎる傾向。</div></div>
+          <div class="typo-cell"><div class="typo-label">血液型</div>
+            <div class="typo-value">AB</div><div class="typo-sub">日本人口の10%</div>
+            <div class='typo-desc'>冷静な分析力と繊細な感性が同居。「二面性がある」と言われがちだが、実態は「状況に応じて最適なモードを切り替えている」合理的適応。</div></div>
+        </div>
       </div>
-    </div>
-    <div class="locked-overlay">
-      <div class="locked-icon">&#128274;</div>
-      <div class="locked-title">あなたの強みと性格タイプが見える</div>
-      <div class="locked-desc">10分の質問に答えるだけで、あなたの隠れた才能と性格の核心が明らかになります</div>
-      <a href="../form/" class="locked-cta">才能を発見する</a>
-    </div>
-  </div>
+      <div style="margin-top:24px">
+        <div class="card-title" style="font-size:13px"><span class="icon">&#9830;</span> エネルギー特性</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:4px">
+          <div class="typo-cell"><div class="typo-label">感受性タイプ</div>
+            <div class="typo-value" style="color:#facc15">繊細</div><div class="typo-sub">環境・感情への感度</div>
+            <div class='typo-desc'>環境や人の感情を微細なレベルで処理する繊細さ。蠍座の深い洞察力、Empathy #1の体感的共感と相乗効果を発揮し、通常は見逃す情報を拾い上げる。美しいもの・深い会話からは何倍もの充足を得る一方、ネガティブな刺激からの回復にも時間がかかる。</div></div>
+          <div class="typo-cell"><div class="typo-label">集中スタイル</div>
+            <div class="typo-value" style="color:#ff8f6b">やや多動</div><div class="typo-sub">過集中×拡散の波</div>
+            <div class='typo-desc'>興味が点火されると驚異的な集中力を発揮し、何時間も一つのテーマに没頭する。Intellection #2の思考力と組み合わさり、深い洞察を生む原動力。一方で興味の対象が移ると瞬時に切り替わるため、仕組み化（自動化・ルーティン設計）で定型業務を排除することが有効。</div></div>
+        </div>
+      </div>
+    </div></div>
 </section>
   </div>
 </div><div class="hub-card expanded" id="divination-card">
