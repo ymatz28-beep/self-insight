@@ -1,4 +1,20 @@
+<!-- [auto-precompact] 2026-07-15 22:42 transcript: /Users/ytejima/.claude/projects/-Users-ytejima-Documents-Projects/b13a9e51-264e-4d91-8217-a492dd338ffb.jsonl -->
 # Self-Insight — HANDOFF
+
+## Resume (2026-07-15 — バズる型戦略、未着手)
+architectサブエージェントで「バズる自己診断アプリ」の設計調査を実施。結論は記録のみで、コード実装は未着手（次回セッションでここから着手）。
+
+**論点1: 相性/比較診断の方が単独診断より拡散しやすい（仮説・未検証）**
+- 根拠: LoveType16→ラブキャラ64（比較シェア構造で拡散）、Co-Star（友達比較機能が主機能、米18-25歳女性の25%利用）、hottolink（診断1億件分析で「比較したくなる構造」を拡散要因の1つと指摘）
+- 弱点: self-insightで単独診断vs相性診断を直接比較した実測データではない。一般傾向からの類推。今のcompatibility.py（既存機能）の利用実績を見れば多少検証できるかもしれない
+- 現状: `compatibility.py`/`generate_compatibility.py`は既にあるが、拡散・シェア専用の導線にはなっていない
+
+**論点2: 有料/無料の2層分離案（設計方針、未実装）**
+- 現状: 有料/無料の区分・課金・シェアカード生成、いずれもコード上に存在しない（grep確認済み、2026-07-15）
+- 案: 有料の深堀り鑑定書は現行の「バーナム効果排除・出典明記」方針を維持。無料のシェアカードは`_get_archetype_tagline`（`sections/core_identity.py:48`）を土台に、事実性より言語的インパクト優先の短文を別経路で生成
+- 理由: 同じトーンを両方に効かせると有料の信頼性が薄まるか無料が拡散力を失うかの共倒れになるため
+
+**Next**: 実装着手する場合は、まず論点1の検証（compatibility.py利用実績確認 or 他の日本語診断アプリ拡散実例の追加調査）からが妥当。着手前にYuma確認。
 
 ## [Auto-Kaizen] 2026-07-08
 - [WARN] self-insight/HANDOFF.md not updated in 7 days (threshold: 7).
