@@ -1,0 +1,4 @@
+Jinja2==3.1.6
+PyYAML==6.0.3
+playwright==1.61.0
+pillow==12.2.0

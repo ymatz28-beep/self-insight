@@ -27,11 +27,12 @@ architectサブエージェントで「バズる自己診断アプリ」の設�
 **Phase 1/2 実装完了（2026-07-15）**
 - `sections/core_identity.py`に`_get_share_tagline(p)`追加: 日主10種キーの単独フックコピー（`_get_archetype_tagline`とは別系統、ページ文脈なしで単独で刺さる設計）
 - `templates/share_card.html`新規: Opus（architect）にゼロベース設計を依頼した1080x1080pxシェア画像テンプレート。DESIGN.mdの色トークンは完全準拠、タイポグラフィは正方形SNS画像という性質上あえて`max 40px`ルールを超える巨大サイズを採用（design-auditor確認済み・「シェア画像文脈では妥当、DESIGN.mdに注記推奨」）
-- `scripts/generate_share_card.py`新規: Playwright（新規依存、`.venv`にインストール済み。requirements.txtがプロジェクトに存在しないため要記録）でHTML→PNG(2x)を生成するCLI
+- `scripts/generate_share_card.py`新規: Playwright（新規依存）でHTML→PNG(2x)を生成するCLI
 - 検証: yuma/ayako/shuhei/shizukaの実プロファイル4件 + 最長アーキタイプ名11文字の合成ケース、計5枚をPlaywrightで実際にレンダリングし目視確認（`.archetype-ja`の`is-long`クラスで8文字超は68pxに縮小、崩れなし）
 - git commit済み（3ファイル、255行追加）
+- **セットアップ（2026-07-16追記）**: `requirements.txt`新規作成（プロジェクト初のマニフェスト、Jinja2/PyYAML/playwright/pillow）。`pip install -r requirements.txt` だけでは足りず、初回のみ `playwright install chromium` の実行が別途必要（ブラウザ本体はpipパッケージに同梱されないため）
 
-**Next（Phase 3・未着手）**: シェアカード生成を`generate_dashboard.py`のユーザー別パイプラインに配線し、ダウンロード/シェアUIを設計する。dc-pair原則により、静的PNG事前生成のみならReceiver/Persistence不要の可能性が高いが、実際のUI設計（ボタン設置等）確定後に再確認すること。requirements.txt不在の件はPC移行メモ相当の記録が必要。
+**Next（Phase 3・未着手）**: シェアカード生成を`generate_dashboard.py`のユーザー別パイプラインに配線し、ダウンロード/シェアUIを設計する。dc-pair原則により、静的PNG事前生成のみならReceiver/Persistence不要の可能性が高いが、実際のUI設計（ボタン設置等）確定後に再確認すること。
 
 ## [Auto-Kaizen] 2026-07-08
 - [WARN] self-insight/HANDOFF.md not updated in 7 days (threshold: 7).
