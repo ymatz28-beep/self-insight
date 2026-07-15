@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>手嶋静 — Self Insight Premium</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Inter:wght@300;400;500;600&family=Noto+Sans+JP:wght@300;400;500&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    
+    :root {
+      --bg: #F8F4F0;
+      --surface: #FFFFFF;
+      --surface2: #F0EBF4;
+      --border: #E2D9EE;
+      --text-primary: #1A1626;
+      --text-secondary: #4A3F6B;
+      --text-muted: #8B7FAA;
+      --accent: #6D28D9;
+      --accent-warm: #7C3AED;
+      --gold: #92610A;
+    }
+
+    html, body {
+      background-color: var(--bg);
+      color: var(--text-primary);
+      font-family: 'Inter', sans-serif;
+      line-height: 1.6;
+    }
+
+    /* Navigation */
+    nav {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 20px 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 2px 4px rgba(26, 22, 38, 0.04);
+    }
+
+    .nav-logo {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      text-decoration: none;
+      color: var(--text-primary);
+    }
+
+    .nav-monogram {
+      width: 40px;
+      height: 40px;
+      background: linear-gradient(135deg, #6D28D9 0%, #7C3AED 100%);
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 20px;
+      font-weight: 600;
+      color: white;
+    }
+
+    .nav-wordmark {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 18px;
+      font-weight: 400;
+      letter-spacing: 1px;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 30px;
+      list-style: none;
+    }
+
+    .nav-links a {
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 500;
+      letter-spacing: 0.5px;
+      transition: color 0.3s ease;
+      text-transform: uppercase;
+    }
+
+    .nav-links a:hover {
+      color: var(--accent);
+    }
+
+    /* Hero Section */
+    main {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 80px 40px;
+    }
+
+    .hero {
+      text-align: center;
+      margin-bottom: 60px;
+    }
+
+    .hero h1 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 72px;
+      font-weight: 300;
+      color: var(--text-primary);
+      margin-bottom: 12px;
+      letter-spacing: 2px;
+    }
+
+    .ruby {
+      font-size: 12px;
+      color: var(--text-secondary);
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      font-weight: 400;
+    }
+
+    .circular-frame {
+      width: 200px;
+      height: 200px;
+      border: 2px dashed var(--accent-warm);
+      border-radius: 50%;
+      margin: 40px auto;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+
+    .circular-frame span {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 32px;
+      color: var(--accent);
+    }
+
+    /* Identity Strip */
+    .identity-strip {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      flex-wrap: wrap;
+      margin-bottom: 80px;
+    }
+
+    .identity-badge {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      padding: 12px 24px;
+      border-radius: 24px;
+      font-family: 'Noto Sans JP', sans-serif;
+      font-size: 13px;
+      color: var(--text-secondary);
+      font-weight: 500;
+    }
+
+    .identity-badge strong {
+      color: var(--text-primary);
+      font-weight: 600;
+      margin-right: 6px;
+    }
+
+    /* Score Section */
+    .score-section {
+      margin-bottom: 80px;
+    }
+
+    .section-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 28px;
+      color: var(--text-primary);
+      margin-bottom: 40px;
+      letter-spacing: 1px;
+    }
+
+    .score-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 30px;
+      max-width: 700px;
+      margin: 0 auto;
+    }
+
+    .score-circle {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .circle {
+      width: 140px;
+      height: 140px;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .circle svg {
+      transform: rotate(-90deg);
+    }
+
+    .circle-bg {
+      fill: none;
+      stroke: var(--border);
+      stroke-width: 6;
+    }
+
+    .circle-progress {
+      fill: none;
+      stroke: #6D28D9;
+      stroke-width: 6;
+      stroke-linecap: round;
+      transition: stroke-dashoffset 0.5s ease;
+    }
+
+    .circle-text {
+      position: absolute;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 42px;
+      font-weight: 600;
+      color: var(--accent);
+    }
+
+    .score-label {
+      font-family: 'Noto Sans JP', sans-serif;
+      font-size: 12px;
+      color: var(--text-secondary);
+      font-weight: 500;
+      text-align: center;
+    }
+
+    /* Meishiki Section */
+    .meishiki-section {
+      margin-bottom: 80px;
+      background: var(--surface);
+      padding: 60px 40px;
+      border: 1px solid var(--border);
+    }
+
+    .meishiki-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 30px;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .meishiki-card {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      padding: 30px;
+      text-align: center;
+    }
+
+    .meishiki-value {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 36px;
+      font-weight: 600;
+      color: var(--accent);
+      margin-bottom: 12px;
+    }
+
+    .meishiki-label {
+      font-family: 'Noto Sans JP', sans-serif;
+      font-size: 12px;
+      color: var(--text-secondary);
+      font-weight: 500;
+      letter-spacing: 0.5px;
+    }
+
+    .element-fire { background: linear-gradient(to bottom, rgba(239,68,68,0.1), transparent); }
+    .element-water { background: linear-gradient(to bottom, rgba(59,130,246,0.1), transparent); }
+    .element-wood { background: linear-gradient(to bottom, rgba(34,197,94,0.1), transparent); }
+    .element-metal { background: linear-gradient(to bottom, rgba(168,85,247,0.1), transparent); }
+    .element-earth { background: linear-gradient(to bottom, rgba(217,119,6,0.1), transparent); }
+
+    /* Insight Section */
+    .insight-section {
+      max-width: 800px;
+      margin: 0 auto 80px;
+    }
+
+    .insight-content {
+      background: var(--surface);
+      border-left: 4px solid var(--accent);
+      padding: 30px;
+      margin-bottom: 20px;
+    }
+
+    .insight-content p {
+      color: var(--text-secondary);
+      font-size: 14px;
+      line-height: 1.8;
+      margin-bottom: 15px;
+    }
+
+    .insight-content p:last-child {
+      margin-bottom: 0;
+    }
+
+    /* Monthly Section */
+    .monthly-section {
+      max-width: 800px;
+      margin: 0 auto 80px;
+      background: var(--surface);
+      padding: 40px;
+      border: 1px solid var(--border);
+    }
+
+    .monthly-date {
+      font-family: 'Noto Sans JP', sans-serif;
+      font-size: 12px;
+      color: var(--text-secondary);
+      letter-spacing: 1px;
+      margin-bottom: 20px;
+      text-transform: uppercase;
+    }
+
+    .monthly-content {
+      font-size: 14px;
+      color: var(--text-secondary);
+      line-height: 1.8;
+    }
+
+    /* Chart Section */
+    .chart-section {
+      max-width: 700px;
+      margin: 0 auto 80px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      padding: 40px;
+    }
+
+    #trendChart {
+      max-width: 100%;
+      height: 300px;
+    }
+
+    /* Footer */
+    footer {
+      text-align: center;
+      padding: 40px;
+      color: var(--text-muted);
+      font-size: 12px;
+      border-top: 1px solid var(--border);
+    }
+
+    footer .logo {
+      margin-bottom: 15px;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 18px;
+      letter-spacing: 1px;
+    }
+  </style>
+</head>
+<body>
+  <!-- Navigation -->
+  <nav>
+    <a href="#" class="nav-logo">
+      <div class="nav-monogram">SI</div>
+      <div class="nav-wordmark">Self Insight</div>
+    </a>
+    <ul class="nav-links">
+      <li><a href="#profile">Profile</a></li>
+      <li><a href="#readings">Readings</a></li>
+      <li><a href="#guide">Guide</a></li>
+    </ul>
+  </nav>
+
+  <main>
+    <!-- Hero Section -->
+    <section class="hero">
+      <h1>手嶋 静</h1>
+      <div class="ruby">Shizuka Tejima</div>
+      <div class="circular-frame"><span>✧</span></div>
+    </section>
+
+    <!-- Identity Strip -->
+    <section class="identity-strip">
+      <div class="identity-badge"><strong>日主:</strong> 壬（みずのえ）</div>
+      <div class="identity-badge"><strong>血液型:</strong> A型</div>
+      <div class="identity-badge"><strong>九星:</strong> 三碧木星</div>
+      <div class="identity-badge"><strong>六星:</strong> 天王星</div>
+    </section>
+
+    <!-- Score Section -->
+    <section class="score-section">
+      <h2 class="section-title">人生6領域のスコア</h2>
+      <div class="score-grid">
+        <div class="score-circle">
+          <div class="circle">
+            <svg width="140" height="140" viewBox="0 0 140 140">
+              <circle class="circle-bg" cx="70" cy="70" r="62"></circle>
+              <circle class="circle-progress" cx="70" cy="70" r="62" 
+                style="stroke-dasharray: 389.53 389.53; stroke-dashoffset: 86.90;"></circle>
+            </svg>
+            <span class="circle-text">78</span>
+          </div>
+          <div class="score-label">仕事</div>
+        </div>
+        <div class="score-circle">
+          <div class="circle">
+            <svg width="140" height="140" viewBox="0 0 140 140">
+              <circle class="circle-bg" cx="70" cy="70" r="62"></circle>
+              <circle class="circle-progress" cx="70" cy="70" r="62" 
+                style="stroke-dasharray: 389.53 389.53; stroke-dashoffset: 70.12;"></circle>
+            </svg>
+            <span class="circle-text">82</span>
+          </div>
+          <div class="score-label">恋愛</div>
+        </div>
+        <div class="score-circle">
+          <div class="circle">
+            <svg width="140" height="140" viewBox="0 0 140 140">
+              <circle class="circle-bg" cx="70" cy="70" r="62"></circle>
+              <circle class="circle-progress" cx="70" cy="70" r="62" 
+                style="stroke-dasharray: 389.53 389.53; stroke-dashoffset: 136.34;"></circle>
+            </svg>
+            <span class="circle-text">65</span>
+          </div>
+          <div class="score-label">財運</div>
+        </div>
+        <div class="score-circle">
+          <div class="circle">
+            <svg width="140" height="140" viewBox="0 0 140 140">
+              <circle class="circle-bg" cx="70" cy="70" r="62"></circle>
+              <circle class="circle-progress" cx="70" cy="70" r="62" 
+                style="stroke-dasharray: 389.53 389.53; stroke-dashoffset: 47.32;"></circle>
+            </svg>
+            <span class="circle-text">88</span>
+          </div>
+          <div class="score-label">健康</div>
+        </div>
+        <div class="score-circle">
+          <div class="circle">
+            <svg width="140" height="140" viewBox="0 0 140 140">
+              <circle class="circle-bg" cx="70" cy="70" r="62"></circle>
+              <circle class="circle-progress" cx="70" cy="70" r="62" 
+                style="stroke-dasharray: 389.53 389.53; stroke-dashoffset: 108.57;"></circle>
+            </svg>
+            <span class="circle-text">71</span>
+          </div>
+          <div class="score-label">家庭</div>
+        </div>
+        <div class="score-circle">
+          <div class="circle">
+            <svg width="140" height="140" viewBox="0 0 140 140">
+              <circle class="circle-bg" cx="70" cy="70" r="62"></circle>
+              <circle class="circle-progress" cx="70" cy="70" r="62" 
+                style="stroke-dasharray: 389.53 389.53; stroke-dashoffset: 59.12;"></circle>
+            </svg>
+            <span class="circle-text">85</span>
+          </div>
+          <div class="score-label">精神</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Meishiki Section -->
+    <section class="meishiki-section">
+      <h2 class="section-title">命式 — The Four Pillars</h2>
+      <div class="meishiki-grid">
+        <div class="meishiki-card element-water">
+          <div class="meishiki-value">壬</div>
+          <div class="meishiki-label">年柱 (Year Stem)</div>
+        </div>
+        <div class="meishiki-card element-wood">
+          <div class="meishiki-value">寅</div>
+          <div class="meishiki-label">年支 (Year Branch)</div>
+        </div>
+        <div class="meishiki-card element-wood">
+          <div class="meishiki-value">壬</div>
+          <div class="meishiki-label">月柱 (Month Stem)</div>
+        </div>
+        <div class="meishiki-card element-fire">
+          <div class="meishiki-value">寅</div>
+          <div class="meishiki-label">月支 (Month Branch)</div>
+        </div>
+        <div class="meishiki-card element-earth">
+          <div class="meishiki-value">甲</div>
+          <div class="meishiki-label">日柱 (Day Stem)</div>
+        </div>
+        <div class="meishiki-card element-metal">
+          <div class="meishiki-value">辰</div>
+          <div class="meishiki-label">日支 (Day Branch)</div>
+        </div>
+        <div class="meishiki-card element-earth">
+          <div class="meishiki-value">癸</div>
+          <div class="meishiki-label">時柱 (Hour Stem)</div>
+        </div>
+        <div class="meishiki-card element-metal">
+          <div class="meishiki-value">卯</div>
+          <div class="meishiki-label">時支 (Hour Branch)</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Insight Section -->
+    <section class="insight-section">
+      <h2 class="section-title">鑑定結果</h2>
+      <div class="insight-content">
+        <p>あなたの命式は、深い知性と創造性を兼ね備えた運勢を示しています。壬の流動性は変化を好み、柔軟で周囲との調和を大切にする性質を表します。</p>
+        <p>現在、あなたは人生の転機を迎えています。三碧木星のエネルギーは成長と拡大を意味し、新しい可能性の扉が開かれる時期です。ただし、焦らず、一歩一歩確実に進むことが重要です。</p>
+      </div>
+      <div class="insight-content">
+        <p>天王星の影響下にあるあなたは、独創性と直感の力が強いです。周囲の意見に左右されず、自分の内なる声に耳を傾けることで、本当の成功が訪れるでしょう。</p>
+      </div>
+    </section>
+
+    <!-- Monthly Section -->
+    <section class="monthly-section">
+      <div class="monthly-date">2026年5月の運勢</div>
+      <div class="monthly-content">
+        <p>この月は創造性と直感が最高潮に達する時期です。新しいプロジェクトの開始、重要な決断、人間関係の構築に最適な時期となります。金運も好調で、予期しない幸運が訪れる可能性があります。</p>
+        <p style="margin-top: 15px;">対人関係は調和的で、チームワークが実を結びます。ただし、月の中盤は内省の時間を持つことで、より深い洞察が得られるでしょう。</p>
+      </div>
+    </section>
+
+    <!-- Chart Section -->
+    <section class="chart-section">
+      <h2 class="section-title">6ヶ月運勢トレンド</h2>
+      <canvas id="trendChart"></canvas>
+    </section>
+  </main>
+
+  <footer>
+    <div class="logo">Self Insight</div>
+    <p>&copy; 2026 Self Insight Inc. All rights reserved.</p>
+  </footer>
+
+  <script>
+    const ctx = document.getElementById('trendChart').getContext('2d');
+    
+    new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: ['1月', '2月', '3月', '4月', '5月', '6月'],
+        datasets: [
+          {
+            label: '総合運勢',
+            data: [72, 75, 78, 80, 84, 86],
+            borderColor: '#6D28D9',
+            backgroundColor: 'rgba(109, 40, 217, 0.05)',
+            borderWidth: 2.5,
+            fill: true,
+            pointBackgroundColor: '#6D28D9',
+            pointBorderColor: '#FFFFFF',
+            pointBorderWidth: 2,
+            pointRadius: 5,
+            pointHoverRadius: 7,
+            tension: 0.4
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: true,
+        plugins: {
+          legend: {
+            labels: {
+              color: '#4A3F6B',
+              font: { family: "'Inter', sans-serif", size: 12, weight: '500' }
+            }
+          },
+          filler: {
+            propagate: true
+          }
+        },
+        scales: {
+          y: {
+            beginAtZero: true,
+            max: 100,
+            ticks: {
+              color: '#8B7FAA',
+              font: { family: "'Inter', sans-serif", size: 11 }
+            },
+            grid: {
+              color: 'rgba(226, 217, 238, 0.5)',
+              drawBorder: false
+            }
+          },
+          x: {
+            ticks: {
+              color: '#8B7FAA',
+              font: { family: "'Noto Sans JP', sans-serif", size: 11, weight: '500' }
+            },
+            grid: {
+              display: false
+            }
+          }
+        }
+      }
+    });
+  </script>
+</body>
+</html>

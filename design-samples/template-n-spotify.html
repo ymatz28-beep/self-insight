@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>手嶋静 — Self Insight (N: Spotify-dark)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Noto+Sans+JP:wght@300;400;500&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --bg: #0D0B14;
+      --surface: #1A1626;
+      --surface2: #251E36;
+      --border: #2E2545;
+      --gold: #C9A84C;
+      --accent: #8B5CF6;
+      --accent-warm: #A78BFA;
+      --accent-teal: #14b8a6;
+      --text-primary: #F5F0E8;
+      --text-secondary: #A89EC0;
+      --text-muted: #6B6285;
+      --female-bg: #f5eff2;
+    }
+
+    html, body { height: 100%; }
+
+    body {
+      background: var(--bg);
+      color: var(--text-primary);
+      font-family: 'Inter', sans-serif;
+      display: flex;
+      min-height: 100vh;
+    }
+
+    /* ── Sidebar ── */
+    .sidebar {
+      width: 256px;
+      flex-shrink: 0;
+      background: #0a0812;
+      border-right: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      padding: 28px 16px 28px;
+      gap: 28px;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      overflow-y: auto;
+    }
+
+    .sb-profile {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      text-align: center;
+      padding: 0 8px;
+    }
+
+    .sb-avatar {
+      width: 72px; height: 72px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #4C1D95, #7C3AED);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 28px; font-weight: 800; color: #fff;
+      box-shadow: 0 4px 20px rgba(139,92,246,0.4);
+    }
+
+    .sb-name {
+      font-size: 17px; font-weight: 700;
+      color: var(--text-primary); letter-spacing: -0.3px;
+    }
+
+    .sb-tag {
+      font-size: 11px; color: var(--text-muted);
+      background: var(--surface2);
+      padding: 3px 10px; border-radius: 20px;
+      letter-spacing: 0.5px;
+    }
+
+    .sb-monthly {
+      background: var(--surface);
+      border-radius: 12px;
+      padding: 20px;
+      text-align: center;
+    }
+
+    .sb-month-label {
+      font-size: 10px; color: var(--text-muted);
+      letter-spacing: 2.5px; text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+
+    .sb-month-score {
+      font-size: 60px; font-weight: 900;
+      color: var(--accent-warm);
+      line-height: 1; letter-spacing: -3px;
+    }
+
+    .sb-month-sub {
+      font-size: 11px; color: var(--text-secondary); margin-top: 4px;
+    }
+
+    .sb-nav {
+      display: flex; flex-direction: column; gap: 2px;
+    }
+
+    .sb-nav-item {
+      display: flex; align-items: center; gap: 10px;
+      padding: 9px 12px; border-radius: 6px;
+      font-size: 13.5px; font-weight: 500;
+      color: var(--text-secondary); cursor: pointer;
+      transition: background 0.15s, color 0.15s;
+      text-decoration: none;
+    }
+
+    .sb-nav-item:hover, .sb-nav-item.active {
+      background: var(--surface2); color: var(--text-primary);
+    }
+
+    .sb-nav-dot {
+      width: 5px; height: 5px;
+      border-radius: 50%; flex-shrink: 0;
+    }
+
+    .sb-quote {
+      margin-top: auto;
+      border-left: 3px solid var(--gold);
+      padding: 12px 14px;
+      background: rgba(201,168,76,0.06);
+      border-radius: 0 8px 8px 0;
+    }
+
+    .sb-quote p {
+      font-size: 12px; color: var(--text-secondary);
+      font-style: italic; line-height: 1.7;
+    }
+
+    /* ── Main ── */
+    .main {
+      flex: 1;
+      padding: 40px 52px 60px;
+      max-width: 960px;
+      overflow-y: auto;
+    }
+
+    .sec-label {
+      font-size: 10px; color: var(--text-muted);
+      letter-spacing: 3px; text-transform: uppercase;
+      margin-bottom: 5px;
+    }
+
+    .sec-title {
+      font-size: 26px; font-weight: 700;
+      letter-spacing: -0.5px; color: var(--text-primary);
+    }
+
+    .sec-desc {
+      font-size: 13.5px; color: var(--text-secondary);
+      margin-top: 5px; line-height: 1.65;
+    }
+
+    .sec-hd { margin-bottom: 24px; }
+
+    /* Monthly Hero */
+    .monthly-hero {
+      background: linear-gradient(130deg, #1A1626 0%, #251E36 55%, #2D1B5E 100%);
+      border-radius: 14px; padding: 36px 40px;
+      margin-bottom: 52px; position: relative; overflow: hidden;
+    }
+
+    .monthly-hero::after {
+      content: '';
+      position: absolute; right: -30px; top: -30px;
+      width: 220px; height: 220px; border-radius: 50%;
+      background: radial-gradient(circle, rgba(139,92,246,0.25) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .mh-meta { font-size: 11px; color: var(--text-muted); letter-spacing: 2.5px; text-transform: uppercase; margin-bottom: 10px; }
+
+    .mh-score {
+      font-size: 88px; font-weight: 900;
+      line-height: 0.9; letter-spacing: -5px;
+      color: var(--text-primary);
+    }
+
+    .mh-score span {
+      font-size: 22px; font-weight: 400; color: var(--text-muted); letter-spacing: 0;
+    }
+
+    .mh-text {
+      font-size: 14.5px; color: var(--text-secondary);
+      margin-top: 18px; max-width: 500px; line-height: 1.75;
+    }
+
+    /* Domains */
+    .domains-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-bottom: 52px;
+    }
+
+    .d-card {
+      background: var(--surface);
+      border-radius: 8px; overflow: hidden;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .d-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 12px 28px rgba(0,0,0,0.5);
+    }
+
+    .d-top {
+      height: 78px; position: relative;
+      display: flex; align-items: flex-end; padding: 10px 12px;
+    }
+
+    .d-top::after {
+      content: ''; position: absolute; inset: 0;
+      background: linear-gradient(to bottom, transparent 30%, rgba(0,0,0,0.45) 100%);
+    }
+
+    .d-score {
+      font-size: 38px; font-weight: 900; color: #fff;
+      line-height: 1; letter-spacing: -2px;
+      position: relative; z-index: 2;
+    }
+
+    .d-body { padding: 14px 14px 16px; }
+
+    .d-name {
+      font-family: 'Noto Sans JP', sans-serif;
+      font-size: 13px; font-weight: 500;
+      color: var(--text-primary); margin-bottom: 8px;
+    }
+
+    .d-bar {
+      height: 3px; background: var(--surface2);
+      border-radius: 2px; overflow: hidden;
+    }
+
+    .d-bar-fill { height: 100%; border-radius: 2px; }
+
+    /* card accent colors */
+    .dc-shigoto .d-top { background: linear-gradient(140deg, #2D1B69 0%, #4C1D95 100%); }
+    .dc-shigoto .d-bar-fill { background: #8B5CF6; }
+    .dc-renai   .d-top { background: linear-gradient(140deg, #4A1942 0%, #9D174D 100%); }
+    .dc-renai   .d-bar-fill { background: #EC4899; }
+    .dc-zaion   .d-top { background: linear-gradient(140deg, #3D2C0A 0%, #78350F 100%); }
+    .dc-zaion   .d-bar-fill { background: #C9A84C; }
+    .dc-kenkou  .d-top { background: linear-gradient(140deg, #052E16 0%, #166534 100%); }
+    .dc-kenkou  .d-bar-fill { background: #22c55e; }
+    .dc-katei   .d-top { background: linear-gradient(140deg, #042F2E 0%, #115E59 100%); }
+    .dc-katei   .d-bar-fill { background: #14b8a6; }
+    .dc-seishin .d-top { background: linear-gradient(140deg, #2E1A6B 0%, #5B21B6 100%); }
+    .dc-seishin .d-bar-fill { background: #A78BFA; }
+
+    /* 四柱 */
+    .shiju-cards {
+      display: flex; gap: 10px;
+      margin-bottom: 52px;
+    }
+
+    .sj-card {
+      flex: 1; background: var(--surface); border-radius: 8px;
+      padding: 18px 14px; text-align: center;
+    }
+
+    .sj-period { font-size: 10px; color: var(--text-muted); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 8px; }
+    .sj-kanji  { font-size: 26px; font-weight: 700; color: var(--text-primary); letter-spacing: -1px; margin-bottom: 8px; }
+    .sj-rel    { font-size: 11px; padding: 3px 10px; border-radius: 20px; display: inline-block; }
+
+    .sj-rel-accent   { background: rgba(139,92,246,0.15); color: var(--accent-warm); }
+    .sj-rel-day      { background: rgba(201,168,76,0.12); color: var(--gold); }
+
+    /* 五行 */
+    .gogyou-wrap {
+      background: var(--surface); border-radius: 12px;
+      padding: 24px 24px 20px;
+      margin-bottom: 52px;
+    }
+
+    .gg-row {
+      display: flex; align-items: center; gap: 14px;
+      margin-bottom: 12px;
+    }
+
+    .gg-label {
+      font-family: 'Noto Sans JP', sans-serif;
+      font-size: 13px; color: var(--text-secondary);
+      width: 28px; flex-shrink: 0;
+    }
+
+    .gg-track {
+      flex: 1; height: 5px;
+      background: var(--surface2); border-radius: 3px; overflow: hidden;
+    }
+
+    .gg-fill { height: 100%; border-radius: 3px; }
+    .gg-pct  { font-size: 13px; font-weight: 600; width: 36px; text-align: right; color: var(--text-primary); }
+
+    .gg-note {
+      font-size: 12px; color: var(--text-muted);
+      border-top: 1px solid var(--border); padding-top: 14px; margin-top: 6px; line-height: 1.65;
+    }
+
+    /* Year chart */
+    .chart-wrap {
+      background: var(--surface); border-radius: 12px;
+      padding: 28px;
+    }
+
+  </style>
+</head>
+<body>
+
+  <aside class="sidebar">
+    <div class="sb-profile">
+      <div class="sb-avatar">静</div>
+      <div class="sb-name">手嶋 静</div>
+      <div class="sb-tag">壬水 × 二黒土星</div>
+    </div>
+
+    <div class="sb-monthly">
+      <div class="sb-month-label">2026年5月</div>
+      <div class="sb-month-score">84</div>
+      <div class="sb-month-sub">フォーチュン・インデックス</div>
+    </div>
+
+    <nav class="sb-nav">
+      <a class="sb-nav-item active" href="#monthly"><span class="sb-nav-dot" style="background:#A78BFA"></span>今月の運勢</a>
+      <a class="sb-nav-item" href="#domains"><span class="sb-nav-dot" style="background:#EC4899"></span>6領域スコア</a>
+      <a class="sb-nav-item" href="#shiju"><span class="sb-nav-dot" style="background:#C9A84C"></span>四柱推命</a>
+      <a class="sb-nav-item" href="#gogyou"><span class="sb-nav-dot" style="background:#22c55e"></span>五行バランス</a>
+      <a class="sb-nav-item" href="#chart"><span class="sb-nav-dot" style="background:#14b8a6"></span>年間運勢</a>
+    </nav>
+
+    <div class="sb-quote">
+      <p>"大地に宿る、深く静かな水"</p>
+    </div>
+  </aside>
+
+  <main class="main">
+
+    <!-- Monthly -->
+    <section id="monthly">
+      <div class="monthly-hero">
+        <div class="mh-meta">2026年5月 — フォーチュン・インデックス</div>
+        <div class="mh-score">84 <span>/ 100</span></div>
+        <div class="mh-text">
+          この月は創造性と直感が最高潮に。新しいプロジェクトの開始に最適な時期。金運も好調で、予期しない幸運が訪れる可能性あり。対人関係は調和的で、チームワークが実を結ぶ。
+        </div>
+      </div>
+    </section>
+
+    <!-- Domains -->
+    <section id="domains">
+      <div class="sec-hd">
+        <div class="sec-label">6 Domains</div>
+        <div class="sec-title">人生6領域のスコア</div>
+        <div class="sec-desc">仕事・恋愛・財運・健康・家庭・精神の現在のバランス。月ごとに変動する生命エネルギーの配分を可視化</div>
+      </div>
+      <div class="domains-grid">
+        <div class="d-card dc-shigoto"><div class="d-top"><div class="d-score">78</div></div><div class="d-body"><div class="d-name">仕事</div><div class="d-bar"><div class="d-bar-fill" style="width:78%"></div></div></div></div>
+        <div class="d-card dc-renai">  <div class="d-top"><div class="d-score">82</div></div><div class="d-body"><div class="d-name">恋愛</div><div class="d-bar"><div class="d-bar-fill" style="width:82%"></div></div></div></div>
+        <div class="d-card dc-zaion">  <div class="d-top"><div class="d-score">65</div></div><div class="d-body"><div class="d-name">財運</div><div class="d-bar"><div class="d-bar-fill" style="width:65%"></div></div></div></div>
+        <div class="d-card dc-kenkou"> <div class="d-top"><div class="d-score">88</div></div><div class="d-body"><div class="d-name">健康</div><div class="d-bar"><div class="d-bar-fill" style="width:88%"></div></div></div></div>
+        <div class="d-card dc-katei">  <div class="d-top"><div class="d-score">71</div></div><div class="d-body"><div class="d-name">家庭</div><div class="d-bar"><div class="d-bar-fill" style="width:71%"></div></div></div></div>
+        <div class="d-card dc-seishin"><div class="d-top"><div class="d-score">85</div></div><div class="d-body"><div class="d-name">精神</div><div class="d-bar"><div class="d-bar-fill" style="width:85%"></div></div></div></div>
+      </div>
+    </section>
+
+    <!-- 四柱 -->
+    <section id="shiju">
+      <div class="sec-hd">
+        <div class="sec-label">四柱推命</div>
+        <div class="sec-title">命式パネル</div>
+        <div class="sec-desc">生年月日時から導かれる4本の柱。年柱・月柱・日柱・時柱がそれぞれ過去・環境・本質・内面を映す</div>
+      </div>
+      <div class="shiju-cards">
+        <div class="sj-card">
+          <div class="sj-period">年柱</div>
+          <div class="sj-kanji">丁巳</div>
+          <div class="sj-rel sj-rel-accent">偏財</div>
+        </div>
+        <div class="sj-card">
+          <div class="sj-period">月柱</div>
+          <div class="sj-kanji">甲子</div>
+          <div class="sj-rel sj-rel-accent">比肩</div>
+        </div>
+        <div class="sj-card">
+          <div class="sj-period">日柱（日主）</div>
+          <div class="sj-kanji">壬辰</div>
+          <div class="sj-rel sj-rel-day">日主</div>
+        </div>
+        <div class="sj-card">
+          <div class="sj-period">時柱</div>
+          <div class="sj-kanji">庚申</div>
+          <div class="sj-rel sj-rel-accent">偏印</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 五行 -->
+    <section id="gogyou">
+      <div class="sec-hd">
+        <div class="sec-label">五行バランス</div>
+        <div class="sec-title">エレメント分布</div>
+        <div class="sec-desc">木・火・土・金・水の5エレメント配分。欠如エレメントの意識的な補完が運勢向上の鍵となる</div>
+      </div>
+      <div class="gogyou-wrap">
+        <div class="gg-row"><div class="gg-label">木</div><div class="gg-track"><div class="gg-fill" style="width:30%;background:#22c55e"></div></div><div class="gg-pct">30%</div></div>
+        <div class="gg-row"><div class="gg-label">火</div><div class="gg-track"><div class="gg-fill" style="width:0%;background:#ef4444"></div></div><div class="gg-pct" style="color:#ef4444">0%</div></div>
+        <div class="gg-row"><div class="gg-label">土</div><div class="gg-track"><div class="gg-fill" style="width:35%;background:#C9A84C"></div></div><div class="gg-pct">35%</div></div>
+        <div class="gg-row"><div class="gg-label">金</div><div class="gg-track"><div class="gg-fill" style="width:25%;background:#A78BFA"></div></div><div class="gg-pct">25%</div></div>
+        <div class="gg-row" style="margin-bottom:0"><div class="gg-label">水</div><div class="gg-track"><div class="gg-fill" style="width:10%;background:#14b8a6"></div></div><div class="gg-pct">10%</div></div>
+        <div class="gg-note">⚠ 火エレメントが欠如 — 情熱・積極性・自己主張を意識的に補う必要あり。赤・橙系の取り入れや南方位への意識が吉</div>
+      </div>
+    </section>
+
+    <!-- Chart -->
+    <section id="chart">
+      <div class="sec-hd">
+        <div class="sec-label">年間運勢</div>
+        <div class="sec-title">2024–2032 運勢トレンド</div>
+        <div class="sec-desc">九星気学と六星占術の2系統から算出した9年間の波動グラフ。ピークとボトムを把握して大局で動く</div>
+      </div>
+      <div class="chart-wrap">
+        <canvas id="yearChart"></canvas>
+      </div>
+    </section>
+
+  </main>
+
+  <script>
+    new Chart(document.getElementById('yearChart').getContext('2d'), {
+      type: 'line',
+      data: {
+        labels: ['2024','2025','2026','2027','2028','2029','2030','2031','2032'],
+        datasets: [
+          {
+            label: '九星気学',
+            data: [75, 100, 90, 80, 40, 70, 30, 45, 65],
+            borderColor: '#A78BFA',
+            backgroundColor: 'rgba(167,139,250,0.1)',
+            borderWidth: 2.5, pointBackgroundColor: '#A78BFA',
+            pointRadius: 5, tension: 0.4, fill: true,
+          },
+          {
+            label: '六星占術',
+            data: [80, 35, 90, 25, 70, 85, 95, 15, 10],
+            borderColor: '#C9A84C',
+            backgroundColor: 'rgba(201,168,76,0.07)',
+            borderWidth: 2.5, pointBackgroundColor: '#C9A84C',
+            pointRadius: 5, tension: 0.4, fill: true,
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          legend: { labels: { color: '#A89EC0', font: { family: 'Inter', size: 12 }, padding: 20 } }
+        },
+        scales: {
+          x: { ticks: { color: '#6B6285', font: { size: 12 } }, grid: { color: 'rgba(46,37,69,0.4)' } },
+          y: { min: 0, max: 100, ticks: { color: '#6B6285', font: { size: 11 }, stepSize: 25 }, grid: { color: 'rgba(46,37,69,0.4)' } }
+        }
+      }
+    });
+  </script>
+</body>
+</html>

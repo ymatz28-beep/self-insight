@@ -1,0 +1,892 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>手嶋静 — Self Insight</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Sans+JP:wght@300;400;500&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --bg: #0D0B14;
+      --surface: #131120;
+      --surface2: #1C1830;
+      --border: rgba(255,255,255,0.06);
+      --border-subtle: rgba(255,255,255,0.03);
+      --gold: #C9A84C;
+      --accent: #8B5CF6;
+      --accent-warm: #A78BFA;
+      --accent-dim: rgba(139, 92, 246, 0.15);
+      --text-primary: #F5F0E8;
+      --text-secondary: #9089A8;
+      --text-muted: #504B66;
+      --female-bg: #f5eff2;
+      --green: #22c55e;
+      --teal: #14b8a6;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text-primary);
+      font-family: 'Inter', 'Noto Sans JP', sans-serif;
+      font-size: 14px;
+      line-height: 1.5;
+      min-height: 100vh;
+    }
+
+    /* Top bar */
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(13, 11, 20, 0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      padding: 0 32px;
+      height: 52px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .topbar-brand {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-muted);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .topbar-user {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text-primary);
+    }
+
+    .topbar-date {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    /* Layout */
+    .layout {
+      display: grid;
+      grid-template-columns: 220px 1fr;
+      min-height: calc(100vh - 52px);
+    }
+
+    /* Sidebar */
+    .sidebar {
+      border-right: 1px solid var(--border);
+      padding: 32px 0;
+      position: sticky;
+      top: 52px;
+      height: calc(100vh - 52px);
+      overflow-y: auto;
+    }
+
+    .sidebar-section {
+      padding: 0 20px;
+      margin-bottom: 32px;
+    }
+
+    .sidebar-label {
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 12px;
+    }
+
+    .sidebar-identity {
+      text-align: center;
+      padding: 0 20px 32px;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 32px;
+    }
+
+    .avatar {
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      background: var(--accent-dim);
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      margin: 0 auto 12px;
+    }
+
+    .user-name {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 4px;
+    }
+
+    .user-sub {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .sidebar-stat {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 6px 0;
+    }
+
+    .stat-key {
+      font-size: 12px;
+      color: var(--text-secondary);
+    }
+
+    .stat-val {
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--text-primary);
+    }
+
+    .stat-tag {
+      display: inline-block;
+      font-size: 10px;
+      padding: 2px 6px;
+      border-radius: 3px;
+      background: var(--accent-dim);
+      color: var(--accent-warm);
+      font-weight: 500;
+    }
+
+    /* Main content */
+    .main {
+      padding: 32px 40px;
+      max-width: 900px;
+    }
+
+    /* Section header */
+    .section-header {
+      display: flex;
+      align-items: baseline;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    .section-title {
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+    }
+
+    .section-line {
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+
+    /* Fortune hero */
+    .fortune-hero {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 28px 32px;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 40px;
+    }
+
+    .fortune-score-block {
+      flex-shrink: 0;
+    }
+
+    .fortune-score {
+      font-size: 72px;
+      font-weight: 700;
+      color: var(--accent-warm);
+      line-height: 1;
+      letter-spacing: -2px;
+    }
+
+    .fortune-score-label {
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-top: 4px;
+      letter-spacing: 0.06em;
+    }
+
+    .fortune-divider {
+      width: 1px;
+      height: 80px;
+      background: var(--border);
+    }
+
+    .fortune-body {
+      flex: 1;
+    }
+
+    .fortune-month {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 8px;
+    }
+
+    .fortune-text {
+      font-size: 13px;
+      color: var(--text-secondary);
+      line-height: 1.7;
+    }
+
+    /* Domains row */
+    .domains-row {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 8px;
+      margin-bottom: 32px;
+    }
+
+    .domain-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 14px 10px;
+      text-align: center;
+      transition: border-color 0.15s;
+    }
+
+    .domain-card:hover {
+      border-color: rgba(139, 92, 246, 0.3);
+    }
+
+    .domain-score {
+      font-size: 26px;
+      font-weight: 700;
+      color: var(--accent-warm);
+      letter-spacing: -0.5px;
+      line-height: 1;
+    }
+
+    .domain-name {
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-top: 5px;
+    }
+
+    .domain-bar {
+      width: 100%;
+      height: 2px;
+      background: var(--border);
+      border-radius: 1px;
+      margin-top: 8px;
+      overflow: hidden;
+    }
+
+    .domain-bar-fill {
+      height: 100%;
+      background: var(--accent);
+      border-radius: 1px;
+    }
+
+    /* Two column grid */
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 32px;
+    }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 22px 24px;
+    }
+
+    .card-title {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 16px;
+    }
+
+    /* 四柱命式 */
+    .pillars-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+    }
+
+    .pillar-cell {
+      text-align: center;
+    }
+
+    .pillar-header {
+      font-size: 10px;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+    }
+
+    .pillar-kan {
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--text-primary);
+      line-height: 1.2;
+    }
+
+    .pillar-shi {
+      font-size: 14px;
+      color: var(--accent-warm);
+      margin-top: 2px;
+    }
+
+    .pillar-element {
+      font-size: 10px;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+
+    /* 五行 */
+    .gogyou-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .gogyou-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .gogyou-name {
+      font-size: 12px;
+      color: var(--text-secondary);
+      width: 20px;
+      flex-shrink: 0;
+    }
+
+    .gogyou-track {
+      flex: 1;
+      height: 4px;
+      background: var(--border);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+
+    .gogyou-fill {
+      height: 100%;
+      border-radius: 2px;
+    }
+
+    .gogyou-pct {
+      font-size: 11px;
+      color: var(--text-muted);
+      width: 32px;
+      text-align: right;
+      flex-shrink: 0;
+    }
+
+    /* Astro row */
+    .astro-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .astro-tag {
+      font-size: 12px;
+      padding: 4px 10px;
+      border-radius: 4px;
+      border: 1px solid var(--border);
+      color: var(--text-secondary);
+    }
+
+    .astro-tag.primary {
+      background: var(--accent-dim);
+      border-color: rgba(139, 92, 246, 0.2);
+      color: var(--accent-warm);
+    }
+
+    /* 運星 block */
+    .stars-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 10px;
+    }
+
+    .star-item {
+      text-align: center;
+      padding: 12px 8px;
+      background: var(--surface2);
+      border-radius: 6px;
+    }
+
+    .star-val {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+
+    .star-key {
+      font-size: 10px;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+
+    /* Chart */
+    .chart-wrap {
+      position: relative;
+      height: 260px;
+    }
+
+    /* Traits */
+    .traits-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .trait-row {
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+    }
+
+    .trait-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--accent);
+      margin-top: 5px;
+      flex-shrink: 0;
+    }
+
+    .trait-text {
+      font-size: 13px;
+      color: var(--text-secondary);
+      line-height: 1.6;
+    }
+
+    /* 今月のアドバイス */
+    .advice-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .advice-item {
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+    }
+
+    .advice-num {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--accent-warm);
+      min-width: 18px;
+    }
+
+    .advice-text {
+      font-size: 13px;
+      color: var(--text-secondary);
+      line-height: 1.6;
+    }
+
+    /* Footer */
+    .footer {
+      margin-top: 48px;
+      padding-top: 20px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .footer-brand {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .footer-note {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .layout { grid-template-columns: 1fr; }
+      .sidebar { position: static; height: auto; border-right: none; border-bottom: 1px solid var(--border); }
+      .domains-row { grid-template-columns: repeat(3, 1fr); }
+      .grid-2 { grid-template-columns: 1fr; }
+      .fortune-hero { flex-direction: column; gap: 20px; }
+      .fortune-divider { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top bar -->
+  <div class="topbar">
+    <span class="topbar-brand">Self Insight</span>
+    <span class="topbar-user">手嶋 静</span>
+    <span class="topbar-date">2026年5月</span>
+  </div>
+
+  <div class="layout">
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="sidebar-identity">
+        <div class="avatar">静</div>
+        <div class="user-name">手嶋 静</div>
+        <div class="user-sub">1944年9月25日生 · AB型</div>
+      </div>
+
+      <div class="sidebar-section">
+        <div class="sidebar-label">基本情報</div>
+        <div class="sidebar-stat">
+          <span class="stat-key">年齢</span>
+          <span class="stat-val">81歳</span>
+        </div>
+        <div class="sidebar-stat">
+          <span class="stat-key">血液型</span>
+          <span class="stat-tag">AB型</span>
+        </div>
+        <div class="sidebar-stat">
+          <span class="stat-key">星座</span>
+          <span class="stat-val">天秤座 ♎</span>
+        </div>
+      </div>
+
+      <div class="sidebar-section">
+        <div class="sidebar-label">四柱推命</div>
+        <div class="sidebar-stat">
+          <span class="stat-key">日主</span>
+          <span class="stat-val">壬 (水)</span>
+        </div>
+        <div class="sidebar-stat">
+          <span class="stat-key">用神</span>
+          <span class="stat-val">金・水</span>
+        </div>
+      </div>
+
+      <div class="sidebar-section">
+        <div class="sidebar-label">年運・月運</div>
+        <div class="sidebar-stat">
+          <span class="stat-key">九星</span>
+          <span class="stat-val">二黒土星</span>
+        </div>
+        <div class="sidebar-stat">
+          <span class="stat-key">六星</span>
+          <span class="stat-val">火星人 +</span>
+        </div>
+        <div class="sidebar-stat">
+          <span class="stat-key">2026大運</span>
+          <span class="stat-tag">安定期</span>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main -->
+    <main class="main">
+
+      <!-- Fortune hero -->
+      <div class="section-header">
+        <span class="section-title">2026年5月 運勢</span>
+        <div class="section-line"></div>
+      </div>
+
+      <div class="fortune-hero" style="margin-bottom: 32px;">
+        <div class="fortune-score-block">
+          <div class="fortune-score">85</div>
+          <div class="fortune-score-label">フォーチュン・インデックス</div>
+        </div>
+        <div class="fortune-divider"></div>
+        <div class="fortune-body">
+          <div class="fortune-month">創造と内省が交わる月</div>
+          <div class="fortune-text">
+            壬水の流れが金の支援を得て澄む時期。新しいアイデアが浮かびやすく、対人関係は調和的。
+            九星の影響で家庭や身近な人との絆を深める機会が増える。財運は安定しており、
+            無理な動きを避ければ着実な蓄積が続く。
+          </div>
+        </div>
+      </div>
+
+      <!-- 6 Domains -->
+      <div class="section-header">
+        <span class="section-title">人生6領域スコア</span>
+        <div class="section-line"></div>
+      </div>
+
+      <div class="domains-row">
+        <div class="domain-card">
+          <div class="domain-score">72</div>
+          <div class="domain-name">仕事</div>
+          <div class="domain-bar"><div class="domain-bar-fill" style="width:72%"></div></div>
+        </div>
+        <div class="domain-card">
+          <div class="domain-score">88</div>
+          <div class="domain-name">精神</div>
+          <div class="domain-bar"><div class="domain-bar-fill" style="width:88%"></div></div>
+        </div>
+        <div class="domain-card">
+          <div class="domain-score">85</div>
+          <div class="domain-name">恋愛</div>
+          <div class="domain-bar"><div class="domain-bar-fill" style="width:85%"></div></div>
+        </div>
+        <div class="domain-card">
+          <div class="domain-score">68</div>
+          <div class="domain-name">財運</div>
+          <div class="domain-bar"><div class="domain-bar-fill" style="width:68%"></div></div>
+        </div>
+        <div class="domain-card">
+          <div class="domain-score">78</div>
+          <div class="domain-name">健康</div>
+          <div class="domain-bar"><div class="domain-bar-fill" style="width:78%"></div></div>
+        </div>
+        <div class="domain-card">
+          <div class="domain-score">82</div>
+          <div class="domain-name">家庭</div>
+          <div class="domain-bar"><div class="domain-bar-fill" style="width:82%"></div></div>
+        </div>
+      </div>
+
+      <!-- Grid: 四柱 + 五行 -->
+      <div class="section-header">
+        <span class="section-title">命式・五行</span>
+        <div class="section-line"></div>
+      </div>
+
+      <div class="grid-2" style="margin-bottom: 32px;">
+        <div class="card">
+          <div class="card-title">四柱命式</div>
+          <div class="pillars-grid">
+            <div class="pillar-cell">
+              <div class="pillar-header">年柱</div>
+              <div class="pillar-kan">甲</div>
+              <div class="pillar-shi">午</div>
+              <div class="pillar-element">木 / 火</div>
+            </div>
+            <div class="pillar-cell">
+              <div class="pillar-header">月柱</div>
+              <div class="pillar-kan">癸</div>
+              <div class="pillar-shi">酉</div>
+              <div class="pillar-element">水 / 金</div>
+            </div>
+            <div class="pillar-cell">
+              <div class="pillar-header">日柱</div>
+              <div class="pillar-kan" style="color: var(--accent-warm);">壬</div>
+              <div class="pillar-shi" style="color: var(--gold);">子</div>
+              <div class="pillar-element">水 / 水</div>
+            </div>
+            <div class="pillar-cell">
+              <div class="pillar-header">時柱</div>
+              <div class="pillar-kan">庚</div>
+              <div class="pillar-shi">申</div>
+              <div class="pillar-element">金 / 金</div>
+            </div>
+          </div>
+          <div style="margin-top: 16px; padding-top: 14px; border-top: 1px solid var(--border);">
+            <div style="font-size: 11px; color: var(--text-muted); margin-bottom: 6px;">命式の読み方</div>
+            <div style="font-size: 12px; color: var(--text-secondary); line-height: 1.7;">
+              日主・壬水は「大海の水」。深く静かに流れ、物事の本質を見通す洞察力を持つ。
+              金運・水運が強く、財運や精神的充実に恵まれる命式。
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-title">五行バランス</div>
+          <div class="gogyou-list">
+            <div class="gogyou-row">
+              <span class="gogyou-name">火</span>
+              <div class="gogyou-track">
+                <div class="gogyou-fill" style="width:0%; background:#ef4444;"></div>
+              </div>
+              <span class="gogyou-pct" style="color:#ef4444">0%</span>
+            </div>
+            <div class="gogyou-row">
+              <span class="gogyou-name">金</span>
+              <div class="gogyou-track">
+                <div class="gogyou-fill" style="width:33%; background:#C9A84C;"></div>
+              </div>
+              <span class="gogyou-pct" style="color:#C9A84C">33%</span>
+            </div>
+            <div class="gogyou-row">
+              <span class="gogyou-name">水</span>
+              <div class="gogyou-track">
+                <div class="gogyou-fill" style="width:33%; background:#60a5fa;"></div>
+              </div>
+              <span class="gogyou-pct" style="color:#60a5fa">33%</span>
+            </div>
+            <div class="gogyou-row">
+              <span class="gogyou-name">土</span>
+              <div class="gogyou-track">
+                <div class="gogyou-fill" style="width:24%; background:#a8a07a;"></div>
+              </div>
+              <span class="gogyou-pct" style="color:#a8a07a">24%</span>
+            </div>
+            <div class="gogyou-row">
+              <span class="gogyou-name">木</span>
+              <div class="gogyou-track">
+                <div class="gogyou-fill" style="width:10%; background:#22c55e;"></div>
+              </div>
+              <span class="gogyou-pct" style="color:#22c55e">10%</span>
+            </div>
+          </div>
+          <div style="margin-top: 16px; padding-top: 14px; border-top: 1px solid var(--border);">
+            <div style="font-size: 11px; color: var(--text-muted); margin-bottom: 6px;">バランス診断</div>
+            <div style="font-size: 12px; color: var(--text-secondary); line-height: 1.7;">
+              火気ゼロは感情の爆発が少なく安定した判断力の源。金水が均衡して知性と直感が高水準。
+              木を補う緑の食材・自然との接触がバランスを整える。
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Grid: 占星術 + 運星 -->
+      <div class="section-header">
+        <span class="section-title">星座・運星</span>
+        <div class="section-line"></div>
+      </div>
+
+      <div class="grid-2" style="margin-bottom: 32px;">
+        <div class="card">
+          <div class="card-title">西洋占星術</div>
+          <div class="astro-tags" style="margin-bottom: 14px;">
+            <span class="astro-tag primary">太陽 天秤座 ♎</span>
+            <span class="astro-tag">月 射手座 ♐</span>
+            <span class="astro-tag">上昇 山羊座 ♑</span>
+          </div>
+          <div style="font-size: 12px; color: var(--text-secondary); line-height: 1.7;">
+            天秤座は調和と美、知性と公正さを象徴。人間関係の構築に天性の才を持ち、
+            対話を通じて真実を見出す。月星座・射手座が広い視野と精神的自由への渇望を加える。
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-title">東洋占術 — 運星</div>
+          <div class="stars-grid">
+            <div class="star-item">
+              <div class="star-val">二黒</div>
+              <div class="star-key">九星 (土星)</div>
+            </div>
+            <div class="star-item">
+              <div class="star-val">火星人</div>
+              <div class="star-key">六星 (+)</div>
+            </div>
+            <div class="star-item">
+              <div class="star-val">AB型</div>
+              <div class="star-key">血液型</div>
+            </div>
+          </div>
+          <div style="margin-top: 14px; font-size: 12px; color: var(--text-secondary); line-height: 1.7;">
+            二黒土星は大地の星。2026年は「収穫」の年周期に入り、
+            これまでの積み重ねが形となって現れる。火星人(+)の行動力が好転を後押し。
+          </div>
+        </div>
+      </div>
+
+      <!-- Grid: Radar + Advice -->
+      <div class="section-header">
+        <span class="section-title">レーダー / 今月のアドバイス</span>
+        <div class="section-line"></div>
+      </div>
+
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-title">6領域レーダー</div>
+          <div class="chart-wrap">
+            <canvas id="radar"></canvas>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-title">今月のアドバイス</div>
+          <div class="advice-list">
+            <div class="advice-item">
+              <span class="advice-num">1.</span>
+              <span class="advice-text">5月中旬に金運の高まりあり。収入増のチャンスは受け身で待たず、自ら動いて摑む。</span>
+            </div>
+            <div class="advice-item">
+              <span class="advice-num">2.</span>
+              <span class="advice-text">人間関係で誤解が生じやすい時期。「言わなくても伝わる」は禁物。明確に言葉で確認を。</span>
+            </div>
+            <div class="advice-item">
+              <span class="advice-num">3.</span>
+              <span class="advice-text">精神スコア88は今月の強み。直感を信じて動くと、思わぬ良縁や発見が生まれる。</span>
+            </div>
+            <div class="advice-item">
+              <span class="advice-num">4.</span>
+              <span class="advice-text">体調管理は腎臓と下肢を重点に。水をよく飲み、冷えを避けることが月運を底上げする。</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <div class="footer">
+        <span class="footer-brand">Self Insight — iUMA Mystic</span>
+        <span class="footer-note">占術・心理学・確率論の統合鑑定。参考情報として活用ください。</span>
+      </div>
+
+    </main>
+  </div>
+
+  <script>
+    const ctx = document.getElementById('radar').getContext('2d');
+    new Chart(ctx, {
+      type: 'radar',
+      data: {
+        labels: ['仕事', '精神', '恋愛', '財運', '健康', '家庭'],
+        datasets: [{
+          label: '運勢スコア',
+          data: [72, 88, 85, 68, 78, 82],
+          borderColor: '#8B5CF6',
+          backgroundColor: 'rgba(139,92,246,0.12)',
+          borderWidth: 1.5,
+          pointBackgroundColor: '#C9A84C',
+          pointBorderColor: '#8B5CF6',
+          pointRadius: 4,
+          pointHoverRadius: 6,
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { display: false }
+        },
+        scales: {
+          r: {
+            beginAtZero: true,
+            max: 100,
+            ticks: {
+              color: '#504B66',
+              font: { size: 10 },
+              stepSize: 25,
+              backdropColor: 'transparent'
+            },
+            grid: { color: 'rgba(255,255,255,0.05)' },
+            angleLines: { color: 'rgba(255,255,255,0.05)' },
+            pointLabels: {
+              color: '#9089A8',
+              font: { family: "'Noto Sans JP'", size: 12 }
+            }
+          }
+        }
+      }
+    });
+  </script>
+</body>
+</html>

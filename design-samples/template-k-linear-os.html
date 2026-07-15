@@ -1,0 +1,839 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Self Insight OS — 手嶋静</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Sans+JP:wght@300;400;500&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <style>
+        /* CSS Variables — iUMA Mystic */
+        :root {
+            --bg: #0D0B14;
+            --surface: #1A1626;
+            --surface2: #251E36;
+            --border: #2E2545;
+            --gold: #C9A84C;
+            --accent: #8B5CF6;
+            --accent-warm: #A78BFA;
+            --text-primary: #F5F0E8;
+            --text-secondary: #A89EC0;
+            --text-muted: #6B6285;
+
+            --spacing: 4px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', 'Noto Sans JP', sans-serif;
+            background-color: var(--bg);
+            color: var(--text-primary);
+            line-height: 1.4;
+            font-size: 13px;
+        }
+
+        /* Header */
+        .header {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            height: 48px;
+            background-color: var(--surface);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            padding: 0 calc(var(--spacing) * 4);
+            gap: calc(var(--spacing) * 4);
+        }
+
+        .header-logo {
+            font-weight: 600;
+            font-size: 13px;
+            letter-spacing: -0.3px;
+            flex: 0 0 auto;
+        }
+
+        .header-center {
+            flex: 1;
+            text-align: center;
+            font-weight: 500;
+            font-size: 13px;
+        }
+
+        .header-date {
+            font-size: 12px;
+            color: var(--text-secondary);
+            flex: 0 0 auto;
+        }
+
+        /* Layout */
+        .container {
+            display: flex;
+            height: calc(100vh - 48px);
+            overflow: hidden;
+        }
+
+        .sidebar {
+            width: 240px;
+            background-color: var(--surface);
+            border-right: 1px solid var(--border);
+            padding: calc(var(--spacing) * 4);
+            overflow-y: auto;
+            flex-shrink: 0;
+        }
+
+        .sidebar-section {
+            margin-bottom: calc(var(--spacing) * 6);
+        }
+
+        .sidebar-label {
+            font-size: 11px;
+            color: var(--text-muted);
+            font-weight: 600;
+            letter-spacing: 0.3px;
+            text-transform: uppercase;
+            margin-bottom: calc(var(--spacing) * 2);
+        }
+
+        .sidebar-nav {
+            display: flex;
+            flex-direction: column;
+            gap: calc(var(--spacing) * 1);
+        }
+
+        .nav-item {
+            padding: calc(var(--spacing) * 2) calc(var(--spacing) * 3);
+            border-radius: 4px;
+            font-size: 12px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            border: 1px solid transparent;
+        }
+
+        .nav-item:hover {
+            background-color: var(--surface2);
+            color: var(--text-primary);
+            border-color: var(--border);
+        }
+
+        .nav-item.active {
+            background-color: var(--surface2);
+            color: var(--accent);
+            border-color: var(--accent);
+        }
+
+        .main-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: calc(var(--spacing) * 6);
+            max-width: 1200px;
+        }
+
+        /* Sections */
+        .section {
+            margin-bottom: calc(var(--spacing) * 8);
+        }
+
+        .section-divider {
+            height: 1px;
+            background-color: var(--border);
+            margin: calc(var(--spacing) * 8) 0;
+        }
+
+        .section-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-primary);
+            letter-spacing: -0.3px;
+            margin-bottom: calc(var(--spacing) * 4);
+        }
+
+        .section-subtitle {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-bottom: calc(var(--spacing) * 3);
+        }
+
+        /* Identity */
+        .identity-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: calc(var(--spacing) * 6);
+        }
+
+        .identity-item {
+            padding: calc(var(--spacing) * 4);
+            background-color: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+        }
+
+        .identity-label {
+            font-size: 11px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+            margin-bottom: calc(var(--spacing) * 2);
+        }
+
+        .identity-value {
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--text-primary);
+            letter-spacing: -0.4px;
+        }
+
+        /* Quote */
+        .quote {
+            padding: calc(var(--spacing) * 4);
+            background-color: var(--surface);
+            border-left: 3px solid var(--accent);
+            border-radius: 6px;
+            font-size: 13px;
+            color: var(--text-secondary);
+            font-style: italic;
+            margin-bottom: calc(var(--spacing) * 4);
+        }
+
+        /* Four Pillars */
+        .pillars-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: calc(var(--spacing) * 3);
+        }
+
+        .pillar {
+            padding: calc(var(--spacing) * 4);
+            background-color: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            text-align: center;
+        }
+
+        .pillar-label {
+            font-size: 11px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+            margin-bottom: calc(var(--spacing) * 2);
+        }
+
+        .pillar-value {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--accent);
+            letter-spacing: -0.4px;
+            margin-bottom: calc(var(--spacing) * 1);
+        }
+
+        .pillar-element {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        /* Five Elements */
+        .elements-grid {
+            display: flex;
+            flex-direction: column;
+            gap: calc(var(--spacing) * 4);
+        }
+
+        .element-row {
+            display: flex;
+            align-items: center;
+            gap: calc(var(--spacing) * 4);
+        }
+
+        .element-label {
+            font-size: 12px;
+            font-weight: 500;
+            color: var(--text-primary);
+            min-width: 32px;
+        }
+
+        .element-bar-wrapper {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            gap: calc(var(--spacing) * 2);
+        }
+
+        .element-bar {
+            flex: 1;
+            height: 24px;
+            background-color: var(--surface2);
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .element-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent) 0%, var(--accent-warm) 100%);
+            border-radius: 3px;
+            transition: width 0.3s ease;
+        }
+
+        .element-bar.empty .element-bar-fill {
+            width: 0;
+            background: transparent;
+        }
+
+        .element-bar.empty::after {
+            content: '−';
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            color: var(--text-muted);
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .element-percent {
+            font-size: 12px;
+            color: var(--text-secondary);
+            min-width: 36px;
+            text-align: right;
+        }
+
+        /* Domain Scores */
+        .domains-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: calc(var(--spacing) * 4);
+        }
+
+        .domain-tile {
+            padding: calc(var(--spacing) * 5);
+            background-color: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            min-height: 140px;
+        }
+
+        .domain-label {
+            font-size: 11px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+            margin-bottom: calc(var(--spacing) * 3);
+        }
+
+        .domain-score {
+            font-size: 48px;
+            font-weight: 700;
+            color: var(--accent);
+            letter-spacing: -0.5px;
+            line-height: 1;
+        }
+
+        .domain-unit {
+            font-size: 11px;
+            color: var(--text-secondary);
+            margin-top: calc(var(--spacing) * 1);
+        }
+
+        /* Chart Section */
+        .chart-container {
+            background-color: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: calc(var(--spacing) * 4);
+            margin-bottom: calc(var(--spacing) * 4);
+        }
+
+        .chart-wrapper {
+            position: relative;
+            height: 300px;
+        }
+
+        /* Monthly Fortune */
+        .monthly-fortune {
+            padding: calc(var(--spacing) * 5);
+            background-color: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+        }
+
+        .monthly-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            margin-bottom: calc(var(--spacing) * 4);
+        }
+
+        .monthly-title {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-primary);
+            letter-spacing: -0.3px;
+        }
+
+        .monthly-score {
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--accent);
+            letter-spacing: -0.4px;
+        }
+
+        .monthly-detail {
+            font-size: 12px;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        /* Blueprint */
+        .blueprint-box {
+            padding: calc(var(--spacing) * 4);
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.08) 0%, rgba(167, 139, 250, 0.04) 100%);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            border-left: 3px solid var(--gold);
+        }
+
+        .blueprint-label {
+            font-size: 11px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+            margin-bottom: calc(var(--spacing) * 2);
+        }
+
+        .blueprint-text {
+            font-size: 13px;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        /* Footer */
+        .footer {
+            margin-top: calc(var(--spacing) * 12);
+            padding-top: calc(var(--spacing) * 6);
+            border-top: 1px solid var(--border);
+            font-size: 11px;
+            color: var(--text-muted);
+            text-align: center;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+            }
+
+            .sidebar {
+                width: 100%;
+                height: auto;
+                border-right: none;
+                border-bottom: 1px solid var(--border);
+                display: flex;
+                overflow-x: auto;
+            }
+
+            .sidebar-section {
+                margin-right: calc(var(--spacing) * 6);
+                margin-bottom: 0;
+            }
+
+            .main-content {
+                padding: calc(var(--spacing) * 4);
+            }
+
+            .identity-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .pillars-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .domains-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .header {
+                flex-direction: column;
+                height: auto;
+                gap: calc(var(--spacing) * 2);
+                padding: calc(var(--spacing) * 2);
+            }
+
+            .header-center, .header-date {
+                flex: 1;
+            }
+
+            .pillars-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .domains-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Scrollbar styling */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--border);
+            border-radius: 3px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--text-muted);
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <div class="header">
+        <div class="header-logo">Self Insight OS</div>
+        <div class="header-center">手嶋静</div>
+        <div class="header-date">2026.05</div>
+    </div>
+
+    <!-- Main Layout -->
+    <div class="container">
+        <!-- Sidebar Navigation -->
+        <div class="sidebar">
+            <div class="sidebar-section">
+                <div class="sidebar-label">Navigation</div>
+                <div class="sidebar-nav">
+                    <a class="nav-item active" onclick="scrollToSection('identity')">命式</a>
+                    <a class="nav-item" onclick="scrollToSection('elements')">五行</a>
+                    <a class="nav-item" onclick="scrollToSection('domains')">領域</a>
+                    <a class="nav-item" onclick="scrollToSection('annual')">年運</a>
+                    <a class="nav-item" onclick="scrollToSection('blueprint')">Blueprint</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Identity Section -->
+            <div class="section" id="identity">
+                <div class="section-title">命式 & アイデンティティ</div>
+                <div class="quote">大地に宿る、深く静かな水</div>
+                <div class="identity-grid">
+                    <div class="identity-item">
+                        <div class="identity-label">Core Element</div>
+                        <div class="identity-value">壬水</div>
+                    </div>
+                    <div class="identity-item">
+                        <div class="identity-label">Nine Star</div>
+                        <div class="identity-value">二黒土星</div>
+                    </div>
+                </div>
+
+                <div class="section-divider"></div>
+
+                <div class="section-subtitle">四柱推命</div>
+                <div class="pillars-grid">
+                    <div class="pillar">
+                        <div class="pillar-label">年柱</div>
+                        <div class="pillar-value">丁巳</div>
+                        <div class="pillar-element">偏財</div>
+                    </div>
+                    <div class="pillar">
+                        <div class="pillar-label">月柱</div>
+                        <div class="pillar-value">甲子</div>
+                        <div class="pillar-element">比肩</div>
+                    </div>
+                    <div class="pillar">
+                        <div class="pillar-label">日柱</div>
+                        <div class="pillar-value">壬辰</div>
+                        <div class="pillar-element">日主</div>
+                    </div>
+                    <div class="pillar">
+                        <div class="pillar-label">時柱</div>
+                        <div class="pillar-value">庚申</div>
+                        <div class="pillar-element">偏印</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section-divider"></div>
+
+            <!-- Five Elements Section -->
+            <div class="section" id="elements">
+                <div class="section-title">五行バランス</div>
+                <div class="elements-grid">
+                    <div class="element-row">
+                        <div class="element-label">木</div>
+                        <div class="element-bar-wrapper">
+                            <div class="element-bar">
+                                <div class="element-bar-fill" style="width: 30%"></div>
+                            </div>
+                            <div class="element-percent">30%</div>
+                        </div>
+                    </div>
+                    <div class="element-row">
+                        <div class="element-label">火</div>
+                        <div class="element-bar-wrapper">
+                            <div class="element-bar empty">
+                                <div class="element-bar-fill"></div>
+                            </div>
+                            <div class="element-percent">0% <span style="color: var(--text-muted); font-size: 11px;">※ 要補強</span></div>
+                        </div>
+                    </div>
+                    <div class="element-row">
+                        <div class="element-label">土</div>
+                        <div class="element-bar-wrapper">
+                            <div class="element-bar">
+                                <div class="element-bar-fill" style="width: 35%"></div>
+                            </div>
+                            <div class="element-percent">35%</div>
+                        </div>
+                    </div>
+                    <div class="element-row">
+                        <div class="element-label">金</div>
+                        <div class="element-bar-wrapper">
+                            <div class="element-bar">
+                                <div class="element-bar-fill" style="width: 25%"></div>
+                            </div>
+                            <div class="element-percent">25%</div>
+                        </div>
+                    </div>
+                    <div class="element-row">
+                        <div class="element-label">水</div>
+                        <div class="element-bar-wrapper">
+                            <div class="element-bar">
+                                <div class="element-bar-fill" style="width: 10%"></div>
+                            </div>
+                            <div class="element-percent">10%</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section-divider"></div>
+
+            <!-- Domain Scores Section -->
+            <div class="section" id="domains">
+                <div class="section-title">人生6領域スコア</div>
+                <div class="domains-grid">
+                    <div class="domain-tile">
+                        <div class="domain-label">仕事</div>
+                        <div class="domain-score">78</div>
+                        <div class="domain-unit">/100</div>
+                    </div>
+                    <div class="domain-tile">
+                        <div class="domain-label">恋愛</div>
+                        <div class="domain-score">82</div>
+                        <div class="domain-unit">/100</div>
+                    </div>
+                    <div class="domain-tile">
+                        <div class="domain-label">財運</div>
+                        <div class="domain-score">65</div>
+                        <div class="domain-unit">/100</div>
+                    </div>
+                    <div class="domain-tile">
+                        <div class="domain-label">健康</div>
+                        <div class="domain-score">88</div>
+                        <div class="domain-unit">/100</div>
+                    </div>
+                    <div class="domain-tile">
+                        <div class="domain-label">家庭</div>
+                        <div class="domain-score">71</div>
+                        <div class="domain-unit">/100</div>
+                    </div>
+                    <div class="domain-tile">
+                        <div class="domain-label">精神</div>
+                        <div class="domain-score">85</div>
+                        <div class="domain-unit">/100</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section-divider"></div>
+
+            <!-- Annual Fortune Section -->
+            <div class="section" id="annual">
+                <div class="section-title">年運推移 2024–2032</div>
+                <div class="chart-container">
+                    <div class="chart-wrapper">
+                        <canvas id="fortuneChart"></canvas>
+                    </div>
+                </div>
+
+                <div class="section-subtitle">2026年5月 月運</div>
+                <div class="monthly-fortune">
+                    <div class="monthly-header">
+                        <div class="monthly-title">今月の運勢</div>
+                        <div class="monthly-score">84</div>
+                    </div>
+                    <div class="monthly-detail">
+                        創造性と直感が最高潮。新しいプロジェクト開始の吉。積極的な行動が吉を呼び込む時期。
+                    </div>
+                </div>
+            </div>
+
+            <div class="section-divider"></div>
+
+            <!-- Blueprint Section -->
+            <div class="section" id="blueprint">
+                <div class="section-title">Life Blueprint</div>
+                <div class="blueprint-box">
+                    <div class="blueprint-label">Core Principle</div>
+                    <div class="blueprint-text">
+                        壬水の流れを途切れさせない — 交流と動きが鍵。停滞を避け、柔軟性を保ちながら確実に目標へ進む。火の要素が不足しているため、情熱と行動力を意識的に高める必要がある。
+                    </div>
+                </div>
+            </div>
+
+            <!-- Footer -->
+            <div class="footer">
+                Self Insight · 2026 · 手嶋静
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Chart initialization
+        const ctx = document.getElementById('fortuneChart').getContext('2d');
+        const chart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: ['2024', '2025', '2026', '2027', '2028', '2029', '2030', '2031', '2032'],
+                datasets: [
+                    {
+                        label: '九星気学',
+                        data: [75, 100, 90, 80, 40, 70, 30, 45, 65],
+                        borderColor: '#8B5CF6',
+                        backgroundColor: 'rgba(139, 92, 246, 0.08)',
+                        fill: true,
+                        tension: 0.4,
+                        borderWidth: 2,
+                        pointBackgroundColor: '#8B5CF6',
+                        pointBorderColor: '#1A1626',
+                        pointBorderWidth: 2,
+                        pointRadius: 5,
+                        pointHoverRadius: 7,
+                    },
+                    {
+                        label: '六星占術',
+                        data: [80, 35, 90, 25, 70, 85, 95, 15, 10],
+                        borderColor: '#A78BFA',
+                        backgroundColor: 'rgba(167, 139, 250, 0.04)',
+                        fill: false,
+                        tension: 0.4,
+                        borderWidth: 2,
+                        borderDash: [4, 4],
+                        pointBackgroundColor: '#A78BFA',
+                        pointBorderColor: '#1A1626',
+                        pointBorderWidth: 2,
+                        pointRadius: 5,
+                        pointHoverRadius: 7,
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                interaction: {
+                    mode: 'index',
+                    intersect: false,
+                },
+                plugins: {
+                    legend: {
+                        display: true,
+                        labels: {
+                            color: '#A89EC0',
+                            font: { size: 12, weight: '500' },
+                            padding: 16,
+                            usePointStyle: true,
+                        },
+                        align: 'end',
+                    },
+                    filler: {
+                        propagate: true,
+                    },
+                },
+                scales: {
+                    y: {
+                        type: 'linear',
+                        display: true,
+                        position: 'left',
+                        min: 0,
+                        max: 100,
+                        ticks: {
+                            color: '#6B6285',
+                            font: { size: 11 },
+                            stepSize: 20,
+                        },
+                        grid: {
+                            color: '#2E2545',
+                            drawBorder: false,
+                        },
+                    },
+                    x: {
+                        ticks: {
+                            color: '#6B6285',
+                            font: { size: 11 },
+                        },
+                        grid: {
+                            display: false,
+                            drawBorder: false,
+                        },
+                    },
+                },
+            },
+        });
+
+        // Navigation scroll
+        function scrollToSection(sectionId) {
+            const section = document.getElementById(sectionId);
+            if (section) {
+                section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                updateActiveNav(sectionId);
+            }
+        }
+
+        function updateActiveNav(sectionId) {
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            document.querySelector(`[onclick="scrollToSection('${sectionId}')"]`).classList.add('active');
+        }
+
+        // Update active nav on scroll
+        document.querySelector('.main-content').addEventListener('scroll', () => {
+            const sections = ['identity', 'elements', 'domains', 'annual', 'blueprint'];
+            const mainContent = document.querySelector('.main-content');
+
+            for (const sectionId of sections) {
+                const section = document.getElementById(sectionId);
+                const rect = section.getBoundingClientRect();
+                const contentRect = mainContent.getBoundingClientRect();
+
+                if (rect.top <= contentRect.top + 200) {
+                    updateActiveNav(sectionId);
+                }
+            }
+        });
+    </script>
+</body>
+</html>

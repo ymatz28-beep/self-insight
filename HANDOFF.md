@@ -1,8 +1,8 @@
 # Self-Insight — HANDOFF
 
-## [Constancy] 2026-05-03
-- [ERROR] structural_reform: [ESCALATED: 18d unresolved] generate_dashboard.py is 3852 lines (threshold: 800). Consider splitting.
-- [WARN] post_change_testing: self-insight: 直近7時間以内に変更あり、テスト証跡なし（self-insight/.test_ok）
+## [Auto-Kaizen] 2026-07-08
+- [WARN] self-insight/HANDOFF.md not updated in 7 days (threshold: 7).
+
 
 ## Last Updated
 2026-05-02 Session — 競合・ユーザーニーズ調査完了 + 年齢対応型ナラティブ深化（母・妹ダッシュボード再生成）
@@ -68,6 +68,13 @@
 
 ## Next Actions（優先順）
 
+### 🎨 デザインリニューアル（2026-05-10 議論中）
+- **テンプレ探索結果**: G（星図型）/ H（タイムライン型）/ I（ベントグリッド型）を新規作成 → `design-samples/` に保存済み。GHIが質的にA〜Fより大幅に高評価
+- **外部テンプレ候補**: Cosmic Tarot (TemplateMonster $32) / Horoscope 128 (Webflow) / Horoscope All-in-One (ThemeForest $12) / GitHub: astro-website (free) — プレビュー確認中
+- **方針検討中**: GHIのいいとこどり or 外部テンプレをベースに iUMA Mystic カラーで上書き
+- **横展開TODO**: 他PJダッシュボード（health-tracker / stock-analyzer / wealth-strategy等）も同水準のデザインにアップデートしたい。self-insightで確立したデザインパターンを横展開する
+
+0. **【デザイン選定】** テンプレ方針決定 → `users/8c858d57/index.html` に適用（手嶋静本番ページ）
 1. **3 名フィードバック収集**（1 週間窓）: 母・妹・Yuma がそれぞれ読み、占い師型トーンの違和感・内容精度・UI を評価
 2. **相性診断デプロイ**: generate_compatibility.py 動作確認 → 3 家族ペア（yuma↔shizuka, yuma↔ayako, shizuka↔ayako）生成 → `/insight/compat/{a}-{b}/` 配置 → 各個人ダッシュボードからリンク
 3. **Phase 1.5 占い師型残し**: DM_GIST / ETO_GIST / DM_STRENGTHS / 月間 narrative / compatibility narrative

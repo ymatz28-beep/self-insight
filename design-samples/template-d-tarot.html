@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>手嶋静 の鑑定書 — Self Insight Tarot</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Inter:wght@300;400;500;600&family=Noto+Sans+JP:wght@300;400;500&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    
+    :root {
+      --bg: #0D0B14;
+      --surface: #1A1626;
+      --surface2: #251E36;
+      --border: #2E2545;
+      --gold: #C9A84C;
+      --accent: #8B5CF6;
+      --accent-warm: #A78BFA;
+      --text-primary: #F5F0E8;
+      --text-secondary: #A89EC0;
+      --text-muted: #6B6285;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text-primary);
+      font-family: 'Inter', sans-serif;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    /* Animated particle/star field background */
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background-image: 
+        radial-gradient(2px 2px at 20% 30%, white, rgba(255,255,255,0)),
+        radial-gradient(2px 2px at 60% 70%, white, rgba(255,255,255,0)),
+        radial-gradient(1px 1px at 50% 50%, white, rgba(255,255,255,0)),
+        radial-gradient(1px 1px at 80% 10%, white, rgba(255,255,255,0)),
+        radial-gradient(2px 2px at 90% 60%, white, rgba(255,255,255,0)),
+        radial-gradient(1px 1px at 30% 80%, white, rgba(255,255,255,0)),
+        radial-gradient(1px 1px at 10% 40%, white, rgba(255,255,255,0));
+      background-size: 200% 200%, 250% 250%, 150% 150%, 300% 300%, 280% 280%, 180% 180%, 220% 220%;
+      background-position: 0% 0%, 40% 60%, 80% 20%, 20% 80%, 60% 40%, 90% 10%, 30% 30%;
+      animation: starDrift 120s ease-in-out infinite;
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.4;
+    }
+
+    @keyframes starDrift {
+      0% { background-position: 0% 0%, 40% 60%, 80% 20%, 20% 80%, 60% 40%, 90% 10%, 30% 30%; }
+      50% { background-position: 100% 100%, 60% 40%, 20% 80%, 80% 20%, 40% 60%, 10% 90%, 70% 70%; }
+      100% { background-position: 0% 0%, 40% 60%, 80% 20%, 20% 80%, 60% 40%, 90% 10%, 30% 30%; }
+    }
+
+    main {
+      position: relative;
+      z-index: 1;
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 60px 40px;
+    }
+
+    /* Hero Section */
+    .hero {
+      text-align: center;
+      margin-bottom: 80px;
+    }
+
+    .hero h1 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 56px;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 20px;
+      letter-spacing: 2px;
+    }
+
+    .divider {
+      width: 200px;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--gold), transparent);
+      margin: 20px auto 40px;
+    }
+
+    /* Tarot Spread Section */
+    .tarot-spread {
+      display: flex;
+      justify-content: center;
+      gap: 40px;
+      margin-bottom: 80px;
+      flex-wrap: wrap;
+    }
+
+    .tarot-card {
+      width: 200px;
+      height: 320px;
+      background: linear-gradient(135deg, #251E36 0%, #1A1626 100%);
+      border: 2px solid var(--border);
+      border-top: 2px solid var(--gold);
+      position: relative;
+      cursor: pointer;
+      transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      transform-style: preserve-3d;
+    }
+
+    .tarot-card::before {
+      content: '';
+      position: absolute;
+      top: 2px; left: 2px; right: 2px; bottom: 2px;
+      border: 1px solid rgba(201, 168, 76, 0.3);
+      pointer-events: none;
+    }
+
+    .tarot-card::after {
+      content: '';
+      position: absolute;
+      top: 12px; left: 12px; right: 12px; bottom: 12px;
+      border: 1px solid rgba(139, 92, 246, 0.2);
+      pointer-events: none;
+    }
+
+    .tarot-card:nth-child(1) {
+      transform: rotate(-5deg);
+    }
+
+    .tarot-card:nth-child(2) {
+      transform: rotate(0deg);
+    }
+
+    .tarot-card:nth-child(3) {
+      transform: rotate(5deg);
+    }
+
+    .tarot-card:hover {
+      transform: rotate(0deg) scale(1.05);
+      border-color: var(--accent-warm);
+      box-shadow: 0 0 30px rgba(167, 139, 250, 0.4);
+    }
+
+    .card-header {
+      background: linear-gradient(135deg, #8B5CF6 0%, #A78BFA 100%);
+      height: 80px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 48px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .card-body {
+      padding: 20px;
+      height: 240px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      position: relative;
+      z-index: 2;
+    }
+
+    .card-label {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 12px;
+      color: var(--text-muted);
+      letter-spacing: 3px;
+      text-transform: uppercase;
+    }
+
+    .card-keyword {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 24px;
+      font-style: italic;
+      color: var(--gold);
+      font-weight: 300;
+    }
+
+    .card-description {
+      font-size: 11px;
+      color: var(--text-secondary);
+      line-height: 1.6;
+    }
+
+    /* Domain Hexagons */
+    .domains-section {
+      margin-bottom: 80px;
+    }
+
+    .domains-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 32px;
+      text-align: center;
+      color: var(--gold);
+      margin-bottom: 40px;
+      letter-spacing: 1px;
+    }
+
+    .domains-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 20px;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .domain-tile {
+      aspect-ratio: 1;
+      background: linear-gradient(135deg, #1A1626 0%, #251E36 100%);
+      border: 2px solid var(--border);
+      clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      position: relative;
+    }
+
+    .domain-tile:hover {
+      background: linear-gradient(135deg, #251E36 0%, #2E2545 100%);
+      border-color: var(--accent-warm);
+      transform: scale(1.08);
+    }
+
+    .domain-score {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 42px;
+      font-weight: 600;
+      color: var(--accent-warm);
+    }
+
+    .domain-name {
+      font-family: 'Noto Sans JP', sans-serif;
+      font-size: 12px;
+      color: var(--text-secondary);
+      margin-top: 8px;
+      font-weight: 500;
+    }
+
+    /* Monthly Section */
+    .monthly-section {
+      margin-bottom: 80px;
+      text-align: center;
+    }
+
+    .monthly-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 32px;
+      color: var(--gold);
+      margin-bottom: 30px;
+      letter-spacing: 1px;
+    }
+
+    .monthly-card {
+      background: linear-gradient(135deg, #1A1626 0%, #251E36 100%);
+      border: 2px solid var(--border);
+      border-top: 2px solid var(--gold);
+      padding: 40px;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    .monthly-score {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 72px;
+      font-weight: 600;
+      color: var(--accent-warm);
+      margin-bottom: 20px;
+    }
+
+    .monthly-label {
+      font-size: 13px;
+      color: var(--text-secondary);
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+
+    .monthly-description {
+      font-size: 14px;
+      color: var(--text-secondary);
+      margin-top: 20px;
+      line-height: 1.8;
+    }
+
+    /* Chart Section */
+    .chart-section {
+      margin-bottom: 60px;
+      max-width: 700px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .chart-container {
+      background: linear-gradient(135deg, #1A1626 0%, #251E36 100%);
+      border: 2px solid var(--border);
+      border-top: 2px solid var(--gold);
+      padding: 40px;
+      position: relative;
+    }
+
+    #radarChart {
+      max-width: 100%;
+      height: 400px;
+    }
+
+    /* Footer */
+    footer {
+      text-align: center;
+      padding: 40px;
+      color: var(--text-muted);
+      font-size: 12px;
+      border-top: 1px solid var(--border);
+      margin-top: 60px;
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <!-- Hero Section -->
+    <section class="hero">
+      <h1>手嶋静 の鑑定書</h1>
+      <div class="divider"></div>
+    </section>
+
+    <!-- Tarot Spread -->
+    <section class="tarot-spread">
+      <div class="tarot-card">
+        <div class="card-header">☽</div>
+        <div class="card-body">
+          <div class="card-label">過去</div>
+          <div class="card-keyword">The Seeker</div>
+          <div class="card-description">変化を求めた時代。新しい道を模索していた</div>
+        </div>
+      </div>
+
+      <div class="tarot-card">
+        <div class="card-header">✦</div>
+        <div class="card-body">
+          <div class="card-label">現在</div>
+          <div class="card-keyword">The Builder</div>
+          <div class="card-description">基盤を築く時期。確実な成長を遂行中</div>
+        </div>
+      </div>
+
+      <div class="tarot-card">
+        <div class="card-header">☀</div>
+        <div class="card-body">
+          <div class="card-label">未来</div>
+          <div class="card-keyword">The Ascendant</div>
+          <div class="card-description">新しい章の始まり。光へ向かう時代</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Domain Hexagons -->
+    <section class="domains-section">
+      <h2 class="domains-title">人生6領域の調和度</h2>
+      <div class="domains-grid">
+        <div class="domain-tile">
+          <div class="domain-score">78</div>
+          <div class="domain-name">仕事</div>
+        </div>
+        <div class="domain-tile">
+          <div class="domain-score">82</div>
+          <div class="domain-name">恋愛</div>
+        </div>
+        <div class="domain-tile">
+          <div class="domain-score">65</div>
+          <div class="domain-name">財運</div>
+        </div>
+        <div class="domain-tile">
+          <div class="domain-score">88</div>
+          <div class="domain-name">健康</div>
+        </div>
+        <div class="domain-tile">
+          <div class="domain-score">71</div>
+          <div class="domain-name">家庭</div>
+        </div>
+        <div class="domain-tile">
+          <div class="domain-score">85</div>
+          <div class="domain-name">精神</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Monthly Section -->
+    <section class="monthly-section">
+      <h2 class="monthly-title">2026年5月の運勢</h2>
+      <div class="monthly-card">
+        <div class="monthly-score">84</div>
+        <div class="monthly-label">フォーチュン・インデックス</div>
+        <div class="monthly-description">
+          この月は創造性と直感が最高潮に。新しいプロジェクトの開始に最適な時期。金運も好調で、予期しない幸運が訪れる可能性あり。対人関係は調和的で、チームワークが実を結ぶ。
+        </div>
+      </div>
+    </section>
+
+    <!-- Chart Section -->
+    <section class="chart-section">
+      <div class="chart-container">
+        <canvas id="radarChart"></canvas>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    &copy; 2026 Self Insight. All readings are for entertainment and reflection purposes.
+  </footer>
+
+  <script>
+    const ctx = document.getElementById('radarChart').getContext('2d');
+    
+    new Chart(ctx, {
+      type: 'radar',
+      data: {
+        labels: ['仕事', '恋愛', '財運', '健康', '家庭', '精神'],
+        datasets: [
+          {
+            label: '運勢スコア',
+            data: [78, 82, 65, 88, 71, 85],
+            borderColor: '#A78BFA',
+            backgroundColor: 'rgba(139, 92, 246, 0.2)',
+            borderWidth: 2,
+            pointBackgroundColor: '#C9A84C',
+            pointBorderColor: '#A78BFA',
+            pointRadius: 5,
+            pointHoverRadius: 7,
+            pointHoverBackgroundColor: '#C9A84C'
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: true,
+        plugins: {
+          legend: {
+            labels: {
+              color: '#A89EC0',
+              font: { family: "'Inter', sans-serif", size: 13 }
+            }
+          }
+        },
+        scales: {
+          r: {
+            beginAtZero: true,
+            max: 100,
+            ticks: {
+              color: '#6B6285',
+              font: { family: "'Inter', sans-serif", size: 11 },
+              stepSize: 20
+            },
+            grid: {
+              color: 'rgba(46, 37, 69, 0.5)'
+            },
+            pointLabels: {
+              color: '#A89EC0',
+              font: { family: "'Noto Sans JP', sans-serif", size: 12, weight: '500' }
+            }
+          }
+        }
+      }
+    });
+  </script>
+</body>
+</html>

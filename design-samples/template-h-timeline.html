@@ -1,0 +1,873 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>手嶋静 — Self Insight Timeline</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Inter:wght@300;400;500;600&family=Noto+Sans+JP:wght@300;400;500&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+      --bg: #0D0B14;
+      --surface: #1A1626;
+      --surface2: #251E36;
+      --border: #2E2545;
+      --gold: #C9A84C;
+      --accent: #8B5CF6;
+      --accent-warm: #A78BFA;
+      --accent-teal: #14b8a6;
+      --text-primary: #F5F0E8;
+      --text-secondary: #A89EC0;
+      --text-muted: #6B6285;
+      --female-bg: #f5eff2;
+    }
+    body {
+      background: var(--bg);
+      color: var(--text-primary);
+      font-family: 'Inter', sans-serif;
+      min-height: 100vh;
+    }
+    main {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 60px 32px 80px;
+    }
+
+    /* ─── HERO ─── */
+    .hero {
+      text-align: center;
+      margin-bottom: 64px;
+      padding-bottom: 48px;
+      border-bottom: 1px solid var(--border);
+    }
+    .hero-eyebrow {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 13px;
+      letter-spacing: 4px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      margin-bottom: 20px;
+    }
+    .hero h1 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 48px;
+      font-weight: 600;
+      color: var(--text-primary);
+      letter-spacing: 2px;
+      margin-bottom: 8px;
+    }
+    .hero-sub {
+      font-size: 14px;
+      color: var(--text-muted);
+      letter-spacing: 1px;
+    }
+    .identity-strip {
+      display: flex;
+      justify-content: center;
+      gap: 32px;
+      margin-top: 32px;
+      flex-wrap: wrap;
+    }
+    .identity-chip {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      color: var(--text-secondary);
+    }
+    .identity-chip .dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--accent-warm);
+    }
+    .identity-chip strong {
+      color: var(--text-primary);
+      font-weight: 500;
+    }
+
+    /* ─── SECTION LABEL ─── */
+    .section-label {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 11px;
+      letter-spacing: 4px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+    .section-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 26px;
+      font-weight: 600;
+      color: var(--gold);
+      margin-bottom: 6px;
+    }
+    .section-subtitle {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-bottom: 36px;
+      line-height: 1.6;
+    }
+    .section-block {
+      margin-bottom: 72px;
+    }
+
+    /* ─── TIMELINE ─── */
+    .timeline-wrapper {
+      position: relative;
+      padding-left: 120px;
+    }
+    .timeline-axis {
+      position: absolute;
+      left: 60px;
+      top: 0;
+      bottom: 0;
+      width: 2px;
+      background: linear-gradient(180deg, var(--accent) 0%, var(--border) 40%, var(--border) 100%);
+    }
+    .timeline-node {
+      position: relative;
+      margin-bottom: 32px;
+      min-height: 64px;
+    }
+    .timeline-node::before {
+      content: '';
+      position: absolute;
+      left: -66px;
+      top: 14px;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: var(--surface2);
+      border: 2px solid var(--border);
+    }
+    .timeline-node.current::before {
+      background: var(--accent);
+      border-color: var(--accent-warm);
+      box-shadow: 0 0 12px rgba(139,92,246,0.5);
+      width: 16px;
+      height: 16px;
+      left: -68px;
+      top: 12px;
+    }
+    .timeline-year {
+      position: absolute;
+      left: -110px;
+      top: 10px;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-align: right;
+      width: 44px;
+    }
+    .timeline-node.current .timeline-year {
+      color: var(--accent-warm);
+    }
+    .timeline-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 16px 20px;
+    }
+    .timeline-node.current .timeline-card {
+      border-color: var(--accent);
+      background: linear-gradient(135deg, var(--surface) 0%, #1e1a30 100%);
+    }
+    .tcard-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    }
+    .tcard-phase {
+      font-family: 'Noto Sans JP', sans-serif;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text-primary);
+    }
+    .tcard-badge {
+      font-size: 11px;
+      padding: 2px 10px;
+      border-radius: 12px;
+      letter-spacing: 1px;
+    }
+    .badge-now {
+      background: rgba(139,92,246,0.2);
+      color: var(--accent-warm);
+      border: 1px solid rgba(139,92,246,0.3);
+    }
+    .badge-next {
+      background: rgba(20,184,166,0.1);
+      color: var(--accent-teal);
+      border: 1px solid rgba(20,184,166,0.2);
+    }
+    .badge-past {
+      background: rgba(107,98,133,0.15);
+      color: var(--text-muted);
+      border: 1px solid rgba(107,98,133,0.2);
+    }
+    .tcard-tags {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 8px;
+    }
+    .tcard-tag {
+      font-size: 11px;
+      padding: 2px 8px;
+      border-radius: 4px;
+      background: var(--surface2);
+      color: var(--text-secondary);
+      border: 1px solid var(--border);
+    }
+    .tcard-desc {
+      font-size: 13px;
+      color: var(--text-secondary);
+      line-height: 1.7;
+    }
+    .now-indicator {
+      position: absolute;
+      left: -130px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 11px;
+      letter-spacing: 2px;
+      color: var(--accent);
+      writing-mode: horizontal-tb;
+      white-space: nowrap;
+    }
+
+    /* ─── 四柱命式 ─── */
+    .pillars-grid {
+      display: grid;
+      grid-template-columns: 80px repeat(4, 1fr);
+      gap: 0;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    .pillar-header-cell, .pillar-label-cell {
+      background: var(--surface);
+      padding: 12px 8px;
+      text-align: center;
+      font-size: 11px;
+      color: var(--text-muted);
+      letter-spacing: 1px;
+      border-bottom: 1px solid var(--border);
+      border-right: 1px solid var(--border);
+    }
+    .pillar-label-cell {
+      font-family: 'Noto Sans JP', sans-serif;
+      text-align: left;
+      padding-left: 16px;
+      color: var(--text-secondary);
+    }
+    .pillar-cell {
+      background: var(--surface);
+      padding: 14px 8px;
+      text-align: center;
+      border-bottom: 1px solid var(--border);
+      border-right: 1px solid var(--border);
+    }
+    .pillar-cell:last-child, .pillar-header-cell:last-child { border-right: none; }
+    .pillar-main {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 22px;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+    .pillar-furigana {
+      font-size: 10px;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+    .pillar-cell.accent-cell .pillar-main { color: var(--accent-warm); }
+    .pillars-desc {
+      margin-top: 16px;
+      font-size: 13px;
+      color: var(--text-secondary);
+      line-height: 1.7;
+      background: var(--surface);
+      padding: 16px 20px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+    }
+
+    /* 五行バランス */
+    .gogyou-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 12px;
+      margin-top: 24px;
+    }
+    .gogyou-item {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 16px 12px;
+      text-align: center;
+    }
+    .gogyou-item.lacking {
+      border-color: rgba(139,92,246,0.3);
+      background: rgba(139,92,246,0.05);
+    }
+    .gogyou-symbol {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 28px;
+      font-weight: 600;
+    }
+    .symbol-wood { color: #4ade80; }
+    .symbol-fire { color: #f87171; }
+    .symbol-earth { color: #fbbf24; }
+    .symbol-metal { color: #94a3b8; }
+    .symbol-water { color: #60a5fa; }
+    .gogyou-name { font-size: 12px; color: var(--text-muted); margin: 6px 0 10px; font-family: 'Noto Sans JP', sans-serif; }
+    .gogyou-bar-wrap { height: 4px; background: var(--border); border-radius: 2px; overflow: hidden; }
+    .gogyou-bar { height: 100%; border-radius: 2px; }
+    .bar-wood { background: #4ade80; }
+    .bar-fire { background: #f87171; }
+    .bar-earth { background: #fbbf24; }
+    .bar-metal { background: #94a3b8; }
+    .bar-water { background: #60a5fa; }
+    .gogyou-pct { font-family: 'Cormorant Garamond', serif; font-size: 18px; color: var(--text-secondary); margin-top: 8px; }
+    .lacking-tag { font-size: 10px; color: var(--accent-warm); margin-top: 4px; letter-spacing: 1px; }
+
+    /* ─── 月次 ─── */
+    .monthly-layout {
+      display: grid;
+      grid-template-columns: 1fr 280px;
+      gap: 20px;
+      align-items: start;
+    }
+    .monthly-main {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--gold);
+      border-radius: 8px;
+      padding: 28px;
+    }
+    .monthly-score-row {
+      display: flex;
+      align-items: baseline;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+    .monthly-score-num {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 64px;
+      font-weight: 600;
+      color: var(--accent-warm);
+      line-height: 1;
+    }
+    .monthly-score-unit {
+      font-size: 13px;
+      color: var(--text-muted);
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+    .monthly-tags {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 16px;
+    }
+    .monthly-tag {
+      font-size: 11px;
+      padding: 3px 10px;
+      border-radius: 12px;
+    }
+    .tag-indigo { background: rgba(99,102,241,0.15); color: #818cf8; border: 1px solid rgba(99,102,241,0.2); }
+    .tag-teal { background: rgba(20,184,166,0.15); color: var(--accent-teal); border: 1px solid rgba(20,184,166,0.2); }
+    .tag-gold { background: rgba(201,168,76,0.1); color: var(--gold); border: 1px solid rgba(201,168,76,0.2); }
+    .monthly-text {
+      font-size: 14px;
+      color: var(--text-secondary);
+      line-height: 1.8;
+    }
+    .monthly-side {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .side-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 16px;
+    }
+    .side-card-label {
+      font-size: 11px;
+      color: var(--text-muted);
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+    .side-card-value {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 20px;
+      color: var(--text-primary);
+    }
+    .side-card-sub {
+      font-size: 12px;
+      color: var(--text-secondary);
+      margin-top: 4px;
+      line-height: 1.5;
+    }
+
+    /* ─── 六道スコア ─── */
+    .domains-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+    }
+    .domain-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 20px 16px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    .domain-hex-wrap {
+      flex-shrink: 0;
+      width: 56px;
+      height: 56px;
+      clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+      background: var(--surface2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: none;
+    }
+    .domain-score-num {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 24px;
+      font-weight: 600;
+      color: var(--accent-warm);
+      line-height: 1;
+    }
+    .domain-info-name {
+      font-family: 'Noto Sans JP', sans-serif;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text-primary);
+      margin-bottom: 4px;
+    }
+    .domain-bar-wrap {
+      height: 3px;
+      background: var(--border);
+      border-radius: 2px;
+      overflow: hidden;
+      margin-top: 6px;
+    }
+    .domain-bar {
+      height: 100%;
+      border-radius: 2px;
+      background: linear-gradient(90deg, var(--accent), var(--accent-warm));
+    }
+    .domain-info-desc {
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-top: 4px;
+      line-height: 1.4;
+    }
+
+    /* ─── CHART ─── */
+    .chart-wrap {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 32px;
+    }
+    #radarChart { max-width: 100%; height: 380px; }
+
+    footer {
+      text-align: center;
+      padding: 40px;
+      color: var(--text-muted);
+      font-size: 12px;
+      border-top: 1px solid var(--border);
+      margin-top: 60px;
+    }
+  </style>
+</head>
+<body>
+<main>
+
+  <!-- HERO -->
+  <section class="hero">
+    <p class="hero-eyebrow">Self Insight Report</p>
+    <h1>手嶋静</h1>
+    <p class="hero-sub">1944年9月25日 生 · 壬水日主 · AB型</p>
+    <div class="identity-strip">
+      <div class="identity-chip"><span class="dot"></span><span>四柱命式</span><strong>壬水 日主</strong></div>
+      <div class="identity-chip"><span class="dot"></span><span>九星気学</span><strong>二黒土星</strong></div>
+      <div class="identity-chip"><span class="dot"></span><span>六星占術</span><strong>火星人＋</strong></div>
+      <div class="identity-chip"><span class="dot"></span><span>西洋占星術</span><strong>天秤座 ♎</strong></div>
+    </div>
+  </section>
+
+  <!-- 九星サイクル TIMELINE -->
+  <section class="section-block">
+    <p class="section-label">Nine Stars Cycle</p>
+    <h2 class="section-title">九星気学 — 9年大運サイクル</h2>
+    <p class="section-subtitle">九星気学では人の運気は9年で一巡する。二黒土星を持つあなたは、2025年から新しい9年サイクルが始まった。各年に固有のテーマがあり、その波に乗ることが開運の鍵。</p>
+
+    <div class="timeline-wrapper">
+      <div class="timeline-axis"></div>
+
+      <div class="timeline-node past">
+        <div class="timeline-year">2024</div>
+        <div class="timeline-card">
+          <div class="tcard-header">
+            <span class="tcard-phase">収束・手放し</span>
+            <span class="tcard-badge badge-past">終章</span>
+          </div>
+          <div class="tcard-tags">
+            <span class="tcard-tag">一白水星年</span><span class="tcard-tag">内省</span><span class="tcard-tag">整理整頓</span>
+          </div>
+          <p class="tcard-desc">前サイクルの最終年。蓄積してきたものを見直し、次の9年に持ち越すものと手放すものを選別する時期。内面との対話が深まり、精神的な成熟が進む。</p>
+        </div>
+      </div>
+
+      <div class="timeline-node current">
+        <div class="timeline-year">2025</div>
+        <div class="timeline-card">
+          <div class="tcard-header">
+            <span class="tcard-phase">新サイクル開幕・種まき</span>
+            <span class="tcard-badge badge-now">進行中</span>
+          </div>
+          <div class="tcard-tags">
+            <span class="tcard-tag">二黒土星年（本命年）</span><span class="tcard-tag">再出発</span><span class="tcard-tag">基盤構築</span>
+          </div>
+          <p class="tcard-desc">9年サイクルのスタート年。本命星が本宮に入る本命年にあたり、原点回帰と新たな出発のエネルギーが高まる。地道な努力が次の9年の土台となる重要な1年。</p>
+        </div>
+      </div>
+
+      <div class="timeline-node current">
+        <div class="timeline-year">2026</div>
+        <div class="timeline-card">
+          <div class="tcard-header">
+            <span class="tcard-phase">育成期・関係性の展開</span>
+            <span class="tcard-badge badge-now">今ここ ✦</span>
+          </div>
+          <div class="tcard-tags">
+            <span class="tcard-tag">三碧木星年</span><span class="tcard-tag">発展</span><span class="tcard-tag">コミュニケーション</span><span class="tcard-tag">創造</span>
+          </div>
+          <p class="tcard-desc">昨年蒔いた種が芽吹く年。三碧木星の若木のエネルギーが加わり、新しい出会いや情報の流れが活発化する。言葉と表現の力が運を拓く。声に出すこと、書くことが吉。</p>
+        </div>
+      </div>
+
+      <div class="timeline-node">
+        <div class="timeline-year">2027</div>
+        <div class="timeline-card">
+          <div class="tcard-header">
+            <span class="tcard-phase">充実期・成果の兆し</span>
+            <span class="tcard-badge badge-next">次フェーズ</span>
+          </div>
+          <div class="tcard-tags">
+            <span class="tcard-tag">四緑木星年</span><span class="tcard-tag">信頼構築</span><span class="tcard-tag">縁の深まり</span>
+          </div>
+          <p class="tcard-desc">2026年に広げた縁が実を結び始める年。継続してきた取り組みへの信頼が高まり、遠方や旅行との縁も深まる。人との交流が運勢の鍵。</p>
+        </div>
+      </div>
+
+      <div class="timeline-node">
+        <div class="timeline-year">2028–33</div>
+        <div class="timeline-card">
+          <div class="tcard-header">
+            <span class="tcard-phase">最盛期 → 円熟 → 収穫</span>
+            <span class="tcard-badge badge-next">将来</span>
+          </div>
+          <div class="tcard-tags">
+            <span class="tcard-tag">五黄〜九紫</span><span class="tcard-tag">中心運</span><span class="tcard-tag">精神深化</span>
+          </div>
+          <p class="tcard-desc">2028年の五黄土星年が運気の頂点。その後、六白金星・七赤金星と続き、豊かさと知恵が深まる充実の6年間へ。2025年に始めた取り組みの収穫期となる。</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 六星12年サイクル -->
+  <section class="section-block">
+    <p class="section-label">Six Stars 12-Year Cycle</p>
+    <h2 class="section-title">六星占術 — 12年大運サイクル</h2>
+    <p class="section-subtitle">六星占術では12年周期で運命が動く。火星人＋のあなたは今、どの局面にいるか。各フェーズのテーマを知ることで、行動のタイミングを最適化できる。</p>
+
+    <div class="timeline-wrapper">
+      <div class="timeline-axis"></div>
+
+      <div class="timeline-node past">
+        <div class="timeline-year">2022</div>
+        <div class="timeline-card">
+          <div class="tcard-header">
+            <span class="tcard-phase">陰影期 — 充電と内省</span>
+            <span class="tcard-badge badge-past">完了</span>
+          </div>
+          <div class="tcard-tags"><span class="tcard-tag">火星人＋</span><span class="tcard-tag">充電</span></div>
+          <p class="tcard-desc">エネルギーを蓄える時期。外向きの行動より内省と準備に専念することで、次の上昇期への土台を固めた。</p>
+        </div>
+      </div>
+
+      <div class="timeline-node past">
+        <div class="timeline-year">2023–24</div>
+        <div class="timeline-card">
+          <div class="tcard-header">
+            <span class="tcard-phase">種まき期 — 再スタート</span>
+            <span class="tcard-badge badge-past">完了</span>
+          </div>
+          <div class="tcard-tags"><span class="tcard-tag">芽生え</span><span class="tcard-tag">新しい縁</span></div>
+          <p class="tcard-desc">新しいことを始めるに適した時期。小さな行動の積み重ねが2年後の大きな変化につながる。人脈や興味の幅が広がった。</p>
+        </div>
+      </div>
+
+      <div class="timeline-node current">
+        <div class="timeline-year">2025–26</div>
+        <div class="timeline-card">
+          <div class="tcard-header">
+            <span class="tcard-phase">財成期 — 実りと豊かさ</span>
+            <span class="tcard-badge badge-now">今ここ ✦</span>
+          </div>
+          <div class="tcard-tags">
+            <span class="tcard-tag">財成</span><span class="tcard-tag">物質的充実</span><span class="tcard-tag">安定</span>
+          </div>
+          <p class="tcard-desc">六星占術で最も豊かさが実る「財成」の時期。これまでの努力が形になり、物質的・精神的な充実感が高まる。新しい財の流れが生まれやすく、資産や価値ある人間関係が安定する。積極的な行動が吉。</p>
+        </div>
+      </div>
+
+      <div class="timeline-node">
+        <div class="timeline-year">2027–28</div>
+        <div class="timeline-card">
+          <div class="tcard-header">
+            <span class="tcard-phase">達成期 — ピーク</span>
+            <span class="tcard-badge badge-next">次フェーズ</span>
+          </div>
+          <div class="tcard-tags"><span class="tcard-tag">達成</span><span class="tcard-tag">評価</span><span class="tcard-tag">社会的充実</span></div>
+          <p class="tcard-desc">12年サイクルの頂点。社会的な評価や目標達成が実現しやすい時期。財成期に築いた基盤がここで最大の花を咲かせる。大きな決断にも適した2年間。</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 四柱命式 -->
+  <section class="section-block">
+    <p class="section-label">Four Pillars of Destiny</p>
+    <h2 class="section-title">四柱命式 · 五行バランス</h2>
+    <p class="section-subtitle">生年月日から導かれる四つの柱。天干と地支の組み合わせが、持って生まれた気質・才能・人生のパターンを示す。日柱の「壬水」がコアパーソナリティ。</p>
+
+    <div class="pillars-grid">
+      <div class="pillar-header-cell"></div>
+      <div class="pillar-header-cell">年柱</div>
+      <div class="pillar-header-cell">月柱</div>
+      <div class="pillar-header-cell">日柱</div>
+      <div class="pillar-header-cell">時柱</div>
+
+      <div class="pillar-label-cell">天干</div>
+      <div class="pillar-cell"><div class="pillar-main">甲</div><div class="pillar-furigana">きのえ・木</div></div>
+      <div class="pillar-cell"><div class="pillar-main">癸</div><div class="pillar-furigana">みずのと・水</div></div>
+      <div class="pillar-cell accent-cell"><div class="pillar-main">壬</div><div class="pillar-furigana">みずのえ・水</div></div>
+      <div class="pillar-cell"><div class="pillar-main">—</div><div class="pillar-furigana">不明</div></div>
+
+      <div class="pillar-label-cell">地支</div>
+      <div class="pillar-cell"><div class="pillar-main">申</div><div class="pillar-furigana">さる・金</div></div>
+      <div class="pillar-cell"><div class="pillar-main">酉</div><div class="pillar-furigana">とり・金</div></div>
+      <div class="pillar-cell accent-cell"><div class="pillar-main">辰</div><div class="pillar-furigana">たつ・土</div></div>
+      <div class="pillar-cell"><div class="pillar-main">—</div><div class="pillar-furigana">不明</div></div>
+    </div>
+
+    <div class="pillars-desc">
+      <strong style="color:var(--text-primary)">壬水日主</strong>とは、海や大河のように深く広い水のエネルギーを持つ命式。知性と洞察力に優れ、物事の本質を直観的につかむ力がある。感情の波は大きいが、柔軟性と包容力で周囲を引きつける。金（申・酉）が水を生じさせる「金水相生」の構造が強く、財との縁が深い。
+    </div>
+
+    <div class="gogyou-grid">
+      <div class="gogyou-item">
+        <div class="gogyou-symbol symbol-wood">木</div>
+        <div class="gogyou-name">創造・成長</div>
+        <div class="gogyou-bar-wrap"><div class="gogyou-bar bar-wood" style="width:10%"></div></div>
+        <div class="gogyou-pct">10%</div>
+      </div>
+      <div class="gogyou-item lacking">
+        <div class="gogyou-symbol symbol-fire">火</div>
+        <div class="gogyou-name">情熱・表現</div>
+        <div class="gogyou-bar-wrap"><div class="gogyou-bar bar-fire" style="width:0%"></div></div>
+        <div class="gogyou-pct">0%</div>
+        <div class="lacking-tag">★ 欠如</div>
+      </div>
+      <div class="gogyou-item">
+        <div class="gogyou-symbol symbol-earth">土</div>
+        <div class="gogyou-name">安定・信頼</div>
+        <div class="gogyou-bar-wrap"><div class="gogyou-bar bar-earth" style="width:24%"></div></div>
+        <div class="gogyou-pct">24%</div>
+      </div>
+      <div class="gogyou-item">
+        <div class="gogyou-symbol symbol-metal">金</div>
+        <div class="gogyou-name">決断・精錬</div>
+        <div class="gogyou-bar-wrap"><div class="gogyou-bar bar-metal" style="width:33%"></div></div>
+        <div class="gogyou-pct">33%</div>
+      </div>
+      <div class="gogyou-item">
+        <div class="gogyou-symbol symbol-water">水</div>
+        <div class="gogyou-name">知性・直感</div>
+        <div class="gogyou-bar-wrap"><div class="gogyou-bar bar-water" style="width:33%"></div></div>
+        <div class="gogyou-pct">33%</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 月次フォーキャスト -->
+  <section class="section-block">
+    <p class="section-label">Monthly Forecast</p>
+    <h2 class="section-title">2026年5月の運勢</h2>
+    <p class="section-subtitle">九星・六星・西洋占星術の3軸を統合した今月のエネルギー読み。各システムの視点を重ねることで、より立体的な運勢像を描く。</p>
+
+    <div class="monthly-layout">
+      <div class="monthly-main">
+        <div class="monthly-score-row">
+          <span class="monthly-score-num">85</span>
+          <span class="monthly-score-unit">Fortune Index</span>
+        </div>
+        <div class="monthly-tags">
+          <span class="monthly-tag tag-indigo">八白土星月</span>
+          <span class="monthly-tag tag-teal">牡牛座♉シーズン</span>
+          <span class="monthly-tag tag-gold">財成期×育成期</span>
+        </div>
+        <p class="monthly-text">
+          八白土星の月が二黒土星・本命のあなたに土のエネルギーを重ね合わせ、安定と実現の力が格段に高まる月。六星の財成期とも重なり、物質的な豊かさへの流れが加速する。<br><br>
+          牡牛座♉の太陽が「価値あるものを育てる」テーマを強調。新しいことに手を出すより、すでに動いているプロジェクトに集中し深める姿勢が吉。財・健康・美に関わる行動は積極的に。
+        </p>
+      </div>
+      <div class="monthly-side">
+        <div class="side-card">
+          <div class="side-card-label">九星 今月の星</div>
+          <div class="side-card-value">八白土星</div>
+          <div class="side-card-sub">土のエネルギー強化。二黒土星と共鳴し、変革と達成のダブル効果。</div>
+        </div>
+        <div class="side-card">
+          <div class="side-card-label">六星 フェーズ</div>
+          <div class="side-card-value">財成期 継続</div>
+          <div class="side-card-sub">金運・安定・蓄積に最適な継続フェーズ。大きな出費より積み上げを。</div>
+        </div>
+        <div class="side-card">
+          <div class="side-card-label">西洋 今月の配置</div>
+          <div class="side-card-value">金星 牡牛座</div>
+          <div class="side-card-sub">天秤座支配星・金星が牡牛座滞在。審美眼と財の直感が研ぎ澄まされる。</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 六道スコア -->
+  <section class="section-block">
+    <p class="section-label">Six Domain Harmony</p>
+    <h2 class="section-title">六道運勢スコア</h2>
+    <p class="section-subtitle">人生の6つの領域における現在の調和度。高い領域はエネルギーが充実しており、低い領域は意識的なケアが運気を上げるカギ。</p>
+
+    <div class="domains-grid">
+      <div class="domain-card">
+        <div class="domain-hex-wrap"><div class="domain-score-num">72</div></div>
+        <div>
+          <div class="domain-info-name">仕事・使命</div>
+          <div class="domain-bar-wrap"><div class="domain-bar" style="width:72%"></div></div>
+          <div class="domain-info-desc">壬水の知性が活かせる局面。直感的判断が功を奏する。</div>
+        </div>
+      </div>
+      <div class="domain-card">
+        <div class="domain-hex-wrap"><div class="domain-score-num">88</div></div>
+        <div>
+          <div class="domain-info-name">精神・自己</div>
+          <div class="domain-bar-wrap"><div class="domain-bar" style="width:88%"></div></div>
+          <div class="domain-info-desc">内面の豊かさがピーク。精神的な充実が全方位に影響。</div>
+        </div>
+      </div>
+      <div class="domain-card">
+        <div class="domain-hex-wrap"><div class="domain-score-num">85</div></div>
+        <div>
+          <div class="domain-info-name">恋愛・対人</div>
+          <div class="domain-bar-wrap"><div class="domain-bar" style="width:85%"></div></div>
+          <div class="domain-info-desc">天秤座の調和エネルギーで関係性が深まる好機。</div>
+        </div>
+      </div>
+      <div class="domain-card">
+        <div class="domain-hex-wrap"><div class="domain-score-num">68</div></div>
+        <div>
+          <div class="domain-info-name">財運・資産</div>
+          <div class="domain-bar-wrap"><div class="domain-bar" style="width:68%"></div></div>
+          <div class="domain-info-desc">財成期の恩恵はあるが、慎重な判断が必要な局面も。</div>
+        </div>
+      </div>
+      <div class="domain-card">
+        <div class="domain-hex-wrap"><div class="domain-score-num">78</div></div>
+        <div>
+          <div class="domain-info-name">健康・活力</div>
+          <div class="domain-bar-wrap"><div class="domain-bar" style="width:78%"></div></div>
+          <div class="domain-info-desc">火の欠如を補う活動（運動・日光）が開運に直結。</div>
+        </div>
+      </div>
+      <div class="domain-card">
+        <div class="domain-hex-wrap"><div class="domain-score-num">82</div></div>
+        <div>
+          <div class="domain-info-name">家庭・ルーツ</div>
+          <div class="domain-bar-wrap"><div class="domain-bar" style="width:82%"></div></div>
+          <div class="domain-info-desc">二黒土星の「大地・母」の象意が家庭運を安定させる。</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- レーダーチャート -->
+  <section class="section-block">
+    <p class="section-label">Visual Overview</p>
+    <h2 class="section-title">エネルギーバランス チャート</h2>
+    <p class="section-subtitle">6領域のスコアをビジュアル化。形の偏りがあなた独自のエネルギーパターンを示す。</p>
+    <div class="chart-wrap">
+      <canvas id="radarChart"></canvas>
+    </div>
+  </section>
+
+</main>
+
+<footer>&copy; 2026 Self Insight. All readings are for reflection and personal growth.</footer>
+
+<script>
+  const ctx = document.getElementById('radarChart').getContext('2d');
+  new Chart(ctx, {
+    type: 'radar',
+    data: {
+      labels: ['仕事・使命','精神・自己','恋愛・対人','財運・資産','健康・活力','家庭・ルーツ'],
+      datasets: [{
+        label: '運勢スコア',
+        data: [72, 88, 85, 68, 78, 82],
+        borderColor: '#A78BFA',
+        backgroundColor: 'rgba(139,92,246,0.15)',
+        borderWidth: 2,
+        pointBackgroundColor: '#C9A84C',
+        pointBorderColor: '#A78BFA',
+        pointRadius: 5,
+        pointHoverRadius: 7,
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: true,
+      plugins: {
+        legend: { labels: { color: '#A89EC0', font: { family: "'Inter'", size: 13 } } }
+      },
+      scales: {
+        r: {
+          beginAtZero: true, max: 100,
+          ticks: { color: '#6B6285', font: { size: 11 }, stepSize: 20 },
+          grid: { color: 'rgba(46,37,69,0.5)' },
+          pointLabels: { color: '#A89EC0', font: { family: "'Noto Sans JP'", size: 12 } }
+        }
+      }
+    }
+  });
+</script>
+</body>
+</html>

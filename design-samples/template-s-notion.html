@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Self Insight - 手嶋静の鑑定書</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --brand-navy: #0a1530;
+      --brand-navy-deep: #070f24;
+      --brand-navy-mid: #1a2a52;
+      --primary: #5645d4;
+      --primary-deep: #3a2a99;
+      --brand-purple: #7b3ff2;
+      --brand-purple-300: #d6b6f6;
+      --on-primary: #ffffff;
+      --on-dark: #ffffff;
+      --on-dark-muted: #a4a097;
+      --canvas: #ffffff;
+      --surface: #f6f5f4;
+      --charcoal: #37352f;
+      --slate: #5d5b54;
+      --card-tint-lavender: #e6e0f5;
+      --card-tint-rose: #fde0ec;
+      --card-tint-sky: #dcecfa;
+      --card-tint-mint: #d9f3e1;
+      --card-tint-yellow: #fef7d6;
+      --card-tint-peach: #ffe8d4;
+      --brand-yellow: #f5d75e;
+      --brand-teal: #2a9d99;
+      --brand-pink: #ff64c8;
+      --brand-green: #1aae39;
+      --female-bg: #f5eff2;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--canvas);
+      color: var(--charcoal);
+      line-height: 1.6;
+    }
+
+    /* Sticky Top Navigation */
+    nav {
+      position: sticky;
+      top: 0;
+      background: var(--canvas);
+      border-bottom: 1px solid #e5e3df;
+      z-index: 100;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px 40px;
+      max-width: 100%;
+    }
+
+    .nav-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .nav-title {
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--charcoal);
+    }
+
+    .nav-dots {
+      display: flex;
+      gap: 6px;
+    }
+
+    .nav-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+    }
+
+    .dot-primary { background: var(--primary); }
+    .dot-pink { background: var(--brand-pink); }
+    .dot-yellow { background: var(--brand-yellow); }
+    .dot-green { background: var(--brand-green); }
+    .dot-purple { background: var(--brand-purple); }
+    .dot-teal { background: var(--brand-teal); }
+
+    .nav-right {
+      font-size: 16px;
+      font-weight: 500;
+      color: var(--charcoal);
+    }
+
+    /* Hero Section */
+    .hero {
+      background: linear-gradient(135deg, var(--brand-navy-deep) 0%, var(--brand-navy) 100%);
+      width: 100%;
+      padding: 80px 40px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-decoration {
+      display: flex;
+      justify-content: center;
+      gap: 16px;
+      margin-bottom: 32px;
+    }
+
+    .hero-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      opacity: 0.6;
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 2;
+    }
+
+    .hero-name {
+      font-size: 80px;
+      font-weight: 600;
+      letter-spacing: -2px;
+      color: var(--on-dark);
+      margin-bottom: 24px;
+    }
+
+    .hero-score {
+      font-size: 96px;
+      font-weight: 600;
+      color: var(--brand-purple-300);
+      margin-bottom: 12px;
+      letter-spacing: -2px;
+    }
+
+    .hero-label {
+      font-size: 16px;
+      font-weight: 400;
+      color: var(--on-dark-muted);
+      letter-spacing: 0.5px;
+    }
+
+    /* Main Body */
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 60px 40px;
+      background: var(--canvas);
+    }
+
+    /* Section Headers */
+    .section-header {
+      font-size: 36px;
+      font-weight: 600;
+      letter-spacing: -0.5px;
+      color: var(--charcoal);
+      margin-bottom: 40px;
+      margin-top: 80px;
+    }
+
+    .section-header:first-child {
+      margin-top: 0;
+    }
+
+    /* Domain Grid */
+    .domain-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 24px;
+      margin-bottom: 60px;
+    }
+
+    .domain-card {
+      border-radius: 12px;
+      overflow: hidden;
+      border: 1px solid #e5e3df;
+      background: var(--canvas);
+      transition: transform 0.2s ease;
+    }
+
+    .domain-card:hover {
+      transform: translateY(-4px);
+    }
+
+    .domain-card-top {
+      height: 4px;
+      background: var(--primary);
+    }
+
+    .domain-card-body {
+      padding: 32px;
+      background: var(--card-tint-sky);
+    }
+
+    /* Domain card variants */
+    .domain-card.work .domain-card-top { background: var(--primary); }
+    .domain-card.work .domain-card-body { background: var(--card-tint-sky); }
+
+    .domain-card.love .domain-card-top { background: var(--brand-pink); }
+    .domain-card.love .domain-card-body { background: var(--card-tint-rose); }
+
+    .domain-card.wealth .domain-card-top { background: var(--brand-yellow); }
+    .domain-card.wealth .domain-card-body { background: var(--card-tint-yellow); }
+
+    .domain-card.health .domain-card-top { background: var(--brand-green); }
+    .domain-card.health .domain-card-body { background: var(--card-tint-mint); }
+
+    .domain-card.family .domain-card-top { background: var(--brand-purple); }
+    .domain-card.family .domain-card-body { background: var(--card-tint-lavender); }
+
+    .domain-card.spirit .domain-card-top { background: var(--brand-teal); }
+    .domain-card.spirit .domain-card-body { background: var(--card-tint-peach); }
+
+    .domain-name {
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--charcoal);
+      margin-bottom: 16px;
+    }
+
+    .domain-score {
+      font-size: 48px;
+      font-weight: 600;
+      color: var(--primary);
+      margin-bottom: 8px;
+      letter-spacing: -1px;
+    }
+
+    .domain-status {
+      font-size: 14px;
+      font-weight: 400;
+      color: var(--slate);
+    }
+
+    /* Chart Section */
+    .chart-container {
+      background: var(--surface);
+      border: 1px solid #e5e3df;
+      border-radius: 12px;
+      padding: 40px;
+      margin-bottom: 60px;
+    }
+
+    .chart-wrapper {
+      position: relative;
+      height: 400px;
+      margin: 0 auto;
+      max-width: 500px;
+    }
+
+    /* Archetype Section */
+    .archetype-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 24px;
+      margin-bottom: 60px;
+    }
+
+    .archetype-card {
+      background: var(--surface);
+      border: 1px solid #e5e3df;
+      border-radius: 12px;
+      padding: 32px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .archetype-tag {
+      display: inline-block;
+      font-size: 12px;
+      font-weight: 600;
+      padding: 6px 12px;
+      border-radius: 4px;
+      background: rgba(86, 69, 212, 0.15);
+      color: var(--primary);
+      margin-bottom: 16px;
+      width: fit-content;
+      letter-spacing: 0.3px;
+    }
+
+    .archetype-tag.past { background: rgba(86, 69, 212, 0.15); color: var(--primary); }
+    .archetype-tag.present { background: rgba(255, 100, 200, 0.15); color: var(--brand-pink); }
+    .archetype-tag.future { background: rgba(42, 157, 153, 0.15); color: var(--brand-teal); }
+
+    .archetype-name {
+      font-size: 24px;
+      font-weight: 600;
+      color: var(--charcoal);
+      margin-bottom: 12px;
+    }
+
+    .archetype-description {
+      font-size: 14px;
+      color: var(--slate);
+      line-height: 1.6;
+    }
+
+    /* Divination Systems */
+    .system-rows {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      margin-bottom: 60px;
+    }
+
+    .system-row {
+      background: var(--surface);
+      border: 1px solid #e5e3df;
+      border-radius: 12px;
+      padding: 24px 32px;
+      display: flex;
+      align-items: center;
+      gap: 24px;
+    }
+
+    .system-tag {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 600;
+      padding: 8px 14px;
+      border-radius: 4px;
+      background: rgba(86, 69, 212, 0.1);
+      color: var(--primary);
+      letter-spacing: 0.3px;
+      min-width: 120px;
+      text-align: center;
+    }
+
+    .system-name {
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--charcoal);
+      flex: 1;
+    }
+
+    .system-description {
+      font-size: 14px;
+      color: var(--slate);
+      flex: 2;
+    }
+
+    /* Footer */
+    .footer {
+      background: var(--surface);
+      padding: 40px;
+      text-align: center;
+      color: var(--on-dark-muted);
+      font-size: 14px;
+      border-top: 1px solid #e5e3df;
+      margin-top: 80px;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .hero {
+        padding: 60px 24px;
+      }
+
+      .hero-name {
+        font-size: 56px;
+      }
+
+      .hero-score {
+        font-size: 72px;
+      }
+
+      nav {
+        padding: 12px 24px;
+        flex-direction: column;
+        gap: 12px;
+      }
+
+      .nav-right {
+        font-size: 14px;
+      }
+
+      .container {
+        padding: 40px 24px;
+      }
+
+      .section-header {
+        font-size: 28px;
+        margin-bottom: 24px;
+      }
+
+      .domain-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .archetype-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .system-row {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+      }
+
+      .chart-wrapper {
+        height: 300px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Sticky Navigation -->
+  <nav>
+    <div class="nav-left">
+      <div class="nav-title">Self Insight</div>
+      <div class="nav-dots">
+        <div class="nav-dot dot-primary"></div>
+        <div class="nav-dot dot-pink"></div>
+        <div class="nav-dot dot-yellow"></div>
+        <div class="nav-dot dot-green"></div>
+        <div class="nav-dot dot-purple"></div>
+        <div class="nav-dot dot-teal"></div>
+      </div>
+    </div>
+    <div class="nav-right">手嶋静 の鑑定書</div>
+  </nav>
+
+  <!-- Hero Section -->
+  <div class="hero">
+    <div class="hero-content">
+      <div class="hero-decoration">
+        <div class="hero-dot dot-primary"></div>
+        <div class="hero-dot dot-pink"></div>
+        <div class="hero-dot dot-yellow"></div>
+        <div class="hero-dot dot-green"></div>
+        <div class="hero-dot dot-purple"></div>
+        <div class="hero-dot dot-teal"></div>
+      </div>
+      <div class="hero-name">手嶋静</div>
+      <div class="hero-score">84</div>
+      <div class="hero-label">2026年5月 フォーチュン・インデックス</div>
+    </div>
+  </div>
+
+  <!-- Main Container -->
+  <div class="container">
+    <!-- Domain Grid Section -->
+    <h2 class="section-header">人生6領域の調和度</h2>
+    <div class="domain-grid">
+      <div class="domain-card work">
+        <div class="domain-card-top"></div>
+        <div class="domain-card-body">
+          <div class="domain-name">仕事</div>
+          <div class="domain-score">78</div>
+          <div class="domain-status">責任感強く、着実に進行中</div>
+        </div>
+      </div>
+
+      <div class="domain-card love">
+        <div class="domain-card-top"></div>
+        <div class="domain-card-body">
+          <div class="domain-name">恋愛</div>
+          <div class="domain-score">82</div>
+          <div class="domain-status">良好な人間関係が形成中</div>
+        </div>
+      </div>
+
+      <div class="domain-card wealth">
+        <div class="domain-card-top"></div>
+        <div class="domain-card-body">
+          <div class="domain-name">財運</div>
+          <div class="domain-score">65</div>
+          <div class="domain-status">計画的な貯蓄が重要な時期</div>
+        </div>
+      </div>
+
+      <div class="domain-card health">
+        <div class="domain-card-top"></div>
+        <div class="domain-card-body">
+          <div class="domain-name">健康</div>
+          <div class="domain-score">88</div>
+          <div class="domain-status">心身ともに好調を維持中</div>
+        </div>
+      </div>
+
+      <div class="domain-card family">
+        <div class="domain-card-top"></div>
+        <div class="domain-card-body">
+          <div class="domain-name">家庭</div>
+          <div class="domain-score">71</div>
+          <div class="domain-status">調整と理解が必要な段階</div>
+        </div>
+      </div>
+
+      <div class="domain-card spirit">
+        <div class="domain-card-top"></div>
+        <div class="domain-card-body">
+          <div class="domain-name">精神</div>
+          <div class="domain-score">85</div>
+          <div class="domain-status">内的成長が加速している</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Chart Section -->
+    <h2 class="section-header">レーダーチャート</h2>
+    <div class="chart-container">
+      <div class="chart-wrapper">
+        <canvas id="radarChart"></canvas>
+      </div>
+    </div>
+
+    <!-- Archetype Section -->
+    <h2 class="section-header">3つのアーキタイプ</h2>
+    <div class="archetype-grid">
+      <div class="archetype-card">
+        <div class="archetype-tag past">過去</div>
+        <div class="archetype-name">The Seeker</div>
+        <div class="archetype-description">探求者としてのあなた。新しい知識や経験を求め、人生の意味を問い続けてきた時間。変化と成長への渇望が特徴。</div>
+      </div>
+
+      <div class="archetype-card">
+        <div class="archetype-tag present">現在</div>
+        <div class="archetype-name">The Builder</div>
+        <div class="archetype-description">構築者としてのあなた。今、現実に形を与えることに心が向いている。知識を行動に変え、基盤を築く時期。</div>
+      </div>
+
+      <div class="archetype-card">
+        <div class="archetype-tag future">未来</div>
+        <div class="archetype-name">The Ascendant</div>
+        <div class="archetype-description">上昇者としてのあなた。これから迎える段階は統合と昇華。個の確立から他者とのつながりへ、視野が広がる予兆。</div>
+      </div>
+    </div>
+
+    <!-- Divination Systems -->
+    <h2 class="section-header">占術システム</h2>
+    <div class="system-rows">
+      <div class="system-row">
+        <div class="system-tag">四柱推命</div>
+        <div class="system-name">陰陽五行に基づく運命診断</div>
+        <div class="system-description">生年月日時から算出される天干地支。あなたの本質的な資質と人生のリズムを読み解く、中国最古の占術体系。</div>
+      </div>
+
+      <div class="system-row">
+        <div class="system-tag">六星占術</div>
+        <div class="system-name">12運命周期の解析</div>
+        <div class="system-description">細木数子により体系化された日本占術。生年月日から導き出される6つの運命星で、人生の周期と適性を診断。</div>
+      </div>
+
+      <div class="system-row">
+        <div class="system-tag">九星気学</div>
+        <div class="system-name">気の流れによる吉凶判断</div>
+        <div class="system-description">9つの星の配置と運行パターンで運を読む。方位、時間、人間関係における吉凶と開運方法を導く。</div>
+      </div>
+
+      <div class="system-row">
+        <div class="system-tag">西洋占星術</div>
+        <div class="system-name">天体の運行と心理分析</div>
+        <div class="system-description">太陽、月、惑星の位置から個性と運命を読む。心理学的深さを備えた西洋の伝統占術。現在を多面的に捉える。</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <div class="footer">
+    <p>Self Insight © 2026 | 鑑定基準日: 2026年5月10日 | 月次フォーチュン・インデックス算出</p>
+  </div>
+
+  <script>
+    // Radar Chart
+    const ctx = document.getElementById('radarChart').getContext('2d');
+    const radarChart = new Chart(ctx, {
+      type: 'radar',
+      data: {
+        labels: ['仕事', '恋愛', '財運', '健康', '家庭', '精神'],
+        datasets: [
+          {
+            label: '現在のスコア',
+            data: [78, 82, 65, 88, 71, 85],
+            borderColor: '#5645d4',
+            backgroundColor: 'rgba(86, 69, 212, 0.15)',
+            borderWidth: 2,
+            pointBackgroundColor: '#5645d4',
+            pointBorderColor: '#ffffff',
+            pointBorderWidth: 2,
+            pointRadius: 5,
+            pointHoverRadius: 7,
+            tension: 0.3
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: {
+            display: false
+          }
+        },
+        scales: {
+          r: {
+            beginAtZero: true,
+            max: 100,
+            ticks: {
+              color: '#5d5b54',
+              font: {
+                family: "'Inter', sans-serif",
+                size: 12,
+                weight: '400'
+              },
+              stepSize: 20
+            },
+            grid: {
+              color: 'rgba(93, 91, 84, 0.1)'
+            },
+            pointLabels: {
+              color: '#37352f',
+              font: {
+                family: "'Inter', sans-serif",
+                size: 14,
+                weight: '600'
+              }
+            }
+          }
+        }
+      }
+    });
+  </script>
+</body>
+</html>

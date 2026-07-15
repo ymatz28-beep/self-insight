@@ -10,6 +10,10 @@
 <style>
 :root{--bg:#0f1117;--surface:#1a1d27;--surface2:#242836;--border:#2d3348;--border-light:#3d4460;
   --accent:#6366f1;--accent2:#8b5cf6;--blue:#3b82f6;--green:#22c55e;--red:#ef4444;--yellow:#eab308;--gold:#c9a84c;
+  --accent-green:#22c55e;--accent-green-light:#4ade80;--accent-blue:#3b82f6;--accent-blue-light:#60a5fa;
+  --accent-red:#ef4444;--accent-red-light:#f87171;
+  --accent-purple:#8b5cf6;--accent-purple-light:#a78bfa;--accent-purple-dark:#6d28d9;
+  --accent-teal:#14b8a6;--accent-teal-light:#5eead4;
   --text:#e4e4e7;--text-secondary:#9ca3af;--text-muted:#7c8293;
   --font-body:'Inter','Noto Sans JP',sans-serif;--font-mono:'JetBrains Mono',monospace;--font-display:'Cormorant Garamond',serif;--font-heading:'Inter',sans-serif;
   --r-sm:6px;--r-md:10px;--r-lg:14px;--r-xl:16px;--gnav-height:52px}
@@ -589,7 +593,34 @@ abbr.term:hover,abbr.term:focus{color:#8c6820!important}
 </style>
 </head>
 <body>
-
+<header class="site-header">
+  <input type="checkbox" id="nav-toggle" class="nav-toggle" aria-label="Toggle navigation">
+  <label for="nav-toggle" class="nav-toggle-label"><span></span></label>
+  <nav class="site-nav">
+    <a href="https://iuma-private.pages.dev/stock/portfolio.html">Stock</a>
+    <a href="https://iuma-private.pages.dev/stock/market-intel.html">Market Intel</a>
+    <a href="https://iuma-private.pages.dev/cisco/">Cisco</a>
+    <a href="https://iuma-private.pages.dev/action/">Action</a>
+    <a href="https://ymatz28-beep.github.io/property-report/">Property</a>
+    <div class="nav-more">
+      <button class="nav-more-btn" aria-label="More pages" onclick="this.parentElement.classList.toggle('open')">⋯</button>
+      <div class="nav-more-menu">
+    <a href="https://iuma-private.pages.dev/wealth/dashboard.html">Wealth</a>
+    <a href="https://iuma-private.pages.dev/trading/">Trading</a>
+    <a href="https://iuma-private.pages.dev/intel/">Insight</a>
+    <a href="https://iuma-private.pages.dev/health/">Health</a>
+    <a href="https://iuma-family.pages.dev/">Medical</a>
+    <a href="https://ymatz28-beep.github.io/trip-planner/">Travel</a>
+    <a href="https://iuma-private.pages.dev/newsletter/">Newsletter</a>
+    <a href="https://iuma-private.pages.dev/bookmarks/">Bookmarks</a>
+    <a href="https://iuma-private.pages.dev/bookmarks/decide.html">判定</a>
+    <a href="https://iuma-private.pages.dev/sns/">SNS</a>
+    <a href="https://iuma-private.pages.dev/monetize/">Monetize</a>
+    <a href="https://ymatz28-beep.github.io/self-insight/" aria-current="page">Self-Insight</a>
+      </div>
+    </div>
+  </nav>
+</header><script>document.addEventListener("click",function(e){var m=document.querySelector(".nav-more");if(m&&!m.contains(e.target))m.classList.remove("open");});</script>
 <div class="container">
 <section class="hero">
   <div class="hero-particles"></div>
@@ -671,17 +702,30 @@ abbr.term:hover,abbr.term:focus{color:#8c6820!important}
 
 <div class="hub-card expanded" id="core-identity-card">
   <div class="hub-card-preview" onclick="this.parentElement.classList.toggle('expanded')">
-    <div class="hub-card-icon" style="background:rgba(99,102,241,0.12);color:#a5b4fc">&#9733;</div>
+    <div class="hub-card-icon" style="background:rgba(176,68,95,0.12);color:#b0445f">&#9733;</div>
     <div>
       <div class="hub-card-title">あなたの本質</div>
-      <div class="hub-card-summary">壬火 × 二黒土星 — 大河の流れ × 母なる支える力</div>
+      <div class="hub-card-summary">壬水 × 二黒土星 — 大河の流れ × 母なる支える力</div>
     </div>
     <div class="hub-card-arrow"></div>
   </div>
   <div class="hub-card-content">
     <section class="section" id="core-identity">
-  <div class="section-quote">"あなたを一言で表すなら—"</div>
-  <div class="insight-box" style="border-color:rgba(99,102,241,0.4);background:linear-gradient(135deg,rgba(99,102,241,0.12),rgba(139,92,246,0.08));">
+  <div class="section-quote">"あなたを一言で表すなら——大地に宿る、深く静かな水"</div>
+  <div style="margin-top:16px">
+    <div class="section-sub-title" style="font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--text-muted);margin-bottom:10px">命式の読み解き</div>
+    <div class="grid grid-3"><div class="card" style="border-left:3px solid #b0445f">
+      <div class="card-label" style="color:#b0445f">日主「壬」</div>
+      <div style="font-size:13px;line-height:1.8;color:var(--text-secondary);margin-top:6px">大海のような、広く深い包容力と知恵をお持ちの方です。年を重ねるごとに深みが増す命式で、若い頃の苦労や迷いがすべて滋養となって今のあなたを形作っています。人の痛みをわかる器と、静かに流れを読む眼は、人生の積み重ねから生まれた本物の宝でございます。</div>
+    </div><div class="card" style="border-left:3px solid #22c55e">
+      <div class="card-label" style="color:#86efac">本命星「二黒土星」</div>
+      <div style="font-size:13px;line-height:1.8;color:var(--text-secondary);margin-top:6px">「大地」の星をお持ちです。派手さよりも堅実さを大切にされ、誰かを支える側に回ることに深い喜びを見出されるお方です。</div>
+    </div><div class="card" style="border-left:3px solid #eab308">
+      <div class="card-label" style="color:#fde047">六星占術「火星人」</div>
+      <div style="font-size:13px;line-height:1.8;color:var(--text-secondary);margin-top:6px">燃え立つ火星人でいらっしゃいます。情熱と行動力の塊。じっとしていらっしゃると不調に傾きやすい、動いて整う方です。</div>
+    </div></div>
+  </div>
+  <div class="insight-box" style="border-color:rgba(176,68,95,0.4);background:linear-gradient(135deg,rgba(176,68,95,0.08),rgba(144,64,160,0.06));">
     <div class="insight-title" style="font-size:15px;">統合インサイト</div>
     <p style="line-height:1.9;font-size:14px;">手嶋 静さん、81年という人生のすべてが、今このダッシュボードの言葉に凝縮されています。占いは「未来を当てるもの」ではなく、<strong>「あなたが歩んできた道を肯定するもの」</strong>でもあります。今年は九星気学で<strong>乾宮（充実・実り）</strong>、六星占術で<strong>達成</strong>——複数の体系が口を揃えて「今年が実りの時」と告げています。これまでの努力と選択は、正しかったのです。</p>
     <div class="collapsible-content" style="display:none"><p style="line-height:1.9;font-size:14px;margin-top:12px;">手嶋 静さんを一言で言い表すなら、四柱推命の日主が示す「<strong>壬日主</strong>」——大海のような、広く深い包容力と知恵をお持ちの方です。年を重ねるごとに深みが増す命式で、若い頃の苦労や迷いがすべて滋養となって今のあなたを形作っています。人の痛みをわかる器と、静かに流れを読む眼は、人生の積み重ねから生まれた本物の宝でございます。 そして、九星気学の本命星から見える社会に出た時のお顔は「<strong>二黒土星</strong>」——「大地」の星をお持ちです。派手さよりも堅実さを大切にされ、誰かを支える側に回ることに深い喜びを見出されるお方です。 血液型は「<strong>AB型</strong>」で、合理と感性の両立。状況に応じて最適なモードを切り替えられる、適応力の高いタイプの方です（日本人の約 9%）。生年月日という揺るぎない事実だけから、手嶋 静さんの核はこのように浮かび上がります。</p><p style="line-height:1.9;font-size:14px;margin-top:12px;">視点を変えて西洋占星術で見ると、あなたは <strong>天秤座（風・活動宮）— バランスと美を重んじる調停者</strong>。東洋の干支に目を向けると <strong>申年（奇才を宿す発想の人）</strong>でいらっしゃいます。起源の全く違う 2 つの体系が、あなたの気質を別々の角度から描き出しているのです。東洋と西洋の読みが重なり合う場所に、<strong>「本当に変わらないあなたの軸」</strong>が静かに見えてまいります。</p><p style="line-height:1.9;font-size:14px;margin-top:12px;">六星占術の視点を加えると、あなたは <strong>火星人</strong>でいらっしゃいます。燃え立つ火星人でいらっしゃいます。情熱と行動力の塊。じっとしていらっしゃると不調に傾きやすい、動いて整う方です。 12 年周期で運気が巡るため、「今の時期になさるべきこと・お控えになるべきこと」が明確に見えてくるのが、この体系ならではの強みでございます。</p><p style="line-height:1.9;font-size:14px;margin-top:12px;">最後に、お気を付けいただきたい点を一つ。あなたの命式で欠けている五行は「<strong>火</strong>」でいらっしゃいます。これは 「情熱・行動力・人前に出る力」 のエネルギーが命式から出づらい構造であることを示しています。「弱点」ではなく、「<strong>意識的に補うと、全体のバランスが整う方向</strong>」とお考えください。自然体では情熱を込めた発信・人前に出る場面が後回しになりがちですので、予定や環境を整える形で仕組みになさると、あなたの本来の強みが最大限に活きてまいります。</p></div>
@@ -819,7 +863,7 @@ abbr.term:hover,abbr.term:focus{color:#8c6820!important}
   </div>
 </div><div class="hub-card expanded" id="cross-reference-card">
   <div class="hub-card-preview" onclick="this.parentElement.classList.toggle('expanded')">
-    <div class="hub-card-icon" style="background:rgba(99,102,241,0.12);color:#a5b4fc">&#10021;</div>
+    <div class="hub-card-icon" style="background:rgba(176,68,95,0.12);color:#b0445f">&#10021;</div>
     <div>
       <div class="hub-card-title">クロスリファレンス・インサイト</div>
       <div class="hub-card-summary">体系を跨いだ一致点と矛盾点から読む「あなた」</div>
@@ -945,12 +989,20 @@ abbr.term:hover,abbr.term:focus{color:#8c6820!important}
     <div class="blueprint-section" id="blueprint">
   <div class="blueprint-grid"><div class="blueprint-card">
       <div class="blueprint-label">エネルギー管理</div>
-      <div class="blueprint-title">壬火の炎を安定させる — 環境設計が鍵</div>
-      <div class="blueprint-desc">壬火（ロウソクの炎）は環境次第で安定も不安定もする。集中できる環境を意識的に選び、エネルギーの無駄遣いを避ける仕組みを作る</div>
+      <div class="blueprint-title">壬水の流れを途切れさせない — 交流と動きが鍵</div>
+      <div class="blueprint-desc">壬（大海・陽水）は動くほどに澄み、止まると淀む。人との交流・外への働きかけが「水の流れ」を生み、本来のエネルギーが循環する</div>
     </div><div class="blueprint-card">
       <div class="blueprint-label">弱点の構造的カバー</div>
-      <div class="blueprint-title">情熱の補完</div>
-      <div class="blueprint-desc">「なぜ自分がこれをやるのか」を定期的に言語化する。目的を明確にすることで内なる火を維持する</div>
+      <div class="blueprint-title">火の欠如を意識的に補う</div>
+      <div class="blueprint-desc">五行で火がゼロ。「なぜ今これをするのか」を月に一度声に出して確認する。情熱の出どころを意識するだけで行動の質が変わる</div>
+    </div><div class="blueprint-card">
+      <div class="blueprint-label">縁と感謝を深める</div>
+      <div class="blueprint-title">旧友・家族とのつながりを耕す</div>
+      <div class="blueprint-desc">壬水×二黒土星の組み合わせは「縁を実らせる」年廻りが2026年に重なる。長く疎遠だった人へ一本連絡を入れるだけで、思いがけない喜びが戻ってくる</div>
+    </div><div class="blueprint-card">
+      <div class="blueprint-label">2026年ダブルピーク活用</div>
+      <div class="blueprint-title">8〜10月は動ける時期を最大限に使う</div>
+      <div class="blueprint-desc">九星（中宮・乾宮）と六星（再会・財成・安定）がそろって高エネルギーになる3か月。先送りしていた「やりたいこと」をこの時期に動かすと成果が出やすい</div>
     </div></div>
 </div>
   </div>
@@ -1017,7 +1069,7 @@ abbr.term:hover,abbr.term:focus{color:#8c6820!important}
       <div class="element-badge elem-water">水（Water）</div>
       <div style="font-size:10px;color:var(--text-muted);margin-top:6px">本質的な自己</div></div><div class="pillar unknown"><div class="pillar-label">時柱</div><div class="kanji">？？</div><div class="reading">出生時刻不明</div><div class="element-badge" style="background:rgba(255,255,255,0.05);color:var(--text-muted)">未解放</div><div style="font-size:10px;color:var(--text-muted);margin-top:6px">晩年・子孫運</div></div></div>
   <div style="margin-top:16px;font-size:13px;color:var(--text-secondary);line-height:1.7">
-    <strong style="color:var(--text)">日主（にっしゅ）: 壬火（Yang火 / ひのと）</strong> — あなたの生まれ持った本質。陽水 — 大海。広大な知恵と包容力</div>
+    <strong style="color:var(--text)">日主（にっしゅ）: 壬（陽水 / みずのえ）</strong> — あなたの生まれ持った本質。陽水 — 大海。広大な知恵と包容力</div>
   
   <div class="element-bar" style="margin-top:12px"><div class="element-col">
       <div class="element-pct" style="color:var(--accent-green-light)">17%</div>
@@ -1102,7 +1154,7 @@ abbr.term:hover,abbr.term:focus{color:#8c6820!important}
       <span class="chart-legend-line" style="background:#6366f1"></span>
       <div><span class="chart-legend-label">九星気学</span>
       <span class="chart-legend-desc">9年周期。本命星の宮遷移による運気の波。社会的な運勢の流れを示す</span></div></div><div class="chart-legend-item">
-      <span class="chart-legend-line" style="background:var(--accent-green)"></span>
+      <span class="chart-legend-line" style="background:#22c55e"></span>
       <div><span class="chart-legend-label">六星占術</span>
       <span class="chart-legend-desc">12年周期。大殺界を含む運命星の巡り。個人的な運気のバイオリズム</span></div></div></div>
   <div class="insight-box" style="margin-top:16px;border-color:rgba(234,179,8,0.3);background:linear-gradient(135deg,rgba(234,179,8,0.08),rgba(250,204,21,0.04))">
@@ -1172,7 +1224,7 @@ monthlyData.forEach((m,i)=>{
       <div class="month-tags">
         <span class="month-tag" style="background:rgba(99,102,241,0.15);color:#a5b4fc">九星: ${m.nineStarNote}</span>
         <span class="month-tag" style="background:${pc.bg};color:${pc.color};border:1px solid ${pc.border}">六星: ${m.rokuseiPhase}</span>
-        ${m.westernTheme ? '<span class="month-tag" style="background:rgba(139,92,246,0.15);color:var(--accent-purple-light);border:1px solid rgba(139,92,246,0.3)">西洋: '+m.westernTheme+'</span>' : ''}
+        ${m.westernTheme ? '<span class="month-tag" style="background:rgba(20,184,166,0.15);color:#5eead4;border:1px solid rgba(20,184,166,0.3)">西洋: '+m.westernTheme+'</span>' : ''}
         ${m.retroBadge || ''}
       </div>
     </div>
@@ -1204,7 +1256,7 @@ selectMonth(currentMonth);
 </div>
 <footer class="page-footer">
   <div>Self-Insight — Powered by AI × 東洋占術 × 心理学</div>
-  <div style="margin-top:4px;font-size:10px">Generated 2026-05-07</div>
+  <div style="margin-top:4px;font-size:10px">Generated 2026-05-08</div>
 </footer>
 </div>
 <script>
@@ -1212,13 +1264,13 @@ new Chart(document.getElementById('chartOverlay'),{
   type:'line',
   data:{labels:["2024", "2025", "2026", "2027", "2028", "2029", "2030", "2031", "2032", "2033"],datasets:[
     {label:'九星気学',data:[75, 100, 90, 80, 40, 70, 30, 45, 65, null],borderColor:'#6366f1',fill:false,tension:0.4,borderWidth:2,pointRadius:4,pointBackgroundColor:'#6366f1'},
-    {label:'六星占術',data:[80, 35, 90, 25, 70, 85, 95, 15, 10, 20],borderColor:'var(--accent-green)',fill:false,tension:0.4,borderWidth:2,pointRadius:4,pointBackgroundColor:'var(--accent-green)'},
+    {label:'六星占術',data:[80, 35, 90, 25, 70, 85, 95, 15, 10, 20],borderColor:'#22c55e',fill:false,tension:0.4,borderWidth:2,pointRadius:4,pointBackgroundColor:'#22c55e'},
     {label:'霊合合成',data:[null, null, null, null, null, null, null, null, null, null],borderColor:'#eab308',fill:false,tension:0.4,borderWidth:2,borderDash:[6,3],pointRadius:4,pointBackgroundColor:'#eab308'}
   ]},
   options:{responsive:true,maintainAspectRatio:false,animation:{duration:1500,easing:'easeOutQuart'},interaction:{mode:'index',intersect:false},
     plugins:{legend:{display:false}},
-    scales:{x:{ticks:{color:'#7c8293',font:{family:"'JetBrains Mono',monospace",size:11}},grid:{color:'rgba(255,255,255,0.05)'}},
-      y:{min:0,max:110,ticks:{display:false},grid:{color:'rgba(255,255,255,0.05)'}}}
+    scales:{x:{ticks:{color:'#7c8293',font:{family:"'JetBrains Mono',monospace",size:11}},grid:{color:'rgba(0,0,0,0.07)'}},
+      y:{min:0,max:110,ticks:{display:false},grid:{color:'rgba(0,0,0,0.07)'}}}
   }
 });
 const fadeObserver=new IntersectionObserver((entries)=>{entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');fadeObserver.unobserve(e.target);}});},{threshold:0.1,rootMargin:'0px 0px -40px 0px'});

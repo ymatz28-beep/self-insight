@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>手嶋静 — Template G: 星図型</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Inter:wght@300;400;500;600&family=Noto+Sans+JP:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+      --bg: #0D0B14;
+      --surface: #1A1626;
+      --surface2: #251E36;
+      --border: #2E2545;
+      --gold: #C9A84C;
+      --accent: #8B5CF6;
+      --accent-warm: #A78BFA;
+      --text-primary: #F5F0E8;
+      --text-secondary: #A89EC0;
+      --text-muted: #6B6285;
+      --female-bg: #f5eff2;
+    }
+    body { background: var(--bg); color: var(--text-primary); font-family: 'Inter', sans-serif; }
+
+    .page { max-width: 900px; margin: 0 auto; padding: 60px 24px; }
+
+    /* Hero */
+    .hero { text-align: center; margin-bottom: 64px; }
+    .hero-label { font-size: 11px; letter-spacing: 4px; color: var(--text-muted); text-transform: uppercase; margin-bottom: 16px; }
+    .hero-name { font-family: 'Cormorant Garamond', serif; font-size: clamp(48px, 10vw, 72px); font-weight: 300; color: var(--text-primary); letter-spacing: 4px; }
+    .hero-sub { font-size: 13px; color: var(--text-secondary); margin-top: 12px; letter-spacing: 1px; }
+    .hero-divider { width: 120px; height: 1px; background: linear-gradient(90deg, transparent, var(--gold), transparent); margin: 24px auto; }
+
+    /* Star Wheel */
+    .wheel-section { display: flex; gap: 48px; align-items: center; margin-bottom: 64px; flex-wrap: wrap; justify-content: center; }
+    .wheel-wrap { position: relative; width: 340px; height: 340px; flex-shrink: 0; }
+    .wheel-wrap svg { width: 100%; height: 100%; }
+
+    .wheel-info { flex: 1; min-width: 260px; }
+    .wheel-info-title { font-family: 'Cormorant Garamond', serif; font-size: 22px; color: var(--gold); margin-bottom: 20px; }
+    .wheel-info-item { display: flex; align-items: flex-start; gap: 12px; padding: 12px 0; border-bottom: 1px solid var(--border); }
+    .wheel-info-item:last-child { border-bottom: none; }
+    .wii-icon { font-size: 20px; line-height: 1; margin-top: 2px; }
+    .wii-label { font-size: 11px; color: var(--text-muted); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 4px; }
+    .wii-value { font-family: 'Cormorant Garamond', serif; font-size: 18px; color: var(--text-primary); }
+    .wii-desc { font-size: 12px; color: var(--text-secondary); margin-top: 3px; line-height: 1.5; }
+
+    /* Sections */
+    .section { margin-bottom: 56px; }
+    .section-header { display: flex; align-items: center; gap: 16px; margin-bottom: 28px; }
+    .section-line { flex: 1; height: 1px; background: var(--border); }
+    .section-title { font-family: 'Cormorant Garamond', serif; font-size: 20px; color: var(--gold); white-space: nowrap; }
+
+    /* Energy Ring Bars */
+    .ring-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .ring-item { background: var(--surface); border: 1px solid var(--border); padding: 20px; border-radius: 4px; }
+    .ring-label { font-size: 11px; color: var(--text-muted); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 8px; }
+    .ring-value { font-family: 'Cormorant Garamond', serif; font-size: 36px; color: var(--accent-warm); line-height: 1; margin-bottom: 12px; }
+    .ring-bar-wrap { height: 4px; background: var(--border); border-radius: 2px; overflow: hidden; }
+    .ring-bar { height: 100%; border-radius: 2px; background: linear-gradient(90deg, var(--accent), var(--accent-warm)); }
+    .ring-desc { font-size: 12px; color: var(--text-secondary); margin-top: 10px; line-height: 1.6; }
+
+    /* Pillar grid */
+    .pillar-row { display: grid; grid-template-columns: 80px repeat(4, 1fr); gap: 1px; background: var(--border); border: 1px solid var(--border); margin-bottom: 16px; }
+    .pillar-cell { background: var(--surface); padding: 14px 10px; text-align: center; }
+    .pillar-header { background: var(--surface2); }
+    .pillar-title { font-size: 10px; color: var(--text-muted); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 4px; }
+    .pillar-kanji { font-family: 'Cormorant Garamond', serif; font-size: 22px; color: var(--gold); }
+    .pillar-romaji { font-size: 10px; color: var(--text-secondary); margin-top: 4px; }
+    .pillar-element { font-size: 11px; color: var(--accent-warm); margin-top: 6px; }
+    .row-label { font-size: 11px; color: var(--text-secondary); display: flex; align-items: center; justify-content: center; }
+
+    /* Five elements wheel mini */
+    .elements-row { display: flex; gap: 12px; align-items: center; }
+    .elem-bar-wrap { flex: 1; }
+    .elem-bar-row { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+    .elem-name { font-size: 12px; color: var(--text-secondary); width: 24px; text-align: center; }
+    .elem-track { flex: 1; height: 6px; background: var(--border); border-radius: 3px; overflow: hidden; }
+    .elem-fill { height: 100%; border-radius: 3px; }
+    .elem-fill.ki  { background: #4ade80; }
+    .elem-fill.hi  { background: #f87171; }
+    .elem-fill.tsuchi { background: #c9a84c; }
+    .elem-fill.kin { background: #94a3b8; }
+    .elem-fill.mizu { background: #60a5fa; }
+    .elem-pct { font-size: 11px; color: var(--text-muted); width: 32px; text-align: right; }
+    .elem-note { font-size: 12px; color: var(--text-secondary); background: var(--surface2); padding: 12px 16px; border-left: 2px solid var(--accent); margin-top: 8px; line-height: 1.7; }
+
+    /* Cycle table */
+    .cycle-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    .cycle-table th { background: var(--surface2); color: var(--text-muted); font-weight: 400; font-size: 11px; letter-spacing: 1px; padding: 10px 12px; text-align: left; border-bottom: 1px solid var(--border); }
+    .cycle-table td { padding: 10px 12px; border-bottom: 1px solid var(--border); color: var(--text-secondary); }
+    .cycle-table tr.current td { background: rgba(139,92,246,0.08); color: var(--text-primary); }
+    .cycle-table .year { color: var(--text-muted); font-size: 12px; }
+    .cycle-table .phase { font-family: 'Cormorant Garamond', serif; font-size: 15px; color: var(--gold); }
+    .cycle-table .current .phase { color: var(--accent-warm); }
+    .energy-dot { display: inline-block; width: 6px; height: 6px; border-radius: 50%; margin-right: 6px; vertical-align: middle; background: var(--accent-warm); }
+    .score-chip { display: inline-block; background: rgba(139,92,246,0.2); border: 1px solid rgba(139,92,246,0.4); color: var(--accent-warm); font-size: 11px; padding: 2px 8px; border-radius: 2px; }
+
+    footer { text-align: center; padding: 40px; color: var(--text-muted); font-size: 12px; border-top: 1px solid var(--border); margin-top: 40px; }
+  </style>
+</head>
+<body>
+<div class="page">
+
+  <!-- Hero -->
+  <section class="hero">
+    <div class="hero-label">Self Insight — 2026年 鑑定書</div>
+    <div class="hero-name">手嶋 静</div>
+    <div class="hero-sub">1944年9月25日生 · 東京都 · AB型 · 81歳</div>
+    <div class="hero-divider"></div>
+  </section>
+
+  <!-- Star Wheel + Core Identity -->
+  <section class="wheel-section">
+    <div class="wheel-wrap">
+      <svg viewBox="0 0 340 340" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <!-- Outer ring -->
+        <circle cx="170" cy="170" r="155" stroke="#2E2545" stroke-width="1"/>
+        <!-- Middle ring -->
+        <circle cx="170" cy="170" r="110" stroke="#2E2545" stroke-width="1"/>
+        <!-- Inner ring -->
+        <circle cx="170" cy="170" r="66" stroke="rgba(201,168,76,0.3)" stroke-width="1.5"/>
+        <!-- Center circle -->
+        <circle cx="170" cy="170" r="38" fill="#1A1626" stroke="rgba(201,168,76,0.5)" stroke-width="1.5"/>
+
+        <!-- Spokes -->
+        <line x1="170" y1="15" x2="170" y2="325" stroke="#2E2545" stroke-width="0.5" stroke-dasharray="3,6"/>
+        <line x1="15" y1="170" x2="325" y2="170" stroke="#2E2545" stroke-width="0.5" stroke-dasharray="3,6"/>
+        <line x1="60" y1="60" x2="280" y2="280" stroke="#2E2545" stroke-width="0.5" stroke-dasharray="3,6"/>
+        <line x1="280" y1="60" x2="60" y2="280" stroke="#2E2545" stroke-width="0.5" stroke-dasharray="3,6"/>
+
+        <!-- Zodiac arc segment (Libra ~180°) highlight -->
+        <path d="M 170 170 L 170 15 A 155 155 0 0 1 295 245 Z" fill="rgba(139,92,246,0.05)" stroke="none"/>
+        <path d="M 170 15 A 155 155 0 0 1 295 245" stroke="rgba(139,92,246,0.3)" stroke-width="2" fill="none"/>
+
+        <!-- Labels on outer ring -->
+        <text x="170" y="10" fill="#6B6285" font-size="9" text-anchor="middle" font-family="Inter">北</text>
+        <text x="330" y="174" fill="#6B6285" font-size="9" text-anchor="start" font-family="Inter">東</text>
+        <text x="170" y="335" fill="#6B6285" font-size="9" text-anchor="middle" font-family="Inter">南</text>
+        <text x="5" y="174" fill="#6B6285" font-size="9" text-anchor="start" font-family="Inter">西</text>
+
+        <!-- Dots on middle ring for occupancies -->
+        <circle cx="170" cy="60" r="4" fill="#C9A84C"/><!-- 水 -->
+        <circle cx="248" cy="92" r="4" fill="#94a3b8"/><!-- 金 -->
+        <circle cx="280" cy="170" r="4" fill="#94a3b8"/><!-- 金 -->
+        <circle cx="212" cy="60" r="3" fill="#4ade80" opacity="0.7"/><!-- 木 -->
+
+        <!-- Energy score arc (inner area) -->
+        <circle cx="170" cy="170" r="52" stroke="#8B5CF6" stroke-width="4" stroke-dasharray="278 50" stroke-dashoffset="0" stroke-linecap="round" fill="none" transform="rotate(-90 170 170)"/>
+
+        <!-- Center text -->
+        <text x="170" y="163" fill="#C9A84C" font-size="22" text-anchor="middle" font-family="Cormorant Garamond, serif" font-weight="300">壬</text>
+        <text x="170" y="180" fill="#A89EC0" font-size="9" text-anchor="middle" font-family="Inter">日主</text>
+
+        <!-- Outer labels -->
+        <text x="170" y="42" fill="#A89EC0" font-size="10" text-anchor="middle" font-family="Noto Sans JP">水</text>
+        <text x="248" y="76" fill="#A89EC0" font-size="10" text-anchor="middle" font-family="Noto Sans JP">金</text>
+        <text x="296" y="180" fill="#A89EC0" font-size="10" text-anchor="middle" font-family="Noto Sans JP">二黒</text>
+        <text x="68" y="180" fill="#A89EC0" font-size="10" text-anchor="middle" font-family="Noto Sans JP">火星人+</text>
+        <text x="210" y="290" fill="#A78BFA" font-size="10" text-anchor="middle" font-family="Noto Sans JP">♎ 天秤</text>
+        <text x="118" y="290" fill="#A89EC0" font-size="10" text-anchor="middle" font-family="Noto Sans JP">乾宮</text>
+
+        <!-- Current year indicator -->
+        <circle cx="296" cy="120" r="5" fill="#A78BFA"/>
+        <text x="296" y="109" fill="#A78BFA" font-size="9" text-anchor="middle" font-family="Inter">2026</text>
+      </svg>
+    </div>
+
+    <div class="wheel-info">
+      <div class="wheel-info-title">核心プロフィール</div>
+      <div class="wheel-info-item">
+        <div class="wii-icon">🌊</div>
+        <div>
+          <div class="wii-label">日主 · 四柱推命</div>
+          <div class="wii-value">壬水 — 陽水</div>
+          <div class="wii-desc">大海のような広大な知恵と包容力。深く静かに、しかし力強く流れる水の性質を持つ</div>
+        </div>
+      </div>
+      <div class="wheel-info-item">
+        <div class="wii-icon">⭐</div>
+        <div>
+          <div class="wii-label">本命星 · 九星気学</div>
+          <div class="wii-value">二黒土星</div>
+          <div class="wii-desc">大地の母のような堅実さ。SW方位に縁があり、2026年は乾宮で充実の年</div>
+        </div>
+      </div>
+      <div class="wheel-info-item">
+        <div class="wii-icon">🔥</div>
+        <div>
+          <div class="wii-label">本星 · 六星占術</div>
+          <div class="wii-value">火星人＋</div>
+          <div class="wii-desc">情熱的で行動力があり、プラス霊で幸運体質。2026年は「達成」の年</div>
+        </div>
+      </div>
+      <div class="wheel-info-item">
+        <div class="wii-icon">♎</div>
+        <div>
+          <div class="wii-label">太陽星座 · 西洋占星術</div>
+          <div class="wii-value">天秤座 · 金星支配</div>
+          <div class="wii-desc">調和・美・対人関係を重んじる。Cardinal Air — 変化を率いるバランスの取り手</div>
+        </div>
+      </div>
+      <div class="wheel-info-item">
+        <div class="wii-icon">🩸</div>
+        <div>
+          <div class="wii-label">血液型</div>
+          <div class="wii-value">AB型</div>
+          <div class="wii-desc">合理的思考と感性が共存。冷静な分析力と多角的視点を持つが、二面性で迷いやすい</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 2026年エネルギー -->
+  <section class="section">
+    <div class="section-header">
+      <div class="section-title">2026年 エネルギー鑑定</div>
+      <div class="section-line"></div>
+    </div>
+    <div class="ring-grid">
+      <div class="ring-item">
+        <div class="ring-label">九星気学 · 乾宮年</div>
+        <div class="ring-value">90</div>
+        <div class="ring-bar-wrap"><div class="ring-bar" style="width:90%"></div></div>
+        <div class="ring-desc">乾は「天」を象徴。天の運気が味方し、高い目標に向かって動ける最良の年。物事が大きくまとまりやすい時期</div>
+      </div>
+      <div class="ring-item">
+        <div class="ring-label">六星占術 · 達成年</div>
+        <div class="ring-value">90</div>
+        <div class="ring-bar-wrap"><div class="ring-bar" style="width:90%"></div></div>
+        <div class="ring-desc">12年サイクルの頂点に近い「達成」フェーズ。これまでの努力が形になり、新たな一歩を踏み出せる</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 四柱命式 -->
+  <section class="section">
+    <div class="section-header">
+      <div class="section-title">四柱命式</div>
+      <div class="section-line"></div>
+    </div>
+    <div class="pillar-row">
+      <div class="pillar-cell pillar-header row-label">天干</div>
+      <div class="pillar-cell"><div class="pillar-title">年柱</div><div class="pillar-kanji">甲</div><div class="pillar-element">木 · 陽</div></div>
+      <div class="pillar-cell"><div class="pillar-title">月柱</div><div class="pillar-kanji">癸</div><div class="pillar-element">水 · 陰</div></div>
+      <div class="pillar-cell"><div class="pillar-title">日柱</div><div class="pillar-kanji">壬</div><div class="pillar-element">水 · 陽</div></div>
+      <div class="pillar-cell"><div class="pillar-title">時柱</div><div class="pillar-kanji" style="color:var(--text-muted)">—</div><div class="pillar-element" style="color:var(--text-muted)">不明</div></div>
+    </div>
+    <div class="pillar-row">
+      <div class="pillar-cell pillar-header row-label">地支</div>
+      <div class="pillar-cell"><div class="pillar-kanji">申</div><div class="pillar-romaji">Saru</div><div class="pillar-element">金 · 陽</div></div>
+      <div class="pillar-cell"><div class="pillar-kanji">酉</div><div class="pillar-romaji">Tori</div><div class="pillar-element">金 · 陰</div></div>
+      <div class="pillar-cell"><div class="pillar-kanji">辰</div><div class="pillar-romaji">Tatsu</div><div class="pillar-element">土 · 陽</div></div>
+      <div class="pillar-cell"><div class="pillar-kanji" style="color:var(--text-muted)">—</div><div class="pillar-romaji" style="color:var(--text-muted)">—</div><div class="pillar-element" style="color:var(--text-muted)">—</div></div>
+    </div>
+
+    <!-- 五行バランス -->
+    <div style="margin-top:20px">
+      <div style="font-size:12px;color:var(--text-muted);letter-spacing:2px;text-transform:uppercase;margin-bottom:14px;">五行バランス</div>
+      <div class="elem-bar-row"><div class="elem-name">木</div><div class="elem-track"><div class="elem-fill ki" style="width:17%"></div></div><div class="elem-pct">17%</div></div>
+      <div class="elem-bar-row"><div class="elem-name">火</div><div class="elem-track"><div class="elem-fill hi" style="width:0%"></div></div><div class="elem-pct" style="color:#f87171">0%</div></div>
+      <div class="elem-bar-row"><div class="elem-name">土</div><div class="elem-track"><div class="elem-fill tsuchi" style="width:17%"></div></div><div class="elem-pct">17%</div></div>
+      <div class="elem-bar-row"><div class="elem-name">金</div><div class="elem-track"><div class="elem-fill kin" style="width:33%"></div></div><div class="elem-pct">33%</div></div>
+      <div class="elem-bar-row"><div class="elem-name">水</div><div class="elem-track"><div class="elem-fill mizu" style="width:33%"></div></div><div class="elem-pct">33%</div></div>
+      <div class="elem-note">火（情熱・活力）が完全欠如。金と水が突出した構成は、深い思考力・分析力の裏側に、行動力や熱量が湧きにくいという特性を示す</div>
+    </div>
+  </section>
+
+  <!-- サイクル表 -->
+  <section class="section">
+    <div class="section-header">
+      <div class="section-title">六星占術 12年サイクル</div>
+      <div class="section-line"></div>
+    </div>
+    <table class="cycle-table">
+      <thead><tr><th>年</th><th>フェーズ</th><th>エネルギー</th><th>メモ</th></tr></thead>
+      <tbody>
+        <tr><td class="year">2024</td><td class="phase">立花</td><td><span class="score-chip">80</span></td><td style="font-size:12px;">芽吹き・新展開</td></tr>
+        <tr><td class="year">2025</td><td class="phase">健弱</td><td><span class="score-chip" style="background:rgba(248,113,113,0.15);border-color:rgba(248,113,113,0.4);color:#f87171;">35</span></td><td style="font-size:12px;color:#f87171;">小殺界 — 無理は禁物</td></tr>
+        <tr class="current"><td class="year">2026 ▶</td><td class="phase">達成</td><td><span class="score-chip">90</span></td><td style="font-size:12px;">努力が実を結ぶ</td></tr>
+        <tr><td class="year">2027</td><td class="phase">乱気</td><td><span class="score-chip" style="background:rgba(248,113,113,0.15);border-color:rgba(248,113,113,0.4);color:#f87171;">25</span></td><td style="font-size:12px;color:#f87171;">中殺界 — 変化に注意</td></tr>
+        <tr><td class="year">2028</td><td class="phase">再会</td><td><span class="score-chip">70</span></td><td style="font-size:12px;">縁が戻る</td></tr>
+        <tr><td class="year">2029</td><td class="phase">財成</td><td><span class="score-chip">85</span></td><td style="font-size:12px;">金運好調</td></tr>
+        <tr><td class="year">2030</td><td class="phase">安定</td><td><span class="score-chip">95</span></td><td style="font-size:12px;">最高潮</td></tr>
+        <tr><td class="year">2031</td><td class="phase">陰影</td><td><span class="score-chip" style="background:rgba(248,113,113,0.15);border-color:rgba(248,113,113,0.4);color:#f87171;">15</span></td><td style="font-size:12px;color:#f87171;">大殺界開始</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+</div>
+<footer>&copy; 2026 Self Insight — Template G: 星図型</footer>
+</body>
+</html>

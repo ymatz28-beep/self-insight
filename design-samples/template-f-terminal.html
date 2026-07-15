@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>[ORACLE SYS v4.1] TEJIMA_SHIZUKA.dat</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    
+    :root {
+      --bg: #050408;
+      --text-primary: #F5F0E8;
+      --text-secondary: #A89EC0;
+      --text-muted: #6B6285;
+      --glow-primary: #A78BFA;
+      --glow-secondary: #22c55e;
+      --gold: #C9A84C;
+    }
+
+    html, body {
+      background-color: var(--bg);
+      color: var(--text-primary);
+      font-family: 'JetBrains Mono', monospace;
+      overflow-x: hidden;
+      line-height: 1.5;
+    }
+
+    /* Animated Scan Lines */
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: repeating-linear-gradient(
+        0deg,
+        rgba(0,0,0,0.15) 0px,
+        rgba(0,0,0,0.15) 1px,
+        transparent 1px,
+        transparent 2px
+      );
+      animation: scanLines 8s linear infinite;
+      pointer-events: none;
+      z-index: 10;
+      mix-blend-mode: overlay;
+    }
+
+    @keyframes scanLines {
+      0% { transform: translateY(0); }
+      100% { transform: translateY(10px); }
+    }
+
+    /* Cursor Blink */
+    @keyframes blink {
+      0%, 49% { opacity: 1; }
+      50%, 100% { opacity: 0; }
+    }
+
+    .cursor {
+      display: inline-block;
+      width: 8px;
+      height: 1em;
+      background-color: var(--glow-primary);
+      margin-left: 4px;
+      animation: blink 1s infinite;
+    }
+
+    main {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 40px;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Terminal Header */
+    .terminal-header {
+      border: 1px solid var(--glow-primary);
+      padding: 12px 16px;
+      margin-bottom: 40px;
+      background: rgba(167, 139, 250, 0.05);
+      font-size: 11px;
+      color: var(--glow-primary);
+      letter-spacing: 1px;
+      text-shadow: 0 0 8px var(--glow-primary);
+      overflow-x: auto;
+    }
+
+    .terminal-header span:nth-child(2) {
+      margin: 0 10px;
+    }
+
+    /* ASCII Art Box */
+    .ascii-box {
+      margin-bottom: 60px;
+      text-align: center;
+      color: var(--glow-primary);
+      text-shadow: 0 0 8px var(--glow-primary), 0 0 20px rgba(167, 139, 250, 0.3);
+      font-size: 11px;
+      line-height: 1.4;
+      letter-spacing: 1px;
+    }
+
+    .ascii-box .top {
+      margin-bottom: 8px;
+    }
+
+    .ascii-box .name {
+      font-size: 18px;
+      font-weight: 600;
+      margin: 8px 0;
+      letter-spacing: 2px;
+    }
+
+    .ascii-box .info {
+      font-size: 10px;
+      color: var(--text-secondary);
+      margin: 4px 0;
+    }
+
+    .ascii-box .bottom {
+      margin-top: 8px;
+    }
+
+    /* Section Headers */
+    .section-header {
+      color: var(--glow-secondary);
+      text-shadow: 0 0 8px var(--glow-secondary);
+      font-size: 12px;
+      margin: 40px 0 20px;
+      letter-spacing: 2px;
+      font-weight: 600;
+    }
+
+    /* Score Bars with Block Characters */
+    .domain-bars {
+      margin-bottom: 40px;
+      max-width: 600px;
+    }
+
+    .bar-row {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      margin-bottom: 12px;
+      font-size: 11px;
+    }
+
+    .bar-label {
+      width: 60px;
+      text-align: right;
+      color: var(--text-secondary);
+    }
+
+    .bar-container {
+      flex: 1;
+      height: 16px;
+      background: rgba(34, 197, 94, 0.1);
+      border: 1px solid var(--glow-secondary);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--glow-secondary), var(--glow-primary));
+      text-shadow: 0 0 8px var(--glow-secondary);
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      padding-right: 6px;
+      font-size: 10px;
+      color: var(--bg);
+      font-weight: 600;
+      animation: barFill 1s ease-out forwards;
+      opacity: 0.9;
+    }
+
+    @keyframes barFill {
+      from { width: 0; }
+    }
+
+    .bar-row:nth-child(1) .bar-fill { width: 78%; animation-delay: 0.1s; }
+    .bar-row:nth-child(2) .bar-fill { width: 82%; animation-delay: 0.2s; }
+    .bar-row:nth-child(3) .bar-fill { width: 65%; animation-delay: 0.3s; }
+    .bar-row:nth-child(4) .bar-fill { width: 88%; animation-delay: 0.4s; }
+    .bar-row:nth-child(5) .bar-fill { width: 71%; animation-delay: 0.5s; }
+    .bar-row:nth-child(6) .bar-fill { width: 85%; animation-delay: 0.6s; }
+
+    /* Data Table */
+    .data-table {
+      margin-bottom: 40px;
+      font-size: 10px;
+      color: var(--text-secondary);
+      overflow-x: auto;
+    }
+
+    .data-table table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .data-table th {
+      color: var(--glow-primary);
+      text-shadow: 0 0 8px var(--glow-primary);
+      border-bottom: 1px solid var(--glow-primary);
+      padding: 8px 12px;
+      text-align: left;
+      font-weight: 600;
+      background: rgba(167, 139, 250, 0.05);
+    }
+
+    .data-table td {
+      border-bottom: 1px solid rgba(167, 139, 250, 0.2);
+      padding: 8px 12px;
+    }
+
+    .data-table tr:hover {
+      background: rgba(167, 139, 250, 0.08);
+    }
+
+    /* Key Data with Neon Glow */
+    .key-data {
+      color: var(--glow-primary);
+      text-shadow: 0 0 8px var(--glow-primary), 0 0 20px rgba(167, 139, 250, 0.5);
+      font-weight: 600;
+      letter-spacing: 1px;
+    }
+
+    .key-data.green {
+      color: var(--glow-secondary);
+      text-shadow: 0 0 8px var(--glow-secondary), 0 0 20px rgba(34, 197, 94, 0.5);
+    }
+
+    /* System Log Section */
+    .system-log {
+      margin-bottom: 40px;
+      background: rgba(34, 197, 94, 0.03);
+      border: 1px solid rgba(34, 197, 94, 0.3);
+      padding: 16px;
+      font-size: 10px;
+      line-height: 1.8;
+    }
+
+    .log-entry {
+      color: var(--text-secondary);
+      margin-bottom: 8px;
+    }
+
+    .log-timestamp {
+      color: var(--glow-secondary);
+      font-weight: 600;
+    }
+
+    .log-value {
+      color: var(--glow-primary);
+      text-shadow: 0 0 8px var(--glow-primary);
+    }
+
+    /* Chart Container */
+    .chart-section {
+      margin-bottom: 40px;
+      background: rgba(34, 197, 94, 0.02);
+      border: 1px solid rgba(34, 197, 94, 0.4);
+      padding: 20px;
+    }
+
+    #oscilloscope {
+      max-width: 100%;
+      height: 300px;
+    }
+
+    /* Footer */
+    footer {
+      border-top: 1px solid var(--glow-primary);
+      padding: 20px;
+      margin-top: 60px;
+      text-align: center;
+      font-size: 10px;
+      color: var(--glow-primary);
+      text-shadow: 0 0 8px var(--glow-primary);
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      main { padding: 20px; }
+      .ascii-box .name { font-size: 14px; }
+      .data-table { font-size: 9px; }
+      .bar-row { gap: 10px; }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <!-- Terminal Header -->
+    <div class="terminal-header">
+      [ORACLE SYS v4.1]
+      <span>TEJIMA_SHIZUKA.dat</span>
+      <span>—</span>
+      <span>DECRYPTION COMPLETE<span class="cursor"></span></span>
+    </div>
+
+    <!-- ASCII Art Box -->
+    <div class="ascii-box">
+      <div class="top">┌────────────────────────────────────┐</div>
+      <div class="name">手嶋 静 / SHIZUKA TEJIMA</div>
+      <div class="info">BORN: 1988-03-14 — Age: 37</div>
+      <div class="info">ELEMENT: 壬（Water） — 血液型: A型</div>
+      <div class="info">STAR: 三碧木星 | PLANET: 天王星</div>
+      <div class="bottom">└────────────────────────────────────┘</div>
+    </div>
+
+    <!-- Domain Analysis -->
+    <div class="section-header">> LOADING MEISHIKI DATA...</div>
+    <div class="domain-bars">
+      <div class="bar-row">
+        <div class="bar-label">仕事</div>
+        <div class="bar-container">
+          <div class="bar-fill">█</div>
+        </div>
+      </div>
+      <div class="bar-row">
+        <div class="bar-label">恋愛</div>
+        <div class="bar-container">
+          <div class="bar-fill">█</div>
+        </div>
+      </div>
+      <div class="bar-row">
+        <div class="bar-label">財運</div>
+        <div class="bar-container">
+          <div class="bar-fill">█</div>
+        </div>
+      </div>
+      <div class="bar-row">
+        <div class="bar-label">健康</div>
+        <div class="bar-container">
+          <div class="bar-fill">█</div>
+        </div>
+      </div>
+      <div class="bar-row">
+        <div class="bar-label">家庭</div>
+        <div class="bar-container">
+          <div class="bar-fill">█</div>
+        </div>
+      </div>
+      <div class="bar-row">
+        <div class="bar-label">精神</div>
+        <div class="bar-container">
+          <div class="bar-fill">█</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Data Table -->
+    <div class="section-header">> DOMAIN ANALYSIS COMPLETE</div>
+    <div class="data-table">
+      <table>
+        <thead>
+          <tr>
+            <th>PILLAR</th>
+            <th>STEM</th>
+            <th>BRANCH</th>
+            <th>ELEMENT</th>
+            <th>AFFINITY</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Year</td>
+            <td class="key-data">壬</td>
+            <td class="key-data">寅</td>
+            <td>Water | Wood</td>
+            <td>High</td>
+          </tr>
+          <tr>
+            <td>Month</td>
+            <td class="key-data">壬</td>
+            <td class="key-data">卯</td>
+            <td>Water | Wood</td>
+            <td>Excellent</td>
+          </tr>
+          <tr>
+            <td>Day (DayMaster)</td>
+            <td class="key-data green">甲</td>
+            <td class="key-data green">辰</td>
+            <td>Wood | Earth</td>
+            <td>Strong</td>
+          </tr>
+          <tr>
+            <td>Hour</td>
+            <td class="key-data">癸</td>
+            <td class="key-data">卯</td>
+            <td>Water | Wood</td>
+            <td>Balanced</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Oscilloscope Chart -->
+    <div class="section-header">> ENERGY SIGNATURE SCAN...</div>
+    <div class="chart-section">
+      <canvas id="oscilloscope"></canvas>
+    </div>
+
+    <!-- System Log -->
+    <div class="section-header">> SESSION LOG BUFFER</div>
+    <div class="system-log">
+      <div class="log-entry">
+        <span class="log-timestamp">[2026-05-01]</span>
+        FORTUNE INDEX: <span class="log-value">78/100</span> — Ascending phase detected
+      </div>
+      <div class="log-entry">
+        <span class="log-timestamp">[2026-05-02]</span>
+        CREATIVITY LEVEL: <span class="log-value">PEAK</span> — Optimal for new initiatives
+      </div>
+      <div class="log-entry">
+        <span class="log-timestamp">[2026-05-03]</span>
+        RELATIONSHIP MATRIX: <span class="log-value">HARMONIOUS</span> — Cooperation beneficial
+      </div>
+      <div class="log-entry">
+        <span class="log-timestamp">[2026-05-04]</span>
+        FINANCIAL VELOCITY: <span class="log-value">MODERATE</span> — Patience required
+      </div>
+      <div class="log-entry">
+        <span class="log-timestamp">[2026-05-08]</span>
+        CURRENT STATUS: <span class="log-value">STABLE</span> — Integration phase active
+      </div>
+      <div class="log-entry">
+        <span class="log-timestamp">[2026-05-08]</span>
+        MONTHLY FORTUNE: <span class="log-value">84/100</span> — Peak prosperity window
+      </div>
+    </div>
+
+    <!-- Monthly Forecast -->
+    <div class="section-header">> MONTHLY FORECAST LOADED</div>
+    <div style="margin-bottom: 40px; font-size: 11px; color: var(--text-secondary); line-height: 1.8; max-width: 700px;">
+      <span class="key-data">[2026-04]</span> ENERGY LEVEL: <span class="key-data green">HIGH</span> :: FORTUNE INDEX: <span class="key-data">84/100</span><br>
+      創造性と直感が最高潮。新プロジェクト開始に最適。金運好調で予期しない幸運あり。対人関係調和的、チームワーク実を結ぶ。<br><br>
+      RECOMMENDATIONS:<br>
+      → 新しい企画・決断は上旬に集中<br>
+      → 対人関係の構築・深化に注力<br>
+      → 金銭的投資は月中盤に実行<br>
+      → 月後半は内省・計画立案タイム
+    </div>
+  </main>
+
+  <footer>
+    [SYSTEM] Session logged. Oracle sync complete. ▪ Prophecy engine v4.1 ▪
+  </footer>
+
+  <script>
+    const ctx = document.getElementById('oscilloscope').getContext('2d');
+    
+    new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: Array.from({length: 30}, (_, i) => i),
+        datasets: [
+          {
+            label: 'Energy Oscillation',
+            data: [
+              70, 72, 75, 73, 76, 78, 75, 77, 80, 78,
+              80, 82, 80, 83, 85, 83, 85, 84, 86, 84,
+              85, 87, 86, 88, 87, 85, 88, 86, 87, 85
+            ],
+            borderColor: '#22c55e',
+            backgroundColor: 'rgba(34, 197, 94, 0.1)',
+            borderWidth: 2.5,
+            fill: true,
+            pointBackgroundColor: '#22c55e',
+            pointBorderColor: '#050408',
+            pointBorderWidth: 1,
+            pointRadius: 3,
+            pointHoverRadius: 5,
+            tension: 0.3,
+            shadowBlur: 10
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: true,
+        plugins: {
+          legend: {
+            labels: {
+              color: '#22c55e',
+              font: { family: "'JetBrains Mono', monospace", size: 10 },
+              boxWidth: 12
+            }
+          },
+          filler: {
+            propagate: true
+          }
+        },
+        scales: {
+          y: {
+            beginAtZero: true,
+            max: 100,
+            ticks: {
+              color: '#22c55e',
+              font: { family: "'JetBrains Mono', monospace", size: 9 },
+              stepSize: 20
+            },
+            grid: {
+              color: 'rgba(34, 197, 94, 0.2)',
+              drawBorder: false
+            }
+          },
+          x: {
+            ticks: {
+              color: '#6B6285',
+              font: { family: "'JetBrains Mono', monospace", size: 8 },
+              maxTicksLimit: 10
+            },
+            grid: {
+              color: 'rgba(34, 197, 94, 0.1)',
+              drawBorder: false
+            }
+          }
+        }
+      }
+    });
+  </script>
+</body>
+</html>

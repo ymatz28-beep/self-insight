@@ -1,0 +1,745 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>手嶋静 — Self Insight</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600;700&family=Noto+Sans+JP:wght@300;400;500&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --bg: #0D0B14;
+      --surface: #1A1626;
+      --surface2: #251E36;
+      --border: #2E2545;
+      --gold: #C9A84C;
+      --accent: #8B5CF6;
+      --accent-warm: #A78BFA;
+      --accent-teal: #14b8a6;
+      --text-primary: #F5F0E8;
+      --text-secondary: #A89EC0;
+      --text-muted: #6B6285;
+      --female-bg: #f5eff2;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text-primary);
+      font-family: 'Inter', -apple-system, sans-serif;
+      font-size: 17px;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── Apple-style top nav ── */
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(13, 11, 20, 0.85);
+      backdrop-filter: blur(20px) saturate(180%);
+      -webkit-backdrop-filter: blur(20px) saturate(180%);
+      border-bottom: 1px solid rgba(46, 37, 69, 0.5);
+      padding: 0 40px;
+      height: 52px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .nav-brand {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text-muted);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 32px;
+      list-style: none;
+    }
+
+    .nav-links a {
+      font-size: 13px;
+      color: var(--text-secondary);
+      text-decoration: none;
+      letter-spacing: 0.02em;
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover { color: var(--text-primary); }
+
+    /* ── Layout ── */
+    main {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 0 40px 120px;
+    }
+
+    /* ── Hero ── */
+    .hero {
+      padding: 100px 0 80px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .hero-eyebrow {
+      font-size: 13px;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--accent-warm);
+      margin-bottom: 24px;
+    }
+
+    .hero-name {
+      font-size: 80px;
+      font-weight: 200;
+      letter-spacing: -4px;
+      line-height: 0.92;
+      color: var(--text-primary);
+      margin-bottom: 32px;
+    }
+
+    .hero-name em {
+      font-style: normal;
+      color: var(--accent-warm);
+    }
+
+    .hero-meta {
+      display: flex;
+      align-items: baseline;
+      gap: 24px;
+      flex-wrap: wrap;
+    }
+
+    .hero-score-block {
+      display: flex;
+      align-items: baseline;
+      gap: 8px;
+    }
+
+    .hero-score-num {
+      font-size: 56px;
+      font-weight: 200;
+      letter-spacing: -3px;
+      color: var(--accent-warm);
+      line-height: 1;
+    }
+
+    .hero-score-label {
+      font-size: 13px;
+      color: var(--text-muted);
+      letter-spacing: 0.05em;
+    }
+
+    .hero-divider {
+      width: 1px;
+      height: 40px;
+      background: var(--border);
+    }
+
+    .hero-period {
+      font-size: 15px;
+      color: var(--text-secondary);
+      font-weight: 300;
+    }
+
+    /* ── Section ── */
+    .section {
+      padding: 72px 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .section:last-of-type {
+      border-bottom: none;
+    }
+
+    .section-label {
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--accent-warm);
+      margin-bottom: 8px;
+    }
+
+    .section-title {
+      font-size: 32px;
+      font-weight: 300;
+      letter-spacing: -1.5px;
+      color: var(--text-primary);
+      margin-bottom: 48px;
+      line-height: 1.1;
+    }
+
+    /* ── Monthly Detail ── */
+    .monthly-body {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+    }
+
+    .monthly-card {
+      background: var(--surface);
+      border-radius: 18px;
+      padding: 32px;
+    }
+
+    .monthly-card-title {
+      font-size: 13px;
+      font-weight: 500;
+      letter-spacing: 0.05em;
+      color: var(--text-muted);
+      margin-bottom: 16px;
+      text-transform: uppercase;
+    }
+
+    .monthly-card-body {
+      font-size: 15px;
+      color: var(--text-secondary);
+      line-height: 1.75;
+      font-weight: 300;
+    }
+
+    .monthly-card.featured {
+      background: var(--surface2);
+      grid-column: 1 / -1;
+    }
+
+    .monthly-card.featured .monthly-card-body {
+      font-size: 17px;
+      color: var(--text-primary);
+      line-height: 1.8;
+    }
+
+    /* ── Domain Grid ── */
+    .domain-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+
+    .domain-card {
+      background: var(--surface);
+      border-radius: 18px;
+      padding: 28px 24px;
+      transition: transform 0.2s ease;
+    }
+
+    .domain-card:hover {
+      transform: translateY(-2px);
+    }
+
+    .domain-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px;
+    }
+
+    .domain-name {
+      font-family: 'Noto Sans JP', sans-serif;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text-secondary);
+    }
+
+    .domain-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+    }
+
+    .domain-score-large {
+      font-size: 48px;
+      font-weight: 200;
+      letter-spacing: -3px;
+      line-height: 1;
+      color: var(--text-primary);
+      margin-bottom: 12px;
+    }
+
+    .domain-bar-track {
+      height: 2px;
+      background: var(--border);
+      border-radius: 1px;
+      overflow: hidden;
+    }
+
+    .domain-bar-fill {
+      height: 100%;
+      border-radius: 1px;
+      transition: width 0.8s ease;
+    }
+
+    .domain-commentary {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-top: 10px;
+      line-height: 1.5;
+    }
+
+    /* ── 四柱推命 ── */
+    .shiju-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+    }
+
+    .shiju-card {
+      background: var(--surface);
+      border-radius: 18px;
+      padding: 32px;
+    }
+
+    .shiju-card-num {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 12px;
+    }
+
+    .shiju-card-title {
+      font-size: 22px;
+      font-weight: 300;
+      letter-spacing: -0.5px;
+      color: var(--gold);
+      margin-bottom: 16px;
+    }
+
+    .shiju-card-body {
+      font-size: 14px;
+      color: var(--text-secondary);
+      line-height: 1.8;
+      font-weight: 300;
+    }
+
+    /* ── 五行 ── */
+    .gogyou-list {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .gogyou-row {
+      display: grid;
+      grid-template-columns: 80px 1fr 40px;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .gogyou-name {
+      font-family: 'Noto Sans JP', sans-serif;
+      font-size: 14px;
+      color: var(--text-secondary);
+      font-weight: 500;
+    }
+
+    .gogyou-track {
+      height: 4px;
+      background: var(--surface);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+
+    .gogyou-fill {
+      height: 100%;
+      border-radius: 2px;
+    }
+
+    .gogyou-val {
+      font-size: 13px;
+      color: var(--text-muted);
+      text-align: right;
+      font-weight: 500;
+    }
+
+    /* ── Chart ── */
+    .chart-container {
+      background: var(--surface);
+      border-radius: 18px;
+      padding: 40px;
+    }
+
+    .chart-title {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text-secondary);
+      margin-bottom: 4px;
+      letter-spacing: 0.03em;
+    }
+
+    .chart-subtitle {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-bottom: 28px;
+    }
+
+    /* ── 命式 Highlight ── */
+    .meisei-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+    }
+
+    .meisei-cell {
+      background: var(--surface);
+      border-radius: 18px;
+      padding: 24px 20px;
+      text-align: center;
+    }
+
+    .meisei-cell-label {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 12px;
+    }
+
+    .meisei-cell-value {
+      font-size: 28px;
+      font-weight: 200;
+      letter-spacing: -1px;
+      color: var(--accent-warm);
+      line-height: 1;
+      margin-bottom: 8px;
+    }
+
+    .meisei-cell-sub {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    /* ── Footer ── */
+    footer {
+      text-align: center;
+      padding: 60px 40px;
+      font-size: 12px;
+      color: var(--text-muted);
+      letter-spacing: 0.04em;
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <span class="nav-brand">Self Insight</span>
+  <ul class="nav-links">
+    <li><a href="#monthly">今月</a></li>
+    <li><a href="#domains">6領域</a></li>
+    <li><a href="#shiju">四柱推命</a></li>
+    <li><a href="#forecast">運勢推移</a></li>
+  </ul>
+</nav>
+
+<main>
+
+  <!-- Hero -->
+  <section class="hero">
+    <p class="hero-eyebrow">Self Insight Report · 2026年5月</p>
+    <h1 class="hero-name">手嶋<em>静</em></h1>
+    <div class="hero-meta">
+      <div class="hero-score-block">
+        <span class="hero-score-num">84</span>
+        <span class="hero-score-label">フォーチュン<br>インデックス</span>
+      </div>
+      <div class="hero-divider"></div>
+      <span class="hero-period">壬子年 · 九紫火星 · 六星金星人</span>
+    </div>
+  </section>
+
+  <!-- Monthly -->
+  <section class="section" id="monthly">
+    <p class="section-label">Monthly Overview</p>
+    <h2 class="section-title">2026年5月の<br>運勢と指針</h2>
+    <div class="monthly-body">
+      <div class="monthly-card featured">
+        <p class="monthly-card-title">今月のサマリー</p>
+        <p class="monthly-card-body">
+          この月は創造性と直感が最高潮に達する。四柱推命では「庚申」の強金気が木の創造性を剋する局面だが、九紫火星の月命盤が火で金を制し、バランスが取れる。直感に従って動くと、予期しない出会いや機会が連鎖する。
+          金運は好調で、過去3ヶ月の慎重な積み上げが実を結ぶ時期。ただし六星占術では月の下弦が「昨日の力」の消化期にあたるため、新規投資より既存資産の最適化に力を入れると吉。
+        </p>
+      </div>
+      <div class="monthly-card">
+        <p class="monthly-card-title">仕事・対人</p>
+        <p class="monthly-card-body">
+          チームワークが実を結ぶ月。自分のビジョンを言語化する機会が増え、周囲からの信頼が高まる。13日前後に重要な決断のタイミングあり。
+        </p>
+      </div>
+      <div class="monthly-card">
+        <p class="monthly-card-title">内面・健康</p>
+        <p class="monthly-card-body">
+          睡眠の質が高まりやすい時期。深い思索と内省が、来月以降の方向性を決める土台になる。過去の経験を「知恵」として昇華するプロセスが自然に進む。
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Domain -->
+  <section class="section" id="domains">
+    <p class="section-label">Life Domains</p>
+    <h2 class="section-title">人生6領域の<br>調和スコア</h2>
+    <div class="domain-grid">
+      <div class="domain-card">
+        <div class="domain-header">
+          <span class="domain-name">仕事</span>
+          <span class="domain-dot" style="background:#8B5CF6;"></span>
+        </div>
+        <div class="domain-score-large">78</div>
+        <div class="domain-bar-track">
+          <div class="domain-bar-fill" style="width:78%;background:#8B5CF6;"></div>
+        </div>
+        <p class="domain-commentary">構築期の安定。土台が固まりつつある</p>
+      </div>
+      <div class="domain-card">
+        <div class="domain-header">
+          <span class="domain-name">恋愛</span>
+          <span class="domain-dot" style="background:#ec4899;"></span>
+        </div>
+        <div class="domain-score-large">82</div>
+        <div class="domain-bar-track">
+          <div class="domain-bar-fill" style="width:82%;background:#ec4899;"></div>
+        </div>
+        <p class="domain-commentary">相互理解が深まる好調局面</p>
+      </div>
+      <div class="domain-card">
+        <div class="domain-header">
+          <span class="domain-name">財運</span>
+          <span class="domain-dot" style="background:#C9A84C;"></span>
+        </div>
+        <div class="domain-score-large">65</div>
+        <div class="domain-bar-track">
+          <div class="domain-bar-fill" style="width:65%;background:#C9A84C;"></div>
+        </div>
+        <p class="domain-commentary">守りの月。堅実路線が吉</p>
+      </div>
+      <div class="domain-card">
+        <div class="domain-header">
+          <span class="domain-name">健康</span>
+          <span class="domain-dot" style="background:#22c55e;"></span>
+        </div>
+        <div class="domain-score-large">88</div>
+        <div class="domain-bar-track">
+          <div class="domain-bar-fill" style="width:88%;background:#22c55e;"></div>
+        </div>
+        <p class="domain-commentary">体調・エネルギー共に高水準</p>
+      </div>
+      <div class="domain-card">
+        <div class="domain-header">
+          <span class="domain-name">家庭</span>
+          <span class="domain-dot" style="background:#14b8a6;"></span>
+        </div>
+        <div class="domain-score-large">71</div>
+        <div class="domain-bar-track">
+          <div class="domain-bar-fill" style="width:71%;background:#14b8a6;"></div>
+        </div>
+        <p class="domain-commentary">穏やかな安定。対話を増やすと更に好転</p>
+      </div>
+      <div class="domain-card">
+        <div class="domain-header">
+          <span class="domain-name">精神</span>
+          <span class="domain-dot" style="background:#A78BFA;"></span>
+        </div>
+        <div class="domain-score-large">85</div>
+        <div class="domain-bar-track">
+          <div class="domain-bar-fill" style="width:85%;background:#A78BFA;"></div>
+        </div>
+        <p class="domain-commentary">内省と成長のサイクルが活発</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 四柱推命 -->
+  <section class="section" id="shiju">
+    <p class="section-label">四柱推命</p>
+    <h2 class="section-title">命式が示す<br>本質と使命</h2>
+    <div class="meisei-grid" style="margin-bottom:40px;">
+      <div class="meisei-cell">
+        <p class="meisei-cell-label">日干</p>
+        <p class="meisei-cell-value">庚</p>
+        <p class="meisei-cell-sub">陽金 · 白刃</p>
+      </div>
+      <div class="meisei-cell">
+        <p class="meisei-cell-label">通変</p>
+        <p class="meisei-cell-value">正官</p>
+        <p class="meisei-cell-sub">秩序と責任</p>
+      </div>
+      <div class="meisei-cell">
+        <p class="meisei-cell-label">格局</p>
+        <p class="meisei-cell-value">正財</p>
+        <p class="meisei-cell-sub">堅実な蓄積</p>
+      </div>
+      <div class="meisei-cell">
+        <p class="meisei-cell-label">大運</p>
+        <p class="meisei-cell-value">甲子</p>
+        <p class="meisei-cell-sub">2024 – 2034</p>
+      </div>
+    </div>
+    <div class="shiju-grid">
+      <div class="shiju-card">
+        <p class="shiju-card-num">本質</p>
+        <p class="shiju-card-title">庚金の白刃</p>
+        <p class="shiju-card-body">
+          日干「庚」は剣のように鋭い陽金。原石を磨き、完成形に仕上げる力を持つ。美意識と精度へのこだわりが際立ち、妥協を嫌う。人の本質を見抜く洞察力と、正確な判断力が天分として備わっている。
+        </p>
+      </div>
+      <div class="shiju-card">
+        <p class="shiju-card-num">使命</p>
+        <p class="shiju-card-title">正官格の秩序</p>
+        <p class="shiju-card-body">
+          「正官」は規律と正義の星。社会的な責任を果たすことで最も輝く命式。組織やルールを尊重しながら、その中でリーダーシップを発揮する。長期的な信頼の積み上げが、最大の武器になる。
+        </p>
+      </div>
+      <div class="shiju-card">
+        <p class="shiju-card-num">才能</p>
+        <p class="shiju-card-title">正財の蓄積力</p>
+        <p class="shiju-card-body">
+          財星は現実世界での実力を示す。正財は「コツコツ積み上げる才能」の象徴で、一夜で富を得るより、長い時間をかけた堅実な積み上げで本物の豊かさを手にする型。継続が最大の差別化要因。
+        </p>
+      </div>
+      <div class="shiju-card">
+        <p class="shiju-card-num">大運期</p>
+        <p class="shiju-card-title">甲子の10年</p>
+        <p class="shiju-card-body">
+          現在の大運「甲子」は、木が旺じる成長のサイクル。金(庚)が木を剋する命式に木の運気が流れ込む構造で、内側のエネルギーが外へ解放される時期。新しいプロジェクトや人間関係が根を張りやすい。
+        </p>
+      </div>
+    </div>
+
+    <!-- 五行バランス -->
+    <div style="margin-top:40px;">
+      <p style="font-size:14px;font-weight:500;color:var(--text-secondary);margin-bottom:24px;letter-spacing:0.05em;">五行バランス</p>
+      <div class="gogyou-list">
+        <div class="gogyou-row">
+          <span class="gogyou-name">木</span>
+          <div class="gogyou-track"><div class="gogyou-fill" style="width:60%;background:#22c55e;"></div></div>
+          <span class="gogyou-val">60</span>
+        </div>
+        <div class="gogyou-row">
+          <span class="gogyou-name">火</span>
+          <div class="gogyou-track"><div class="gogyou-fill" style="width:75%;background:#f97316;"></div></div>
+          <span class="gogyou-val">75</span>
+        </div>
+        <div class="gogyou-row">
+          <span class="gogyou-name">土</span>
+          <div class="gogyou-track"><div class="gogyou-fill" style="width:45%;background:#C9A84C;"></div></div>
+          <span class="gogyou-val">45</span>
+        </div>
+        <div class="gogyou-row">
+          <span class="gogyou-name">金</span>
+          <div class="gogyou-track"><div class="gogyou-fill" style="width:90%;background:#A78BFA;"></div></div>
+          <span class="gogyou-val">90</span>
+        </div>
+        <div class="gogyou-row">
+          <span class="gogyou-name">水</span>
+          <div class="gogyou-track"><div class="gogyou-fill" style="width:55%;background:#14b8a6;"></div></div>
+          <span class="gogyou-val">55</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Forecast Chart -->
+  <section class="section" id="forecast">
+    <p class="section-label">Annual Forecast</p>
+    <h2 class="section-title">2024〜2032年<br>運勢推移</h2>
+    <div class="chart-container">
+      <p class="chart-title">年別バイオリズム指数</p>
+      <p class="chart-subtitle">九星気学 / 六星占術 の複合スコア</p>
+      <canvas id="forecastChart" style="height:320px;"></canvas>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  © 2026 Self Insight · All readings are for reflection and personal growth.
+</footer>
+
+<script>
+  const ctx = document.getElementById('forecastChart').getContext('2d');
+  new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: ['2024','2025','2026','2027','2028','2029','2030','2031','2032'],
+      datasets: [
+        {
+          label: '九星気学',
+          data: [75,100,90,80,40,70,30,45,65],
+          borderColor: '#8B5CF6',
+          backgroundColor: 'rgba(139,92,246,0.08)',
+          borderWidth: 2,
+          pointRadius: 4,
+          pointBackgroundColor: '#8B5CF6',
+          tension: 0.4,
+          fill: true
+        },
+        {
+          label: '六星占術',
+          data: [80,35,90,25,70,85,95,15,10],
+          borderColor: '#C9A84C',
+          backgroundColor: 'rgba(201,168,76,0.05)',
+          borderWidth: 2,
+          pointRadius: 4,
+          pointBackgroundColor: '#C9A84C',
+          tension: 0.4,
+          fill: true
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      interaction: { intersect: false, mode: 'index' },
+      plugins: {
+        legend: {
+          labels: {
+            color: '#A89EC0',
+            font: { family: "'Inter'", size: 13 },
+            boxWidth: 12,
+            boxHeight: 2,
+            padding: 20
+          }
+        },
+        tooltip: {
+          backgroundColor: '#1A1626',
+          borderColor: '#2E2545',
+          borderWidth: 1,
+          titleColor: '#F5F0E8',
+          bodyColor: '#A89EC0',
+          padding: 12
+        }
+      },
+      scales: {
+        x: {
+          grid: { color: 'rgba(46,37,69,0.4)' },
+          ticks: { color: '#6B6285', font: { family: "'Inter'", size: 12 } }
+        },
+        y: {
+          beginAtZero: true,
+          max: 110,
+          grid: { color: 'rgba(46,37,69,0.4)' },
+          ticks: {
+            color: '#6B6285',
+            font: { family: "'Inter'", size: 12 },
+            stepSize: 20
+          }
+        }
+      }
+    }
+  });
+</script>
+</body>
+</html>

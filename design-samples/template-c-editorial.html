@@ -1,0 +1,738 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Template C — Tarot Editorial</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Inter:wght@300;400;500;600&family=Noto+Sans+JP:wght@300;400;500&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+:root {
+  --bg: #0D0B14;
+  --surface: #1A1626;
+  --surface2: #251E36;
+  --border: #2E2545;
+  --gold: #C9A84C;
+  --accent: #8B5CF6;
+  --accent-warm: #A78BFA;
+  --text-primary: #F5F0E8;
+  --text-secondary: #A89EC0;
+  --text-muted: #6B6285;
+  --female-bg: #f5eff2;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{font-size:16px;scroll-behavior:smooth}
+body{
+  background:var(--bg);
+  color:var(--text-primary);
+  font-family:'Inter','Noto Sans JP',sans-serif;
+  font-weight:300;
+  line-height:1.8;
+  min-height:100vh;
+}
+
+/* Subtle grain texture overlay */
+body::after{
+  content:'';
+  position:fixed;inset:0;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events:none;
+  z-index:0;
+  opacity:.5;
+}
+
+/* ── LAYOUT ── */
+.page-wrap{
+  max-width:720px;
+  margin:0 auto;
+  padding:0 24px 80px;
+  position:relative;z-index:1;
+}
+
+/* ── NAV ── */
+nav{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:28px 0 0;
+  border-bottom:1px solid var(--border);
+  padding-bottom:20px;
+  margin-bottom:72px;
+}
+.nav-brand{
+  font-family:'Cormorant Garamond',serif;
+  font-size:14px;font-weight:400;
+  letter-spacing:.18em;text-transform:uppercase;
+  color:var(--text-muted);
+}
+.nav-right{
+  font-size:11px;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--text-muted);
+  display:flex;gap:28px;
+}
+.nav-right a{
+  color:inherit;text-decoration:none;
+  transition:color .2s;
+}
+.nav-right a:hover,.nav-right a.active{color:var(--text-primary)}
+
+/* ── HERO ── */
+.hero{
+  text-align:center;
+  padding:0 0 72px;
+  border-bottom:1px solid var(--border);
+  margin-bottom:72px;
+}
+.hero-issue{
+  font-size:11px;letter-spacing:.2em;text-transform:uppercase;
+  color:var(--text-muted);margin-bottom:32px;
+}
+.hero-issue::before{
+  content:'— ';color:var(--gold);
+}
+.hero-issue::after{
+  content:' —';color:var(--gold);
+}
+.hero-name{
+  font-family:'Cormorant Garamond',serif;
+  font-size:clamp(52px,10vw,80px);
+  font-weight:300;
+  line-height:1.05;
+  letter-spacing:.02em;
+  color:var(--text-primary);
+  margin-bottom:8px;
+}
+.hero-name em{
+  font-style:italic;
+  color:var(--accent-warm);
+}
+.hero-ruby{
+  font-size:11px;letter-spacing:.28em;
+  color:var(--text-muted);
+  text-transform:uppercase;
+  margin-bottom:36px;
+}
+.hero-divider{
+  display:flex;align-items:center;gap:16px;
+  justify-content:center;
+  margin-bottom:36px;
+}
+.hero-divider::before,.hero-divider::after{
+  content:'';flex:1;max-width:80px;
+  height:1px;background:linear-gradient(90deg,transparent,var(--border));
+}
+.hero-divider::after{
+  background:linear-gradient(90deg,var(--border),transparent);
+}
+.hero-divider-glyph{
+  font-family:'Cormorant Garamond',serif;
+  font-size:20px;color:var(--gold);
+  line-height:1;
+}
+.hero-scores{
+  display:flex;justify-content:center;gap:48px;
+  flex-wrap:wrap;
+}
+.hero-score-item{
+  text-align:center;
+}
+.hero-score-num{
+  font-family:'Cormorant Garamond',serif;
+  font-size:44px;font-weight:300;
+  line-height:1;
+  color:var(--accent-warm);
+  display:block;margin-bottom:4px;
+}
+.hero-score-label{
+  font-size:10px;letter-spacing:.18em;
+  text-transform:uppercase;color:var(--text-muted);
+}
+.hero-meta{
+  margin-top:36px;
+  display:flex;justify-content:center;gap:0;
+  border:1px solid var(--border);
+  border-radius:2px;
+  overflow:hidden;
+  max-width:480px;margin-left:auto;margin-right:auto;
+}
+.hero-meta-item{
+  flex:1;
+  padding:12px 8px;
+  text-align:center;
+  border-right:1px solid var(--border);
+  background:var(--surface);
+}
+.hero-meta-item:last-child{border-right:none}
+.hero-meta-key{
+  font-size:9px;letter-spacing:.15em;text-transform:uppercase;
+  color:var(--text-muted);display:block;margin-bottom:4px;
+}
+.hero-meta-val{
+  font-family:'Cormorant Garamond',serif;
+  font-size:18px;font-weight:400;
+  color:var(--text-primary);
+}
+
+/* ── SECTION HEAD ── */
+.section{margin-bottom:72px;}
+.section-label{
+  font-size:10px;letter-spacing:.22em;text-transform:uppercase;
+  color:var(--gold);margin-bottom:12px;
+}
+.section-title{
+  font-family:'Cormorant Garamond',serif;
+  font-size:clamp(28px,5vw,36px);
+  font-weight:300;font-style:italic;
+  color:var(--text-primary);
+  line-height:1.2;
+  margin-bottom:8px;
+}
+.section-subtitle{
+  font-size:13px;color:var(--text-secondary);
+  margin-bottom:40px;
+  padding-bottom:24px;
+  border-bottom:1px solid var(--border);
+}
+
+/* ── 命式 GRID ── */
+.pillars-grid{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:1px;
+  background:var(--border);
+  border:1px solid var(--border);
+  border-radius:2px;
+  overflow:hidden;
+  margin-bottom:32px;
+}
+.pillar-cell{
+  background:var(--surface);
+  padding:20px 12px;
+  text-align:center;
+  transition:background .2s;
+}
+.pillar-cell:hover{background:var(--surface2)}
+.pillar-header{
+  font-size:9px;letter-spacing:.18em;text-transform:uppercase;
+  color:var(--text-muted);margin-bottom:12px;
+}
+.pillar-kan{
+  font-family:'Cormorant Garamond',serif;
+  font-size:28px;font-weight:400;
+  line-height:1;color:var(--text-primary);
+  margin-bottom:4px;
+}
+.pillar-chi{
+  font-family:'Cormorant Garamond',serif;
+  font-size:22px;color:var(--text-secondary);
+  line-height:1;margin-bottom:12px;
+}
+.pillar-element{
+  font-size:10px;letter-spacing:.1em;
+  padding:3px 8px;
+  border-radius:1px;
+  background:rgba(139,92,246,.12);
+  color:var(--accent-warm);
+  display:inline-block;
+}
+.pillar-element.fire{background:rgba(239,68,68,.12);color:#fca5a5}
+.pillar-element.water{background:rgba(59,130,246,.12);color:#93c5fd}
+.pillar-element.wood{background:rgba(34,197,94,.12);color:#86efac}
+.pillar-element.earth{background:rgba(234,179,8,.12);color:#fde68a}
+.pillar-element.metal{background:rgba(156,163,175,.12);color:#d1d5db}
+
+/* ── INSIGHT BLOCKS ── */
+.insight-stack{display:flex;flex-direction:column;gap:0;}
+.insight-item{
+  padding:24px 0;
+  border-bottom:1px solid var(--border);
+  display:grid;
+  grid-template-columns:140px 1fr;
+  gap:24px;
+  align-items:start;
+}
+.insight-item:last-child{border-bottom:none}
+.insight-domain{
+  font-size:10px;letter-spacing:.18em;text-transform:uppercase;
+  color:var(--text-muted);
+  padding-top:2px;
+}
+.insight-domain strong{
+  display:block;
+  font-family:'Cormorant Garamond',serif;
+  font-size:16px;letter-spacing:.04em;text-transform:none;
+  color:var(--text-secondary);
+  font-weight:400;margin-top:4px;
+}
+.insight-score-inline{
+  font-family:'Cormorant Garamond',serif;
+  font-size:32px;font-weight:300;
+  color:var(--accent-warm);
+  line-height:1;margin-top:8px;
+}
+.insight-text{
+  font-size:14px;line-height:1.85;
+  color:var(--text-secondary);
+}
+.insight-text strong{color:var(--text-primary)}
+
+/* ── CHART ── */
+.chart-wrap{
+  position:relative;
+  border:1px solid var(--border);
+  border-radius:2px;
+  padding:32px;
+  background:var(--surface);
+  margin-bottom:32px;
+}
+.chart-title{
+  font-size:11px;letter-spacing:.15em;text-transform:uppercase;
+  color:var(--text-muted);margin-bottom:24px;
+}
+
+/* ── MONTHLY ── */
+.month-nav{
+  display:flex;gap:0;
+  border:1px solid var(--border);
+  border-radius:2px;
+  overflow:hidden;
+  margin-bottom:32px;
+}
+.month-btn{
+  flex:1;padding:10px 4px;
+  background:var(--surface);
+  border:none;
+  border-right:1px solid var(--border);
+  color:var(--text-muted);
+  font-size:11px;letter-spacing:.08em;
+  cursor:pointer;
+  transition:all .2s;
+}
+.month-btn:last-child{border-right:none}
+.month-btn:hover{background:var(--surface2);color:var(--text-secondary)}
+.month-btn.active{
+  background:var(--surface2);
+  color:var(--accent-warm);
+  border-bottom:2px solid var(--accent);
+}
+.monthly-block{
+  display:grid;grid-template-columns:1fr 1fr;gap:24px;
+  margin-bottom:32px;
+}
+.monthly-stat{
+  padding:20px;
+  border:1px solid var(--border);
+  border-radius:2px;
+  background:var(--surface);
+}
+.monthly-stat-label{
+  font-size:10px;letter-spacing:.15em;text-transform:uppercase;
+  color:var(--text-muted);margin-bottom:8px;
+}
+.monthly-stat-value{
+  font-family:'Cormorant Garamond',serif;
+  font-size:36px;font-weight:300;
+  color:var(--text-primary);line-height:1;
+  margin-bottom:4px;
+}
+.monthly-stat-sub{font-size:13px;color:var(--text-secondary)}
+
+/* ── TABLE ── */
+.cycle-table{width:100%;border-collapse:collapse;font-size:13px;}
+.cycle-table th{
+  text-align:left;padding:10px 12px;
+  font-size:9px;letter-spacing:.18em;text-transform:uppercase;
+  color:var(--text-muted);
+  border-bottom:1px solid var(--border);
+  font-weight:400;
+}
+.cycle-table td{
+  padding:12px;
+  border-bottom:1px solid rgba(46,37,69,.5);
+  color:var(--text-secondary);
+  vertical-align:top;
+}
+.cycle-table tr.current td{color:var(--text-primary)}
+.cycle-table tr.current td:first-child{
+  color:var(--accent-warm);
+  font-weight:500;
+}
+.cycle-table tr:hover td{background:rgba(26,22,38,.6)}
+.cycle-level{
+  display:inline-block;width:6px;height:6px;
+  border-radius:50%;
+  background:var(--accent);
+  margin-right:8px;
+  vertical-align:middle;
+}
+.cycle-level.high{background:#22c55e}
+.cycle-level.med{background:var(--gold)}
+.cycle-level.low{background:#6B6285}
+
+/* ── FOOTER ── */
+footer{
+  padding-top:48px;
+  border-top:1px solid var(--border);
+  text-align:center;
+}
+.footer-brand{
+  font-family:'Cormorant Garamond',serif;
+  font-size:11px;letter-spacing:.28em;text-transform:uppercase;
+  color:var(--text-muted);margin-bottom:8px;
+}
+.footer-copy{font-size:11px;color:var(--text-muted)}
+
+/* ── QUOTE BLOCK ── */
+.editorial-quote{
+  border-left:2px solid var(--gold);
+  padding:16px 24px;
+  margin:32px 0;
+  background:var(--surface);
+}
+.editorial-quote p{
+  font-family:'Cormorant Garamond',serif;
+  font-size:20px;font-style:italic;font-weight:300;
+  color:var(--text-secondary);
+  line-height:1.6;
+}
+.editorial-quote cite{
+  display:block;
+  font-size:11px;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--text-muted);margin-top:12px;
+}
+
+/* ── TAGS ── */
+.tag-row{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px;}
+.tag{
+  font-size:10px;letter-spacing:.12em;
+  padding:4px 10px;
+  border:1px solid var(--border);
+  border-radius:1px;
+  color:var(--text-muted);
+  background:transparent;
+}
+.tag.accent{border-color:rgba(139,92,246,.4);color:var(--accent-warm);background:rgba(139,92,246,.08)}
+.tag.gold{border-color:rgba(201,168,76,.4);color:var(--gold);background:rgba(201,168,76,.08)}
+
+</style>
+</head>
+<body>
+<div class="page-wrap">
+
+  <!-- NAV -->
+  <nav>
+    <span class="nav-brand">Self Insight</span>
+    <div class="nav-right">
+      <a href="#" class="active">命式</a>
+      <a href="#">月運</a>
+      <a href="#">年運</a>
+      <a href="#">相性</a>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <p class="hero-issue">2024年 個人鑑定レポート</p>
+    <h1 class="hero-name">Shizuka<br><em>Tejima</em></h1>
+    <p class="hero-ruby">てじま　しずか　/ 1988年 3月 14日</p>
+
+    <div class="hero-divider">
+      <span class="hero-divider-glyph">✦</span>
+    </div>
+
+    <div class="hero-scores">
+      <div class="hero-score-item">
+        <span class="hero-score-num">82</span>
+        <span class="hero-score-label">総合運</span>
+      </div>
+      <div class="hero-score-item">
+        <span class="hero-score-num">76</span>
+        <span class="hero-score-label">恋愛運</span>
+      </div>
+      <div class="hero-score-item">
+        <span class="hero-score-num">90</span>
+        <span class="hero-score-label">仕事運</span>
+      </div>
+      <div class="hero-score-item">
+        <span class="hero-score-num">88</span>
+        <span class="hero-score-label">財運</span>
+      </div>
+    </div>
+
+    <div class="hero-meta">
+      <div class="hero-meta-item">
+        <span class="hero-meta-key">日主</span>
+        <span class="hero-meta-val">壬</span>
+      </div>
+      <div class="hero-meta-item">
+        <span class="hero-meta-key">血液型</span>
+        <span class="hero-meta-val">A型</span>
+      </div>
+      <div class="hero-meta-item">
+        <span class="hero-meta-key">九星</span>
+        <span class="hero-meta-val">三碧</span>
+      </div>
+      <div class="hero-meta-item">
+        <span class="hero-meta-key">六星</span>
+        <span class="hero-meta-val">天王星</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- 命式 -->
+  <section class="section">
+    <p class="section-label">Chapter I</p>
+    <h2 class="section-title">四柱推命 — 命式</h2>
+    <p class="section-subtitle">生年月日と生時から導出された8つの干支。あなたの本質を構成するコア。</p>
+
+    <div class="pillars-grid">
+      <div class="pillar-cell">
+        <p class="pillar-header">年柱</p>
+        <p class="pillar-kan">戊</p>
+        <p class="pillar-chi">辰</p>
+        <span class="pillar-element earth">土</span>
+      </div>
+      <div class="pillar-cell">
+        <p class="pillar-header">月柱</p>
+        <p class="pillar-kan">癸</p>
+        <p class="pillar-chi">卯</p>
+        <span class="pillar-element wood">木</span>
+      </div>
+      <div class="pillar-cell">
+        <p class="pillar-header">日柱</p>
+        <p class="pillar-kan">壬</p>
+        <p class="pillar-chi">午</p>
+        <span class="pillar-element fire">火</span>
+      </div>
+      <div class="pillar-cell">
+        <p class="pillar-header">時柱</p>
+        <p class="pillar-kan">甲</p>
+        <p class="pillar-chi">子</p>
+        <span class="pillar-element water">水</span>
+      </div>
+    </div>
+
+    <div class="editorial-quote">
+      <p>「壬の日干は大海の水。深く、広く、包容力がある。<br>木を育て、火を宿す水としての性質。」</p>
+      <cite>四柱推命 — 日主解説</cite>
+    </div>
+
+    <div class="tag-row">
+      <span class="tag accent">印星強め</span>
+      <span class="tag accent">食傷あり</span>
+      <span class="tag gold">財星旺</span>
+      <span class="tag">官星弱</span>
+    </div>
+  </section>
+
+  <!-- ドメイン運勢 -->
+  <section class="section">
+    <p class="section-label">Chapter II</p>
+    <h2 class="section-title">六道運勢 — ドメイン別</h2>
+    <p class="section-subtitle">仕事・恋愛・財・健康・家庭・精神の6軸で現在地を読む。</p>
+
+    <div class="insight-stack">
+      <div class="insight-item">
+        <div class="insight-domain">
+          Work
+          <strong>仕事運</strong>
+          <div class="insight-score-inline">90</div>
+        </div>
+        <div class="insight-text">
+          <strong>今年は仕事で大きな転機が訪れる年。</strong>積み上げてきた実績が評価され、昇進・昇格・新プロジェクトのリードなど、責任ある役割を担う機会が増えます。特に夏場（7〜8月）の動きが顕著。自分から手を挙げることで、より大きな果実を手に入れられます。
+        </div>
+      </div>
+      <div class="insight-item">
+        <div class="insight-domain">
+          Love
+          <strong>恋愛運</strong>
+          <div class="insight-score-inline">76</div>
+        </div>
+        <div class="insight-text">
+          <strong>現実的な関係構築を優先する時期。</strong>ロマンティックな展開よりも、日常を共に積み重ねることで絆が深まります。新しい出会いは職場や習慣的な場所からの縁が多い年。既存の関係では相手の「変化」を受け入れる柔軟さが鍵。
+        </div>
+      </div>
+      <div class="insight-item">
+        <div class="insight-domain">
+          Finance
+          <strong>財運</strong>
+          <div class="insight-score-inline">88</div>
+        </div>
+        <div class="insight-text">
+          <strong>収入増加の兆しあり。</strong>副収入・ボーナス・投資の益など、複数の経路から財が集まりやすい年です。ただし春（3〜4月）は衝動買いのリスクあり。大きな投資判断は夏以降に行うと吉。
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- チャート -->
+  <section class="section">
+    <p class="section-label">Chapter III</p>
+    <h2 class="section-title">年間エネルギーチャート</h2>
+    <p class="section-subtitle">月別の運気変動。高低差と転換点を把握するための俯瞰データ。</p>
+
+    <div class="chart-wrap">
+      <p class="chart-title">Monthly Luck Index — 2024</p>
+      <canvas id="mainChart" height="120"></canvas>
+    </div>
+  </section>
+
+  <!-- 月運 -->
+  <section class="section">
+    <p class="section-label">Chapter IV</p>
+    <h2 class="section-title">月運詳細 — 2024</h2>
+    <p class="section-subtitle">各月の支配星・テーマ・注意点を読む。</p>
+
+    <div class="month-nav">
+      <button class="month-btn">1</button>
+      <button class="month-btn">2</button>
+      <button class="month-btn">3</button>
+      <button class="month-btn active">4</button>
+      <button class="month-btn">5</button>
+      <button class="month-btn">6</button>
+      <button class="month-btn">7</button>
+      <button class="month-btn">8</button>
+      <button class="month-btn">9</button>
+      <button class="month-btn">10</button>
+      <button class="month-btn">11</button>
+      <button class="month-btn">12</button>
+    </div>
+
+    <div class="monthly-block">
+      <div class="monthly-stat">
+        <p class="monthly-stat-label">月運スコア</p>
+        <p class="monthly-stat-value">84</p>
+        <p class="monthly-stat-sub">4月 / 甲辰月</p>
+      </div>
+      <div class="monthly-stat">
+        <p class="monthly-stat-label">今月のキーワード</p>
+        <p class="monthly-stat-value" style="font-size:22px">展開</p>
+        <p class="monthly-stat-sub">行動が実りに変わる</p>
+      </div>
+    </div>
+
+    <div class="editorial-quote">
+      <p>「甲辰の木は天に向かって伸びる。停滞を破り、新しい方向性が見える月。」</p>
+      <cite>4月運 — 月柱解説</cite>
+    </div>
+  </section>
+
+  <!-- 大運表 -->
+  <section class="section">
+    <p class="section-label">Chapter V</p>
+    <h2 class="section-title">大運・年運一覧</h2>
+    <p class="section-subtitle">10年単位で流れるバイオリズム。現在地と今後の潮流を俯瞰する。</p>
+
+    <table class="cycle-table">
+      <thead>
+        <tr>
+          <th>期間</th>
+          <th>干支</th>
+          <th>テーマ</th>
+          <th>エネルギー</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>2015–2024</td>
+          <td>癸巳</td>
+          <td>内省・蓄積</td>
+          <td><span class="cycle-level med"></span>中</td>
+        </tr>
+        <tr class="current">
+          <td>2025–2034 ▶</td>
+          <td>甲午</td>
+          <td>拡張・飛躍</td>
+          <td><span class="cycle-level high"></span>高</td>
+        </tr>
+        <tr>
+          <td>2035–2044</td>
+          <td>乙未</td>
+          <td>完成・収穫</td>
+          <td><span class="cycle-level med"></span>中</td>
+        </tr>
+        <tr>
+          <td>2045–2054</td>
+          <td>丙申</td>
+          <td>変革・革新</td>
+          <td><span class="cycle-level high"></span>高</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <p class="footer-brand">Self Insight — iUMA</p>
+    <p class="footer-copy">© 2024 iUMA LLC. All rights reserved.</p>
+  </footer>
+
+</div>
+
+<script>
+// Month nav
+document.querySelectorAll('.month-btn').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    document.querySelectorAll('.month-btn').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+  });
+});
+
+// Chart
+const ctx = document.getElementById('mainChart').getContext('2d');
+new Chart(ctx,{
+  type:'line',
+  data:{
+    labels:['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月'],
+    datasets:[{
+      label:'総合運',
+      data:[72,68,75,84,80,78,88,92,86,82,77,80],
+      borderColor:'#8B5CF6',
+      backgroundColor:'rgba(139,92,246,0.06)',
+      borderWidth:1.5,
+      pointBackgroundColor:'#8B5CF6',
+      pointRadius:3,
+      pointHoverRadius:5,
+      tension:.4,
+      fill:true
+    },{
+      label:'財運',
+      data:[80,74,70,82,85,88,86,90,84,80,82,88],
+      borderColor:'#22c55e',
+      backgroundColor:'rgba(34,197,94,0.04)',
+      borderWidth:1.5,
+      pointBackgroundColor:'#22c55e',
+      pointRadius:3,
+      pointHoverRadius:5,
+      tension:.4,
+      fill:false
+    }]
+  },
+  options:{
+    responsive:true,
+    plugins:{
+      legend:{
+        display:true,
+        labels:{
+          color:'#6B6285',
+          font:{size:11},
+          boxWidth:12,
+          padding:20
+        }
+      }
+    },
+    scales:{
+      x:{
+        grid:{color:'rgba(46,37,69,.4)',drawBorder:false},
+        ticks:{color:'#6B6285',font:{size:10}}
+      },
+      y:{
+        min:50,max:100,
+        grid:{color:'rgba(46,37,69,.4)',drawBorder:false},
+        ticks:{color:'#6B6285',font:{size:10}}
+      }
+    }
+  }
+});
+</script>
+</body>
+</html>

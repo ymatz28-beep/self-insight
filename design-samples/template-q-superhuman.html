@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>手嶋静 - フォーチュンダッシュボード</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-deep: #0e0c1f;
+            --primary: #1b1938;
+            --violet-soft: #c9b4fa;
+            --hairline-dark: #3f3a52;
+            --on-dark-mute: #bcbac9;
+            --on-dark-faint: #5a5772;
+            --ink: #292827;
+            --teal-deep: #0e3030;
+            --teal-mid: #155555;
+            --violet-accent: #8B5CF6;
+            --teal-bright: #14b8a6;
+            --female-bg: #f5eff2;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--primary-deep);
+            color: var(--on-dark-mute);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 60px 40px;
+        }
+
+        /* Hero Section */
+        .hero {
+            background: radial-gradient(ellipse at 30% 40%, rgba(139, 92, 246, 0.18) 0%, transparent 60%), var(--primary-deep);
+            padding: 80px 60px;
+            text-align: center;
+            margin-bottom: 80px;
+            position: relative;
+        }
+
+        .hero h1 {
+            font-size: 64px;
+            font-weight: 600;
+            color: white;
+            margin-bottom: 24px;
+            letter-spacing: -0.02em;
+            line-height: 0.96;
+        }
+
+        .hero-divider {
+            width: 80px;
+            height: 2px;
+            background-color: var(--violet-accent);
+            margin: 24px auto 32px;
+        }
+
+        .hero-label {
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--on-dark-faint);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 24px;
+        }
+
+        .hero-score {
+            font-size: 88px;
+            font-weight: 600;
+            color: var(--violet-soft);
+            line-height: 1;
+        }
+
+        /* Section Divider */
+        .section-divider {
+            height: 1px;
+            background-color: var(--hairline-dark);
+            margin: 80px 0;
+        }
+
+        /* Section Title */
+        .section-title {
+            font-size: 28px;
+            font-weight: 600;
+            color: white;
+            margin-bottom: 48px;
+            letter-spacing: -0.02em;
+        }
+
+        /* Domain Grid */
+        .domains-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 32px;
+            margin-bottom: 80px;
+        }
+
+        .domain-card {
+            background-color: var(--primary);
+            padding: 32px;
+            border-left: 4px solid var(--violet-accent);
+            position: relative;
+        }
+
+        .domain-score {
+            font-size: 48px;
+            font-weight: 600;
+            color: var(--violet-soft);
+            line-height: 1;
+            margin-bottom: 12px;
+        }
+
+        .domain-label {
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--on-dark-faint);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        /* Chart Section */
+        .chart-section {
+            background-color: var(--primary);
+            padding: 60px 40px;
+            margin-bottom: 80px;
+            position: relative;
+        }
+
+        .chart-container {
+            position: relative;
+            height: 400px;
+            width: 100%;
+        }
+
+        /* Archetype Cards */
+        .archetypes {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+            margin-bottom: 80px;
+        }
+
+        .archetype-card {
+            background-color: var(--primary);
+            padding: 40px 32px;
+            text-align: center;
+            border-top: 3px solid var(--violet-accent);
+        }
+
+        .archetype-label {
+            font-size: 12px;
+            font-weight: 500;
+            color: var(--on-dark-faint);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 16px;
+        }
+
+        .archetype-name {
+            font-size: 24px;
+            font-weight: 600;
+            color: white;
+            line-height: 1.2;
+        }
+
+        /* Systems Section */
+        .systems-section {
+            background-color: var(--teal-deep);
+            padding: 60px 40px;
+            margin-bottom: 80px;
+        }
+
+        .systems-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 24px;
+        }
+
+        .system-block {
+            padding: 32px 24px;
+            text-align: center;
+            border-bottom: 2px solid var(--teal-mid);
+        }
+
+        .system-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--teal-bright);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 12px;
+        }
+
+        .system-description {
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.7);
+            line-height: 1.6;
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 60px 0;
+            border-top: 1px solid var(--hairline-dark);
+            font-size: 12px;
+            color: var(--on-dark-faint);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .container {
+                padding: 40px 24px;
+            }
+
+            .hero {
+                padding: 60px 40px;
+                margin-bottom: 60px;
+            }
+
+            .hero h1 {
+                font-size: 48px;
+            }
+
+            .hero-score {
+                font-size: 64px;
+            }
+
+            .domains-grid {
+                grid-template-columns: 1fr;
+                gap: 24px;
+            }
+
+            .archetypes {
+                grid-template-columns: 1fr;
+            }
+
+            .systems-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .section-divider {
+                margin: 60px 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Hero Section -->
+        <section class="hero">
+            <h1>手嶋静</h1>
+            <div class="hero-divider"></div>
+            <p class="hero-label">2026年5月 フォーチュン</p>
+            <p class="hero-score">84</p>
+        </section>
+
+        <div class="section-divider"></div>
+
+        <!-- Domain Scores Section -->
+        <section>
+            <h2 class="section-title">人生6領域</h2>
+            <div class="domains-grid">
+                <div class="domain-card">
+                    <div class="domain-score">78</div>
+                    <div class="domain-label">仕事</div>
+                </div>
+                <div class="domain-card">
+                    <div class="domain-score">82</div>
+                    <div class="domain-label">恋愛</div>
+                </div>
+                <div class="domain-card">
+                    <div class="domain-score">65</div>
+                    <div class="domain-label">財運</div>
+                </div>
+                <div class="domain-card">
+                    <div class="domain-score">88</div>
+                    <div class="domain-label">健康</div>
+                </div>
+                <div class="domain-card">
+                    <div class="domain-score">71</div>
+                    <div class="domain-label">家庭</div>
+                </div>
+                <div class="domain-card">
+                    <div class="domain-score">85</div>
+                    <div class="domain-label">精神</div>
+                </div>
+            </div>
+        </section>
+
+        <div class="section-divider"></div>
+
+        <!-- Chart Section -->
+        <section class="chart-section">
+            <h2 class="section-title">月次コンパス</h2>
+            <div class="chart-container">
+                <canvas id="radarChart"></canvas>
+            </div>
+        </section>
+
+        <div class="section-divider"></div>
+
+        <!-- Archetype Section -->
+        <section>
+            <h2 class="section-title">3つのアーキタイプ</h2>
+            <div class="archetypes">
+                <div class="archetype-card">
+                    <p class="archetype-label">過去</p>
+                    <p class="archetype-name">The Seeker</p>
+                </div>
+                <div class="archetype-card">
+                    <p class="archetype-label">現在</p>
+                    <p class="archetype-name">The Builder</p>
+                </div>
+                <div class="archetype-card">
+                    <p class="archetype-label">未来</p>
+                    <p class="archetype-name">The Ascendant</p>
+                </div>
+            </div>
+        </section>
+
+        <div class="section-divider"></div>
+
+        <!-- Systems Section -->
+        <section class="systems-section">
+            <h2 class="section-title" style="color: white; margin-bottom: 48px;">占術システム</h2>
+            <div class="systems-grid">
+                <div class="system-block">
+                    <p class="system-title">四柱推命</p>
+                    <p class="system-description">五行のバランスと天干地支による性質診断。人生全期の流れを読む基盤。</p>
+                </div>
+                <div class="system-block">
+                    <p class="system-title">六星占術</p>
+                    <p class="system-description">生年月日から導く6つの運命の流れ。年運の強弱パターンを追う。</p>
+                </div>
+                <div class="system-block">
+                    <p class="system-title">九星気学</p>
+                    <p class="system-description">九星と方位の関係性。吉方位と凶方位を読み月運を最適化する。</p>
+                </div>
+                <div class="system-block">
+                    <p class="system-title">西洋占星術</p>
+                    <p class="system-description">天体運行と星座位置。現在の宇宙エネルギーを読む統合的視点。</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer>
+            <p>© 2026 Self-Insight Dashboard | 次回更新: 2026年6月</p>
+        </footer>
+    </div>
+
+    <script>
+        // Radar Chart
+        const ctx = document.getElementById('radarChart').getContext('2d');
+        const radarChart = new Chart(ctx, {
+            type: 'radar',
+            data: {
+                labels: ['仕事', '恋愛', '財運', '健康', '家庭', '精神'],
+                datasets: [
+                    {
+                        label: '2026年5月スコア',
+                        data: [78, 82, 65, 88, 71, 85],
+                        borderColor: '#8B5CF6',
+                        backgroundColor: 'rgba(139, 92, 246, 0.15)',
+                        borderWidth: 2.5,
+                        pointBackgroundColor: '#c9b4fa',
+                        pointBorderColor: '#8B5CF6',
+                        pointBorderWidth: 2,
+                        pointRadius: 5,
+                        pointHoverRadius: 6,
+                        fill: true,
+                        tension: 0.3
+                    },
+                    {
+                        label: 'ベンチマーク',
+                        data: [80, 80, 80, 80, 80, 80],
+                        borderColor: '#14b8a6',
+                        backgroundColor: 'rgba(20, 184, 166, 0.05)',
+                        borderWidth: 1.5,
+                        borderDash: [5, 5],
+                        pointBackgroundColor: 'transparent',
+                        pointBorderColor: 'transparent',
+                        pointRadius: 0,
+                        fill: false,
+                        tension: 0.3
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: true,
+                        position: 'bottom',
+                        labels: {
+                            color: '#bcbac9',
+                            font: {
+                                family: "'Inter', sans-serif",
+                                size: 12,
+                                weight: '500'
+                            },
+                            padding: 20,
+                            usePointStyle: true
+                        }
+                    },
+                    tooltip: {
+                        backgroundColor: 'rgba(27, 25, 56, 0.95)',
+                        titleColor: '#c9b4fa',
+                        bodyColor: '#bcbac9',
+                        borderColor: '#3f3a52',
+                        borderWidth: 1,
+                        titleFont: {
+                            family: "'Inter', sans-serif",
+                            size: 12,
+                            weight: '600'
+                        },
+                        bodyFont: {
+                            family: "'Inter', sans-serif",
+                            size: 12
+                        },
+                        padding: 12,
+                        displayColors: true
+                    }
+                },
+                scales: {
+                    r: {
+                        beginAtZero: true,
+                        max: 100,
+                        ticks: {
+                            color: '#5a5772',
+                            font: {
+                                family: "'Inter', sans-serif",
+                                size: 11
+                            },
+                            stepSize: 20
+                        },
+                        grid: {
+                            color: '#3f3a52',
+                            drawBorder: false
+                        },
+                        pointLabels: {
+                            color: '#on-dark-mute',
+                            font: {
+                                family: "'Inter', sans-serif",
+                                size: 13,
+                                weight: '500'
+                            },
+                            padding: 12
+                        }
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>

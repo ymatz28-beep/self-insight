@@ -897,6 +897,61 @@ ROKUSEI_NARRATIVE = {
     '天王星人': '自由な天王星人でいらっしゃいます。型にはまらない独自路線を、生まれながらに選ばれる方です。',
 }
 
+CORE_IDENTITY_TAGLINES = {
+    ('壬', '二黒土星'): '大地に宿る、深く静かな水',
+    ('壬', '一白水星'): '深海のように、すべてを映し出す知恵',
+    ('壬', '三碧木星'): '大河の水が、木々を押し広げてゆく力',
+    ('壬', '四緑木星'): '水が縁を結び、流れてゆく信頼の人',
+    ('壬', '五黄土星'): '大海の底に、帝王の静けさが宿る',
+    ('壬', '六白金星'): '天の高みと深海の底、両方を知る者',
+    ('壬', '七赤金星'): '流れる水が、言葉に変わる瞬間',
+    ('壬', '八白土星'): '山を越えてきた大河のような、深い底力',
+    ('壬', '九紫火星'): '水と火が溶け合う、炎のような知性',
+    ('戊', '四緑木星'): '山が風を受けとめ、縁を育む大地',
+    ('戊', '一白水星'): '山の地下を流れる、静かな知恵',
+    ('戊', '二黒土星'): '大地が大地を抱く、揺るぎない支え',
+    ('戊', '三碧木星'): '山肌を拓いてゆく、行動する大地',
+    ('戊', '五黄土星'): '天下無双の山、静かに中央に立つ',
+    ('戊', '六白金星'): '山の頂に宿る、公正な意志',
+    ('戊', '七赤金星'): '山から生まれる清流のような、温かな言葉',
+    ('戊', '八白土星'): '重なる山のような、長く深い底力',
+    ('戊', '九紫火星'): '火山のように、内に知性の熱を秘める',
+    ('甲', '一白水星'): '水辺に根を張る大樹のような、揺るぎない知恵',
+    ('甲', '二黒土星'): '豊かな大地に立つ一本樹、支えと成長の象徴',
+    ('甲', '三碧木星'): '稲妻を受けてなお伸びる、開拓者の大木',
+    ('甲', '四緑木星'): '縁を結びながら天へ伸びる、信頼の大樹',
+    ('甲', '五黄土星'): '大地を割って立つ、圧倒的な生命力',
+    ('甲', '六白金星'): '天に向かって一直線、正義の大樹',
+    ('甲', '七赤金星'): '言葉で人を引きつける、明るい大木',
+    ('甲', '八白土星'): '岩山に根を張る、一本の強い樹',
+    ('甲', '九紫火星'): '火に照らされ輝く、知性と成長の象徴',
+    ('乙', '一白水星'): '水に沿ってしなやかに広がる、柔の知恵',
+    ('乙', '二黒土星'): '大地にそっと根を張る、静かな粘り強さ',
+    ('乙', '三碧木星'): '嵐の中でもたわんで折れない、しなやかな力',
+    ('乙', '四緑木星'): '柔らかく絡まりながら、遠くへ伸びてゆく縁',
+    ('丙', '一白水星'): '水面に映る太陽、知恵を照らす温もり',
+    ('丙', '二黒土星'): '大地を温める陽光、支える者を照らす',
+    ('丁', '一白水星'): 'ろうそくの炎が、静かな水面を照らす夜',
+    ('丁', '二黒土星'): '大地の上で静かに燃える、消えない炎',
+    ('庚', '一白水星'): '清流に研がれた刃のような、明晰な意志',
+    ('庚', '二黒土星'): '大地から鍛えられた鋼のような、決断力',
+    ('辛', '一白水星'): '水晶のように澄んだ、繊細な美意識',
+    ('辛', '二黒土星'): '大地の宝石、静かな輝きを放つ内面',
+    ('己', '一白水星'): '水を含んだ豊かな田、知恵が実を結ぶ',
+    ('己', '二黒土星'): '二重の大地の豊かさ、育てることの喜び',
+    ('癸', '一白水星'): '雨露と泉水が溶け合う、深い静けさ',
+    ('癸', '二黒土星'): '大地に染み入る雨、じわりと広がる優しさ',
+}
+
+
+def _get_core_tagline(dm, ys):
+    key = (dm.get('char', ''), ys.get('name', ''))
+    tagline = CORE_IDENTITY_TAGLINES.get(key)
+    if tagline:
+        return tagline
+    return _get_essence_sub(dm, ys)
+
+
 WESTERN_NARRATIVE = {
     'Aries':   '牡羊座（火・活動宮）— 先陣を切る開拓者',
     'Taurus':  '牡牛座（土・不動宮）— 五感と安定を愛する人',
@@ -1119,8 +1174,40 @@ def _core_identity(p):
         watch_value = '—'
         watch_sub = ''
 
+    tagline = _get_core_tagline(dm, ys)
+    quote_html = f'<div class="section-quote">"あなたを一言で表すなら——{tagline}"</div>'
+
+    dm_char = dm.get('char', '')
+    ys_name = ys.get('name', '')
+    rok_type = rok.get('main_star', {}).get('name', '') if 'main_star' in rok else ''
+    dm_narr = DM_NARRATIVE_LONG.get(dm_char, '')
+    ys_narr = NS_NARRATIVE.get(ys_name, '')
+    rok_narr = ROKUSEI_NARRATIVE.get(rok_type, '')
+
+    narr_cards = ''
+    if dm_narr:
+        narr_cards += f'''<div class="card" style="border-left:3px solid #6366f1">
+      <div class="card-label" style="color:#a5b4fc">日主「{dm_char}」</div>
+      <div style="font-size:13px;line-height:1.8;color:var(--text-secondary);margin-top:6px">{dm_narr}</div>
+    </div>'''
+    if ys_narr:
+        narr_cards += f'''<div class="card" style="border-left:3px solid var(--accent-green)">
+      <div class="card-label" style="color:#86efac">本命星「{ys_name}」</div>
+      <div style="font-size:13px;line-height:1.8;color:var(--text-secondary);margin-top:6px">{ys_narr}</div>
+    </div>'''
+    if rok_narr:
+        narr_cards += f'''<div class="card" style="border-left:3px solid #eab308">
+      <div class="card-label" style="color:#fde047">六星占術「{rok_type}」</div>
+      <div style="font-size:13px;line-height:1.8;color:var(--text-secondary);margin-top:6px">{rok_narr}</div>
+    </div>'''
+    narr_panel = f'''<div style="margin-top:16px">
+    <div class="section-sub-title" style="font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--text-muted);margin-bottom:10px">命式の読み解き</div>
+    <div class="grid grid-3">{narr_cards}</div>
+  </div>''' if narr_cards else ''
+
     return f'''<section class="section" id="core-identity">
-  {_section_quote('core_identity')}
+  {quote_html}
+  {narr_panel}
   {insight_html}
   <div class="grid grid-4" style="margin-top:16px">
     <div class="card tc"><div class="card-label">本質</div>
@@ -2090,7 +2177,7 @@ monthlyData.forEach((m,i)=>{{
       <div class="month-tags">
         <span class="month-tag" style="background:rgba(99,102,241,0.15);color:#a5b4fc">九星: ${{m.nineStarNote}}</span>
         <span class="month-tag" style="background:${{pc.bg}};color:${{pc.color}};border:1px solid ${{pc.border}}">六星: ${{m.rokuseiPhase}}</span>
-        ${{m.westernTheme ? '<span class="month-tag" style="background:rgba(139,92,246,0.15);color:var(--accent-purple-light);border:1px solid rgba(139,92,246,0.3)">西洋: '+m.westernTheme+'</span>' : ''}}
+        ${{m.westernTheme ? '<span class="month-tag" style="background:rgba(20,184,166,0.15);color:#5eead4;border:1px solid rgba(20,184,166,0.3)">西洋: '+m.westernTheme+'</span>' : ''}}
         ${{m.retroBadge || ''}}
       </div>
     </div>
@@ -2257,6 +2344,10 @@ function toggleAccordion(el){{el.classList.toggle('open');const body=el.nextElem
 CSS = '''<style>
 :root{--bg:#0f1117;--surface:#1a1d27;--surface2:#242836;--border:#2d3348;--border-light:#3d4460;
   --accent:#6366f1;--accent2:#8b5cf6;--blue:#3b82f6;--green:#22c55e;--red:#ef4444;--yellow:#eab308;--gold:#c9a84c;
+  --accent-green:#22c55e;--accent-green-light:#4ade80;--accent-blue:#3b82f6;--accent-blue-light:#60a5fa;
+  --accent-red:#ef4444;--accent-red-light:#f87171;
+  --accent-purple:#8b5cf6;--accent-purple-light:#a78bfa;--accent-purple-dark:#6d28d9;
+  --accent-teal:#14b8a6;--accent-teal-light:#5eead4;
   --text:#e4e4e7;--text-secondary:#9ca3af;--text-muted:#7c8293;
   --font-body:'Inter','Noto Sans JP',sans-serif;--font-mono:'JetBrains Mono',monospace;--font-display:'Cormorant Garamond',serif;--font-heading:'Inter',sans-serif;
   --r-sm:6px;--r-md:10px;--r-lg:14px;--r-xl:16px;--gnav-height:52px}

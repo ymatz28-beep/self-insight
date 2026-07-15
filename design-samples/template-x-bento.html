@@ -1,0 +1,763 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>手嶋静 — Self Insight</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Inter:wght@300;400;500;600&family=Noto+Sans+JP:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --bg: #080706;
+      --surface: #0f0e0d;
+      --surface2: #161412;
+      --surface3: #1c1a18;
+      --border: #242220;
+      --border-light: #2e2b28;
+      --gold: #C9A84C;
+      --gold-dim: rgba(201, 168, 76, 0.25);
+      --gold-glow: rgba(201, 168, 76, 0.08);
+      --accent: #8B5CF6;
+      --accent-warm: #A78BFA;
+      --accent-dim: rgba(139, 92, 246, 0.15);
+      --text-primary: #EDE8E0;
+      --text-secondary: #7a746c;
+      --text-muted: #3a3632;
+      --topbar-h: 52px;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text-primary);
+      font-family: 'Inter', sans-serif;
+      font-weight: 300;
+      min-height: 100vh;
+    }
+
+    /* ─── TOP BAR ─── */
+    .topbar {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      height: var(--topbar-h);
+      background: rgba(8, 7, 6, 0.94);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 28px;
+      z-index: 200;
+    }
+
+    .topbar::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 1px;
+      background: linear-gradient(90deg,
+        transparent 0%,
+        var(--gold-dim) 20%,
+        var(--gold-dim) 80%,
+        transparent 100%);
+    }
+
+    .topbar-left {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .topbar-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 19px;
+      font-weight: 400;
+      letter-spacing: 1.5px;
+      color: var(--text-primary);
+    }
+
+    .topbar-sep {
+      width: 1px;
+      height: 18px;
+      background: var(--border-light);
+    }
+
+    .topbar-eyebrow {
+      font-size: 9px;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      color: var(--text-muted);
+    }
+
+    .topbar-right {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .topbar-date {
+      font-size: 11px;
+      letter-spacing: 2px;
+      color: var(--text-muted);
+    }
+
+    .topbar-badge {
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 2px;
+      padding: 5px 16px;
+      background: linear-gradient(135deg, var(--accent), var(--accent-warm));
+      color: #fff;
+      text-transform: uppercase;
+    }
+
+    /* ─── BENTO GRID ─── */
+    .bento {
+      padding: calc(var(--topbar-h) + 16px) 16px 24px;
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap: 10px;
+    }
+
+    /* ─── CARD BASE ─── */
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      padding: 20px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 1px;
+      background: var(--gold-dim);
+    }
+
+    .card-label {
+      font-size: 9px;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 18px;
+    }
+
+    /* ─── DOMAINS — 6 bars (col 1–3) ─── */
+    .card-domains { grid-column: span 3; }
+
+    .domain-rows { display: flex; flex-direction: column; gap: 13px; }
+
+    .domain-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .dom-name {
+      font-size: 11px;
+      color: var(--text-secondary);
+      width: 36px;
+      flex-shrink: 0;
+    }
+
+    .dom-track {
+      flex: 1;
+      height: 2px;
+      background: var(--border-light);
+    }
+
+    .dom-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--accent), var(--accent-warm));
+    }
+
+    .dom-score {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 14px;
+      font-weight: 300;
+      color: var(--text-secondary);
+      width: 24px;
+      text-align: right;
+      flex-shrink: 0;
+    }
+
+    /* ─── FORTUNE MONTH (col 4–6) ─── */
+    .card-fortune {
+      grid-column: span 3;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .fortune-num {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 88px;
+      font-weight: 300;
+      line-height: 1;
+      background: linear-gradient(135deg, var(--accent-warm) 0%, var(--gold) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 6px;
+    }
+
+    .fortune-sub {
+      font-size: 9px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--gold);
+    }
+
+    .fortune-text {
+      font-size: 11px;
+      color: var(--text-secondary);
+      line-height: 1.75;
+    }
+
+    /* ─── GOGYOU — five elements (col 7–12) ─── */
+    .card-gogyou { grid-column: span 6; }
+
+    .gogyou-rows { display: flex; flex-direction: column; gap: 11px; }
+
+    .gogyou-row { display: flex; align-items: center; gap: 12px; }
+
+    .go-name {
+      font-size: 12px;
+      color: var(--text-secondary);
+      width: 20px;
+      flex-shrink: 0;
+    }
+
+    .go-track {
+      flex: 1;
+      height: 3px;
+      background: var(--border-light);
+    }
+
+    .go-fill { height: 100%; }
+
+    .go-score {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 15px;
+      font-weight: 300;
+      color: var(--text-secondary);
+      width: 28px;
+      text-align: right;
+      flex-shrink: 0;
+    }
+
+    /* ─── SHICHUU — four pillars (col 1–8) ─── */
+    .card-shichuu { grid-column: span 8; }
+
+    .pillar-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .pillar-table th {
+      font-size: 9px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      font-weight: 400;
+      padding: 0 14px 12px 0;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .pillar-table td {
+      padding: 10px 14px 10px 0;
+      font-size: 12px;
+      color: var(--text-secondary);
+      border-bottom: 1px solid var(--border);
+      vertical-align: middle;
+    }
+
+    .pillar-table tr:last-child td { border-bottom: none; }
+
+    .pv {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 22px;
+      font-weight: 300;
+      color: var(--text-primary);
+    }
+
+    .pillar-row-label {
+      font-size: 9px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--text-muted);
+    }
+
+    /* ─── ROKKU (col 9–12) ─── */
+    .card-rokku { grid-column: span 4; }
+
+    .cycle-list { display: flex; flex-direction: column; gap: 5px; }
+
+    .cycle-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 9px 10px;
+      border: 1px solid transparent;
+      transition: border-color 0.2s;
+    }
+
+    .cycle-item.current {
+      border-color: var(--gold-dim);
+      background: var(--gold-glow);
+    }
+
+    .cy-num {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 16px;
+      font-weight: 300;
+      color: var(--text-muted);
+      width: 18px;
+      flex-shrink: 0;
+    }
+
+    .cycle-item.current .cy-num { color: var(--gold); }
+
+    .cy-name {
+      font-size: 12px;
+      color: var(--text-secondary);
+      flex: 1;
+    }
+
+    .cycle-item.current .cy-name { color: var(--text-primary); }
+
+    .cy-tag {
+      font-size: 8px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--gold);
+      background: var(--gold-glow);
+      padding: 2px 7px;
+      border: 1px solid var(--gold-dim);
+    }
+
+    /* ─── PLANETS — Western astrology (col 1–8) ─── */
+    .card-planets { grid-column: span 8; }
+
+    .planet-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+    }
+
+    .planet-card {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      padding: 14px 12px;
+    }
+
+    .planet-symbol {
+      font-size: 22px;
+      margin-bottom: 10px;
+      opacity: 0.7;
+    }
+
+    .planet-en {
+      font-size: 8px;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 3px;
+    }
+
+    .planet-ja {
+      font-size: 10px;
+      color: var(--text-secondary);
+      margin-bottom: 8px;
+    }
+
+    .planet-sign {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 15px;
+      font-weight: 300;
+      color: var(--accent-warm);
+    }
+
+    /* ─── KYU (col 9–12) ─── */
+    .card-kyu { grid-column: span 4; }
+
+    .kyu-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+      margin-bottom: 14px;
+    }
+
+    .kyu-cell {
+      background: var(--surface2);
+      padding: 10px 8px;
+      text-align: center;
+    }
+
+    .kyu-cell.center { background: var(--accent-dim); }
+
+    .kyu-num {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 22px;
+      font-weight: 300;
+      color: var(--text-secondary);
+    }
+
+    .kyu-cell.center .kyu-num { color: var(--accent-warm); }
+
+    .kyu-kanji {
+      font-size: 9px;
+      color: var(--text-muted);
+      margin-top: 3px;
+    }
+
+    .kyu-note {
+      font-size: 11px;
+      color: var(--text-secondary);
+      line-height: 1.7;
+    }
+
+    /* ─── READING BANDS (full width) ─── */
+    .card-reading { grid-column: span 12; }
+
+    .bands-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+    }
+
+    .band {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      padding: 18px 16px;
+      position: relative;
+    }
+
+    .band::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+    }
+
+    .band.bond::before {
+      background: linear-gradient(90deg, var(--accent), var(--accent-warm));
+    }
+
+    .band.core::before {
+      background: linear-gradient(90deg, var(--gold), #e8c870);
+    }
+
+    .band.shadow::before {
+      background: linear-gradient(90deg, #2e2b28, var(--border));
+    }
+
+    .band-tag {
+      font-size: 8px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 10px;
+    }
+
+    .band-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 17px;
+      font-weight: 300;
+      font-style: italic;
+      color: var(--text-primary);
+      margin-bottom: 10px;
+    }
+
+    .band-body {
+      font-size: 11px;
+      color: var(--text-secondary);
+      line-height: 1.7;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- TOP BAR -->
+  <nav class="topbar">
+    <div class="topbar-left">
+      <span class="topbar-name">手嶋静</span>
+      <div class="topbar-sep"></div>
+      <span class="topbar-eyebrow">Self Insight</span>
+    </div>
+    <div class="topbar-right">
+      <span class="topbar-date">2026 / 05</span>
+      <div class="topbar-badge">Fortune 84</div>
+    </div>
+  </nav>
+
+  <!-- BENTO GRID -->
+  <div class="bento">
+
+    <!-- ROW 1: Domains | Fortune | Gogyou -->
+
+    <div class="card card-domains">
+      <div class="card-label">六領域スコア</div>
+      <div class="domain-rows">
+        <div class="domain-row">
+          <span class="dom-name">仕事</span>
+          <div class="dom-track"><div class="dom-fill" style="width:78%"></div></div>
+          <span class="dom-score">78</span>
+        </div>
+        <div class="domain-row">
+          <span class="dom-name">恋愛</span>
+          <div class="dom-track"><div class="dom-fill" style="width:82%"></div></div>
+          <span class="dom-score">82</span>
+        </div>
+        <div class="domain-row">
+          <span class="dom-name">財運</span>
+          <div class="dom-track"><div class="dom-fill" style="width:65%"></div></div>
+          <span class="dom-score">65</span>
+        </div>
+        <div class="domain-row">
+          <span class="dom-name">健康</span>
+          <div class="dom-track"><div class="dom-fill" style="width:88%"></div></div>
+          <span class="dom-score">88</span>
+        </div>
+        <div class="domain-row">
+          <span class="dom-name">家庭</span>
+          <div class="dom-track"><div class="dom-fill" style="width:71%"></div></div>
+          <span class="dom-score">71</span>
+        </div>
+        <div class="domain-row">
+          <span class="dom-name">精神</span>
+          <div class="dom-track"><div class="dom-fill" style="width:85%"></div></div>
+          <span class="dom-score">85</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="card card-fortune">
+      <div class="card-label">2026年5月の運勢</div>
+      <div>
+        <div class="fortune-num">84</div>
+        <div class="fortune-sub">Fortune Index</div>
+      </div>
+      <div class="fortune-text">創造性と直感が最高潮。新しいプロジェクトの開始に最適な時期。対人関係は調和的で、チームワークが実を結ぶ。</div>
+    </div>
+
+    <div class="card card-gogyou">
+      <div class="card-label">五行バランス</div>
+      <div class="gogyou-rows">
+        <div class="gogyou-row">
+          <span class="go-name">木</span>
+          <div class="go-track"><div class="go-fill" style="width:72%; background:#4ade80"></div></div>
+          <span class="go-score">72</span>
+        </div>
+        <div class="gogyou-row">
+          <span class="go-name">火</span>
+          <div class="go-track"><div class="go-fill" style="width:45%; background:#f87171"></div></div>
+          <span class="go-score">45</span>
+        </div>
+        <div class="gogyou-row">
+          <span class="go-name">土</span>
+          <div class="go-track"><div class="go-fill" style="width:68%; background:#d97706"></div></div>
+          <span class="go-score">68</span>
+        </div>
+        <div class="gogyou-row">
+          <span class="go-name">金</span>
+          <div class="go-track"><div class="go-fill" style="width:85%; background:var(--gold)"></div></div>
+          <span class="go-score">85</span>
+        </div>
+        <div class="gogyou-row">
+          <span class="go-name">水</span>
+          <div class="go-track"><div class="go-fill" style="width:59%; background:#60a5fa"></div></div>
+          <span class="go-score">59</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ROW 2: Shichuu | Rokku -->
+
+    <div class="card card-shichuu">
+      <div class="card-label">四柱推命</div>
+      <table class="pillar-table">
+        <thead>
+          <tr>
+            <th>柱</th>
+            <th>天干</th>
+            <th>地支</th>
+            <th>蔵干</th>
+            <th>十神</th>
+            <th>十二運</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="pillar-row-label">年柱</span></td>
+            <td><span class="pv">甲</span></td>
+            <td><span class="pv">子</span></td>
+            <td>壬</td>
+            <td>偏印</td>
+            <td>沐浴</td>
+          </tr>
+          <tr>
+            <td><span class="pillar-row-label">月柱</span></td>
+            <td><span class="pv">丁</span></td>
+            <td><span class="pv">亥</span></td>
+            <td>甲</td>
+            <td>正財</td>
+            <td>胎</td>
+          </tr>
+          <tr>
+            <td><span class="pillar-row-label">日柱</span></td>
+            <td><span class="pv">庚</span></td>
+            <td><span class="pv">午</span></td>
+            <td>己</td>
+            <td>—</td>
+            <td>死</td>
+          </tr>
+          <tr>
+            <td><span class="pillar-row-label">時柱</span></td>
+            <td><span class="pv">壬</span></td>
+            <td><span class="pv">申</span></td>
+            <td>庚</td>
+            <td>食神</td>
+            <td>建禄</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="card card-rokku">
+      <div class="card-label">六星占術 — 運命サイクル</div>
+      <div class="cycle-list">
+        <div class="cycle-item">
+          <span class="cy-num">1</span>
+          <span class="cy-name">種子</span>
+        </div>
+        <div class="cycle-item current">
+          <span class="cy-num">2</span>
+          <span class="cy-name">緑生</span>
+          <span class="cy-tag">現在</span>
+        </div>
+        <div class="cycle-item">
+          <span class="cy-num">3</span>
+          <span class="cy-name">開花</span>
+        </div>
+        <div class="cycle-item">
+          <span class="cy-num">4</span>
+          <span class="cy-name">結実</span>
+        </div>
+        <div class="cycle-item">
+          <span class="cy-num">5</span>
+          <span class="cy-name">乱気</span>
+        </div>
+        <div class="cycle-item">
+          <span class="cy-num">6</span>
+          <span class="cy-name">停止</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ROW 3: Planets | Kyu -->
+
+    <div class="card card-planets">
+      <div class="card-label">西洋占星術 — 天体配置</div>
+      <div class="planet-grid">
+        <div class="planet-card">
+          <div class="planet-symbol">☉</div>
+          <div class="planet-en">Sun</div>
+          <div class="planet-ja">太陽</div>
+          <div class="planet-sign">牡牛座 8°</div>
+        </div>
+        <div class="planet-card">
+          <div class="planet-symbol">☽</div>
+          <div class="planet-en">Moon</div>
+          <div class="planet-ja">月</div>
+          <div class="planet-sign">蠍座 22°</div>
+        </div>
+        <div class="planet-card">
+          <div class="planet-symbol">☿</div>
+          <div class="planet-en">Mercury</div>
+          <div class="planet-ja">水星</div>
+          <div class="planet-sign">牡羊座 15°</div>
+        </div>
+        <div class="planet-card">
+          <div class="planet-symbol">♀</div>
+          <div class="planet-en">Venus</div>
+          <div class="planet-ja">金星</div>
+          <div class="planet-sign">双子座 3°</div>
+        </div>
+        <div class="planet-card">
+          <div class="planet-symbol">♂</div>
+          <div class="planet-en">Mars</div>
+          <div class="planet-ja">火星</div>
+          <div class="planet-sign">獅子座 27°</div>
+        </div>
+        <div class="planet-card">
+          <div class="planet-symbol">♃</div>
+          <div class="planet-en">Jupiter</div>
+          <div class="planet-ja">木星</div>
+          <div class="planet-sign">蟹座 11°</div>
+        </div>
+        <div class="planet-card">
+          <div class="planet-symbol">♄</div>
+          <div class="planet-en">Saturn</div>
+          <div class="planet-ja">土星</div>
+          <div class="planet-sign">水瓶座 4°</div>
+        </div>
+        <div class="planet-card">
+          <div class="planet-symbol">♇</div>
+          <div class="planet-en">Pluto</div>
+          <div class="planet-ja">冥王星</div>
+          <div class="planet-sign">山羊座 29°</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card card-kyu">
+      <div class="card-label">九星気学</div>
+      <div class="kyu-grid">
+        <div class="kyu-cell"><div class="kyu-num">4</div><div class="kyu-kanji">四緑</div></div>
+        <div class="kyu-cell"><div class="kyu-num">9</div><div class="kyu-kanji">九紫</div></div>
+        <div class="kyu-cell"><div class="kyu-num">2</div><div class="kyu-kanji">二黒</div></div>
+        <div class="kyu-cell"><div class="kyu-num">3</div><div class="kyu-kanji">三碧</div></div>
+        <div class="kyu-cell center"><div class="kyu-num">5</div><div class="kyu-kanji">五黄</div></div>
+        <div class="kyu-cell"><div class="kyu-num">7</div><div class="kyu-kanji">七赤</div></div>
+        <div class="kyu-cell"><div class="kyu-num">8</div><div class="kyu-kanji">八白</div></div>
+        <div class="kyu-cell"><div class="kyu-num">1</div><div class="kyu-kanji">一白</div></div>
+        <div class="kyu-cell"><div class="kyu-num">6</div><div class="kyu-kanji">六白</div></div>
+      </div>
+      <p class="kyu-note">今月は中宮五黄。変化と再生の力が強まる。既存の枠を超えた行動が吉。</p>
+    </div>
+
+    <!-- ROW 4: Reading bands -->
+
+    <div class="card card-reading">
+      <div class="card-label">リーディング</div>
+      <div class="bands-row">
+        <div class="band bond">
+          <div class="band-tag">Bond</div>
+          <div class="band-title">繋がりの星</div>
+          <div class="band-body">対人関係において強い絆と共鳴が生まれる時期。チームや仲間との協力が実を結び、予期しない縁が新しい道を開く。</div>
+        </div>
+        <div class="band core">
+          <div class="band-tag">Core</div>
+          <div class="band-title">黄金の意志</div>
+          <div class="band-body">内なる核が揺るぎない時。自分の価値観に従った判断が未来を切り開く鍵となる。迷いを捨て、軸を信じよ。</div>
+        </div>
+        <div class="band shadow">
+          <div class="band-tag">Shadow</div>
+          <div class="band-title">手放しの季節</div>
+          <div class="band-body">古い習慣や執着を手放すことで新しいエネルギーが流れ込む。変容の痛みを恐れるな。それが成長の代価だ。</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</body>
+</html>

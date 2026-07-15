@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Template A: Celestial Oracle</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400..700&family=Noto+Sans+JP:wght@400..700&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400;1,600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0D0B14;
+  --surface: #1A1626;
+  --surface2: #251E36;
+  --border: #2E2545;
+  --gold: #C9A84C;
+  --accent: #8B5CF6;
+  --accent-warm: #A78BFA;
+  --text-primary: #F5F0E8;
+  --text-secondary: #A89EC0;
+  --text-muted: #6B6285;
+  --r-md: 12px;
+  --r-lg: 16px;
+  --r-xl: 22px;
+}
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box }
+html { font-size:16px; scroll-behavior:smooth }
+body {
+  font-family:'Inter','Noto Sans JP',sans-serif;
+  background:var(--bg);
+  color:var(--text-primary);
+  min-height:100vh;
+  -webkit-font-smoothing:antialiased;
+}
+
+/* ── Ambient nebula background ── */
+body::before {
+  content:'';
+  position:fixed;
+  inset:0;
+  background:
+    radial-gradient(ellipse 70% 60% at 15% -5%, rgba(139,92,246,0.1) 0%, transparent 55%),
+    radial-gradient(ellipse 50% 50% at 85% 95%, rgba(167,139,250,0.07) 0%, transparent 50%),
+    radial-gradient(ellipse 40% 30% at 50% 50%, rgba(139,92,246,0.04) 0%, transparent 60%);
+  pointer-events:none;
+  z-index:0;
+}
+
+/* ── Nav ── */
+.gnav {
+  position:sticky; top:0; z-index:100;
+  display:flex; align-items:center; justify-content:space-between;
+  height:52px; padding:0 24px;
+  background:rgba(13,11,20,0.85);
+  backdrop-filter:blur(20px);
+  border-bottom:1px solid rgba(139,92,246,0.12);
+}
+.gnav-brand {
+  font-family:'Cormorant Garamond',serif;
+  font-size:16px; font-weight:600;
+  color:var(--gold); letter-spacing:0.06em;
+}
+.gnav-links { display:flex; gap:2px }
+.gnav-links a {
+  color:var(--text-muted); text-decoration:none;
+  font-size:12px; font-weight:500;
+  padding:6px 12px; border-radius:6px;
+  transition:all 0.15s;
+}
+.gnav-links a:hover, .gnav-links a.active {
+  color:var(--accent-warm);
+  background:rgba(139,92,246,0.1);
+}
+
+/* ── Container ── */
+.container { max-width:860px; margin:0 auto; padding:24px; position:relative; z-index:1 }
+
+/* ── Hero ── */
+.hero {
+  position:relative; overflow:hidden;
+  border-radius:var(--r-xl);
+  border:1px solid rgba(139,92,246,0.25);
+  margin-bottom:28px;
+}
+.hero-bg {
+  position:absolute; inset:0;
+  background:
+    radial-gradient(ellipse 90% 120% at 50% -10%, rgba(139,92,246,0.28) 0%, transparent 65%),
+    radial-gradient(ellipse 60% 40% at 85% 90%, rgba(167,139,250,0.07) 0%, transparent 50%),
+    linear-gradient(175deg, #1D1040 0%, #0D0B14 50%, #140B28 100%);
+  animation:heroBreath 10s ease-in-out infinite;
+}
+@keyframes heroBreath {
+  0%,100% { opacity:1 }
+  50% { opacity:0.85 }
+}
+/* top glow crown */
+.hero-crown {
+  position:absolute; top:-80px; left:50%; transform:translateX(-50%);
+  width:400px; height:200px;
+  background:radial-gradient(ellipse, rgba(139,92,246,0.22) 0%, transparent 70%);
+  pointer-events:none;
+}
+.hero-body {
+  position:relative; z-index:2;
+  padding:36px 28px 28px;
+  text-align:center;
+}
+.hero-en {
+  font-size:10px; font-weight:500;
+  color:rgba(167,139,250,0.55);
+  text-transform:uppercase; letter-spacing:5px;
+  margin-bottom:10px;
+}
+.hero-title {
+  font-family:'Cormorant Garamond',serif;
+  font-size:clamp(30px,5vw,46px);
+  font-weight:600; line-height:1.1;
+  color:var(--text-primary);
+  margin-bottom:6px;
+  text-shadow:0 0 80px rgba(139,92,246,0.35);
+}
+.hero-tagline {
+  font-family:'Cormorant Garamond',serif;
+  font-size:clamp(14px,2vw,18px);
+  font-style:italic;
+  color:rgba(167,139,250,0.65);
+  margin-bottom:20px;
+  letter-spacing:0.03em;
+}
+.hero-name-band {
+  display:inline-block;
+  font-size:13px; font-weight:500;
+  color:rgba(245,240,232,0.55);
+  letter-spacing:4px;
+  text-transform:uppercase;
+  margin-bottom:22px;
+  padding:0 14px;
+  position:relative;
+}
+.hero-name-band::before, .hero-name-band::after {
+  content:'';
+  position:absolute; top:50%;
+  width:30px; height:1px;
+  background:rgba(167,139,250,0.3);
+}
+.hero-name-band::before { right:100%; transform:translateX(10px) }
+.hero-name-band::after  { left:100%;  transform:translateX(-10px) }
+
+/* meta chips */
+.hero-meta {
+  display:flex; justify-content:center;
+  gap:8px; flex-wrap:wrap; margin-bottom:22px;
+}
+.meta-chip {
+  display:flex; flex-direction:column; align-items:center;
+  background:rgba(255,255,255,0.05);
+  border:1px solid rgba(139,92,246,0.18);
+  border-radius:10px; padding:10px 16px;
+  min-width:72px;
+}
+.meta-chip-label {
+  font-size:9px; color:var(--text-muted);
+  text-transform:uppercase; letter-spacing:0.6px; margin-bottom:4px;
+}
+.meta-chip-value {
+  font-family:'Cormorant Garamond',serif;
+  font-size:20px; font-weight:600; color:var(--gold);
+  line-height:1;
+}
+
+/* hub mini */
+.hub-grid {
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(168px,1fr));
+  gap:8px;
+}
+.hub-mini {
+  display:flex; align-items:center; gap:10px;
+  background:rgba(255,255,255,0.035);
+  border:1px solid rgba(139,92,246,0.14);
+  border-radius:var(--r-md); padding:12px 14px;
+  cursor:pointer; transition:all 0.2s; text-align:left;
+}
+.hub-mini:hover {
+  background:rgba(139,92,246,0.08);
+  border-color:rgba(139,92,246,0.32);
+  transform:translateY(-2px);
+  box-shadow:0 6px 20px rgba(139,92,246,0.08);
+}
+.hub-icon {
+  width:34px; height:34px; border-radius:9px;
+  display:flex; align-items:center; justify-content:center;
+  font-size:16px; flex-shrink:0;
+  background:rgba(139,92,246,0.12);
+}
+.hub-title { font-size:12px; font-weight:600; color:var(--text-primary) }
+.hub-sub { font-size:10px; color:var(--text-secondary); margin-top:2px; line-height:1.3 }
+
+/* ── Section ── */
+.section { margin-bottom:40px }
+.section-heading {
+  display:flex; align-items:center; gap:12px;
+  margin-bottom:20px;
+}
+.section-heading-text {
+  font-family:'Cormorant Garamond',serif;
+  font-size:clamp(20px,3vw,26px);
+  font-weight:600; color:var(--text-primary);
+  white-space:nowrap;
+}
+.section-heading-line {
+  flex:1; height:1px;
+  background:linear-gradient(90deg, rgba(139,92,246,0.35), transparent);
+}
+
+/* ── Insight ── */
+.insight {
+  background:linear-gradient(135deg, rgba(139,92,246,0.09), rgba(167,139,250,0.04));
+  border:1px solid rgba(139,92,246,0.22);
+  border-radius:var(--r-lg);
+  padding:20px 24px; margin-bottom:16px;
+}
+.insight-label {
+  font-size:10px; font-weight:600;
+  color:var(--accent-warm); text-transform:uppercase;
+  letter-spacing:0.08em; margin-bottom:8px;
+}
+.insight p {
+  font-size:14px; color:var(--text-secondary); line-height:1.85;
+}
+
+/* ── Month nav ── */
+.month-nav {
+  display:flex; gap:5px; overflow-x:auto;
+  scrollbar-width:none; padding:2px 0 14px;
+}
+.month-nav::-webkit-scrollbar { display:none }
+.m-btn {
+  flex-shrink:0; padding:7px 16px; border-radius:20px;
+  background:var(--surface); border:1px solid var(--border);
+  color:var(--text-muted); font-size:12px; font-weight:600;
+  cursor:pointer; transition:all 0.2s; font-family:inherit;
+}
+.m-btn:hover { background:var(--surface2); color:var(--text-secondary) }
+.m-btn.active {
+  background:rgba(139,92,246,0.14);
+  color:var(--accent-warm);
+  border-color:rgba(139,92,246,0.4);
+}
+
+/* ── Domain grid ── */
+.domain-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px }
+.domain-card {
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-left:3px solid var(--accent);
+  border-radius:var(--r-md);
+  padding:16px; transition:box-shadow 0.2s;
+}
+.domain-card:hover { box-shadow:0 4px 16px rgba(139,92,246,0.07) }
+.domain-card.work   { border-left-color:#3b82f6 }
+.domain-card.money  { border-left-color:var(--gold) }
+.domain-card.health { border-left-color:#22c55e }
+.domain-card.romance{ border-left-color:#f472b6 }
+.d-label { font-size:10px; font-weight:600; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.5px; margin-bottom:6px }
+.d-stars { font-size:13px; letter-spacing:2px; margin-bottom:8px }
+.d-msg { font-size:12px; color:var(--text-secondary); line-height:1.65 }
+
+/* ── Pillar display ── */
+.pillar-row {
+  display:grid; grid-template-columns:repeat(4,1fr); gap:10px; margin-bottom:20px;
+}
+.pillar-cell {
+  background:var(--surface2);
+  border:1px solid var(--border);
+  border-radius:var(--r-md);
+  padding:16px 10px; text-align:center;
+}
+.p-label { font-size:9px; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.5px; margin-bottom:8px }
+.p-kanji {
+  font-family:'Cormorant Garamond',serif;
+  font-size:32px; font-weight:600; color:var(--text-primary); line-height:1
+}
+.p-reading { font-size:10px; color:var(--text-secondary); margin-top:6px }
+.elem-badge {
+  display:inline-block; font-size:10px; font-weight:500;
+  padding:2px 10px; border-radius:12px; margin-top:8px;
+}
+.elem-water { background:rgba(59,130,246,0.15); color:#60a5fa }
+.elem-metal { background:rgba(148,163,184,0.15); color:#94a3b8 }
+
+/* ── Footer ── */
+.page-footer {
+  text-align:center; padding:32px 0;
+  font-size:11px; color:var(--text-muted);
+  border-top:1px solid var(--border);
+  margin-top:40px;
+}
+
+@media(max-width:640px) {
+  .container { padding:16px }
+  .hero-body { padding:24px 16px 20px }
+  .domain-grid { grid-template-columns:1fr }
+  .pillar-row { grid-template-columns:repeat(2,1fr) }
+}
+</style>
+</head>
+<body>
+
+<nav class="gnav">
+  <span class="gnav-brand">iUMA · Self-Insight</span>
+  <div class="gnav-links">
+    <a href="#" class="active">手嶋 静</a>
+    <a href="#">ダッシュボード</a>
+    <a href="#">設定</a>
+  </div>
+</nav>
+
+<div class="container">
+
+  <!-- Hero -->
+  <section class="hero" style="margin-top:0">
+    <div class="hero-bg"></div>
+    <div class="hero-crown"></div>
+    <div class="hero-body">
+      <div class="hero-en">Archetype · Seeker of Deep Currents</div>
+      <div class="hero-title">深い流れの求道者</div>
+      <div class="hero-tagline">水の流れのように、静かに、確かに、深へ向かう</div>
+      <div class="hero-name-band">手嶋 静</div>
+      <div class="hero-meta">
+        <div class="meta-chip">
+          <span class="meta-chip-label">日主</span>
+          <span class="meta-chip-value">壬水</span>
+        </div>
+        <div class="meta-chip">
+          <span class="meta-chip-label">血液型</span>
+          <span class="meta-chip-value">AB</span>
+        </div>
+        <div class="meta-chip">
+          <span class="meta-chip-label">九星</span>
+          <span class="meta-chip-value">六白</span>
+        </div>
+        <div class="meta-chip">
+          <span class="meta-chip-label">六星</span>
+          <span class="meta-chip-value">天王</span>
+        </div>
+        <div class="meta-chip">
+          <span class="meta-chip-label">総合スコア</span>
+          <span class="meta-chip-value">84</span>
+        </div>
+      </div>
+      <div class="hub-grid">
+        <div class="hub-mini">
+          <div class="hub-icon">☯</div>
+          <div><div class="hub-title">四柱推命</div><div class="hub-sub">壬水 · 水80%支配</div></div>
+        </div>
+        <div class="hub-mini">
+          <div class="hub-icon">⭐</div>
+          <div><div class="hub-title">九星気学</div><div class="hub-sub">六白金星 · 北西型</div></div>
+        </div>
+        <div class="hub-mini">
+          <div class="hub-icon">🌙</div>
+          <div><div class="hub-title">月運 5月</div><div class="hub-sub">整理と準備の月</div></div>
+        </div>
+        <div class="hub-mini">
+          <div class="hub-icon">🔮</div>
+          <div><div class="hub-title">六星占術</div><div class="hub-sub">天王星 · 安定期</div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 命式 -->
+  <section class="section">
+    <div class="section-heading">
+      <span class="section-heading-text">命式 · 四柱</span>
+      <div class="section-heading-line"></div>
+    </div>
+    <div class="pillar-row">
+      <div class="pillar-cell">
+        <div class="p-label">年柱</div>
+        <div class="p-kanji">甲</div>
+        <div class="p-reading">きのえ</div>
+        <span class="elem-badge elem-water" style="background:rgba(34,197,94,0.15);color:#4ade80">木</span>
+      </div>
+      <div class="pillar-cell">
+        <div class="p-label">月柱</div>
+        <div class="p-kanji">壬</div>
+        <div class="p-reading">みずのえ</div>
+        <span class="elem-badge elem-water">水</span>
+      </div>
+      <div class="pillar-cell">
+        <div class="p-label">日柱 (日主)</div>
+        <div class="p-kanji">壬</div>
+        <div class="p-reading">みずのえ</div>
+        <span class="elem-badge elem-water">水</span>
+      </div>
+      <div class="pillar-cell">
+        <div class="p-label">時柱</div>
+        <div class="p-kanji">庚</div>
+        <div class="p-reading">かのえ</div>
+        <span class="elem-badge elem-metal">金</span>
+      </div>
+    </div>
+    <div class="insight">
+      <div class="insight-label">日主の特性</div>
+      <p>壬水は天然の大水・大河を象徴し、知性・直感・包容力に優れた命式です。豊かな感受性と深い観察眼を持ち、人の心の機微を自然に読み取ります。水が80%を超える特異な構成は稀で、内なる世界が非常に豊かであることを示しています。</p>
+    </div>
+  </section>
+
+  <!-- Monthly -->
+  <section class="section">
+    <div class="section-heading">
+      <span class="section-heading-text">月次フォーキャスト</span>
+      <div class="section-heading-line"></div>
+    </div>
+    <div class="month-nav">
+      <button class="m-btn">1月</button><button class="m-btn">2月</button><button class="m-btn">3月</button>
+      <button class="m-btn">4月</button><button class="m-btn active">5月</button><button class="m-btn">6月</button>
+      <button class="m-btn">7月</button><button class="m-btn">8月</button><button class="m-btn">9月</button>
+      <button class="m-btn">10月</button><button class="m-btn">11月</button><button class="m-btn">12月</button>
+    </div>
+    <div class="insight">
+      <div class="insight-label">5月の全体運</div>
+      <p>整理と準備の月。新しいことに飛び込むより、これまでの成果を棚卸しし、次のステージへの土台を固める時期です。人間関係では深い対話が実を結びやすく、信頼できる人との絆が強まります。</p>
+    </div>
+    <div class="domain-grid">
+      <div class="domain-card work">
+        <div class="d-label">仕事運</div>
+        <div class="d-stars">★★★★☆</div>
+        <div class="d-msg">計画・分析・準備に最適。既存プロジェクトの仕上げに注力を。</div>
+      </div>
+      <div class="domain-card money">
+        <div class="d-label">金運</div>
+        <div class="d-stars">★★★☆☆</div>
+        <div class="d-msg">大きな支出は避けること。長期視点の投資判断は吉。</div>
+      </div>
+      <div class="domain-card health">
+        <div class="d-label">健康運</div>
+        <div class="d-stars">★★★★★</div>
+        <div class="d-msg">体調良好の時期。定期的な運動が特に効果的。</div>
+      </div>
+      <div class="domain-card romance">
+        <div class="d-label">恋愛・対人</div>
+        <div class="d-stars">★★★★☆</div>
+        <div class="d-msg">深い会話が縁を育む。本音を語れる場を大切に。</div>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<footer class="page-footer">
+  <div class="container">
+    iUMA Self-Insight · Template A — Celestial Oracle
+    <br><span style="margin-top:4px;display:inline-block;color:rgba(107,98,133,0.6)">© 2025 iUMA合同会社</span>
+  </div>
+</footer>
+
+</body>
+</html>

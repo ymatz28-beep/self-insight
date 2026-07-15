@@ -1,0 +1,755 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>手嶋静 — Self Insight Bento</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Inter:wght@300;400;500;600&family=Noto+Sans+JP:wght@300;400;500&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+      --bg: #0D0B14;
+      --surface: #1A1626;
+      --surface2: #251E36;
+      --border: #2E2545;
+      --gold: #C9A84C;
+      --accent: #8B5CF6;
+      --accent-warm: #A78BFA;
+      --accent-teal: #14b8a6;
+      --text-primary: #F5F0E8;
+      --text-secondary: #A89EC0;
+      --text-muted: #6B6285;
+      --female-bg: #f5eff2;
+    }
+    body {
+      background: var(--bg);
+      color: var(--text-primary);
+      font-family: 'Inter', sans-serif;
+      min-height: 100vh;
+    }
+    main {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 48px 32px 80px;
+    }
+
+    /* ─── HERO ─── */
+    .hero {
+      margin-bottom: 40px;
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 24px;
+      flex-wrap: wrap;
+      padding-bottom: 32px;
+      border-bottom: 1px solid var(--border);
+    }
+    .hero-left h1 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 44px;
+      font-weight: 600;
+      color: var(--text-primary);
+      letter-spacing: 2px;
+      line-height: 1.1;
+    }
+    .hero-left .sub {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-top: 6px;
+      letter-spacing: 1px;
+    }
+    .hero-right {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+    .hero-tag {
+      font-size: 12px;
+      padding: 4px 14px;
+      border-radius: 20px;
+      border: 1px solid var(--border);
+      color: var(--text-secondary);
+      background: var(--surface);
+      letter-spacing: 0.5px;
+    }
+    .hero-tag.accent { border-color: var(--accent); color: var(--accent-warm); background: rgba(139,92,246,0.08); }
+
+    /* ─── BENTO GRID ─── */
+    .bento {
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      grid-template-rows: auto;
+      gap: 14px;
+    }
+
+    /* base card */
+    .bcard {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 24px;
+      overflow: hidden;
+      position: relative;
+    }
+    .bcard-label {
+      font-size: 10px;
+      letter-spacing: 3px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+    .bcard-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--gold);
+      margin-bottom: 4px;
+    }
+    .bcard-desc {
+      font-size: 12px;
+      color: var(--text-secondary);
+      line-height: 1.6;
+    }
+
+    /* grid placements */
+    .card-fortune    { grid-column: span 4; }
+    .card-identity   { grid-column: span 8; }
+    .card-cycle      { grid-column: span 5; }
+    .card-monthly    { grid-column: span 7; }
+    .card-pillars    { grid-column: span 12; }
+    .card-gogyou     { grid-column: span 5; }
+    .card-chart      { grid-column: span 7; }
+    .card-domains    { grid-column: span 12; }
+
+    /* ─── FORTUNE card ─── */
+    .card-fortune {
+      background: linear-gradient(135deg, #1a1533 0%, #251E36 100%);
+      border-color: var(--accent);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .fortune-num {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 88px;
+      font-weight: 600;
+      color: var(--accent-warm);
+      line-height: 1;
+      letter-spacing: -2px;
+    }
+    .fortune-unit {
+      font-size: 11px;
+      color: var(--text-muted);
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      margin-top: 4px;
+    }
+    .fortune-tags {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+      margin-top: 16px;
+    }
+    .fortune-tag {
+      font-size: 10px;
+      padding: 2px 8px;
+      border-radius: 10px;
+    }
+    .ftag-p { background: rgba(139,92,246,0.15); color: var(--accent-warm); border: 1px solid rgba(139,92,246,0.3); }
+    .ftag-t { background: rgba(20,184,166,0.1); color: var(--accent-teal); border: 1px solid rgba(20,184,166,0.2); }
+    .ftag-g { background: rgba(201,168,76,0.1); color: var(--gold); border: 1px solid rgba(201,168,76,0.2); }
+
+    /* ─── IDENTITY card ─── */
+    .card-identity {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      align-items: start;
+    }
+    .id-item {
+      border-left: 2px solid var(--border);
+      padding-left: 14px;
+    }
+    .id-item-system {
+      font-size: 10px;
+      letter-spacing: 2px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+    .id-item-value {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 22px;
+      color: var(--text-primary);
+      font-weight: 600;
+      line-height: 1.1;
+    }
+    .id-item-sub {
+      font-size: 11px;
+      color: var(--text-secondary);
+      margin-top: 6px;
+      line-height: 1.5;
+    }
+
+    /* ─── CYCLE card ─── */
+    .cycle-rows { margin-top: 8px; }
+    .cycle-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .cycle-row:last-child { border-bottom: none; }
+    .cycle-row.now .cycle-year { color: var(--accent-warm); }
+    .cycle-row.now .cycle-name { color: var(--text-primary); }
+    .cycle-year {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 16px;
+      color: var(--text-muted);
+      width: 48px;
+      flex-shrink: 0;
+    }
+    .cycle-name {
+      font-family: 'Noto Sans JP', sans-serif;
+      font-size: 13px;
+      color: var(--text-secondary);
+      flex: 1;
+    }
+    .cycle-badge {
+      font-size: 10px;
+      padding: 2px 8px;
+      border-radius: 10px;
+    }
+    .cbadge-now { background: rgba(139,92,246,0.2); color: var(--accent-warm); border: 1px solid rgba(139,92,246,0.3); }
+    .cbadge-next { background: rgba(20,184,166,0.1); color: var(--accent-teal); border: 1px solid rgba(20,184,166,0.2); }
+    .cbadge-past { background: rgba(107,98,133,0.1); color: var(--text-muted); border: 1px solid rgba(107,98,133,0.2); }
+    .now-dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--accent);
+      flex-shrink: 0;
+      box-shadow: 0 0 8px rgba(139,92,246,0.6);
+    }
+
+    /* ─── MONTHLY card ─── */
+    .card-monthly {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 16px;
+      align-items: start;
+    }
+    .monthly-text-block { grid-column: span 2; }
+    .monthly-header {
+      display: flex;
+      align-items: baseline;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+    .monthly-score-big {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 56px;
+      font-weight: 600;
+      color: var(--accent-warm);
+      line-height: 1;
+    }
+    .monthly-score-label {
+      font-size: 11px;
+      color: var(--text-muted);
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+    .monthly-tags {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+      margin-bottom: 12px;
+    }
+    .monthly-tag {
+      font-size: 10px;
+      padding: 2px 8px;
+      border-radius: 10px;
+    }
+    .mtag-i { background: rgba(99,102,241,0.15); color: #818cf8; border: 1px solid rgba(99,102,241,0.2); }
+    .mtag-t { background: rgba(20,184,166,0.1); color: var(--accent-teal); border: 1px solid rgba(20,184,166,0.2); }
+    .mtag-g { background: rgba(201,168,76,0.1); color: var(--gold); border: 1px solid rgba(201,168,76,0.2); }
+    .monthly-body {
+      font-size: 12px;
+      color: var(--text-secondary);
+      line-height: 1.7;
+    }
+    .monthly-side-items { display: flex; flex-direction: column; gap: 12px; }
+    .mside-item {
+      background: var(--surface2);
+      border-radius: 8px;
+      padding: 12px 14px;
+    }
+    .mside-sys { font-size: 10px; color: var(--text-muted); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 4px; }
+    .mside-val { font-family: 'Cormorant Garamond', serif; font-size: 17px; color: var(--text-primary); }
+    .mside-sub { font-size: 11px; color: var(--text-secondary); margin-top: 3px; line-height: 1.4; }
+
+    /* ─── PILLARS card ─── */
+    .card-pillars { padding: 24px; }
+    .pillars-inner {
+      display: grid;
+      grid-template-columns: 1fr 3fr;
+      gap: 24px;
+      align-items: center;
+    }
+    .pillars-intro-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 32px;
+      font-weight: 600;
+      color: var(--accent-warm);
+      line-height: 1.1;
+      margin-bottom: 8px;
+    }
+    .pillars-intro-desc {
+      font-size: 12px;
+      color: var(--text-secondary);
+      line-height: 1.7;
+    }
+    .pillars-grid {
+      display: grid;
+      grid-template-columns: 72px repeat(4, 1fr);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    .pg-cell {
+      padding: 12px 8px;
+      text-align: center;
+      border-bottom: 1px solid var(--border);
+      border-right: 1px solid var(--border);
+      font-size: 11px;
+      color: var(--text-muted);
+      background: var(--surface2);
+    }
+    .pg-cell:last-child, .pg-cell.no-right { border-right: none; }
+    .pg-label {
+      padding: 12px 12px 12px 16px;
+      text-align: left;
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      border-right: 1px solid var(--border);
+      font-size: 11px;
+      color: var(--text-secondary);
+      font-family: 'Noto Sans JP', sans-serif;
+    }
+    .pg-data {
+      padding: 14px 8px;
+      text-align: center;
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      border-right: 1px solid var(--border);
+    }
+    .pg-data:last-child { border-right: none; }
+    .pg-data.no-bottom { border-bottom: none; }
+    .pg-kanji {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 24px;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+    .pg-data.day .pg-kanji { color: var(--accent-warm); }
+    .pg-furigana { font-size: 10px; color: var(--text-muted); margin-top: 3px; }
+
+    /* ─── GOGYOU card ─── */
+    .gogyou-items { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; margin-top: 12px; }
+    .gg-item {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 14px 10px;
+      text-align: center;
+    }
+    .gg-item.lacking { border-color: rgba(139,92,246,0.35); background: rgba(139,92,246,0.06); }
+    .gg-sym { font-family: 'Cormorant Garamond', serif; font-size: 26px; font-weight: 600; }
+    .sym-wood { color: #4ade80; } .sym-fire { color: #f87171; } .sym-earth { color: #fbbf24; }
+    .sym-metal { color: #94a3b8; } .sym-water { color: #60a5fa; }
+    .gg-name { font-size: 11px; color: var(--text-muted); margin: 5px 0 8px; font-family: 'Noto Sans JP', sans-serif; }
+    .gg-bar-wrap { height: 3px; background: var(--border); border-radius: 2px; overflow: hidden; }
+    .gg-bar { height: 100%; border-radius: 2px; }
+    .b-wood{background:#4ade80} .b-fire{background:#f87171} .b-earth{background:#fbbf24} .b-metal{background:#94a3b8} .b-water{background:#60a5fa}
+    .gg-pct { font-family: 'Cormorant Garamond', serif; font-size: 20px; color: var(--text-secondary); margin-top: 6px; }
+    .gg-lack { font-size: 9px; color: var(--accent-warm); letter-spacing: 1px; margin-top: 2px; }
+    .gogyou-note {
+      margin-top: 14px;
+      font-size: 12px;
+      color: var(--text-secondary);
+      line-height: 1.6;
+      background: var(--surface2);
+      padding: 12px 16px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+    }
+
+    /* ─── CHART card ─── */
+    .card-chart { display: flex; flex-direction: column; }
+    #radarChart { flex: 1; max-width: 100%; height: 320px; }
+
+    /* ─── DOMAINS card ─── */
+    .card-domains { padding: 24px; }
+    .domains-inner {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 12px;
+      margin-top: 12px;
+    }
+    .domain-tile {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      gap: 10px;
+    }
+    .domain-hex {
+      width: 72px;
+      height: 72px;
+      clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+      background: var(--surface2);
+      border: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      cursor: pointer;
+      transition: filter 0.2s;
+    }
+    .domain-hex:hover { filter: brightness(1.2); }
+    .hex-score {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 22px;
+      font-weight: 600;
+      color: var(--accent-warm);
+      line-height: 1;
+    }
+    .domain-name {
+      font-family: 'Noto Sans JP', sans-serif;
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--text-secondary);
+    }
+    .domain-bar-wrap { width: 100%; height: 2px; background: var(--border); border-radius: 1px; overflow: hidden; }
+    .domain-bar { height: 100%; background: linear-gradient(90deg, var(--accent), var(--accent-warm)); border-radius: 1px; }
+    .domain-keyword { font-size: 10px; color: var(--text-muted); line-height: 1.3; }
+
+    footer {
+      text-align: center;
+      padding: 32px;
+      color: var(--text-muted);
+      font-size: 12px;
+      border-top: 1px solid var(--border);
+      margin-top: 48px;
+    }
+  </style>
+</head>
+<body>
+<main>
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-left">
+      <h1>手嶋静</h1>
+      <p class="sub">Self Insight Report · 1944年9月25日 · AB型</p>
+    </div>
+    <div class="hero-right">
+      <span class="hero-tag accent">壬水 日主</span>
+      <span class="hero-tag">二黒土星</span>
+      <span class="hero-tag">火星人＋</span>
+      <span class="hero-tag">天秤座 ♎</span>
+      <span class="hero-tag">財成期 · 育成期</span>
+    </div>
+  </div>
+
+  <!-- BENTO GRID -->
+  <div class="bento">
+
+    <!-- 1. Fortune Index (tall narrow) -->
+    <div class="bcard card-fortune">
+      <div class="bcard-label">2026年5月</div>
+      <div>
+        <div class="fortune-num">85</div>
+        <div class="fortune-unit">Fortune Index</div>
+        <div class="fortune-tags">
+          <span class="fortune-tag ftag-p">八白土星月</span>
+          <span class="fortune-tag ftag-t">牡牛座♉</span>
+          <span class="fortune-tag ftag-g">財成×育成</span>
+        </div>
+      </div>
+      <p style="font-size:12px;color:var(--text-secondary);line-height:1.6;margin-top:16px">
+        土のエネルギーが二黒土星と共鳴。財成期と重なり、物質・精神ともに実りが最大化する月。
+      </p>
+    </div>
+
+    <!-- 2. Core Identity (wide) -->
+    <div class="bcard card-identity">
+      <div class="bcard-label" style="grid-column:span 4;margin-bottom:16px">Core Identity — 4システム統合</div>
+      <div class="id-item">
+        <div class="id-item-system">四柱命式</div>
+        <div class="id-item-value">壬水<br>日主</div>
+        <div class="id-item-sub">海・大河のエネルギー。深い知性と直感。柔軟かつ包容力があり、周囲を引きつける。金水相生で財との縁が深い。</div>
+      </div>
+      <div class="id-item">
+        <div class="id-item-system">九星気学</div>
+        <div class="id-item-value">二黒<br>土星</div>
+        <div class="id-item-sub">大地・母のエネルギー。努力家で忍耐強く、縁の下の力持ち。育てる・支える・蓄積する能力が高い。</div>
+      </div>
+      <div class="id-item">
+        <div class="id-item-system">六星占術</div>
+        <div class="id-item-value">火星人<br>プラス</div>
+        <div class="id-item-sub">情熱と行動力。プラスは精神面の強さを示す。感情の起伏はあるが、意志の力で困難を突破する。</div>
+      </div>
+      <div class="id-item">
+        <div class="id-item-system">西洋占星術</div>
+        <div class="id-item-value">天秤座<br>♎</div>
+        <div class="id-item-sub">調和・美・対話の支配。金星が守護星。バランス感覚と審美眼が卓越し、対人関係で本領発揮。</div>
+      </div>
+    </div>
+
+    <!-- 3. Cycle (nine stars) -->
+    <div class="bcard card-cycle">
+      <div class="bcard-label">Nine Stars Cycle</div>
+      <div class="bcard-title">九星 9年大運</div>
+      <div class="cycle-rows">
+        <div class="cycle-row">
+          <span class="cycle-year">2024</span>
+          <div class="now-dot" style="background:var(--border);box-shadow:none;"></div>
+          <span class="cycle-name">収束・手放し</span>
+          <span class="cycle-badge cbadge-past">完了</span>
+        </div>
+        <div class="cycle-row now">
+          <span class="cycle-year">2025</span>
+          <div class="now-dot"></div>
+          <span class="cycle-name">新サイクル開幕・種まき</span>
+          <span class="cycle-badge cbadge-now">進行中</span>
+        </div>
+        <div class="cycle-row now">
+          <span class="cycle-year">2026</span>
+          <div class="now-dot"></div>
+          <span class="cycle-name">育成期・コミュニケーション</span>
+          <span class="cycle-badge cbadge-now">今ここ ✦</span>
+        </div>
+        <div class="cycle-row">
+          <span class="cycle-year">2027</span>
+          <div class="now-dot" style="background:var(--surface2);box-shadow:none;border:1px solid var(--border);"></div>
+          <span class="cycle-name">充実期・縁の深まり</span>
+          <span class="cycle-badge cbadge-next">次</span>
+        </div>
+        <div class="cycle-row">
+          <span class="cycle-year">2028</span>
+          <div class="now-dot" style="background:var(--surface2);box-shadow:none;border:1px solid var(--border);"></div>
+          <span class="cycle-name">最盛期・五黄運気の頂点</span>
+          <span class="cycle-badge cbadge-next">次々</span>
+        </div>
+      </div>
+      <div style="margin-top:12px;font-size:12px;color:var(--text-secondary);line-height:1.5">
+        六星占術では今2025〜26年が「財成期」。物質・豊かさが実るタイミング。
+      </div>
+    </div>
+
+    <!-- 4. Monthly detail -->
+    <div class="bcard card-monthly">
+      <div class="monthly-text-block">
+        <div class="bcard-label">Monthly Forecast — 2026年5月</div>
+        <div class="monthly-header">
+          <span class="monthly-score-big">85</span>
+          <span class="monthly-score-label">Fortune Index</span>
+        </div>
+        <div class="monthly-tags">
+          <span class="monthly-tag mtag-i">八白土星月</span>
+          <span class="monthly-tag mtag-t">牡牛座♉シーズン</span>
+          <span class="monthly-tag mtag-g">金星 牡牛座滞在</span>
+        </div>
+        <p class="monthly-body">
+          八白土星の月が二黒土星・本命のあなたに土のエネルギーを重ね合わせ、安定と実現の力が格段に高まる。六星の財成期とも重なり、物質的な豊かさへの流れが加速する月。<br><br>
+          牡牛座♉太陽が「価値あるものを育てる」テーマを強調。新しいことに手を出すより、すでに動いているプロジェクトを深める姿勢が吉。天秤座支配星・金星が牡牛座滞在中で、審美眼と財の直感が研ぎ澄まされる。
+        </p>
+      </div>
+      <div class="monthly-side-items">
+        <div class="mside-item">
+          <div class="mside-sys">九星 今月</div>
+          <div class="mside-val">八白土星</div>
+          <div class="mside-sub">土エネルギー強化。変革と達成のダブル効果。</div>
+        </div>
+        <div class="mside-item">
+          <div class="mside-sys">六星 フェーズ</div>
+          <div class="mside-val">財成期 継続</div>
+          <div class="mside-sub">金運・蓄積に最適。大きな出費より積み上げを。</div>
+        </div>
+        <div class="mside-item">
+          <div class="mside-sys">西洋 配置</div>
+          <div class="mside-val">金星 牡牛座</div>
+          <div class="mside-sub">守護星が吉位。美・財・縁すべてに追い風。</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 5. Pillars -->
+    <div class="bcard card-pillars">
+      <div class="pillars-inner">
+        <div>
+          <div class="bcard-label">Four Pillars of Destiny</div>
+          <div class="pillars-intro-title">四柱<br>命式</div>
+          <p class="pillars-intro-desc">生年月日から導かれる4本の柱。天干・地支の組み合わせが、持って生まれた気質と人生パターンを示す。日柱「壬水」がコアパーソナリティ。金水相生の構造が財との深い縁を示す。</p>
+        </div>
+        <div class="pillars-grid">
+          <div class="pg-cell" style="background:var(--surface2)"></div>
+          <div class="pg-cell">年柱</div>
+          <div class="pg-cell">月柱</div>
+          <div class="pg-cell">日柱</div>
+          <div class="pg-cell no-right">時柱</div>
+
+          <div class="pg-label">天干</div>
+          <div class="pg-data"><div class="pg-kanji">甲</div><div class="pg-furigana">きのえ・木</div></div>
+          <div class="pg-data"><div class="pg-kanji">癸</div><div class="pg-furigana">みずのと・水</div></div>
+          <div class="pg-data day"><div class="pg-kanji">壬</div><div class="pg-furigana">みずのえ・水</div></div>
+          <div class="pg-data"><div class="pg-kanji">—</div><div class="pg-furigana">不明</div></div>
+
+          <div class="pg-label" style="border-bottom:none">地支</div>
+          <div class="pg-data no-bottom"><div class="pg-kanji">申</div><div class="pg-furigana">さる・金</div></div>
+          <div class="pg-data no-bottom"><div class="pg-kanji">酉</div><div class="pg-furigana">とり・金</div></div>
+          <div class="pg-data no-bottom day"><div class="pg-kanji">辰</div><div class="pg-furigana">たつ・土</div></div>
+          <div class="pg-data no-bottom" style="border-right:none"><div class="pg-kanji">—</div><div class="pg-furigana">不明</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 6. Gogyou -->
+    <div class="bcard card-gogyou">
+      <div class="bcard-label">Five Elements Balance</div>
+      <div class="bcard-title">五行バランス</div>
+      <div class="gogyou-items">
+        <div class="gg-item">
+          <div class="gg-sym sym-wood">木</div>
+          <div class="gg-name">創造</div>
+          <div class="gg-bar-wrap"><div class="gg-bar b-wood" style="width:10%"></div></div>
+          <div class="gg-pct">10%</div>
+        </div>
+        <div class="gg-item lacking">
+          <div class="gg-sym sym-fire">火</div>
+          <div class="gg-name">情熱</div>
+          <div class="gg-bar-wrap"><div class="gg-bar b-fire" style="width:0%"></div></div>
+          <div class="gg-pct">0%</div>
+          <div class="gg-lack">★欠如</div>
+        </div>
+        <div class="gg-item">
+          <div class="gg-sym sym-earth">土</div>
+          <div class="gg-name">安定</div>
+          <div class="gg-bar-wrap"><div class="gg-bar b-earth" style="width:24%"></div></div>
+          <div class="gg-pct">24%</div>
+        </div>
+        <div class="gg-item">
+          <div class="gg-sym sym-metal">金</div>
+          <div class="gg-name">決断</div>
+          <div class="gg-bar-wrap"><div class="gg-bar b-metal" style="width:33%"></div></div>
+          <div class="gg-pct">33%</div>
+        </div>
+        <div class="gg-item">
+          <div class="gg-sym sym-water">水</div>
+          <div class="gg-name">知性</div>
+          <div class="gg-bar-wrap"><div class="gg-bar b-water" style="width:33%"></div></div>
+          <div class="gg-pct">33%</div>
+        </div>
+      </div>
+      <div class="gogyou-note">
+        <strong style="color:var(--text-primary)">火の欠如</strong>について: 情熱・行動力・カリスマ性が弱点になりやすい。意識的に「赤いもの・太陽・暖かさ」を生活に取り入れること、または行動力の高い人と組むことで補完できる。
+      </div>
+    </div>
+
+    <!-- 7. Radar chart -->
+    <div class="bcard card-chart">
+      <div class="bcard-label">Visual Overview</div>
+      <div class="bcard-title">エネルギーチャート</div>
+      <canvas id="radarChart"></canvas>
+    </div>
+
+    <!-- 8. Domains -->
+    <div class="bcard card-domains">
+      <div class="bcard-label">Six Domain Harmony — 六道運勢スコア</div>
+      <div class="domains-inner">
+        <div class="domain-tile">
+          <div class="domain-hex"><div class="hex-score">72</div></div>
+          <div class="domain-name">仕事・使命</div>
+          <div class="domain-bar-wrap"><div class="domain-bar" style="width:72%"></div></div>
+          <div class="domain-keyword">壬水の知性で直感的判断が冴える</div>
+        </div>
+        <div class="domain-tile">
+          <div class="domain-hex"><div class="hex-score">88</div></div>
+          <div class="domain-name">精神・自己</div>
+          <div class="domain-bar-wrap"><div class="domain-bar" style="width:88%"></div></div>
+          <div class="domain-keyword">内面の充実がピーク。全方位に影響</div>
+        </div>
+        <div class="domain-tile">
+          <div class="domain-hex"><div class="hex-score">85</div></div>
+          <div class="domain-name">恋愛・対人</div>
+          <div class="domain-bar-wrap"><div class="domain-bar" style="width:85%"></div></div>
+          <div class="domain-keyword">天秤座の調和エネルギーで深まる</div>
+        </div>
+        <div class="domain-tile">
+          <div class="domain-hex"><div class="hex-score">68</div></div>
+          <div class="domain-name">財運・資産</div>
+          <div class="domain-bar-wrap"><div class="domain-bar" style="width:68%"></div></div>
+          <div class="domain-keyword">財成期の恩恵あり。判断は慎重に</div>
+        </div>
+        <div class="domain-tile">
+          <div class="domain-hex"><div class="hex-score">78</div></div>
+          <div class="domain-name">健康・活力</div>
+          <div class="domain-bar-wrap"><div class="domain-bar" style="width:78%"></div></div>
+          <div class="domain-keyword">火欠如を補う運動・日光が開運直結</div>
+        </div>
+        <div class="domain-tile">
+          <div class="domain-hex"><div class="hex-score">82</div></div>
+          <div class="domain-name">家庭・ルーツ</div>
+          <div class="domain-bar-wrap"><div class="domain-bar" style="width:82%"></div></div>
+          <div class="domain-keyword">二黒土星の母性が家庭運を安定化</div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /bento -->
+</main>
+
+<footer>&copy; 2026 Self Insight. All readings are for reflection and personal growth.</footer>
+
+<script>
+  const ctx = document.getElementById('radarChart').getContext('2d');
+  new Chart(ctx, {
+    type: 'radar',
+    data: {
+      labels: ['仕事・使命','精神・自己','恋愛・対人','財運・資産','健康・活力','家庭・ルーツ'],
+      datasets: [{
+        label: '運勢スコア',
+        data: [72, 88, 85, 68, 78, 82],
+        borderColor: '#A78BFA',
+        backgroundColor: 'rgba(139,92,246,0.15)',
+        borderWidth: 2,
+        pointBackgroundColor: '#C9A84C',
+        pointBorderColor: '#A78BFA',
+        pointRadius: 5,
+        pointHoverRadius: 7,
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: true,
+      plugins: {
+        legend: { labels: { color: '#A89EC0', font: { family: "'Inter'", size: 13 } } }
+      },
+      scales: {
+        r: {
+          beginAtZero: true, max: 100,
+          ticks: { color: '#6B6285', font: { size: 11 }, stepSize: 20 },
+          grid: { color: 'rgba(46,37,69,0.5)' },
+          pointLabels: { color: '#A89EC0', font: { family: "'Noto Sans JP'", size: 12 } }
+        }
+      }
+    }
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,861 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Self Insight - 手嶋静</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Sans+JP:wght@300;400;500&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg: #0D0B14;
+            --surface: #1A1626;
+            --surface2: #251E36;
+            --border: #2E2545;
+            --gold: #C9A84C;
+            --accent: #8B5CF6;
+            --accent-warm: #A78BFA;
+            --text-primary: #F5F0E8;
+            --text-secondary: #A89EC0;
+            --text-muted: #6B6285;
+            --success: #10B981;
+            --warning: #F59E0B;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text-primary);
+            font-family: 'Inter', 'Noto Sans JP', sans-serif;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Navigation Bar */
+        nav {
+            background-color: var(--surface);
+            border-bottom: 1px solid var(--border);
+            padding: 16px 32px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .nav-logo {
+            font-size: 14px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            color: var(--gold);
+        }
+
+        .nav-tabs {
+            display: flex;
+            gap: 32px;
+            align-items: center;
+        }
+
+        .nav-tabs a {
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text-secondary);
+            text-decoration: none;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            padding-bottom: 4px;
+            transition: all 0.2s ease;
+        }
+
+        .nav-tabs a:hover,
+        .nav-tabs a.active {
+            color: var(--accent);
+            border-bottom-color: var(--accent);
+        }
+
+        .nav-date {
+            font-size: 12px;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        /* Main Container */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 64px 32px;
+        }
+
+        /* Hero Section */
+        .hero {
+            text-align: center;
+            margin-bottom: 80px;
+        }
+
+        .hero-name {
+            font-size: 72px;
+            font-weight: 700;
+            letter-spacing: -3px;
+            color: var(--text-primary);
+            margin-bottom: 16px;
+            line-height: 1;
+        }
+
+        .hero-subtitle {
+            font-size: 24px;
+            font-weight: 400;
+            letter-spacing: -1px;
+            color: var(--text-secondary);
+            margin-bottom: 32px;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            gap: 16px;
+            align-items: center;
+            background-color: var(--surface);
+            padding: 16px 32px;
+            border-radius: 8px;
+            box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.08);
+        }
+
+        .badge-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .badge-label {
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .badge-value {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--accent);
+            letter-spacing: -1px;
+        }
+
+        .badge-divider {
+            width: 1px;
+            height: 32px;
+            background-color: var(--border);
+        }
+
+        /* Feature Grid (Top Domains) */
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 24px;
+            margin-bottom: 80px;
+        }
+
+        .feature-card {
+            background-color: var(--surface);
+            padding: 32px;
+            border-radius: 8px;
+            box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.08);
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            transition: all 0.3s ease;
+        }
+
+        .feature-card:hover {
+            box-shadow: 0 0 0 1px rgba(139, 92, 246, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .feature-icon {
+            font-size: 32px;
+            line-height: 1;
+        }
+
+        .feature-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text-primary);
+            letter-spacing: -0.5px;
+        }
+
+        .feature-score {
+            font-size: 48px;
+            font-weight: 700;
+            color: var(--gold);
+            letter-spacing: -2px;
+            line-height: 1;
+        }
+
+        .feature-subtitle {
+            font-size: 13px;
+            color: var(--text-secondary);
+            font-weight: 400;
+        }
+
+        /* Section Title */
+        .section-title {
+            font-size: 48px;
+            font-weight: 700;
+            letter-spacing: -2px;
+            color: var(--text-primary);
+            text-align: center;
+            margin-bottom: 48px;
+            margin-top: 64px;
+            line-height: 1.1;
+        }
+
+        .section-title.left {
+            text-align: left;
+        }
+
+        /* Four Pillars (命式) Grid */
+        .pillars-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 24px;
+            margin-bottom: 80px;
+        }
+
+        .pillar-card {
+            background-color: var(--surface);
+            padding: 28px;
+            border-radius: 8px;
+            box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.08);
+            text-align: center;
+        }
+
+        .pillar-label {
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 12px;
+        }
+
+        .pillar-value {
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--accent);
+            letter-spacing: -1px;
+            margin-bottom: 8px;
+            line-height: 1;
+        }
+
+        .pillar-meaning {
+            font-size: 13px;
+            color: var(--text-secondary);
+            font-weight: 400;
+        }
+
+        /* Five Elements Section */
+        .elements-container {
+            margin-bottom: 80px;
+        }
+
+        .element-item {
+            margin-bottom: 32px;
+        }
+
+        .element-label {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .element-name {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-primary);
+            letter-spacing: -0.5px;
+        }
+
+        .element-percent {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--accent);
+            letter-spacing: -0.5px;
+        }
+
+        .element-percent.warning {
+            color: var(--warning);
+        }
+
+        .element-bar {
+            width: 100%;
+            height: 12px;
+            background-color: var(--surface2);
+            border-radius: 6px;
+            overflow: hidden;
+            box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.06);
+        }
+
+        .element-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent), var(--accent-warm));
+            border-radius: 6px;
+            transition: width 0.5s ease;
+        }
+
+        .element-fill.missing {
+            background-color: var(--warning);
+        }
+
+        /* Domains Grid */
+        .domains-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 24px;
+            margin-bottom: 80px;
+        }
+
+        .domain-card {
+            background-color: var(--surface);
+            padding: 32px;
+            border-radius: 8px;
+            box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.08);
+        }
+
+        .domain-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 16px;
+        }
+
+        .domain-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-primary);
+            letter-spacing: -0.5px;
+        }
+
+        .domain-score {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--gold);
+            letter-spacing: -1px;
+        }
+
+        .domain-bar-container {
+            width: 100%;
+            height: 8px;
+            background-color: var(--surface2);
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 12px;
+        }
+
+        .domain-bar {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent), var(--accent-warm));
+            border-radius: 4px;
+            transition: width 0.5s ease;
+        }
+
+        .domain-description {
+            font-size: 12px;
+            color: var(--text-muted);
+            font-weight: 400;
+            line-height: 1.5;
+        }
+
+        /* Chart Container */
+        .chart-container {
+            background-color: var(--surface);
+            padding: 40px 32px;
+            border-radius: 8px;
+            box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.08);
+            margin-bottom: 80px;
+        }
+
+        .chart-wrapper {
+            position: relative;
+            height: 380px;
+            width: 100%;
+        }
+
+        /* Blueprint Card */
+        .blueprint-card {
+            background-color: var(--surface);
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.08);
+            border-left: 4px solid var(--gold);
+        }
+
+        .blueprint-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--gold);
+            letter-spacing: -0.5px;
+            margin-bottom: 16px;
+        }
+
+        .blueprint-text {
+            font-size: 16px;
+            font-weight: 400;
+            color: var(--text-secondary);
+            line-height: 1.8;
+            letter-spacing: -0.3px;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .container {
+                padding: 32px 16px;
+            }
+
+            .hero-name {
+                font-size: 48px;
+                letter-spacing: -2px;
+            }
+
+            .hero-subtitle {
+                font-size: 18px;
+                letter-spacing: -0.5px;
+            }
+
+            .hero-badge {
+                flex-direction: column;
+                gap: 12px;
+            }
+
+            .badge-divider {
+                width: 32px;
+                height: 1px;
+            }
+
+            .section-title {
+                font-size: 32px;
+                letter-spacing: -1.5px;
+            }
+
+            .feature-grid,
+            .pillars-grid,
+            .domains-grid {
+                grid-template-columns: 1fr;
+            }
+
+            nav {
+                flex-direction: column;
+                gap: 16px;
+                padding: 12px 16px;
+            }
+
+            .nav-tabs {
+                flex-direction: column;
+                gap: 8px;
+                width: 100%;
+            }
+
+            .nav-tabs a {
+                width: 100%;
+                text-align: center;
+            }
+
+            .chart-wrapper {
+                height: 300px;
+            }
+        }
+
+        /* Print Styles */
+        @media print {
+            nav {
+                display: none;
+            }
+
+            .container {
+                padding: 0;
+            }
+        }
+
+        /* Utility */
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0,0,0,0);
+            white-space: nowrap;
+            border-width: 0;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav>
+        <div class="nav-logo">SELF INSIGHT</div>
+        <div class="nav-tabs">
+            <a href="#" class="active">命式</a>
+            <a href="#elements">五行</a>
+            <a href="#domains">領域</a>
+            <a href="#annual">年運</a>
+            <a href="#monthly">今月</a>
+        </div>
+        <div class="nav-date">2026年5月</div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container">
+        <!-- Hero Section -->
+        <section class="hero">
+            <h1 class="hero-name">手嶋静</h1>
+            <p class="hero-subtitle">壬水 × 二黒土星</p>
+            <div class="hero-badge">
+                <div class="badge-item">
+                    <div class="badge-label">日付</div>
+                    <div class="badge-value">2026.05</div>
+                </div>
+                <div class="badge-divider"></div>
+                <div class="badge-item">
+                    <div class="badge-label">今月運勢</div>
+                    <div class="badge-value">84</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Feature Grid: Top Domains -->
+        <section class="feature-grid">
+            <div class="feature-card">
+                <div class="feature-icon">💪</div>
+                <div class="feature-title">健康</div>
+                <div class="feature-score">88</div>
+                <div class="feature-subtitle">体調と活力が最高潮</div>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">💞</div>
+                <div class="feature-title">恋愛</div>
+                <div class="feature-score">82</div>
+                <div class="feature-subtitle">心が開く良い時期</div>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">✨</div>
+                <div class="feature-title">精神</div>
+                <div class="feature-score">85</div>
+                <div class="feature-subtitle">内面の充実と安定</div>
+            </div>
+        </section>
+
+        <!-- Four Pillars Section -->
+        <h2 class="section-title">命式</h2>
+        <section class="pillars-grid">
+            <div class="pillar-card">
+                <div class="pillar-label">年柱</div>
+                <div class="pillar-value">丁巳</div>
+                <div class="pillar-meaning">偏財</div>
+            </div>
+            <div class="pillar-card">
+                <div class="pillar-label">月柱</div>
+                <div class="pillar-value">甲子</div>
+                <div class="pillar-meaning">比肩</div>
+            </div>
+            <div class="pillar-card">
+                <div class="pillar-label">日柱（日主）</div>
+                <div class="pillar-value">壬辰</div>
+                <div class="pillar-meaning">日主</div>
+            </div>
+            <div class="pillar-card">
+                <div class="pillar-label">時柱</div>
+                <div class="pillar-value">庚申</div>
+                <div class="pillar-meaning">偏印</div>
+            </div>
+        </section>
+
+        <!-- Five Elements Section -->
+        <h2 class="section-title">五行</h2>
+        <section class="elements-container">
+            <div class="element-item">
+                <div class="element-label">
+                    <span class="element-name">木</span>
+                    <span class="element-percent">30%</span>
+                </div>
+                <div class="element-bar">
+                    <div class="element-fill" style="width: 30%;"></div>
+                </div>
+            </div>
+            <div class="element-item">
+                <div class="element-label">
+                    <span class="element-name">火</span>
+                    <span class="element-percent warning">0%</span>
+                </div>
+                <div class="element-bar">
+                    <div class="element-fill missing" style="width: 0%;"></div>
+                </div>
+                <div style="font-size: 12px; color: var(--warning); margin-top: 8px;">⚠ 火の要素が不足 — 行動力補強が課題</div>
+            </div>
+            <div class="element-item">
+                <div class="element-label">
+                    <span class="element-name">土</span>
+                    <span class="element-percent">35%</span>
+                </div>
+                <div class="element-bar">
+                    <div class="element-fill" style="width: 35%;"></div>
+                </div>
+            </div>
+            <div class="element-item">
+                <div class="element-label">
+                    <span class="element-name">金</span>
+                    <span class="element-percent">25%</span>
+                </div>
+                <div class="element-bar">
+                    <div class="element-fill" style="width: 25%;"></div>
+                </div>
+            </div>
+            <div class="element-item">
+                <div class="element-label">
+                    <span class="element-name">水</span>
+                    <span class="element-percent">10%</span>
+                </div>
+                <div class="element-bar">
+                    <div class="element-fill" style="width: 10%;"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- All Domains Section -->
+        <h2 class="section-title" id="domains">領域スコア</h2>
+        <section class="domains-grid">
+            <div class="domain-card">
+                <div class="domain-header">
+                    <div class="domain-title">仕事</div>
+                    <div class="domain-score">78</div>
+                </div>
+                <div class="domain-bar-container">
+                    <div class="domain-bar" style="width: 78%;"></div>
+                </div>
+                <div class="domain-description">キャリア成長のタイミング。新しいプロジェクトに手を伸ばす好機</div>
+            </div>
+            <div class="domain-card">
+                <div class="domain-header">
+                    <div class="domain-title">恋愛</div>
+                    <div class="domain-score">82</div>
+                </div>
+                <div class="domain-bar-container">
+                    <div class="domain-bar" style="width: 82%;"></div>
+                </div>
+                <div class="domain-description">心の開かれた時期。人間関係の深化が期待できる</div>
+            </div>
+            <div class="domain-card">
+                <div class="domain-header">
+                    <div class="domain-title">財運</div>
+                    <div class="domain-score">65</div>
+                </div>
+                <div class="domain-bar-container">
+                    <div class="domain-bar" style="width: 65%;"></div>
+                </div>
+                <div class="domain-description">安定期。控えめな運用が推奨される</div>
+            </div>
+            <div class="domain-card">
+                <div class="domain-header">
+                    <div class="domain-title">健康</div>
+                    <div class="domain-score">88</div>
+                </div>
+                <div class="domain-bar-container">
+                    <div class="domain-bar" style="width: 88%;"></div>
+                </div>
+                <div class="domain-description">体調が最高潮。運動や新しい習慣に最適</div>
+            </div>
+            <div class="domain-card">
+                <div class="domain-header">
+                    <div class="domain-title">家庭</div>
+                    <div class="domain-score">71</div>
+                </div>
+                <div class="domain-bar-container">
+                    <div class="domain-bar" style="width: 71%;"></div>
+                </div>
+                <div class="domain-description">穏やかな時期。家族との繋がりを大切に</div>
+            </div>
+            <div class="domain-card">
+                <div class="domain-header">
+                    <div class="domain-title">精神</div>
+                    <div class="domain-score">85</div>
+                </div>
+                <div class="domain-bar-container">
+                    <div class="domain-bar" style="width: 85%;"></div>
+                </div>
+                <div class="domain-description">内面の充実期。瞑想や自己反省に向いている</div>
+            </div>
+        </section>
+
+        <!-- Annual Fortune Chart -->
+        <h2 class="section-title" id="annual">年運の推移（2024年〜2032年）</h2>
+        <section class="chart-container">
+            <div class="chart-wrapper">
+                <canvas id="annualChart"></canvas>
+            </div>
+        </section>
+
+        <!-- Monthly Fortune -->
+        <h2 class="section-title" id="monthly">2026年5月の運勢</h2>
+        <div class="blueprint-card">
+            <div class="blueprint-title">🌙 今月のテーマ</div>
+            <div class="blueprint-text">
+                創造性と直感が最高潮。新しいプロジェクト開始の吉。
+            </div>
+        </div>
+
+        <!-- Blueprint Advice -->
+        <h2 class="section-title" style="margin-top: 80px;">💡 壬水の処方箋</h2>
+        <div class="blueprint-card">
+            <div class="blueprint-title">大地に宿る、深く静かな水</div>
+            <div class="blueprint-text">
+                壬水の流れを途切れさせない — 交流と動きが鍵。静寂の中でも水は流れ続ける。孤立ではなく、人間関係という水路を通じた自然な循環を心がけることで、あなたの潜在力が最大限に発揮される。月明かりの下で瞑想し、翌朝の太陽とともに動く。そのリズムが、あなたの本質を活かす生き方だ。
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // Annual Fortune Chart
+        const ctx = document.getElementById('annualChart');
+        if (ctx) {
+            const years = ['2024', '2025', '2026', '2027', '2028', '2029', '2030', '2031', '2032'];
+            const jiusingData = [75, 100, 90, 80, 40, 70, 30, 45, 65];
+            const rokusingData = [80, 35, 90, 25, 70, 85, 95, 15, 10];
+
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: years,
+                    datasets: [
+                        {
+                            label: '九星気学',
+                            data: jiusingData,
+                            borderColor: '#8B5CF6',
+                            backgroundColor: 'rgba(139, 92, 246, 0.05)',
+                            borderWidth: 3,
+                            fill: true,
+                            tension: 0.4,
+                            pointRadius: 6,
+                            pointBackgroundColor: '#8B5CF6',
+                            pointBorderColor: '#1A1626',
+                            pointBorderWidth: 2,
+                            pointHoverRadius: 8,
+                        },
+                        {
+                            label: '六星占術',
+                            data: rokusingData,
+                            borderColor: '#C9A84C',
+                            backgroundColor: 'rgba(201, 168, 76, 0.05)',
+                            borderWidth: 3,
+                            fill: true,
+                            tension: 0.4,
+                            pointRadius: 6,
+                            pointBackgroundColor: '#C9A84C',
+                            pointBorderColor: '#1A1626',
+                            pointBorderWidth: 2,
+                            pointHoverRadius: 8,
+                        },
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            labels: {
+                                color: '#A89EC0',
+                                font: {
+                                    family: "'Inter', 'Noto Sans JP', sans-serif",
+                                    size: 13,
+                                    weight: '500'
+                                },
+                                padding: 20,
+                                usePointStyle: true,
+                                pointStyle: 'circle',
+                            },
+                            position: 'bottom',
+                            margin: 20,
+                        },
+                        filler: {
+                            propagate: true,
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 100,
+                            ticks: {
+                                color: '#6B6285',
+                                font: {
+                                    family: "'Inter', 'Noto Sans JP', sans-serif",
+                                    size: 12,
+                                    weight: '400'
+                                },
+                                stepSize: 20,
+                            },
+                            grid: {
+                                color: 'rgba(46, 37, 69, 0.5)',
+                                lineWidth: 1,
+                            }
+                        },
+                        x: {
+                            ticks: {
+                                color: '#6B6285',
+                                font: {
+                                    family: "'Inter', 'Noto Sans JP', sans-serif",
+                                    size: 12,
+                                    weight: '400'
+                                },
+                            },
+                            grid: {
+                                display: false,
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Smooth scroll for navigation
+        document.querySelectorAll('.nav-tabs a').forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const target = link.getAttribute('href');
+                if (target && target !== '#') {
+                    const element = document.querySelector(target);
+                    if (element) {
+                        element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                        document.querySelectorAll('.nav-tabs a').forEach(a => a.classList.remove('active'));
+                        link.classList.add('active');
+                    }
+                }
+            });
+        });
+
+        // Animate bars on scroll
+        const observerOptions = {
+            threshold: 0.3,
+            rootMargin: '0px 0px -100px 0px'
+        };
+
+        const observer = new IntersectionObserver(function(entries) {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.animation = 'none';
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.element-fill, .domain-bar').forEach(el => {
+            observer.observe(el);
+        });
+    </script>
+</body>
+</html>

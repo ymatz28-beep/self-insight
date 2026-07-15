@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Self Insight · 手嶋静</title>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Noto+Sans+JP:wght@300;400;500&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg: #0f0e13;
+            --cell-base: #1c1a24;
+            --gold: #c9a84c;
+            --violet: #7c5cfc;
+            --teal: #2dd4bf;
+            --rose: #f472b6;
+            --text: #f0ede7;
+            --muted: #8882a4;
+            --accent-job: #7c5cfc;
+            --accent-love: #f472b6;
+            --accent-wealth: #c9a84c;
+            --accent-health: #2dd4bf;
+            --accent-family: #a78bfa;
+            --accent-spirit: #67e8f9;
+        }
+
+        html, body {
+            font-family: 'Space Grotesk', 'Noto Sans JP', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+        }
+
+        /* Header */
+        header {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: var(--bg);
+            border-bottom: 1px solid rgba(42, 39, 58, 0.5);
+            padding: 12px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header-left {
+            display: flex;
+            gap: 16px;
+            align-items: center;
+        }
+
+        .header-title {
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: 2px;
+            color: var(--muted);
+            text-transform: uppercase;
+        }
+
+        .header-name {
+            font-size: 18px;
+            font-weight: 500;
+            color: var(--text);
+            font-family: 'Noto Sans JP', sans-serif;
+        }
+
+        .header-date {
+            margin-left: auto;
+            font-size: 12px;
+            color: var(--muted);
+            letter-spacing: 1px;
+        }
+
+        /* Main Container */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Bento Grid */
+        .bento-grid {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            grid-auto-rows: auto;
+            gap: 12px;
+            padding: 12px;
+            background: var(--bg);
+        }
+
+        .cell {
+            border-radius: 16px;
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            transition: transform 0.2s ease;
+        }
+
+        .cell:hover {
+            transform: translateY(-2px);
+        }
+
+        /* Cell A: Name */
+        .cell-name {
+            grid-column: span 3;
+            grid-row: span 2;
+            background: var(--cell-base);
+            justify-content: center;
+        }
+
+        .cell-name-large {
+            font-size: 56px;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 8px;
+            font-family: 'Noto Sans JP', sans-serif;
+        }
+
+        .cell-name-sub {
+            font-size: 12px;
+            color: var(--muted);
+            letter-spacing: 1px;
+        }
+
+        /* Cell B: Fortune Score */
+        .cell-fortune {
+            grid-column: span 1;
+            grid-row: span 2;
+            background: #16132a;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .fortune-number {
+            font-size: 72px;
+            font-weight: 700;
+            color: var(--gold);
+            font-variant-numeric: tabular-nums;
+        }
+
+        .fortune-label {
+            font-size: 10px;
+            color: var(--muted);
+            text-align: center;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            line-height: 1.4;
+        }
+
+        /* Cell C: Monthly Message */
+        .cell-message {
+            grid-column: span 2;
+            grid-row: span 1;
+            background: #13181c;
+        }
+
+        .cell-message-text {
+            font-size: 13px;
+            line-height: 1.5;
+            color: var(--text);
+            font-family: 'Noto Sans JP', sans-serif;
+        }
+
+        /* Cell D: Best Domain */
+        .cell-best {
+            grid-column: span 2;
+            grid-row: span 1;
+            background: #12181a;
+            justify-content: center;
+        }
+
+        .best-label {
+            font-size: 10px;
+            color: var(--muted);
+            margin-bottom: 6px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .best-domain {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+
+        .best-number {
+            font-size: 48px;
+            font-weight: 700;
+            color: var(--teal);
+            font-variant-numeric: tabular-nums;
+        }
+
+        .best-name {
+            font-size: 16px;
+            font-weight: 500;
+            color: var(--text);
+            font-family: 'Noto Sans JP', sans-serif;
+        }
+
+        /* Domain Tiles (E-J): 6 tiles, 1x1 each */
+        .cell-domain {
+            grid-column: span 1;
+            grid-row: span 1;
+            background: var(--cell-base);
+            border-left: 4px solid;
+            padding-left: 20px;
+        }
+
+        .domain-job { border-left-color: var(--accent-job); }
+        .domain-love { border-left-color: var(--accent-love); }
+        .domain-wealth { border-left-color: var(--accent-wealth); }
+        .domain-health { border-left-color: var(--accent-health); }
+        .domain-family { border-left-color: var(--accent-family); }
+        .domain-spirit { border-left-color: var(--accent-spirit); }
+
+        .domain-label {
+            font-size: 11px;
+            color: var(--muted);
+            margin-bottom: 6px;
+            letter-spacing: 0.5px;
+            font-family: 'Noto Sans JP', sans-serif;
+        }
+
+        .domain-score {
+            font-size: 36px;
+            font-weight: 700;
+            color: var(--text);
+            font-variant-numeric: tabular-nums;
+        }
+
+        /* Cell K: Radar Chart */
+        .cell-chart {
+            grid-column: span 4;
+            grid-row: span 2;
+            background: #141420;
+        }
+
+        .chart-title {
+            font-size: 12px;
+            color: var(--muted);
+            margin-bottom: 16px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            font-family: 'Noto Sans JP', sans-serif;
+        }
+
+        .chart-container {
+            position: relative;
+            height: 280px;
+        }
+
+        /* Cell L: Archetypes */
+        .cell-archetypes {
+            grid-column: span 2;
+            grid-row: span 2;
+            background: var(--cell-base);
+            justify-content: space-between;
+            gap: 12px;
+        }
+
+        .archetype-card {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            padding: 12px;
+            background: rgba(124, 92, 252, 0.08);
+            border-radius: 12px;
+            border: 1px solid rgba(124, 92, 252, 0.2);
+        }
+
+        .archetype-label {
+            font-size: 9px;
+            color: var(--muted);
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+        }
+
+        .archetype-keyword {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--violet);
+            font-family: 'Space Grotesk', sans-serif;
+        }
+
+        .archetype-desc {
+            font-size: 11px;
+            color: var(--text);
+            line-height: 1.4;
+            font-family: 'Noto Sans JP', sans-serif;
+        }
+
+        /* Cell M: Footer */
+        .cell-footer {
+            grid-column: span 6;
+            grid-row: span 1;
+            background: var(--bg);
+            border-top: 1px solid #2a273a;
+            text-align: center;
+            justify-content: center;
+            padding: 16px 24px;
+        }
+
+        .footer-text {
+            font-size: 11px;
+            color: var(--muted);
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+        }
+
+        /* Responsive: Simple collapse for smaller screens */
+        @media (max-width: 768px) {
+            .bento-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .cell-name {
+                grid-column: span 2;
+                grid-row: span 1;
+            }
+
+            .cell-fortune {
+                grid-column: span 2;
+                grid-row: span 1;
+            }
+
+            .cell-message,
+            .cell-best {
+                grid-column: span 1;
+                grid-row: span 1;
+            }
+
+            .cell-chart,
+            .cell-archetypes {
+                grid-column: span 2;
+                grid-row: span 1;
+            }
+
+            .cell-name-large {
+                font-size: 36px;
+            }
+
+            .fortune-number {
+                font-size: 48px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="header-left">
+            <span class="header-title">Self Insight</span>
+            <span class="header-name">手嶋静</span>
+        </div>
+        <span class="header-date">2026.05</span>
+    </header>
+
+    <!-- Main Container -->
+    <div class="container">
+        <!-- Bento Grid -->
+        <div class="bento-grid">
+            <!-- Cell A: Name (3 x 2) -->
+            <div class="cell cell-name">
+                <div class="cell-name-large">手嶋静</div>
+                <div class="cell-name-sub">Self Insight Report · 2026年5月</div>
+            </div>
+
+            <!-- Cell B: Fortune Score (1 x 2) -->
+            <div class="cell cell-fortune">
+                <div class="fortune-number">84</div>
+                <div class="fortune-label">Fortune<br>Index</div>
+            </div>
+
+            <!-- Cell C: Monthly Message (2 x 1) -->
+            <div class="cell cell-message">
+                <div class="cell-message-text">今月は新しい視点が開かれる時期。過去の経験が活きる局面が訪れます。</div>
+            </div>
+
+            <!-- Cell D: Best Domain (2 x 1) -->
+            <div class="cell cell-best">
+                <div class="best-label">最高スコア</div>
+                <div class="best-domain">
+                    <div class="best-number">88</div>
+                    <div class="best-name">健康</div>
+                </div>
+            </div>
+
+            <!-- Domain Tiles (6 x 1x1) -->
+            <!-- E: 仕事 -->
+            <div class="cell cell-domain domain-job">
+                <div class="domain-label">仕事</div>
+                <div class="domain-score">78</div>
+            </div>
+
+            <!-- F: 恋愛 -->
+            <div class="cell cell-domain domain-love">
+                <div class="domain-label">恋愛</div>
+                <div class="domain-score">82</div>
+            </div>
+
+            <!-- G: 財運 -->
+            <div class="cell cell-domain domain-wealth">
+                <div class="domain-label">財運</div>
+                <div class="domain-score">65</div>
+            </div>
+
+            <!-- H: 健康 -->
+            <div class="cell cell-domain domain-health">
+                <div class="domain-label">健康</div>
+                <div class="domain-score">88</div>
+            </div>
+
+            <!-- I: 家庭 -->
+            <div class="cell cell-domain domain-family">
+                <div class="domain-label">家庭</div>
+                <div class="domain-score">71</div>
+            </div>
+
+            <!-- J: 精神 -->
+            <div class="cell cell-domain domain-spirit">
+                <div class="domain-label">精神</div>
+                <div class="domain-score">85</div>
+            </div>
+
+            <!-- Cell K: Radar Chart (4 x 2) -->
+            <div class="cell cell-chart">
+                <div class="chart-title">バランスチャート</div>
+                <div class="chart-container">
+                    <canvas id="radarChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Cell L: Archetypes (2 x 2) -->
+            <div class="cell cell-archetypes">
+                <div class="archetype-card">
+                    <div class="archetype-label">過去</div>
+                    <div class="archetype-keyword">The Seeker</div>
+                    <div class="archetype-desc">探求者としての歩み</div>
+                </div>
+                <div class="archetype-card">
+                    <div class="archetype-label">現在</div>
+                    <div class="archetype-keyword">The Builder</div>
+                    <div class="archetype-desc">創造者への変遷</div>
+                </div>
+                <div class="archetype-card">
+                    <div class="archetype-label">未来</div>
+                    <div class="archetype-keyword">The Ascendant</div>
+                    <div class="archetype-desc">上昇への道開き</div>
+                </div>
+            </div>
+
+            <!-- Cell M: Footer (6 x 1) -->
+            <div class="cell cell-footer">
+                <div class="footer-text">Self Insight · 2026 · 鑑定書</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Chart.js Initialization -->
+    <script>
+        const ctx = document.getElementById('radarChart').getContext('2d');
+        const radarChart = new Chart(ctx, {
+            type: 'radar',
+            data: {
+                labels: ['仕事', '恋愛', '財運', '健康', '家庭', '精神'],
+                datasets: [{
+                    label: 'スコア',
+                    data: [78, 82, 65, 88, 71, 85],
+                    borderColor: '#7c5cfc',
+                    backgroundColor: 'rgba(124, 92, 252, 0.2)',
+                    borderWidth: 2,
+                    pointBackgroundColor: '#c9a84c',
+                    pointBorderColor: '#c9a84c',
+                    pointRadius: 5,
+                    pointHoverRadius: 7,
+                    fill: true,
+                    tension: 0.4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                },
+                scales: {
+                    r: {
+                        beginAtZero: true,
+                        max: 100,
+                        ticks: {
+                            display: false
+                        },
+                        grid: {
+                            color: 'rgba(200, 168, 76, 0.1)',
+                            lineWidth: 1
+                        },
+                        pointLabels: {
+                            color: '#8882a4',
+                            font: {
+                                size: 12,
+                                family: "'Noto Sans JP', sans-serif",
+                                weight: '500'
+                            },
+                            padding: 12
+                        }
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>
