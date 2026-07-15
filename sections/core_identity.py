@@ -77,6 +77,29 @@ def _get_archetype_tagline(p):
     }
     return dm_taglines.get(dm_char, '静かに燃える、唯一の存在')
 
+def _get_share_tagline(p: dict) -> str:
+    """Generate a standalone hook line for the free share card.
+
+    Unlike _get_archetype_tagline (read in-context inside the dashboard),
+    this must land on its own — no surrounding page, no explanation.
+    Format: a slightly exposing observation, then a reframe as strength.
+    """
+    dm = p['four_pillars']['day_master']
+    dm_char = dm.get('char', '')
+    share_taglines = {
+        '壬': '表面は静か。でも中では、誰よりも多くを感じ、考えている。',
+        '癸': '気づかれないくらい静かに、一番深いところまで届く人。',
+        '丁': '大声を出さなくても、その場の空気を変えてしまう人。',
+        '丙': 'いるだけで場が明るくなるのに、本人はそれに気づいていない。',
+        '甲': '曲がらない人、というより、曲がる必要がなかった人。',
+        '乙': '折れそうで折れない。そのしなやかさに、みんな救われている。',
+        '戊': '動かないんじゃない。動く必要がないほど、すでに強い。',
+        '己': '誰かの成長を、自分の手柄にしない人。',
+        '庚': '優しさより先に、正しさを選んでしまう人。',
+        '辛': '磨かれるほど輝くタイプ。まだ本気を出していない。',
+    }
+    return share_taglines.get(dm_char, '静かに燃える、唯一の存在。')
+
 def _get_essence_sub(dm, ys):
     """Generate Core Essence sub-description from day master + year star."""
     dm_subs = {

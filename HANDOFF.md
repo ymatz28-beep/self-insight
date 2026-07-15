@@ -1,8 +1,9 @@
+<!-- [auto-precompact] 2026-07-15 23:54 transcript: /Users/ytejima/.claude/projects/-Users-ytejima-Documents-Projects/b13a9e51-264e-4d91-8217-a492dd338ffb.jsonl -->
 <!-- [auto-precompact] 2026-07-15 22:42 transcript: /Users/ytejima/.claude/projects/-Users-ytejima-Documents-Projects/b13a9e51-264e-4d91-8217-a492dd338ffb.jsonl -->
 # Self-Insight — HANDOFF
 
-## Resume (2026-07-15 — バズる型戦略、未着手)
-architectサブエージェントで「バズる自己診断アプリ」の設計調査を実施。結論は記録のみで、コード実装は未着手（次回セッションでここから着手）。
+## Resume (2026-07-15 — シェアカード Phase 1/2 実装済み、Phase 3 未着手)
+architectサブエージェントで「バズる自己診断アプリ」の設計調査を実施 → 単独診断シェアカードのPhase 1（コピー）・Phase 2（ビジュアルデザイン+生成パイプライン）を実装・実データ4プロファイル+最長文字数ケースで目視検証・design-auditorレビュー済み・git commit済み。
 
 **論点1: 相性/比較診断の方が単独診断より拡散しやすい（2026-07-15 Fableモデルで独立検証 → 不支持・確定）**
 - **結論: 支持されない（確信度: 中）**。当初根拠3件中2件は誤引用（存在しない統計・存在しない分析内容の誤帰属）と判明
@@ -23,7 +24,14 @@ architectサブエージェントで「バズる自己診断アプリ」の設�
 - 実装時は着手前に`DESIGN.md` + `lib/DESIGN_SYSTEM.md`必読・renderer.py経由必須（プロジェクト共通ルール）。UI変更後はdesign-auditorエージェントでレビュー
 - 文章面は「刺さる」（感情的インパクト）と「洗練」（安っぽくない・品がある）の両立が条件。バーナム効果的な当てもの感の演出とは別軸の要求
 
-**Next**: 相性診断への転換は不採用。単独診断のシェアカード（論点2/3: 言語化コピー+1枚画像デザイン）の実装から着手が妥当。着手前にYuma確認。
+**Phase 1/2 実装完了（2026-07-15）**
+- `sections/core_identity.py`に`_get_share_tagline(p)`追加: 日主10種キーの単独フックコピー（`_get_archetype_tagline`とは別系統、ページ文脈なしで単独で刺さる設計）
+- `templates/share_card.html`新規: Opus（architect）にゼロベース設計を依頼した1080x1080pxシェア画像テンプレート。DESIGN.mdの色トークンは完全準拠、タイポグラフィは正方形SNS画像という性質上あえて`max 40px`ルールを超える巨大サイズを採用（design-auditor確認済み・「シェア画像文脈では妥当、DESIGN.mdに注記推奨」）
+- `scripts/generate_share_card.py`新規: Playwright（新規依存、`.venv`にインストール済み。requirements.txtがプロジェクトに存在しないため要記録）でHTML→PNG(2x)を生成するCLI
+- 検証: yuma/ayako/shuhei/shizukaの実プロファイル4件 + 最長アーキタイプ名11文字の合成ケース、計5枚をPlaywrightで実際にレンダリングし目視確認（`.archetype-ja`の`is-long`クラスで8文字超は68pxに縮小、崩れなし）
+- git commit済み（3ファイル、255行追加）
+
+**Next（Phase 3・未着手）**: シェアカード生成を`generate_dashboard.py`のユーザー別パイプラインに配線し、ダウンロード/シェアUIを設計する。dc-pair原則により、静的PNG事前生成のみならReceiver/Persistence不要の可能性が高いが、実際のUI設計（ボタン設置等）確定後に再確認すること。requirements.txt不在の件はPC移行メモ相当の記録が必要。
 
 ## [Auto-Kaizen] 2026-07-08
 - [WARN] self-insight/HANDOFF.md not updated in 7 days (threshold: 7).
