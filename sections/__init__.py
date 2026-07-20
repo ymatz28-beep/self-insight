@@ -6,7 +6,7 @@ after import so moved functions can keep their original bodies unchanged.
 """
 from importlib import import_module as _import_module
 
-_MODULE_NAMES = ['utils', 'core_identity', 'navigation', 'monthly', 'divination_forecast', 'ui', 'charts', 'styles', 'glossary', 'eto_cross']
+_MODULE_NAMES = ['utils', 'core_identity', 'navigation', 'monthly', 'divination_forecast', 'ui', 'charts', 'styles', 'glossary', 'eto_cross', 'premium_sections']
 _MODULES = [_import_module(f'.{name}', __name__) for name in _MODULE_NAMES]
 
 def _is_export(name, value):
