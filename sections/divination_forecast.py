@@ -231,7 +231,7 @@ def _forecast(p):
         ('var(--accent-green)', '六星占術', '12年周期。大殺界を含む運命星の巡り。個人的な運気のバイオリズム'),
     ]
     if has_reigou:
-        legend_items.append(('#eab308', '霊合合成', 'メイン星70% + サブ星30%の加重平均。霊合星人の実効的な運気スコア'))
+        legend_items.append(('#eab308', '霊合合成', 'メイン星を主・サブ星を従として統合した運気スコア。霊合星人の実効的な運勢を示す'))
 
     legend_html = '<div class="chart-legend">'
     for color, label, desc in legend_items:

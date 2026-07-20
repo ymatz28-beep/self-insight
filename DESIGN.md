@@ -12,20 +12,24 @@ design_system: pattern-b-dashboard
 
 ## Color Tokens
 
-| Token | Value | Usage |
-|---|---|---|
-| `--bg` | `#F5F4F0` | Page background |
-| `--card` | `#FFFFFF` | Card / panel surface |
-| `--ink` | `#191C22` | Primary text |
-| `--sub` | `#5C6370` | Secondary text |
-| `--faint` | `#8B909B` | De-emphasized text |
-| `--line` | `#E8E5DE` | Borders, dividers |
-| `--essence` / `--essence-bg` | `#4F46E5` / `#EEF0FE` | 本質 (personality) domain — indigo |
-| `--money` / `--money-bg` | `#A16207` / `#FBF3E2` | 金運 (money) domain — gold |
-| `--work` | `#1D4ED8` | 仕事 (work) domain — blue |
-| `--relationships` | `#BE334E` | 人間関係 (relationships) domain — red |
-| `--arc` / `--arc-bg` | `#0F766E` / `#E4F2F0` | 過去と未来 (life-arc) domain — teal |
-| `--warn` / `--warn-bg` | `#B45309` / `#FDF1E3` | Warnings |
+Conceptual token names below map to these actual CSS custom properties in
+`sections/styles.py`'s `:root` block (the names differ; the values are what matter):
+
+| Token | Value | Actual CSS var | Usage |
+|---|---|---|---|
+| `--bg` | `#F5F4F0` | `--bg` | Page background |
+| `--card` | `#FFFFFF` | `--surface` | Card / panel surface |
+| `--ink` | `#191C22` | `--text` | Primary text |
+| `--sub` | `#5C6370` | `--text-secondary` | Secondary text |
+| `--faint` | `#8B909B` | `--text-muted` | De-emphasized text |
+| `--line` | `#E8E5DE` | `--border` | Borders, dividers |
+| `--essence` / `--essence-bg` | `#4F46E5` / `#EEF0FE` | `--accent` (bg is inlined rgba, no named var) | 本質 (personality) domain — indigo |
+| `--money` / `--money-bg` | `#A16207` / `#FBF3E2` | `--gold` (bg is inlined rgba, no named var) | 金運 (money) domain — gold |
+| `--work` | `#1D4ED8` | `--accent-blue-light` | 仕事 (work) domain — blue |
+| `--relationships` | `#BE334E` | `--accent-red-light` | 人間関係 (relationships) domain — red |
+| `--arc` / `--arc-bg` | `#0F766E` / `#E4F2F0` | `--accent-teal-light` (bg is inlined rgba, no named var) | 過去と未来 (life-arc) domain — teal |
+| `--warn` / `--warn-bg` | `#B45309` / `#FDF1E3` | inlined rgba only, no named var | Warnings |
+| *(undocumented 6th accent)* | `#6D28D9` | `--accent-purple` / `--accent-purple-light` | 明日からできること (action blueprint) + 西洋占星術 (astrology) sub-theme — purple. Not one of the 5 domains above; kept as its own accent, not remapped to any domain color |
 
 ## Typography
 

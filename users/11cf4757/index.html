@@ -1195,7 +1195,7 @@ abbr.term:hover,abbr.term:focus{color:#8c6820!important}
       <span class="chart-legend-desc">12年周期。大殺界を含む運命星の巡り。個人的な運気のバイオリズム</span></div></div><div class="chart-legend-item">
       <span class="chart-legend-line" style="background:#eab308"></span>
       <div><span class="chart-legend-label">霊合合成</span>
-      <span class="chart-legend-desc">メイン星70% + サブ星30%の加重平均。霊合星人の実効的な運気スコア</span></div></div></div>
+      <span class="chart-legend-desc">メイン星を主・サブ星を従として統合した運気スコア。霊合星人の実効的な運勢を示す</span></div></div></div>
   <div class="insight-box" style="margin-top:16px;border-color:rgba(234,179,8,0.3);background:linear-gradient(135deg,rgba(234,179,8,0.08),rgba(250,204,21,0.04))">
     <div class="insight-title" style="color:var(--yellow)">統合フォーキャスト</div>
     <p style="line-height:1.9;font-size:14px">九星気学では<strong>艮宮</strong>（停滞・自己改革）に位置し、エネルギーは<strong>40</strong>。六星占術のメイン星は<strong>達成</strong>（Energy 90）で好調期。一方、霊合サブ星は<strong>停止</strong>（大殺界）で逆風。統合スコア<strong>66</strong>（矛盾期）。メイン星「達成」は好調を示す一方、サブ星「停止」（大殺界）は強いブレーキを踏んでいます。この<strong>内なる矛盾</strong>は今年の特徴です。外から見えるチャンスに飛び込みながら、内側では立ち止まって再考する——その両方を<strong>同時にやること</strong>が今年の霊合星人としての最適解。次のピークは<strong>2030年</strong>（統合スコア90）。そこへ向けた布石を今から打つ。</p>
@@ -1303,7 +1303,7 @@ new Chart(document.getElementById('chartOverlay'),{
   type:'line',
   data:{labels:["2024", "2025", "2026", "2027", "2028", "2029", "2030", "2031", "2032", "2033"],datasets:[
     {label:'九星気学',data:[90, 80, 40, 70, 30, 45, 65, 75, 100, null],borderColor:'#4F46E5',fill:false,tension:0.4,borderWidth:2,pointRadius:4,pointBackgroundColor:'#4F46E5'},
-    {label:'六星占術',data:[80, 35, 90, 25, 70, 85, 95, 15, 10, 20],borderColor:'var(--accent-green)',fill:false,tension:0.4,borderWidth:2,pointRadius:4,pointBackgroundColor:'var(--accent-green)'},
+    {label:'六星占術',data:[80, 35, 90, 25, 70, 85, 95, 15, 10, 20],borderColor:'#15803D',fill:false,tension:0.4,borderWidth:2,pointRadius:4,pointBackgroundColor:'#15803D'},
     {label:'霊合合成',data:[84, 29, 66, 24, 64, 79, 90, 21, 34, 22],borderColor:'#A16207',fill:false,tension:0.4,borderWidth:2,borderDash:[6,3],pointRadius:4,pointBackgroundColor:'#A16207'}
   ]},
   options:{responsive:true,maintainAspectRatio:false,animation:{duration:1500,easing:'easeOutQuart'},interaction:{mode:'index',intersect:false},

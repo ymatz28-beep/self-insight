@@ -23,7 +23,7 @@ new Chart(document.getElementById('chartOverlay'),{{
   type:'line',
   data:{{labels:{overlay_labels},datasets:[
     {{label:'九星気学',data:{nine_data},borderColor:'#4F46E5',fill:false,tension:0.4,borderWidth:2,pointRadius:4,pointBackgroundColor:'#4F46E5'}},
-    {{label:'六星占術',data:{twelve_data},borderColor:'var(--accent-green)',fill:false,tension:0.4,borderWidth:2,pointRadius:4,pointBackgroundColor:'var(--accent-green)'}},
+    {{label:'六星占術',data:{twelve_data},borderColor:'#15803D',fill:false,tension:0.4,borderWidth:2,pointRadius:4,pointBackgroundColor:'#15803D'}},
     {{label:'霊合合成',data:{comb_data},borderColor:'#A16207',fill:false,tension:0.4,borderWidth:2,borderDash:[6,3],pointRadius:4,pointBackgroundColor:'#A16207'}}
   ]}},
   options:{{responsive:true,maintainAspectRatio:false,animation:{{duration:1500,easing:'easeOutQuart'}},interaction:{{mode:'index',intersect:false}},
