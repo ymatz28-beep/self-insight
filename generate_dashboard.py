@@ -136,28 +136,28 @@ def generate_html(p, tier=2, show_gnav=False):
     if money_content:
         interp = p.get('interpretations', {})
         money_summary = interp.get('money', {}).get('headline', '金運の流れを読む')
-        hub_sections += _hub_card('money', '&#165;', 'rgba(201,168,76,0.12)', 'var(--gold)',
+        hub_sections += _hub_card('money', '&#165;', 'rgba(161,98,7,0.12)', 'var(--gold)',
                                   '金運 — 富の流れ', money_summary, money_content)
 
     # Work — premium deep-dive
     if work_content:
         interp = p.get('interpretations', {})
         work_summary = interp.get('work', {}).get('headline', '仕事運の流れを読む')
-        hub_sections += _hub_card('work', '&#9874;', 'rgba(59,130,246,0.12)', 'var(--accent-blue-light)',
+        hub_sections += _hub_card('work', '&#9874;', 'rgba(29,78,216,0.12)', 'var(--accent-blue-light)',
                                   '仕事運 — 才能を積み上げる場所', work_summary, work_content)
 
     # Relationships — premium deep-dive
     if relationships_content:
         interp = p.get('interpretations', {})
         rel_summary = interp.get('relationships', {}).get('headline', '人間関係の型を読む')
-        hub_sections += _hub_card('relationships', '&#9826;', 'rgba(239,68,68,0.12)', 'var(--accent-red-light)',
+        hub_sections += _hub_card('relationships', '&#9826;', 'rgba(190,51,78,0.12)', 'var(--accent-red-light)',
                                   '人間関係 — 縁の設計図', rel_summary, relationships_content)
 
     # Life Arc — premium deep-dive (past & future)
     if life_arc_content:
         interp = p.get('interpretations', {})
         arc_summary = interp.get('life_arc', {}).get('headline', '12年サイクルで見る物語')
-        hub_sections += _hub_card('life-arc', '&#8734;', 'rgba(139,92,246,0.12)', 'var(--accent-purple-light)',
+        hub_sections += _hub_card('life-arc', '&#8734;', 'rgba(15,118,110,0.12)', 'var(--accent-teal-light)',
                                   '過去と未来 — 12年の物語', arc_summary, life_arc_content)
 
     return f'''<!DOCTYPE html>
