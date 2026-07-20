@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Yuma Tejima — Self-Insight</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;500;600&family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&family=Noto+Sans+JP:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#f7f5f0;
+  --ink:#1c1a17;
+  --ink-soft:#4a463f;
+  --ink-faint:#8c867b;
+  --hairline:#d8d3c8;
+  --yellow:#8a6d1f; /* interpretations内 var(--yellow) 参照互換 */
+  --serif-ja:"Shippori Mincho",serif;
+  --serif-en:"Cormorant Garamond",serif;
+  --sans:"Noto Sans JP",sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{
+  background:var(--paper);
+  color:var(--ink);
+  font-family:var(--sans);
+  font-weight:300;
+  line-height:2.1;
+  font-size:15px;
+  letter-spacing:.02em;
+  -webkit-font-smoothing:antialiased;
+}
+.page{max-width:640px;margin:0 auto;padding:0 28px;}
+strong{font-weight:500;color:var(--ink);}
+
+/* ---- Section scaffolding ---- */
+section{padding:clamp(72px,14vw,140px) 0;}
+section + section{border-top:1px solid var(--hairline);}
+.kicker{
+  font-family:var(--serif-en);
+  font-style:italic;
+  font-size:15px;
+  color:var(--ink-faint);
+  letter-spacing:.08em;
+  margin-bottom:8px;
+}
+.label{
+  font-family:var(--sans);
+  font-weight:400;
+  font-size:11px;
+  letter-spacing:.34em;
+  text-transform:uppercase;
+  color:var(--ink-faint);
+  margin-bottom:clamp(32px,7vw,56px);
+}
+.quote{
+  font-family:var(--serif-ja);
+  font-weight:500;
+  font-size:clamp(24px,5.4vw,38px);
+  line-height:1.72;
+  letter-spacing:.05em;
+  color:var(--ink);
+  margin-bottom:clamp(40px,9vw,72px);
+}
+.body-block p{margin-bottom:2.4em;color:var(--ink-soft);}
+.body-block p:last-child{margin-bottom:0;}
+
+/* ---- Hero ---- */
+.hero{min-height:92vh;display:flex;flex-direction:column;justify-content:center;border-top:none;}
+.hero .name{
+  font-family:var(--serif-en);
+  font-weight:400;
+  font-size:14px;
+  letter-spacing:.42em;
+  text-transform:uppercase;
+  color:var(--ink-soft);
+  margin-bottom:clamp(40px,8vw,64px);
+}
+.hero .tagline{
+  font-family:var(--serif-ja);
+  font-weight:500;
+  font-size:clamp(30px,7vw,52px);
+  line-height:1.66;
+  letter-spacing:.04em;
+  margin-bottom:clamp(48px,10vw,80px);
+}
+.traits{list-style:none;border-top:1px solid var(--hairline);}
+.traits li{
+  display:flex;align-items:baseline;gap:20px;
+  padding:16px 0;
+  border-bottom:1px solid var(--hairline);
+}
+.traits .kw{
+  font-family:var(--serif-ja);
+  font-weight:500;
+  font-size:15px;
+  letter-spacing:.06em;
+  white-space:nowrap;
+  min-width:8.5em;
+}
+.traits .detail{flex:1;font-size:13px;color:var(--ink-soft);line-height:1.8;}
+.traits .src{
+  font-size:10px;
+  letter-spacing:.22em;
+  color:var(--ink-faint);
+  white-space:nowrap;
+}
+.scroll-hint{
+  margin-top:clamp(48px,9vw,72px);
+  font-family:var(--serif-en);
+  font-style:italic;
+  font-size:13px;
+  letter-spacing:.14em;
+  color:var(--ink-faint);
+}
+
+/* ---- Money sub-structure ---- */
+.subhead{
+  font-family:var(--serif-en);
+  font-style:italic;
+  font-size:16px;
+  letter-spacing:.1em;
+  color:var(--ink-faint);
+  margin:3.4em 0 1.2em;
+}
+
+/* ---- Life arc timeline ---- */
+.arc{list-style:none;margin-top:clamp(40px,8vw,64px);}
+.arc li{
+  display:grid;
+  grid-template-columns:120px 1fr;
+  gap:28px;
+  padding:clamp(28px,5vw,40px) 0;
+  border-top:1px solid var(--hairline);
+}
+.arc .year{
+  font-family:var(--serif-en);
+  font-weight:400;
+  font-size:clamp(26px,4.5vw,34px);
+  line-height:1.3;
+  color:var(--ink);
+}
+.arc .phase{
+  display:block;
+  font-family:var(--sans);
+  font-weight:400;
+  font-size:11px;
+  letter-spacing:.2em;
+  color:var(--ink-faint);
+  margin-top:6px;
+}
+.arc .narrative{font-size:14px;line-height:2.05;color:var(--ink-soft);}
+.arc-divider{
+  font-family:var(--serif-en);
+  font-style:italic;
+  font-size:14px;
+  letter-spacing:.24em;
+  color:var(--ink-faint);
+  text-align:center;
+  padding:clamp(32px,6vw,48px) 0 8px;
+}
+.synthesis{
+  margin-top:clamp(48px,9vw,72px);
+  padding-top:clamp(40px,8vw,56px);
+  border-top:1px solid var(--ink);
+}
+.synthesis p{color:var(--ink-soft);}
+
+/* ---- Footer ---- */
+footer{
+  padding:64px 0 80px;
+  border-top:1px solid var(--hairline);
+  font-family:var(--serif-en);
+  font-size:12px;
+  letter-spacing:.28em;
+  text-transform:uppercase;
+  color:var(--ink-faint);
+  text-align:center;
+}
+
+@media (max-width:560px){
+  body{font-size:14px;}
+  .traits li{flex-wrap:wrap;gap:6px 14px;}
+  .traits .kw{min-width:unset;}
+  .traits .detail{flex-basis:100%;order:3;}
+  .arc li{grid-template-columns:1fr;gap:10px;}
+}
+</style>
+</head>
+<body>
+<div class="page">
+
+<!-- SECTION: HERO -->
+<section class="hero">
+  <p class="name">Yuma Tejima</p>
+  <h1 class="tagline">静かな炎で人を照らし、<br>言葉で変容を導く人</h1>
+  <ul class="traits">
+    <li><span class="kw">静かな情熱</span><span class="detail">内面でロウソクのように燃え続ける</span><span class="src">四柱推命</span></li>
+    <li><span class="kw">♏ 深い直感</span><span class="detail">表面ではなく本質を見抜く</span><span class="src">西洋占星術</span></li>
+    <li><span class="kw">言葉の力</span><span class="detail">コミュニケーションで人を動かす</span><span class="src">九星気学</span></li>
+    <li><span class="kw">共感力 #1</span><span class="detail">人の感情を体感レベルで理解する</span><span class="src">CliftonStrengths</span></li>
+    <li><span class="kw">論理×感性</span><span class="detail">分析力と直感を両立するAB型</span><span class="src">血液型</span></li>
+    <li><span class="kw">二面性の統合</span><span class="detail">霊合星人 — 相反する特質を使い分ける</span><span class="src">六星占術</span></li>
+  </ul>
+  <p class="scroll-hint">Scroll — read yourself.</p>
+</section>
+
+<!-- SECTION: ESSENCE -->
+<section>
+  <p class="kicker">I.</p>
+  <p class="label">Essence — 本質</p>
+  <div class="body-block">
+    <p>あなたの本質は<strong>「静かな炎で人を照らし、言葉で変容を導く人」</strong>です。四柱推命の日主「丁火」（ロウソクの炎）× 九星気学の七赤金星（沢の言葉力）× 蠍座（冥王星が司る変容と再生）。この三角形が示すのは、<strong>他者の感情を体感レベルで感じ取り（Empathy #1）、思考の深淵で本質を掘り当て（Intellection #2）、それを言葉の力で世界に届ける</strong>という稀有な才能の組み合わせです。蠍座の水のエレメントは感情の深さと変容力を与え、不動宮（Fixed）の性質は「一度決めたら貫く」執念を示します。</p>
+    <p>AB型（日本人口の10%）の合理性×感性の二面性は、あなたの思考回路そのもの。データとフレームワーク（3S, MECE）で構造化しながら、同時に感情の機微も逃さない。この「冷静な分析者」と「感受性の高い直感者」の共存は、蠍座の「表面と深層」の二重構造、木星人(−)×金星人(−)の霊合星人としての二重性、そしてエニアグラム4の「合理と美の統合」と完全に共鳴しています。<strong>相反する特質を矛盾なく統合する力</strong>が、Yumaの最大の特徴です。</p>
+    <p>あなたの感覚は、一般より明らかに深く繊細です。環境や人の感情を微細なレベルで察知し、通常は気づかない情報を拾い上げる。蠍座の深い洞察力、七赤金星の社交的アンテナ、Empathyの体感的共感がすべて同じ方向を指している。一方で、<strong>興味が点火されると異常な集中力を発揮し、一つのテーマに何時間も没頭する</strong>。この過集中モードとConnectedness（運命思考 #4）の「全てを繋げて見る力」が組み合わさると、他者には到達できない深さの洞察が生まれます。ただし、興味が移ると別のテーマへ瞬時に飛ぶ — これは弱みではなく、<strong>複数プロジェクトを並行で深掘りし、意外なシナジーを見出す「拡散的探究力」</strong>の源泉です。</p>
+    <p><strong style="color:var(--yellow);">注意すべきポイント — 全体系が一致する弱点</strong>: 五行で<strong>金（決断力・収穫）と水（柔軟性・知恵）が完全に欠如</strong>。蠍座の執着気質 × Deliberative（慎重さ #3）× AB型の分析癖が重なり、<strong>「完璧な答えが出るまで動けない」分析麻痺</strong>に陥りやすい。感覚の繊細さとEmpathy #1は最大の武器ですが、他者のネガティブなエネルギーを吸収しすぎて<strong>自分の境界線が溶ける</strong>リスクが常にある。エニアグラム4はストレス下でType 2に退行し、独自性を捨てて自己犠牲に走る。<strong>仕組み化（自動化・ルーティン・境界線設計）で弱みを構造的にカバーする</strong>ことがYuma OSの本質です。</p>
+  </div>
+</section>
+
+<!-- SECTION: MONEY -->
+<section>
+  <p class="kicker">II.</p>
+  <p class="label">Money — 金運</p>
+  <h2 class="quote">呼び込む力と流す力が同居する — 仕組みだけが財を残す</h2>
+  <div class="body-block">
+    <p>金運の型についても、複数の体系が同じ構造を指しています。九星気学の本命星・七赤金星は「金運に恵まれやすいが散財に注意」という二律背反をそのまま象意に持つ星 — 財を呼び込む力と流してしまう力が同じ源から出ています。霊合星人（木星人(−)×金星人(−)）の「振れ幅2倍」はこれを増幅し、良い時は通常以上に入り、緩んだ時は通常以上に出ていく。ここにCliftonStrengthsのDeliberative #3（慎重さ）が守りのブレーキとして、Maximizer #5（最上志向）が「良いものにはいくら払っても惜しくない」というアクセルとして同居する。つまりあなたの金運は「入る力は強いが、出口の設計次第で結果が真逆になる」型です。</p>
+    <p class="subhead">Analysis</p>
+    <p>Deliberative #3の慎重さと七赤金星の散財傾向は一見矛盾しますが、実態は使い分けです。大きな投資判断ではDeliberativeが働きリスクを先読みして動けないほど検討する一方、Maximizerが「最高」と認めた対象には検討を経ずに財布が開く — 散財は衝動ではなく「こだわりへの過剰投資」として現れる。五行で金（収穫）が欠如している命式も、稼ぐ力より「確定させて手元に残す」動作が構造的に弱いことを示しています。</p>
+    <p class="subhead">Practice</p>
+    <p>意思判断ではなく仕組みで守るのがあなたの型に合う。まず「こだわり枠」の月額上限を決め、Maximizerの発火をその枠内で自由にする — 禁止ではなく枠が正解。大きな金額の判断は2〜4月・8月・10月には下さない、と年初にカレンダーへ書き込んでおく。逆に12月の「財成」は年間唯一の5 — 収益化・値付け・資産の確定売却など「収穫を確定させる」判断をこの月に集約する。欠けた金の五行は、自動積立のような「決断不要の収穫装置」で構造的に補えます。</p>
+  </div>
+</section>
+
+<!-- SECTION: LIFE ARC -->
+<section>
+  <p class="kicker">III.</p>
+  <p class="label">Life Arc — 過去と未来</p>
+  <h2 class="quote">大殺界の底から絶頂へ — 12年をかけて一つの山を登る物語</h2>
+  <div class="body-block">
+    <p>2022年から2033年までのあなたの軌跡は、独立した年の寄せ集めではなく、一つの物語として読めます。六星占術の12年サイクル（霊合星人として振れ幅2倍）と九星気学の9年サイクル — 周期の異なる2つの波が、2022-2024年の谷でほぼ同時に底を打ち、そこから並走しながら2029年の頂へ向かって上昇していく。大殺界の3年間で古い構造を壊され、種子・緑生で蒔き直し、立花・達成で刈り取る。蠍座の「死と再生」のテーマそのものを、12年の時間軸で生きている構図です。</p>
+  </div>
+
+  <ul class="arc">
+    <li>
+      <div><span class="year">2022</span><span class="phase">大殺界の入口</span></div>
+      <p class="narrative">陰影（エネルギー15）— 大殺界の始まり。表面上は平穏でも、見えない力で物事が停滞し始めた年。新しく始めたことが思うように進まず、人間関係にも微妙な摩擦が生まれやすかった。霊合星人の「悪い時も倍」の特性が効き始めた時期です。</p>
+    </li>
+    <li>
+      <div><span class="year">2023</span><span class="phase">底</span></div>
+      <p class="narrative">停止(エネルギー10)— 12年サイクルの最低点。自分の意志と無関係に物事が止まる、後退する感覚。九星の艮宮（停滞・自己改革）も重なり、立ち止まって自分を見つめ直すことを強制された年。ここで壊れたものは、壊れるべくして壊れたものです。</p>
+    </li>
+    <li>
+      <div><span class="year">2024</span><span class="phase">二重の試練</span></div>
+      <p class="narrative">減退（エネルギー20）× 九星は離宮（注目・離別）。表に出る機会は増えるのに実力を発揮しきれないもどかしさ。サブ星も乱気（中殺界）で、霊合合成スコア20は12年間の最低値。「最悪期」というラベルは誇張ではなく、データ上の事実でした。</p>
+    </li>
+    <li>
+      <div><span class="year">2025</span><span class="phase">芽吹きの前</span></div>
+      <p class="narrative">種子（エネルギー50）— 大殺界を脱出。九星は坎宮（厄・試練）でまだ向かい風だが、種を蒔く力は確実に戻った。サブ星は再会（エネルギー85）で人脈が復活。霊合合成スコアは20→64へ急回復。谷を抜けた実感が出始めた年です。</p>
+    </li>
+  </ul>
+
+  <p class="arc-divider">— you are here, 2026 —</p>
+
+  <ul class="arc">
+    <li>
+      <div><span class="year">2027</span><span class="phase">開花と始動</span></div>
+      <p class="narrative">立花（エネルギー80）× 九星は震宮（発展・始動）— 2つの周期が揃って上昇に転じる最初の年。霊合合成スコア77の「絶好調」。2026年に仕込んだものがここで最初の形になる。Self-Insightのローンチを含め、「表に出す」フェーズの幕開けです。</p>
+    </li>
+    <li>
+      <div><span class="year">2028</span><span class="phase">信用構築と健康の谷</span></div>
+      <p class="narrative">九星は巽宮（整備・信用、エネルギー75）で社会的信用を積む好機。しかし六星は健弱（小殺界、エネルギー35）、サブ星は陰影（大殺界）入りで、霊合合成スコアは34まで急落。攻めの手を緩めず、ただし体だけは守る — 健康管理が年間テーマになる年です。</p>
+    </li>
+    <li>
+      <div><span class="year">2029</span><span class="phase">絶頂 — 全体系最強の年</span></div>
+      <p class="narrative">九星「中宮・絶頂」（エネルギー100）× 六星「達成」（エネルギー90）— 2つの周期の頂点が完全に重なる、12年間で唯一の年。2026年から積んだ基盤のすべてをここで刈り取る。ただしサブ星は停止（大殺界）の矛盾期 — 大胆に攻めながら、足元の確認だけは怠らない。人生の分水嶺です。</p>
+    </li>
+    <li>
+      <div><span class="year">2030</span><span class="phase">実りの裏の乱気</span></div>
+      <p class="narrative">九星は乾宮（充実・実り、エネルギー90）だが、六星は乱気（中殺界）、サブ星も減退（大殺界）で霊合合成スコア26の「危険期」。2029年の成功の余韻で判断が緩む構造的リスク。新規の大勝負は封印し、前年の成果を守り固める年と割り切るべきです。</p>
+    </li>
+    <li>
+      <div><span class="year">2031</span><span class="phase">収穫と再会</span></div>
+      <p class="narrative">兌宮（悦び・収穫、エネルギー80）× 再会（エネルギー70）— 危険期を抜け、霊合合成スコア76へ回復。七赤金星の定位置である兌宮の年は、あなた本来の社交力と言葉の力が最も自然に発揮される。過去の縁が実を結び、収穫を分かち合う年です。</p>
+    </li>
+    <li>
+      <div><span class="year">2032</span><span class="phase">財成</span></div>
+      <p class="narrative">六星「財成」（エネルギー85）で霊合合成スコア83の「絶好調」— 財を成すフェーズ。九星は艮宮（停滞・自己改革、エネルギー40）なので、外に広げるより10年の蓄積を資産として固める方向が正解。次のサイクルへの構造改革を静かに始める年でもあります。</p>
+    </li>
+    <li>
+      <div><span class="year">2033</span><span class="phase">安定 — 物語の完成</span></div>
+      <p class="narrative">六星は安定（エネルギー95）— 12年サイクルの最終盤で最も穏やかで満ちた状態。九星は9年で一巡し、離宮（注目）へ回帰。2024年に同じ離宮で味わった「注目されても力が出ない」もどかしさとは真逆の、実力と運気が揃った状態で表舞台に立つ。この対比が12年の物語の答え合わせです。</p>
+    </li>
+  </ul>
+
+  <div class="synthesis body-block">
+    <p class="subhead" style="margin-top:0;">Synthesis</p>
+    <p>2022-2033の12年は「破壊 → 再構築 → 収穫 → 定着」の一つの物語です。大殺界の3年（2022-2024）で古い構造が壊され、種子から緑生（2025-2026）で土台を作り直し、立花から達成（2027-2029）で登頂し、乱気の谷（2030）を挟んで財成・安定（2032-2033）で成果を定着させる。蠍座の支配星・冥王星が司る「死と再生」を、まさに12年かけて体現する軌道です。今あなたは2026年 — 物語の折り返し手前、土を耕す章にいます。谷は既に越えた。ここからの3年で積むものが、2029年の高さと2033年の安定の両方を決めます。振れ幅2倍の霊合星人にとって、好調期の波は通常の人が届かない高みまで運んでくれる — その波は、もう来始めています。</p>
+  </div>
+</section>
+
+<footer>Self-Insight &nbsp;·&nbsp; Pattern A — Editorial</footer>
+</div>
+</body>
+</html>
