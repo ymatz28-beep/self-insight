@@ -136,7 +136,7 @@ body::before{content:'';position:fixed;top:0;left:0;width:100%;height:100%;opaci
 .sho{background:#FDF6E7;color:var(--yellow)}
 .chart-wrap{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-md);padding:16px;margin:16px 0;box-shadow:var(--shadow)}
 .unlock-banner{background:#FDF1E3;border:1px dashed rgba(180,83,9,0.35);border-radius:var(--r-md);padding:16px 20px;font-size:12px;color:var(--yellow);text-align:center;margin-top:16px}
-.insight-box{background:linear-gradient(135deg,#EEF0FE,#F7F6FE);border:1px solid rgba(79,70,229,0.18);border-radius:var(--r-md);padding:20px;margin-bottom:16px}
+.insight-box{background:var(--surface);border:1px solid var(--border);border-left:4px solid var(--accent);border-radius:var(--r-md);padding:20px;margin-bottom:16px}
 .insight-box .insight-title{font-size:13px;font-weight:700;color:#4F46E5;margin-bottom:8px}
 .insight-box p{font-size:13px;color:var(--text-secondary);line-height:1.8}
 .section-desc{font-size:13px;color:var(--text-muted);margin-bottom:16px}
@@ -186,7 +186,7 @@ body::before{content:'';position:fixed;top:0;left:0;width:100%;height:100%;opaci
 .guidance-watch{display:flex;flex-direction:column;gap:8px}
 .guidance-watch-title{font-size:11px;font-weight:700;color:var(--yellow);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:4px}
 .guidance-watch-item{font-size:12px;color:var(--text-secondary);line-height:1.7;padding-left:12px;border-left:2px solid rgba(180,83,9,0.35)}
-.year-theme-banner{background:linear-gradient(135deg,#FBF3E2,#F7F6FE);border:1px solid rgba(161,98,7,0.22);border-radius:var(--r-md);padding:20px 24px;margin-bottom:20px;text-align:center}
+.year-theme-banner{background:var(--surface);border:1px solid var(--border);border-left:4px solid var(--gold);border-radius:var(--r-md);padding:20px 24px;margin-bottom:20px;text-align:left}
 .year-theme-label{font-size:11px;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px}
 .year-theme-text{font-size:clamp(16px,2.5vw,22px);font-weight:800;line-height:1.4}
 .blueprint-section{margin-top:24px;margin-bottom:8px}
@@ -517,7 +517,7 @@ body::before{opacity:0.01}
 /* Section items */
 .top5-item[style*="cursor"]:hover{background:rgba(0,0,0,0.03)!important;border-radius:var(--r-sm)}
 /* Insight boxes */
-.insight-box{background:linear-gradient(135deg,rgba(176,68,95,0.06),rgba(144,64,160,0.04))!important;border:1px solid rgba(176,68,95,0.2)!important}
+.insight-box{background:var(--surface)!important;border:1px solid var(--border)!important;border-left:4px solid rgba(176,68,95,0.55)!important}
 .insight-box .insight-title{color:#7b3f8a!important}
 .insight-box p{color:var(--text-secondary)}
 .blueprint-card{background:linear-gradient(135deg,rgba(176,68,95,0.06),rgba(144,64,160,0.04))!important;border:1px solid rgba(176,68,95,0.16)!important}

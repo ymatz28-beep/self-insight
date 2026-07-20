@@ -399,14 +399,14 @@ def _core_identity(p):
         if len(insight_paras) > 1:
             rest_ps = ''.join(f'<p style="line-height:1.9;font-size:14px;margin-top:12px;">{para}</p>'
                               for para in insight_paras[1:])
-            insight_html = f'''<div class="insight-box" style="border-color:rgba(99,102,241,0.4);background:linear-gradient(135deg,rgba(99,102,241,0.12),rgba(139,92,246,0.08));">
+            insight_html = f'''<div class="insight-box" style="border-left-color:#4F46E5">
     <div class="insight-title" style="font-size:15px;">統合インサイト</div>
     {first_p}
     <div class="collapsible-content" style="display:none">{rest_ps}</div>
     <button class="collapse-toggle" onclick="this.previousElementSibling.style.display=this.previousElementSibling.style.display==='none'?'block':'none';this.textContent=this.previousElementSibling.style.display==='none'?'続きを読む':'閉じる'">続きを読む</button>
   </div>'''
         else:
-            insight_html = f'''<div class="insight-box" style="border-color:rgba(99,102,241,0.4);background:linear-gradient(135deg,rgba(99,102,241,0.12),rgba(139,92,246,0.08));">
+            insight_html = f'''<div class="insight-box" style="border-left-color:#4F46E5">
     <div class="insight-title" style="font-size:15px;">統合インサイト</div>
     {first_p}
   </div>'''
@@ -668,7 +668,7 @@ def _western_detail(p):
     if q_traits:
         desc_parts += f'<div style="font-size:12px;color:var(--text-secondary);line-height:1.7;margin-top:12px">{q_traits}</div>'
     if forecast:
-        desc_parts += f'''<div class="insight-box" style="margin-top:12px;border-color:rgba(139,92,246,0.3);background:linear-gradient(135deg,rgba(139,92,246,0.08),rgba(99,102,241,0.04))">
+        desc_parts += f'''<div class="insight-box" style="margin-top:12px;border-left-color:var(--accent-purple-light)">
       <div class="insight-title" style="color:var(--accent-purple-light)">2026年 {west["sign"]}の運勢</div>
       <p style="line-height:1.9;font-size:14px">{forecast}</p></div>'''
 
@@ -735,7 +735,7 @@ def _western_detail(p):
     if cur_west:
         west_energy = cur_west.get('energy', 0)
         west_color = energy_color(west_energy)
-        desc_parts += f'''<div class="insight-box" style="margin-top:16px;border-color:rgba(139,92,246,0.3);background:linear-gradient(135deg,rgba(139,92,246,0.08),rgba(99,102,241,0.04))">
+        desc_parts += f'''<div class="insight-box" style="margin-top:16px;border-left-color:var(--accent-purple-light)">
       <div class="insight-title" style="color:var(--accent-purple-light)">{current_month_num}月の{west["sign"]}ホロスコープ — 「{cur_west["theme"]}」</div>
       <div style="display:flex;align-items:center;gap:12px;margin-bottom:8px">
         <div style="font-size:24px;font-weight:700;color:{west_color}">{west_energy}</div>

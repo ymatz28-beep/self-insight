@@ -13,12 +13,12 @@ def _insight_box(title, paragraphs, accent_bg, accent_color):
         return ''
     first_p = f'<p style="line-height:1.9;font-size:14px;">{paragraphs[0]}</p>'
     if len(paragraphs) == 1:
-        return f'''<div class="insight-box" style="border-color:{accent_bg};background:linear-gradient(135deg,{accent_bg},rgba(255,255,255,0.02));">
+        return f'''<div class="insight-box" style="border-left-color:{accent_color}">
     <div class="insight-title" style="font-size:15px;color:{accent_color}">{title}</div>
     {first_p}
   </div>'''
     rest_ps = ''.join(f'<p style="line-height:1.9;font-size:14px;margin-top:12px;">{para}</p>' for para in paragraphs[1:])
-    return f'''<div class="insight-box" style="border-color:{accent_bg};background:linear-gradient(135deg,{accent_bg},rgba(255,255,255,0.02));">
+    return f'''<div class="insight-box" style="border-left-color:{accent_color}">
     <div class="insight-title" style="font-size:15px;color:{accent_color}">{title}</div>
     {first_p}
     <div class="collapsible-content" style="display:none">{rest_ps}</div>
@@ -65,7 +65,7 @@ def _money_section(p):
     mf = p.get('monthly_fortune', [])
     accent_bg, accent_color = 'rgba(161,98,7,0.12)', 'var(--gold)'
 
-    banner = f'''<div class="year-theme-banner" style="background:linear-gradient(135deg,rgba(161,98,7,0.10),rgba(161,98,7,0.02))">
+    banner = f'''<div class="year-theme-banner" style="border-left-color:var(--gold)">
     <div class="year-theme-label">金運の型</div>
     <div class="year-theme-text" style="color:var(--gold)">{d.get('headline', '')}</div>
   </div>'''
@@ -89,7 +89,7 @@ def _work_section(p):
     mf = p.get('monthly_fortune', [])
     accent_bg, accent_color = 'rgba(29,78,216,0.12)', 'var(--accent-blue-light)'
 
-    banner = f'''<div class="year-theme-banner" style="background:linear-gradient(135deg,rgba(29,78,216,0.10),rgba(29,78,216,0.02))">
+    banner = f'''<div class="year-theme-banner" style="border-left-color:var(--accent-blue-light)">
     <div class="year-theme-label">仕事運の型</div>
     <div class="year-theme-text" style="color:var(--accent-blue-light)">{d.get('headline', '')}</div>
   </div>'''
@@ -112,7 +112,7 @@ def _relationships_section(p):
         return ''
     accent_bg, accent_color = 'rgba(190,51,78,0.12)', 'var(--accent-red-light)'
 
-    banner = f'''<div class="year-theme-banner" style="background:linear-gradient(135deg,rgba(190,51,78,0.10),rgba(190,51,78,0.02))">
+    banner = f'''<div class="year-theme-banner" style="border-left-color:var(--accent-red-light)">
     <div class="year-theme-label">人間関係の型</div>
     <div class="year-theme-text" style="color:var(--accent-red-light)">{d.get('headline', '')}</div>
   </div>'''
@@ -155,7 +155,7 @@ def _life_arc_section(p):
     peak_years = set(d.get('peak_years', []))
     caution_years = set(d.get('caution_years', []))
 
-    banner = f'''<div class="year-theme-banner" style="background:linear-gradient(135deg,rgba(15,118,110,0.10),rgba(15,118,110,0.02))">
+    banner = f'''<div class="year-theme-banner" style="border-left-color:var(--accent-teal-light)">
     <div class="year-theme-label">過去と未来</div>
     <div class="year-theme-text" style="color:var(--accent-teal-light)">{d.get('headline', '')}</div>
   </div>'''
@@ -177,10 +177,10 @@ def _life_arc_section(p):
     </div>'''
 
     past_html = '<div class="grid">' + ''.join(year_card(y) for y in d.get('past', [])) + '</div>'
-    now_html = '''<div class="card tc" style="border-left:3px solid var(--accent-teal-light);margin:16px 0">
-    <div class="card-label">2026年 ← 今ここ</div>
-    <div class="card-value" style="font-size:16px;color:var(--accent-teal-light)">物語の折り返し</div>
-    <div class="card-sub">谷は越えた。ここからの3年が2029年の高さを決める</div>
+    now_html = '''<div class="card tc" style="background:linear-gradient(135deg,#123A36,#0F766E);border:none;margin:16px 0">
+    <div class="card-label" style="color:rgba(234,245,243,0.7)">2026年 ← 今ここ</div>
+    <div class="card-value" style="font-size:16px;color:#EAF5F3">物語の折り返し</div>
+    <div class="card-sub" style="color:rgba(234,245,243,0.85)">谷は越えた。ここからの3年が2029年の高さを決める</div>
   </div>'''
     future_html = '<div class="grid">' + ''.join(year_card(y) for y in d.get('future', [])) + '</div>'
 

@@ -405,7 +405,7 @@ def _forecast_insight(cur9, cur12, cur_sub, cur_comb, has_reigou, nsk, rok, p=No
             parts.append(f'九星気学のピークは<strong>{peak["year"]}年</strong>（{peak["palace"]}、Energy {peak["energy"]}）。')
 
     body = ''.join(parts)
-    return f'''<div class="insight-box" style="margin-top:16px;border-color:rgba(234,179,8,0.3);background:linear-gradient(135deg,rgba(234,179,8,0.08),rgba(250,204,21,0.04))">
+    return f'''<div class="insight-box" style="margin-top:16px;border-left-color:var(--yellow)">
     <div class="insight-title" style="color:var(--yellow)">統合フォーキャスト</div>
     <p style="line-height:1.9;font-size:14px">{body}</p>
   </div>'''
