@@ -520,6 +520,9 @@ body::before{opacity:0.01}
 .insight-box{background:linear-gradient(135deg,rgba(176,68,95,0.06),rgba(144,64,160,0.04))!important;border:1px solid rgba(176,68,95,0.2)!important}
 .insight-box .insight-title{color:#7b3f8a!important}
 .insight-box p{color:var(--text-secondary)}
+.blueprint-card{background:linear-gradient(135deg,rgba(176,68,95,0.06),rgba(144,64,160,0.04))!important;border:1px solid rgba(176,68,95,0.16)!important}
+.month-advice{background:linear-gradient(135deg,rgba(176,68,95,0.06),rgba(144,64,160,0.04))!important;border:1px solid rgba(176,68,95,0.14)!important}
+[style*="border-left:3px solid #6366f1"]{border-left-color:#b0445f!important}
 /* Collapse toggle */
 .collapse-toggle{color:#7b3f8a!important;background:rgba(176,68,95,0.08)!important;border:1px solid rgba(176,68,95,0.2)!important}
 .collapse-toggle:hover{background:rgba(176,68,95,0.15)!important}
@@ -575,6 +578,7 @@ abbr.term{border-bottom-color:rgba(176,68,95,0.4)!important}
 .axis-column{background:rgba(0,0,0,0.03)!important}
 .axis-column-minority{background:rgba(0,0,0,0.02)!important}
 /* Strengths */
+.strength-extra{background:rgba(176,68,95,0.06)!important;border-left-color:rgba(176,68,95,0.3)!important}
 .strength-extra strong{color:#7b3f8a!important}
 /* Rarity */
 .rarity-badge-top{color:#7b3f8a!important;background:rgba(123,63,138,0.12)!important}
