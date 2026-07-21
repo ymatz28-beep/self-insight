@@ -77,13 +77,13 @@ def generate_html(p, tier=2, show_gnav=False):
         bt_type = p.get('blood_type', {}).get('type', '')
         eto_title_jp = ETO_PROFILES.get(eto_animal, {}).get('jp', '')
         eto_summary = f'{eto_title_jp}年 × {bt_type}型 — 日本人の希少組み合わせ'
-        hub_sections += _hub_card('eto-blood', '&#9775;', 'rgba(251,191,36,0.12)', 'var(--accent-amber-light)',
+        hub_sections += _hub_card('eto-blood', '&#9775;', 'rgba(99,102,241,0.12)', '#a5b4fc',
                                   '干支 × 血液型', eto_summary, _eto_section(p))
     except Exception:
         pass
 
     # Tier 1 新規: 5体系整合マップ
-    hub_sections += _hub_card('integration-map', '&#9881;', 'rgba(34,197,94,0.12)', '#86efac',
+    hub_sections += _hub_card('integration-map', '&#9881;', 'rgba(99,102,241,0.12)', '#a5b4fc',
                               '5つの体系が示す、あなたの軸', '多数決で浮かび上がる「本当のあなた」',
                               _integration_map(p))
 
@@ -93,7 +93,7 @@ def generate_html(p, tier=2, show_gnav=False):
                               _cross_reference_insight(p))
 
     # Tier 1 新規: 強み/罠の裏返し構造（CliftonStrengths Shadow Side パターン）
-    hub_sections += _hub_card('strengths-traps', '&#9876;', 'rgba(236,72,153,0.12)', '#f9a8d4',
+    hub_sections += _hub_card('strengths-traps', '&#9876;', 'rgba(99,102,241,0.12)', '#a5b4fc',
                               '強み × 裏返しの罠', 'あなたの強みが暴走した時の落とし穴',
                               _strengths_traps_section(p))
 

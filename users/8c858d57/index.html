@@ -257,25 +257,25 @@ body::before{content:'';position:fixed;top:0;left:0;width:100%;height:100%;opaci
 .locked-skeleton{filter:blur(8px);opacity:0.3;padding:24px}
 
 /* === Tier 1 additions === */
-.eto-hero{display:grid;grid-template-columns:auto 1fr auto;gap:16px;align-items:center;background:linear-gradient(135deg,#FBF3E2,#FDFBF5);border:1px solid rgba(161,98,7,0.22);border-radius:var(--r-md);padding:18px 20px;margin-bottom:16px}
+.eto-hero{display:grid;grid-template-columns:auto 1fr auto;gap:16px;align-items:center;background:linear-gradient(135deg,#EEF0FE,#FDFBFF);border:1px solid rgba(79,70,229,0.22);border-radius:var(--r-md);padding:18px 20px;margin-bottom:16px}
 .eto-emoji{font-size:48px;line-height:1}
 .eto-name .eto-title{font-size:18px;font-weight:800;color:#191C22;margin-bottom:2px}
 .eto-name .eto-reading{font-size:12px;color:var(--text-secondary)}
-.eto-rarity{text-align:right;padding-left:12px;border-left:1px solid rgba(161,98,7,0.25)}
+.eto-rarity{text-align:right;padding-left:12px;border-left:1px solid rgba(79,70,229,0.25)}
 .eto-rarity-label{font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:2px}
-.eto-rarity-value{font-size:15px;font-weight:700;color:#A16207;font-family:var(--font-mono)}
+.eto-rarity-value{font-size:15px;font-weight:700;color:#4F46E5;font-family:var(--font-mono)}
 .eto-narrative{margin-bottom:14px}
 .eto-narrative p{font-size:14px;line-height:1.85;color:#333944;margin-bottom:10px}
 .eto-cross{background:#EEF0FE;border-left:3px solid var(--accent,#4F46E5);border-radius:6px;padding:12px 14px;margin-top:10px}
 .eto-cross-label{font-size:11px;color:#4F46E5;font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin-bottom:6px}
 .eto-cross-body{font-size:14px;line-height:1.8;color:#333944}
 .eto-traits-row{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0 14px}
-.eto-trait{font-size:12px;background:#FBF3E2;border:1px solid rgba(161,98,7,0.3);color:#A16207;padding:4px 10px;border-radius:14px;font-weight:600}
+.eto-trait{font-size:12px;background:#EEF0FE;border:1px solid rgba(79,70,229,0.3);color:#4F46E5;padding:4px 10px;border-radius:14px;font-weight:600}
 .confidence-badge{font-size:12px;color:var(--text-secondary);background:#EEF0FE;border-left:3px solid rgba(79,70,229,0.4);padding:10px 12px;border-radius:6px;margin-top:14px;line-height:1.7}
 
 @media(max-width:600px){
   .eto-hero{grid-template-columns:auto 1fr;grid-template-rows:auto auto;gap:12px}
-  .eto-rarity{grid-column:1/-1;text-align:left;padding-left:0;border-left:none;border-top:1px solid rgba(161,98,7,0.22);padding-top:10px}
+  .eto-rarity{grid-column:1/-1;text-align:left;padding-left:0;border-left:none;border-top:1px solid rgba(79,70,229,0.22);padding-top:10px}
 }
 
 .axes-stack{display:flex;flex-direction:column;gap:16px;margin:14px 0}
@@ -283,35 +283,35 @@ body::before{content:'';position:fixed;top:0;left:0;width:100%;height:100%;opaci
 .axis-card-header{display:flex;align-items:center;gap:12px;margin-bottom:10px;flex-wrap:wrap}
 .axis-card-name{font-size:16px;font-weight:800;color:#191C22;letter-spacing:.02em}
 .verdict-badge{font-size:11px;font-weight:700;padding:4px 10px;border-radius:14px;letter-spacing:.03em}
-.verdict-strong{background:#E3F2E7;color:#15803D;border:1px solid rgba(21,128,61,0.3)}
-.verdict-lean{background:#FBF3E2;color:#A16207;border:1px solid rgba(161,98,7,0.3)}
+.verdict-strong{background:#E3E1FB;color:#4F46E5;border:1px solid rgba(79,70,229,0.3)}
+.verdict-lean{background:#EEF0FE;color:#6366F1;border:1px solid rgba(99,102,241,0.3)}
 .verdict-split{background:#ECEEF1;color:var(--text-secondary);border:1px solid var(--border)}
 .axis-card-verdict{font-size:14px;color:#333944;line-height:1.85;margin-bottom:14px;padding:10px 12px;background:#EEF0FE;border-left:3px solid rgba(79,70,229,0.3);border-radius:6px}
-.axis-card-verdict strong{color:#A16207}
+.axis-card-verdict strong{color:#4F46E5}
 .axis-card-systems{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px}
 .axis-column{padding:10px 12px;border-radius:8px;background:#FAFAF7;border:1px solid var(--border)}
-.axis-column-dominant{background:#EFF8F1;border-color:rgba(21,128,61,0.22)}
+.axis-column-dominant{background:#EEF0FE;border-color:rgba(79,70,229,0.22)}
 .axis-column-minority{background:#FAFAF7;opacity:0.85}
 .axis-column-title{font-size:12px;font-weight:700;color:var(--text-secondary);margin-bottom:6px}
-.axis-column-dominant .axis-column-title{color:#15803D}
+.axis-column-dominant .axis-column-title{color:#4F46E5}
 .axis-column-chips{display:flex;flex-wrap:wrap;gap:4px}
 .sys-chip{font-size:11px;padding:3px 9px;border-radius:12px;white-space:nowrap}
 .sys-chip-left,.sys-chip-right{background:#EEF0FE;color:#4F46E5;border:1px solid rgba(79,70,229,0.2)}
-.axis-column-dominant .sys-chip{background:#E3F2E7;color:#15803D;border-color:rgba(21,128,61,0.25)}
+.axis-column-dominant .sys-chip{background:#E3E1FB;color:#4F46E5;border-color:rgba(79,70,229,0.25)}
 .axis-empty{font-size:11px;color:var(--text-muted);font-style:italic}
-.axis-outlier{font-size:13px;color:#333944;padding:10px 12px;background:#FDF1E3;border-left:3px solid rgba(180,83,9,0.4);border-radius:6px;line-height:1.8}
-.axis-outlier-label{font-size:10px;font-weight:700;color:#B45309;letter-spacing:.08em;text-transform:uppercase;margin-right:6px}
+.axis-outlier{font-size:13px;color:#333944;padding:10px 12px;background:#EEF0FE;border-left:3px solid rgba(79,70,229,0.4);border-radius:6px;line-height:1.8}
+.axis-outlier-label{font-size:10px;font-weight:700;color:#4F46E5;letter-spacing:.08em;text-transform:uppercase;margin-right:6px}
 .axis-outlier strong{color:#191C22}
 @media(max-width:600px){
   .axis-card-systems{grid-template-columns:1fr}
 }
-.consensus-box{background:linear-gradient(135deg,#EFF8F1,#F7F9F4);border:1px solid rgba(21,128,61,0.25);border-radius:var(--r-md);padding:16px 18px;margin-top:16px}
+.consensus-box{background:linear-gradient(135deg,#EEF0FE,#F8F8FD);border:1px solid rgba(79,70,229,0.25);border-radius:var(--r-md);padding:16px 18px;margin-top:16px}
 .consensus-box.subtle{background:#FAFAF7;border-color:var(--border)}
-.consensus-title{font-size:12px;font-weight:700;color:#15803D;letter-spacing:.08em;text-transform:uppercase;margin-bottom:8px}
+.consensus-title{font-size:12px;font-weight:700;color:#4F46E5;letter-spacing:.08em;text-transform:uppercase;margin-bottom:8px}
 .consensus-box.subtle .consensus-title{color:var(--text-secondary)}
 .consensus-box ul{list-style:none;padding:0;margin:0}
 .consensus-box li{font-size:14px;line-height:1.9;color:#333944;padding-left:18px;position:relative}
-.consensus-box li::before{content:'✓';position:absolute;left:0;color:#15803D;font-weight:700}
+.consensus-box li::before{content:'✓';position:absolute;left:0;color:#4F46E5;font-weight:700}
 .consensus-box.subtle p{font-size:14px;line-height:1.8;color:var(--text-secondary);margin:0}
 .section-intro{font-size:14px;color:var(--text-secondary);line-height:1.85;margin-bottom:16px}
 .section-intro strong{color:#191C22}
@@ -324,10 +324,10 @@ body::before{content:'';position:fixed;top:0;left:0;width:100%;height:100%;opaci
 /* === Strengths × Shadow (CliftonStrengths Shadow Side 型) === */
 .strengths-traps-grid{display:flex;flex-direction:column;gap:14px;margin:14px 0}
 .strength-pair{display:grid;grid-template-columns:1fr 32px 1fr;gap:10px;align-items:stretch;background:var(--surface);border:1px solid var(--border);border-radius:var(--r-md);overflow:hidden;box-shadow:var(--shadow)}
-.strength-side{padding:14px 16px;background:linear-gradient(135deg,#EFF8F1,#FDFDFB);border-right:1px solid var(--border)}
-.shadow-side{padding:14px 16px;background:linear-gradient(135deg,#FCEFEF,#FDFDFB)}
-.pair-label-pos{font-size:10px;font-weight:700;color:#15803D;letter-spacing:.08em;text-transform:uppercase;margin-bottom:6px}
-.pair-label-neg{font-size:10px;font-weight:700;color:#B91C1C;letter-spacing:.08em;text-transform:uppercase;margin-bottom:6px}
+.strength-side{padding:14px 16px;background:linear-gradient(135deg,#EEF0FE,#FDFDFB);border-right:1px solid var(--border)}
+.shadow-side{padding:14px 16px;background:linear-gradient(135deg,#F1F0FC,#FDFDFB)}
+.pair-label-pos{font-size:10px;font-weight:700;color:#4F46E5;letter-spacing:.08em;text-transform:uppercase;margin-bottom:6px}
+.pair-label-neg{font-size:10px;font-weight:700;color:#6366F1;letter-spacing:.08em;text-transform:uppercase;margin-bottom:6px}
 .pair-body{font-size:14px;line-height:1.7;color:#333944}
 .pair-connector{display:flex;align-items:center;justify-content:center;font-size:18px;color:var(--text-muted);font-weight:700}
 .strength-extra{font-size:13px;line-height:1.8;color:var(--text-secondary);margin-top:12px;padding:10px 12px;background:#EEF0FE;border-left:3px solid rgba(79,70,229,0.3);border-radius:6px}
@@ -420,21 +420,21 @@ abbr.term:hover,abbr.term:focus{border-bottom-color:#A16207;border-bottom-style:
 /* === Cross-Reference Insight === */
 .cross-section{margin:18px 0}
 .cross-section-label{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:700;letter-spacing:.03em;margin-bottom:12px;padding:8px 14px;border-radius:8px}
-.cross-section-label-agree{background:#EFF8F1;color:#15803D;border:1px solid rgba(21,128,61,0.25)}
-.cross-section-label-tension{background:#FDF1E3;color:#B45309;border:1px solid rgba(180,83,9,0.3)}
+.cross-section-label-agree{background:#EEF0FE;color:#4F46E5;border:1px solid rgba(79,70,229,0.25)}
+.cross-section-label-tension{background:#F1F0FC;color:#6366F1;border:1px solid rgba(99,102,241,0.3)}
 .cross-label-emoji{font-size:16px}
 .cross-grid{display:flex;flex-direction:column;gap:12px}
 .cross-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-md);padding:14px 16px;box-shadow:var(--shadow)}
-.cross-agree{border-left:3px solid #15803D}
-.cross-tension{border-left:3px solid #B45309}
+.cross-agree{border-left:3px solid #4F46E5}
+.cross-tension{border-left:3px solid #6366F1}
 .cross-card-header{display:flex;align-items:center;gap:10px;margin-bottom:8px}
-.cross-marker-agree{font-size:10px;font-weight:700;padding:3px 8px;border-radius:10px;background:#E3F2E7;color:#15803D;letter-spacing:.08em}
-.cross-marker-tension{font-size:10px;font-weight:700;padding:3px 8px;border-radius:10px;background:#FDF1E3;color:#B45309;letter-spacing:.08em}
+.cross-marker-agree{font-size:10px;font-weight:700;padding:3px 8px;border-radius:10px;background:#E3E1FB;color:#4F46E5;letter-spacing:.08em}
+.cross-marker-tension{font-size:10px;font-weight:700;padding:3px 8px;border-radius:10px;background:#F1F0FC;color:#6366F1;letter-spacing:.08em}
 .cross-card-title{font-size:15px;font-weight:700;color:#191C22;flex:1}
 .cross-card-body{font-size:13px;color:var(--text-secondary);line-height:1.8;margin-bottom:10px}
 .cross-card-body strong{color:#4F46E5;font-weight:600}
 .cross-card-insight{font-size:14px;color:#333944;line-height:1.85;padding:10px 12px;background:#EEF0FE;border-radius:6px}
-.cross-card-insight strong{color:#A16207}
+.cross-card-insight strong{color:#4F46E5}
 .cross-empty{font-size:13px;color:var(--text-secondary);font-style:italic;padding:12px 14px;background:#FAFAF7;border-radius:8px;line-height:1.8}
 @media(max-width:600px){
   .rarity-headline{gap:8px}
@@ -807,7 +807,7 @@ abbr.term:hover,abbr.term:focus{color:#8c6820!important}
   </div>
 </div><div class="hub-card expanded" id="eto-blood-card">
   <div class="hub-card-preview" onclick="this.parentElement.classList.toggle('expanded')">
-    <div class="hub-card-icon" style="background:rgba(251,191,36,0.12);color:var(--accent-amber-light)">&#9775;</div>
+    <div class="hub-card-icon" style="background:rgba(99,102,241,0.12);color:#a5b4fc">&#9775;</div>
     <div>
       <div class="hub-card-title">干支 × 血液型</div>
       <div class="hub-card-summary">申年 × AB型 — 日本人の希少組み合わせ</div>
@@ -840,7 +840,7 @@ abbr.term:hover,abbr.term:focus{color:#8c6820!important}
   </div>
 </div><div class="hub-card expanded" id="integration-map-card">
   <div class="hub-card-preview" onclick="this.parentElement.classList.toggle('expanded')">
-    <div class="hub-card-icon" style="background:rgba(34,197,94,0.12);color:#86efac">&#9881;</div>
+    <div class="hub-card-icon" style="background:rgba(99,102,241,0.12);color:#a5b4fc">&#9881;</div>
     <div>
       <div class="hub-card-title">5つの体系が示す、あなたの軸</div>
       <div class="hub-card-summary">多数決で浮かび上がる「本当のあなた」</div>
@@ -983,7 +983,7 @@ abbr.term:hover,abbr.term:focus{color:#8c6820!important}
   </div>
 </div><div class="hub-card expanded" id="strengths-traps-card">
   <div class="hub-card-preview" onclick="this.parentElement.classList.toggle('expanded')">
-    <div class="hub-card-icon" style="background:rgba(236,72,153,0.12);color:#f9a8d4">&#9876;</div>
+    <div class="hub-card-icon" style="background:rgba(99,102,241,0.12);color:#a5b4fc">&#9876;</div>
     <div>
       <div class="hub-card-title">強み × 裏返しの罠</div>
       <div class="hub-card-summary">あなたの強みが暴走した時の落とし穴</div>
