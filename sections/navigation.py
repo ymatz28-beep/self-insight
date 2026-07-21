@@ -106,6 +106,67 @@ def _hero(p, tier):
     else:
         hub3_summary = '自分の本質を活かす行動指針'
 
+    def _trait_desc(value):
+        if isinstance(value, dict):
+            strengths = value.get('strengths', [])
+            if isinstance(strengths, list) and strengths:
+                return strengths[0]
+            return next((str(v) for v in value.values() if isinstance(v, str) and v), '')
+        if isinstance(value, list):
+            return value[0] if value else ''
+        return value or ''
+
+    def _trait_card(icon, keyword, detail, source, bg, color):
+        return f'''<div class="trait">
+        <div class="trait-ico" style="background:{bg};color:{color}">{icon}</div>
+        <div class="trait-kw">{keyword}</div>
+        <div class="trait-dt">{detail}</div>
+        <div class="trait-src">{source}</div>
+      </div>'''
+
+    fp = p.get('four_pillars', {})
+    dm_trait = fp.get('day_master', {})
+    nsk = p.get('nine_star_ki', {})
+    ys_trait = nsk.get('year_star', {})
+    west = p.get('western_astrology', {})
+    sun = west.get('sun_sign', {})
+    rok_trait = p.get('rokusei', {})
+    main_star = rok_trait.get('main_star', {})
+    bt = p.get('blood_type', {})
+    elem_ja_map = {'Fire': '火', 'Wood': '木', 'Earth': '土', 'Metal': '金', 'Water': '水'}
+    dm_elem_ja = elem_ja_map.get(dm_trait.get('element', ''), '')
+    decan = west.get('decan') or {}
+    rok_traits = rok_trait.get('traits', {})
+    rok_detail = ''
+    if isinstance(rok_traits, dict):
+        rok_detail = rok_traits.get('reigou_effect', '') if rok_trait.get('reigou') else rok_traits.get('main', '')
+    elif isinstance(rok_traits, str):
+        rok_detail = rok_traits
+    if rok_trait.get('reigou'):
+        rok_detail = f'霊合星人 — {rok_detail}' if rok_detail else '霊合星人'
+    if not rok_detail:
+        rok_detail = main_star.get('reading', '')
+    bt_desc = _trait_desc(bt.get('traits', ''))
+    bt_type = bt.get('type', '')
+    ys_elem_ja = elem_ja_map.get(ys_trait.get('element', ''), '')
+    ys_detail = nsk.get('traits', '') or (f'五行「{ys_elem_ja}」の性質を持つ星' if ys_elem_ja else '')
+    trait_cards = [
+        _trait_card('&#9679;', f'{dm_trait.get("char", "")}{dm_elem_ja}', dm_trait.get('description', ''), '四柱推命', 'rgba(180,83,9,0.12)', 'var(--yellow)'),
+        _trait_card('&#9734;', f'{sun.get("symbol", "")} {sun.get("sign", "")}'.strip(), decan.get('traits', '') or west.get('traits', '') or '太陽星座が示す基本資質', '西洋占星術', 'rgba(79,70,229,0.12)', 'var(--accent)'),
+        _trait_card('&#9670;', ys_trait.get('name', ''), ys_detail, '九星気学', 'rgba(161,98,7,0.12)', 'var(--gold)'),
+        _trait_card('&#9829;', f'{bt_type}型' if bt_type else '', bt_desc, '血液型', 'rgba(190,51,78,0.12)', 'var(--accent-red-light)'),
+        _trait_card('&#9673;', main_star.get('name', ''), rok_detail, '六星占術', 'rgba(109,40,217,0.12)', 'var(--accent-purple)'),
+    ]
+    if sf_top5:
+        top_sf = sf_top5[0]
+        top_name = top_sf.get('name', '') if isinstance(top_sf, dict) else str(top_sf)
+        top_ja = SF_JA.get(top_name, top_name)
+        top_desc = top_sf.get('description', '') if isinstance(top_sf, dict) else ''
+        trait_cards.append(_trait_card('&#9733;', top_ja, top_desc or f'{top_name}を活かす', 'CliftonStrengths', '#FCE9EC', '#BE334E'))
+    trait_grid_html = f'''<div class="trait-grid">
+      {''.join(trait_cards)}
+    </div>'''
+
     nickname = ident.get('nickname') or ident.get('display_name') or ident.get('name', '')
     return f'''<section class="hero">
   <div class="hero-particles"></div>
@@ -114,6 +175,7 @@ def _hero(p, tier):
     <h1 class="archetype-name">{archetype["ja"]}</h1>
     <div class="hero-tagline">{tagline}</div>
     <div class="hero-name">{nickname}</div>
+    {trait_grid_html}
     {_rarity_stats_bar(p)}
     <div class="stats">{stats}</div>
     <div class="hub-cards-grid">

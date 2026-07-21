@@ -65,13 +65,15 @@ def _money_section(p):
     mf = p.get('monthly_fortune', [])
     accent_bg, accent_color = 'rgba(161,98,7,0.12)', 'var(--gold)'
 
-    banner = f'''<div class="year-theme-banner" style="border-left-color:var(--gold)">
-    <div class="year-theme-label">金運の型</div>
-    <div class="year-theme-text" style="color:var(--gold)">{d.get('headline', '')}</div>
+    banner = f'''<div class="card headline-card">
+    <div class="card-pad" style="border-left:4px solid var(--gold)">
+      <div class="headline">{d.get('headline', '')}</div>
+      <p class="intro">{d.get('intro', '')}</p>
+    </div>
   </div>'''
 
     cards = _month_highlight_cards(mf, 'money', 'var(--accent-green-light)', 'var(--accent-red-light)')
-    insight = _insight_box('金運の分析', [d.get('intro', ''), d.get('yearly_pattern', ''), d.get('analysis', '')], accent_bg, accent_color)
+    insight = _insight_box('金運の分析', [d.get('yearly_pattern', ''), d.get('analysis', '')], accent_bg, accent_color)
     action = _practice_watch(d.get('practice_guide', ''), d.get('caution', ''), accent_bg, accent_color, icon='&#165;')
 
     return f'''<section class="section" id="money-fortune">
@@ -89,13 +91,15 @@ def _work_section(p):
     mf = p.get('monthly_fortune', [])
     accent_bg, accent_color = 'rgba(29,78,216,0.12)', 'var(--accent-blue-light)'
 
-    banner = f'''<div class="year-theme-banner" style="border-left-color:var(--accent-blue-light)">
-    <div class="year-theme-label">仕事運の型</div>
-    <div class="year-theme-text" style="color:var(--accent-blue-light)">{d.get('headline', '')}</div>
+    banner = f'''<div class="card headline-card">
+    <div class="card-pad" style="border-left:4px solid var(--accent-blue-light)">
+      <div class="headline">{d.get('headline', '')}</div>
+      <p class="intro">{d.get('intro', '')}</p>
+    </div>
   </div>'''
 
     cards = _month_highlight_cards(mf, 'work', 'var(--accent-green-light)', 'var(--accent-red-light)')
-    insight = _insight_box('仕事運の分析', [d.get('intro', ''), d.get('yearly_pattern', ''), d.get('analysis', '')], accent_bg, accent_color)
+    insight = _insight_box('仕事運の分析', [d.get('yearly_pattern', ''), d.get('analysis', '')], accent_bg, accent_color)
     action = _practice_watch(d.get('practice_guide', ''), d.get('caution', ''), accent_bg, accent_color, icon='&#9874;')
 
     return f'''<section class="section" id="work-fortune">
@@ -112,12 +116,12 @@ def _relationships_section(p):
         return ''
     accent_bg, accent_color = 'rgba(190,51,78,0.12)', 'var(--accent-red-light)'
 
-    banner = f'''<div class="year-theme-banner" style="border-left-color:var(--accent-red-light)">
-    <div class="year-theme-label">人間関係の型</div>
-    <div class="year-theme-text" style="color:var(--accent-red-light)">{d.get('headline', '')}</div>
+    banner = f'''<div class="card headline-card">
+    <div class="card-pad" style="border-left:4px solid var(--accent-red-light)">
+      <div class="headline">{d.get('headline', '')}</div>
+      <p class="intro">{d.get('intro', '')}</p>
+    </div>
   </div>'''
-
-    intro = _insight_box('複数体系が示す関係構築の型', [d.get('intro', '')], accent_bg, accent_color)
 
     pillar_cards = '<div class="grid">'
     for pillar in d.get('pillars', []):
@@ -141,7 +145,6 @@ def _relationships_section(p):
 
     return f'''<section class="section" id="relationships">
   {banner}
-  {intro}
   {pillar_cards}
   {watch}
 </section>'''
@@ -155,23 +158,23 @@ def _life_arc_section(p):
     peak_years = set(d.get('peak_years', []))
     caution_years = set(d.get('caution_years', []))
 
-    banner = f'''<div class="year-theme-banner" style="border-left-color:var(--accent-teal-light)">
-    <div class="year-theme-label">過去と未来</div>
-    <div class="year-theme-text" style="color:var(--accent-teal-light)">{d.get('headline', '')}</div>
+    banner = f'''<div class="card headline-card">
+    <div class="card-pad" style="border-left:4px solid var(--accent-teal-light)">
+      <div class="headline">{d.get('headline', '')}</div>
+      <p class="intro">{d.get('intro', '')}</p>
+    </div>
   </div>'''
-
-    intro = _insight_box('12年サイクルの物語', [d.get('intro', '')], accent_bg, accent_color)
 
     def year_card(y, is_now=False):
         year = y.get('year')
-        border_color = 'var(--border)'
+        badge = ''
         if year in peak_years:
-            border_color = 'var(--accent-green-light)'
+            badge = ' <span class="badge badge-peak">PEAK</span>'
         elif year in caution_years:
-            border_color = 'var(--accent-red-light)'
+            badge = ' <span class="badge badge-warn">注意</span>'
         now_badge = ' <span style="font-size:10px;color:var(--accent-teal-light)">← 今ここ</span>' if is_now else ''
-        return f'''<div class="card" style="border-left:3px solid {border_color}">
-      <div class="card-label">{year}年{now_badge}</div>
+        return f'''<div class="card">
+      <div class="card-label">{year}年{now_badge}{badge}</div>
       <div class="card-value" style="font-size:16px">{y.get('label', '')}</div>
       <div class="card-sub">{y.get('narrative', '')}</div>
     </div>'''
@@ -188,7 +191,6 @@ def _life_arc_section(p):
 
     return f'''<section class="section" id="life-arc">
   {banner}
-  {intro}
   {past_html}
   {now_html}
   {future_html}

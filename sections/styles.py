@@ -83,6 +83,10 @@ body::before{content:'';position:fixed;top:0;left:0;width:100%;height:100%;opaci
 .grid-4{grid-template-columns:repeat(auto-fit,minmax(200px,1fr))}
 .card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);padding:20px;transition:transform .2s;box-shadow:var(--shadow)}
 .card:hover{transform:translateY(-2px)}
+.headline-card{position:relative}
+.headline-card .card-pad{padding:20px 22px}
+.headline{font-family:var(--font-display,inherit);font-size:16.5px;font-weight:900;line-height:1.6;margin-bottom:10px}
+.headline-card .intro{color:var(--text-secondary);font-size:14px;line-height:1.8}
 .card-title{font-size:14px;font-weight:700;margin-bottom:12px;display:flex;align-items:center;gap:8px}
 .card-title .icon{font-size:18px}
 .card-label{font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:4px}
@@ -139,7 +143,18 @@ body::before{content:'';position:fixed;top:0;left:0;width:100%;height:100%;opaci
 .insight-box{background:var(--surface);border:1px solid var(--border);border-left:4px solid var(--accent);border-radius:var(--r-md);padding:20px;margin-bottom:16px}
 .insight-box .insight-title{font-size:13px;font-weight:700;color:#4F46E5;margin-bottom:8px}
 .insight-box p{font-size:13px;color:var(--text-secondary);line-height:1.8}
+.badge{display:inline-flex;align-items:center;font-size:10.5px;font-weight:700;letter-spacing:.06em;padding:2.5px 9px;border-radius:999px;line-height:1.6}
+.badge-action{background:rgba(79,70,229,0.12);color:var(--accent)}
+.badge-warn{background:rgba(180,83,9,0.12);color:var(--yellow)}
+.badge-peak{background:rgba(21,128,61,0.12);color:var(--accent-green-light)}
 .section-desc{font-size:13px;color:var(--text-muted);margin-bottom:16px}
+.trait-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:20px;text-align:left}
+@media(max-width:768px){.trait-grid{grid-template-columns:repeat(2,1fr)}}
+.trait{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:14px 14px 12px;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:6px}
+.trait-ico{width:30px;height:30px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:14px}
+.trait-kw{font-size:13.5px;font-weight:800;line-height:1.4;color:#191C22}
+.trait-dt{font-size:11.5px;color:var(--text-secondary);line-height:1.6;flex:1}
+.trait-src{font-size:10px;font-weight:600;color:var(--text-muted);letter-spacing:.04em}
 .year-timeline{display:flex;gap:2px;margin:16px 0}
 .yt-month{flex:1;height:24px;border-radius:3px;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:rgba(25,28,34,0.72);cursor:pointer;transition:all .2s}
 .yt-month:hover{transform:scaleY(1.3)}

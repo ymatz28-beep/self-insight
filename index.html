@@ -90,6 +90,10 @@ body::before{content:'';position:fixed;top:0;left:0;width:100%;height:100%;opaci
 .grid-4{grid-template-columns:repeat(auto-fit,minmax(200px,1fr))}
 .card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);padding:20px;transition:transform .2s;box-shadow:var(--shadow)}
 .card:hover{transform:translateY(-2px)}
+.headline-card{position:relative}
+.headline-card .card-pad{padding:20px 22px}
+.headline{font-family:var(--font-display,inherit);font-size:16.5px;font-weight:900;line-height:1.6;margin-bottom:10px}
+.headline-card .intro{color:var(--text-secondary);font-size:14px;line-height:1.8}
 .card-title{font-size:14px;font-weight:700;margin-bottom:12px;display:flex;align-items:center;gap:8px}
 .card-title .icon{font-size:18px}
 .card-label{font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:4px}
@@ -146,7 +150,18 @@ body::before{content:'';position:fixed;top:0;left:0;width:100%;height:100%;opaci
 .insight-box{background:var(--surface);border:1px solid var(--border);border-left:4px solid var(--accent);border-radius:var(--r-md);padding:20px;margin-bottom:16px}
 .insight-box .insight-title{font-size:13px;font-weight:700;color:#4F46E5;margin-bottom:8px}
 .insight-box p{font-size:13px;color:var(--text-secondary);line-height:1.8}
+.badge{display:inline-flex;align-items:center;font-size:10.5px;font-weight:700;letter-spacing:.06em;padding:2.5px 9px;border-radius:999px;line-height:1.6}
+.badge-action{background:rgba(79,70,229,0.12);color:var(--accent)}
+.badge-warn{background:rgba(180,83,9,0.12);color:var(--yellow)}
+.badge-peak{background:rgba(21,128,61,0.12);color:var(--accent-green-light)}
 .section-desc{font-size:13px;color:var(--text-muted);margin-bottom:16px}
+.trait-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:20px;text-align:left}
+@media(max-width:768px){.trait-grid{grid-template-columns:repeat(2,1fr)}}
+.trait{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:14px 14px 12px;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:6px}
+.trait-ico{width:30px;height:30px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:14px}
+.trait-kw{font-size:13.5px;font-weight:800;line-height:1.4;color:#191C22}
+.trait-dt{font-size:11.5px;color:var(--text-secondary);line-height:1.6;flex:1}
+.trait-src{font-size:10px;font-weight:600;color:var(--text-muted);letter-spacing:.04em}
 .year-timeline{display:flex;gap:2px;margin:16px 0}
 .yt-month{flex:1;height:24px;border-radius:3px;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:rgba(25,28,34,0.72);cursor:pointer;transition:all .2s}
 .yt-month:hover{transform:scaleY(1.3)}
@@ -513,6 +528,39 @@ abbr.term:hover,abbr.term:focus{border-bottom-color:#A16207;border-bottom-style:
     <h1 class="archetype-name">静かな炎の共鳴者</h1>
     <div class="hero-tagline">静かな炎で人を照らし、言葉で変容を導く人</div>
     <div class="hero-name">Yuma Tejima</div>
+    <div class="trait-grid">
+      <div class="trait">
+        <div class="trait-ico" style="background:rgba(180,83,9,0.12);color:var(--yellow)">&#9679;</div>
+        <div class="trait-kw">丁火</div>
+        <div class="trait-dt">陰火 — ロウソクの炎。静かで温かく、人を照らす</div>
+        <div class="trait-src">四柱推命</div>
+      </div><div class="trait">
+        <div class="trait-ico" style="background:rgba(79,70,229,0.12);color:var(--accent)">&#9734;</div>
+        <div class="trait-kw">♏ Scorpio</div>
+        <div class="trait-dt">最も純粋な蠍座の性質。変容・再生・深層心理への探究</div>
+        <div class="trait-src">西洋占星術</div>
+      </div><div class="trait">
+        <div class="trait-ico" style="background:rgba(161,98,7,0.12);color:var(--gold)">&#9670;</div>
+        <div class="trait-kw">七赤金星</div>
+        <div class="trait-dt">社交的で人を楽しませる力。言葉に力がある。金運に恵まれやすいが散財に注意</div>
+        <div class="trait-src">九星気学</div>
+      </div><div class="trait">
+        <div class="trait-ico" style="background:rgba(190,51,78,0.12);color:var(--accent-red-light)">&#9829;</div>
+        <div class="trait-kw">AB型</div>
+        <div class="trait-dt">合理的思考と感性の共存</div>
+        <div class="trait-src">血液型</div>
+      </div><div class="trait">
+        <div class="trait-ico" style="background:rgba(109,40,217,0.12);color:var(--accent-purple)">&#9673;</div>
+        <div class="trait-kw">木星人</div>
+        <div class="trait-dt">霊合星人 — 二つの星の性質を併せ持ち、運気の振れ幅が大きい。良い時は倍、悪い時も倍</div>
+        <div class="trait-src">六星占術</div>
+      </div><div class="trait">
+        <div class="trait-ico" style="background:#FCE9EC;color:#BE334E">&#9733;</div>
+        <div class="trait-kw">共感性</div>
+        <div class="trait-dt">Empathyを活かす</div>
+        <div class="trait-src">CliftonStrengths</div>
+      </div>
+    </div>
     
 <div class="rarity-bar">
   <span class="rarity-badge-top">組み合わせ分類 × 日本人分布</span>
@@ -1267,9 +1315,11 @@ selectMonth(currentMonth);
   </div>
   <div class="hub-card-content">
     <section class="section" id="money-fortune">
-  <div class="year-theme-banner" style="border-left-color:var(--gold)">
-    <div class="year-theme-label">金運の型</div>
-    <div class="year-theme-text" style="color:var(--gold)">呼び込む力と流す力が同居する — 仕組みだけが財を残す</div>
+  <div class="card headline-card">
+    <div class="card-pad" style="border-left:4px solid var(--gold)">
+      <div class="headline">呼び込む力と流す力が同居する — 仕組みだけが財を残す</div>
+      <p class="intro">あなたの金運は<strong>「呼び込む力と流す力が同じ蛇口から出ている」</strong>型です。九星気学の本命星・七赤金星は「金運に恵まれやすいが散財に注意」という二律背反をそのまま象意に持つ星 — 財を呼び込む力と流してしまう力は、同じ源から出ています。霊合星人（木星人(−)×金星人(−)）の「振れ幅2倍」がこれを増幅し、良い時は通常以上に入り、緩んだ時は通常以上に出ていく。そこにCliftonStrengthsのDeliberative #3（慎重さ）が守りのブレーキとして、Maximizer #5（最上志向）が「良いものにはいくら払っても惜しくない」というアクセルとして同居する。<strong>入る力は強いが、出口の設計次第で結果が真逆になる</strong> — それがあなたの金運の型です。</p>
+    </div>
   </div>
   <div class="grid">
     <div class="card tc"><div class="card-label">2026年 好調月</div>
@@ -1281,8 +1331,8 @@ selectMonth(currentMonth);
   </div>
   <div class="insight-box" style="border-left-color:var(--gold)">
     <div class="insight-title" style="font-size:15px;color:var(--gold)">金運の分析</div>
-    <p style="line-height:1.9;font-size:14px;">あなたの金運は<strong>「呼び込む力と流す力が同じ蛇口から出ている」</strong>型です。九星気学の本命星・七赤金星は「金運に恵まれやすいが散財に注意」という二律背反をそのまま象意に持つ星 — 財を呼び込む力と流してしまう力は、同じ源から出ています。霊合星人（木星人(−)×金星人(−)）の「振れ幅2倍」がこれを増幅し、良い時は通常以上に入り、緩んだ時は通常以上に出ていく。そこにCliftonStrengthsのDeliberative #3（慎重さ）が守りのブレーキとして、Maximizer #5（最上志向）が「良いものにはいくら払っても惜しくない」というアクセルとして同居する。<strong>入る力は強いが、出口の設計次第で結果が真逆になる</strong> — それがあなたの金運の型です。</p>
-    <div class="collapsible-content" style="display:none"><p style="line-height:1.9;font-size:14px;margin-top:12px;">2026年の月次スコア（金運）は明確な二相構造です。好調月は1月（4・安定）、5月（4・種子×兌宮）、7月（4・立花）、9月（4・達成）、11月（4・再会）、そして12月が年間唯一の5 — 六星「財成」×九星「中宮・大吉」が重なる、文字通り財を成す月です。一方の谷は2〜4月（すべて2）— 月運が大殺界（陰影・停止・減退）を通過する3ヶ月で、九星の月運が最盛（3月は中宮100）でも金運スコアは沈む「矛盾期」。そして8月は年間最低の1（健弱・小殺界×坎宮）、10月も2（乱気・中殺界）。買う・投じる・契約する判断は5月・7月・9月・12月に寄せ、2〜4月・8月・10月は財布の意思決定を凍結するのが、データが示す最適配分です。</p><p style="line-height:1.9;font-size:14px;margin-top:12px;">Deliberative #3の慎重さと七赤金星の散財傾向は一見矛盾しますが、実態は使い分けです。大きな投資判断ではDeliberativeが働きリスクを先読みして動けないほど検討する一方、Maximizerが「最高」と認めた対象には検討を経ずに財布が開く — 散財は衝動ではなく「こだわりへの過剰投資」として現れる。五行で金（収穫）が欠如している命式も、稼ぐ力より「確定させて手元に残す」動作が構造的に弱いことを示しています。</p></div>
+    <p style="line-height:1.9;font-size:14px;">2026年の月次スコア（金運）は明確な二相構造です。好調月は1月（4・安定）、5月（4・種子×兌宮）、7月（4・立花）、9月（4・達成）、11月（4・再会）、そして12月が年間唯一の5 — 六星「財成」×九星「中宮・大吉」が重なる、文字通り財を成す月です。一方の谷は2〜4月（すべて2）— 月運が大殺界（陰影・停止・減退）を通過する3ヶ月で、九星の月運が最盛（3月は中宮100）でも金運スコアは沈む「矛盾期」。そして8月は年間最低の1（健弱・小殺界×坎宮）、10月も2（乱気・中殺界）。買う・投じる・契約する判断は5月・7月・9月・12月に寄せ、2〜4月・8月・10月は財布の意思決定を凍結するのが、データが示す最適配分です。</p>
+    <div class="collapsible-content" style="display:none"><p style="line-height:1.9;font-size:14px;margin-top:12px;">Deliberative #3の慎重さと七赤金星の散財傾向は一見矛盾しますが、実態は使い分けです。大きな投資判断ではDeliberativeが働きリスクを先読みして動けないほど検討する一方、Maximizerが「最高」と認めた対象には検討を経ずに財布が開く — 散財は衝動ではなく「こだわりへの過剰投資」として現れる。五行で金（収穫）が欠如している命式も、稼ぐ力より「確定させて手元に残す」動作が構造的に弱いことを示しています。</p></div>
     <button class="collapse-toggle" onclick="this.previousElementSibling.style.display=this.previousElementSibling.style.display==='none'?'block':'none';this.textContent=this.previousElementSibling.style.display==='none'?'続きを読む':'閉じる'">続きを読む</button>
   </div>
   <div class="guidance-action">
@@ -1306,9 +1356,11 @@ selectMonth(currentMonth);
   </div>
   <div class="hub-card-content">
     <section class="section" id="work-fortune">
-  <div class="year-theme-banner" style="border-left-color:var(--accent-blue-light)">
-    <div class="year-theme-label">仕事運の型</div>
-    <div class="year-theme-text" style="color:var(--accent-blue-light)">太陽を燃料に灯るロウソク — 仕事がエネルギーの根源になる配置</div>
+  <div class="card headline-card">
+    <div class="card-pad" style="border-left:4px solid var(--accent-blue-light)">
+      <div class="headline">太陽を燃料に灯るロウソク — 仕事がエネルギーの根源になる配置</div>
+      <p class="intro">あなたの仕事運は<strong>「太陽を燃料に灯るロウソク」</strong>という配置に刻まれています。四柱推命の月柱は丙戌 — 丙（太陽）は日主の丁（ロウソク）を支える強い火源で、仕事そのものにエネルギーの根源がある型。仕事はあなたにとって消耗の場ではなく、<strong>炎を灯し続けるための燃料供給源</strong>です。そこにCliftonStrengthsの布陣が重なる: Empathy #1で言語化されない不安を察知し、Deliberative #3でリスクを先読みし、Maximizer #5で「良い」を「最高」に引き上げる。さらに七赤金星の言葉の力（沢の説得力）が、この内的な深さを外に届けるアウトプット回路になる。<strong>深く考え、慎重に設計し、言葉で動かす</strong> — これがあなたの仕事運の原型です。</p>
+    </div>
   </div>
   <div class="grid">
     <div class="card tc"><div class="card-label">2026年 好調月</div>
@@ -1320,8 +1372,8 @@ selectMonth(currentMonth);
   </div>
   <div class="insight-box" style="border-left-color:var(--accent-blue-light)">
     <div class="insight-title" style="font-size:15px;color:var(--accent-blue-light)">仕事運の分析</div>
-    <p style="line-height:1.9;font-size:14px;">あなたの仕事運は<strong>「太陽を燃料に灯るロウソク」</strong>という配置に刻まれています。四柱推命の月柱は丙戌 — 丙（太陽）は日主の丁（ロウソク）を支える強い火源で、仕事そのものにエネルギーの根源がある型。仕事はあなたにとって消耗の場ではなく、<strong>炎を灯し続けるための燃料供給源</strong>です。そこにCliftonStrengthsの布陣が重なる: Empathy #1で言語化されない不安を察知し、Deliberative #3でリスクを先読みし、Maximizer #5で「良い」を「最高」に引き上げる。さらに七赤金星の言葉の力（沢の説得力）が、この内的な深さを外に届けるアウトプット回路になる。<strong>深く考え、慎重に設計し、言葉で動かす</strong> — これがあなたの仕事運の原型です。</p>
-    <div class="collapsible-content" style="display:none"><p style="line-height:1.9;font-size:14px;margin-top:12px;">2026年の月次スコア（仕事運）は金運より底堅い推移です。好調月は1月・5月・7月・9月・11月（すべて4）、頂点は12月の5 — 財成×中宮大吉で年間最高。谷は8月の2（健弱・小殺界）のみで、大殺界の2〜4月と乱気の10月も3で踏みとどまる。これは月柱・丙戌の「仕事が火源」という構造の表れで、運気の谷でも仕事だけは水準を保てる型です。ただし2〜4月は九星の月運が最盛（3月は中宮100）なのに六星が大殺界という矛盾期 — チャンスは見えるのに勝負に出るべきでない3ヶ月。攻めの新規着手は5月（種子）と7月（立花）に、刈り取りは9月（達成）と12月に置くのが最適配置です。</p><p style="line-height:1.9;font-size:14px;margin-top:12px;">あなたの仕事の進め方は「深掘り→設計→言語化」の三段構造です。Intellection #2が一人の時間に概念を回して本質を掘り当て、Deliberativeがリスクを潰して確実な設計に落とし、七赤金星の言葉の力とEmpathyが、それを相手に届く形に翻訳する。丁火は前に立って号令をかける太陽型ではなく、1on1の深い対話で人を動かす型 — 大人数会議より少数での質の高い対話に成果が集中します。Maximizerは強みの極大化に向かい、平均的な改善作業では燃えません。</p></div>
+    <p style="line-height:1.9;font-size:14px;">2026年の月次スコア（仕事運）は金運より底堅い推移です。好調月は1月・5月・7月・9月・11月（すべて4）、頂点は12月の5 — 財成×中宮大吉で年間最高。谷は8月の2（健弱・小殺界）のみで、大殺界の2〜4月と乱気の10月も3で踏みとどまる。これは月柱・丙戌の「仕事が火源」という構造の表れで、運気の谷でも仕事だけは水準を保てる型です。ただし2〜4月は九星の月運が最盛（3月は中宮100）なのに六星が大殺界という矛盾期 — チャンスは見えるのに勝負に出るべきでない3ヶ月。攻めの新規着手は5月（種子）と7月（立花）に、刈り取りは9月（達成）と12月に置くのが最適配置です。</p>
+    <div class="collapsible-content" style="display:none"><p style="line-height:1.9;font-size:14px;margin-top:12px;">あなたの仕事の進め方は「深掘り→設計→言語化」の三段構造です。Intellection #2が一人の時間に概念を回して本質を掘り当て、Deliberativeがリスクを潰して確実な設計に落とし、七赤金星の言葉の力とEmpathyが、それを相手に届く形に翻訳する。丁火は前に立って号令をかける太陽型ではなく、1on1の深い対話で人を動かす型 — 大人数会議より少数での質の高い対話に成果が集中します。Maximizerは強みの極大化に向かい、平均的な改善作業では燃えません。</p></div>
     <button class="collapse-toggle" onclick="this.previousElementSibling.style.display=this.previousElementSibling.style.display==='none'?'block':'none';this.textContent=this.previousElementSibling.style.display==='none'?'続きを読む':'閉じる'">続きを読む</button>
   </div>
   <div class="guidance-action">
@@ -1345,13 +1397,11 @@ selectMonth(currentMonth);
   </div>
   <div class="hub-card-content">
     <section class="section" id="relationships">
-  <div class="year-theme-banner" style="border-left-color:var(--accent-red-light)">
-    <div class="year-theme-label">人間関係の型</div>
-    <div class="year-theme-text" style="color:var(--accent-red-light)">深く狭く、選び抜いた縁を静かな炎で照らし続ける人</div>
-  </div>
-  <div class="insight-box" style="border-left-color:var(--accent-red-light)">
-    <div class="insight-title" style="font-size:15px;color:var(--accent-red-light)">複数体系が示す関係構築の型</div>
-    <p style="line-height:1.9;font-size:14px;">あなたの人間関係は<strong>「深く狭く、選び抜いた縁を静かな炎で照らし続ける」</strong>型です。CliftonStrengthsのTOP10のうち4つ（Empathy #1, Connectedness #4, Relator #7, Individualization #9）がRelationship Building領域に集中し、広く浅くではなく「深く狭く」の関係構築者であることを裏付けています。七赤金星の社交力とHSPの繊細な感受性、エニアグラム4の「本物の繋がりへの渇望」が重なり、<strong>「表面は開かれた社交家、深層は選び抜いた少数と結ぶ人」</strong>という二層構造を形成する。丁火（ロウソクの炎）は大広間を照らす太陽ではなく、目の前の人だけを照らす光 — これがあなたの関係の原型です。</p>
+  <div class="card headline-card">
+    <div class="card-pad" style="border-left:4px solid var(--accent-red-light)">
+      <div class="headline">深く狭く、選び抜いた縁を静かな炎で照らし続ける人</div>
+      <p class="intro">あなたの人間関係は<strong>「深く狭く、選び抜いた縁を静かな炎で照らし続ける」</strong>型です。CliftonStrengthsのTOP10のうち4つ（Empathy #1, Connectedness #4, Relator #7, Individualization #9）がRelationship Building領域に集中し、広く浅くではなく「深く狭く」の関係構築者であることを裏付けています。七赤金星の社交力とHSPの繊細な感受性、エニアグラム4の「本物の繋がりへの渇望」が重なり、<strong>「表面は開かれた社交家、深層は選び抜いた少数と結ぶ人」</strong>という二層構造を形成する。丁火（ロウソクの炎）は大広間を照らす太陽ではなく、目の前の人だけを照らす光 — これがあなたの関係の原型です。</p>
+    </div>
   </div>
   <div class="grid"><div class="card">
       <div class="card-label" style="color:var(--accent-red-light)">家族・身近な人</div>
@@ -1395,27 +1445,25 @@ selectMonth(currentMonth);
   </div>
   <div class="hub-card-content">
     <section class="section" id="life-arc">
-  <div class="year-theme-banner" style="border-left-color:var(--accent-teal-light)">
-    <div class="year-theme-label">過去と未来</div>
-    <div class="year-theme-text" style="color:var(--accent-teal-light)">大殺界の底から絶頂へ — 12年をかけて一つの山を登る物語</div>
+  <div class="card headline-card">
+    <div class="card-pad" style="border-left:4px solid var(--accent-teal-light)">
+      <div class="headline">大殺界の底から絶頂へ — 12年をかけて一つの山を登る物語</div>
+      <p class="intro">2022年から2033年までのあなたの軌跡は、独立した年の寄せ集めではなく<strong>一つの物語</strong>として読めます。六星占術の12年サイクル（霊合星人として振れ幅2倍）と九星気学の9年サイクル — 周期の異なる2つの波が、2022-2024年の谷でほぼ同時に底を打ち、そこから並走しながら2029年の頂へ向かって上昇していく。大殺界の3年間で古い構造を壊され、種子・緑生で蒔き直し、立花・達成で刈り取る。<strong>蠍座の「死と再生」のテーマそのものを、12年の時間軸で生きている</strong>構図です。</p>
+    </div>
   </div>
-  <div class="insight-box" style="border-left-color:var(--accent-teal-light)">
-    <div class="insight-title" style="font-size:15px;color:var(--accent-teal-light)">12年サイクルの物語</div>
-    <p style="line-height:1.9;font-size:14px;">2022年から2033年までのあなたの軌跡は、独立した年の寄せ集めではなく<strong>一つの物語</strong>として読めます。六星占術の12年サイクル（霊合星人として振れ幅2倍）と九星気学の9年サイクル — 周期の異なる2つの波が、2022-2024年の谷でほぼ同時に底を打ち、そこから並走しながら2029年の頂へ向かって上昇していく。大殺界の3年間で古い構造を壊され、種子・緑生で蒔き直し、立花・達成で刈り取る。<strong>蠍座の「死と再生」のテーマそのものを、12年の時間軸で生きている</strong>構図です。</p>
-  </div>
-  <div class="grid"><div class="card" style="border-left:3px solid var(--border)">
+  <div class="grid"><div class="card">
       <div class="card-label">2022年</div>
       <div class="card-value" style="font-size:16px">大殺界の入口</div>
       <div class="card-sub">陰影（エネルギー15）— 大殺界の始まり。表面上は平穏でも、見えない力で物事が停滞し始めた年。新しく始めたことが思うように進まず、人間関係にも微妙な摩擦が生まれやすかった。霊合星人の「悪い時も倍」の特性が効き始めた時期です。</div>
-    </div><div class="card" style="border-left:3px solid var(--border)">
+    </div><div class="card">
       <div class="card-label">2023年</div>
       <div class="card-value" style="font-size:16px">底</div>
       <div class="card-sub">停止(エネルギー10)— 12年サイクルの最低点。自分の意志と無関係に物事が止まる、後退する感覚。九星の艮宮（停滞・自己改革）も重なり、立ち止まって自分を見つめ直すことを強制された年。ここで壊れたものは、壊れるべくして壊れたものです。</div>
-    </div><div class="card" style="border-left:3px solid var(--border)">
+    </div><div class="card">
       <div class="card-label">2024年</div>
       <div class="card-value" style="font-size:16px">二重の試練</div>
       <div class="card-sub">減退（エネルギー20）× 九星は離宮（注目・離別）。表に出る機会は増えるのに実力を発揮しきれないもどかしさ。サブ星も乱気（中殺界）で、霊合合成スコア20は12年間の最低値。「最悪期」というラベルは誇張ではなく、データ上の事実でした。</div>
-    </div><div class="card" style="border-left:3px solid var(--border)">
+    </div><div class="card">
       <div class="card-label">2025年</div>
       <div class="card-value" style="font-size:16px">芽吹きの前</div>
       <div class="card-sub">種子（エネルギー50）— 大殺界を脱出。九星は坎宮（厄・試練）でまだ向かい風だが、種を蒔く力は確実に戻った。サブ星は再会（エネルギー85）で人脈が復活。霊合合成スコアは20→64へ急回復。谷を抜けた実感が出始めた年です。</div>
@@ -1425,32 +1473,32 @@ selectMonth(currentMonth);
     <div class="card-value" style="font-size:16px;color:#EAF5F3">物語の折り返し</div>
     <div class="card-sub" style="color:rgba(234,245,243,0.85)">谷は越えた。ここからの3年が2029年の高さを決める</div>
   </div>
-  <div class="grid"><div class="card" style="border-left:3px solid var(--accent-green-light)">
-      <div class="card-label">2027年</div>
+  <div class="grid"><div class="card">
+      <div class="card-label">2027年 <span class="badge badge-peak">PEAK</span></div>
       <div class="card-value" style="font-size:16px">開花と始動</div>
       <div class="card-sub">立花（エネルギー80）× 九星は震宮（発展・始動）— 2つの周期が揃って上昇に転じる最初の年。霊合合成スコア77の「絶好調」。2026年に仕込んだものがここで最初の形になる。Self-Insightのローンチを含め、「表に出す」フェーズの幕開けです。</div>
-    </div><div class="card" style="border-left:3px solid var(--accent-red-light)">
-      <div class="card-label">2028年</div>
+    </div><div class="card">
+      <div class="card-label">2028年 <span class="badge badge-warn">注意</span></div>
       <div class="card-value" style="font-size:16px">信用構築と健康の谷</div>
       <div class="card-sub">九星は巽宮（整備・信用、エネルギー75）で社会的信用を積む好機。しかし六星は健弱（小殺界、エネルギー35）、サブ星は陰影（大殺界）入りで、霊合合成スコアは34まで急落。攻めの手を緩めず、ただし体だけは守る — 健康管理が年間テーマになる年です。</div>
-    </div><div class="card" style="border-left:3px solid var(--accent-green-light)">
-      <div class="card-label">2029年</div>
+    </div><div class="card">
+      <div class="card-label">2029年 <span class="badge badge-peak">PEAK</span></div>
       <div class="card-value" style="font-size:16px">絶頂 — 全体系最強の年</div>
       <div class="card-sub">九星「中宮・絶頂」（エネルギー100）× 六星「達成」（エネルギー90）— 2つの周期の頂点が完全に重なる、12年間で唯一の年。2026年から積んだ基盤のすべてをここで刈り取る。ただしサブ星は停止（大殺界）の矛盾期 — 大胆に攻めながら、足元の確認だけは怠らない。人生の分水嶺です。</div>
-    </div><div class="card" style="border-left:3px solid var(--accent-red-light)">
-      <div class="card-label">2030年</div>
+    </div><div class="card">
+      <div class="card-label">2030年 <span class="badge badge-warn">注意</span></div>
       <div class="card-value" style="font-size:16px">実りの裏の乱気</div>
       <div class="card-sub">九星は乾宮（充実・実り、エネルギー90）だが、六星は乱気（中殺界）、サブ星も減退（大殺界）で霊合合成スコア26の「危険期」。2029年の成功の余韻で判断が緩む構造的リスク。新規の大勝負は封印し、前年の成果を守り固める年と割り切るべきです。</div>
-    </div><div class="card" style="border-left:3px solid var(--border)">
+    </div><div class="card">
       <div class="card-label">2031年</div>
       <div class="card-value" style="font-size:16px">収穫と再会</div>
       <div class="card-sub">兌宮（悦び・収穫、エネルギー80）× 再会（エネルギー70）— 危険期を抜け、霊合合成スコア76へ回復。七赤金星の定位置である兌宮の年は、あなた本来の社交力と言葉の力が最も自然に発揮される。過去の縁が実を結び、収穫を分かち合う年です。</div>
-    </div><div class="card" style="border-left:3px solid var(--accent-green-light)">
-      <div class="card-label">2032年</div>
+    </div><div class="card">
+      <div class="card-label">2032年 <span class="badge badge-peak">PEAK</span></div>
       <div class="card-value" style="font-size:16px">財成</div>
       <div class="card-sub">六星「財成」（エネルギー85）で霊合合成スコア83の「絶好調」— 財を成すフェーズ。九星は艮宮（停滞・自己改革、エネルギー40）なので、外に広げるより10年の蓄積を資産として固める方向が正解。次のサイクルへの構造改革を静かに始める年でもあります。</div>
-    </div><div class="card" style="border-left:3px solid var(--accent-green-light)">
-      <div class="card-label">2033年</div>
+    </div><div class="card">
+      <div class="card-label">2033年 <span class="badge badge-peak">PEAK</span></div>
       <div class="card-value" style="font-size:16px">安定 — 物語の完成</div>
       <div class="card-sub">六星は安定（エネルギー95）— 12年サイクルの最終盤で最も穏やかで満ちた状態。九星は9年で一巡し、離宮（注目）へ回帰。2024年に同じ離宮で味わった「注目されても力が出ない」もどかしさとは真逆の、実力と運気が揃った状態で表舞台に立つ。この対比が12年の物語の答え合わせです。</div>
     </div></div>
@@ -1463,7 +1511,7 @@ selectMonth(currentMonth);
 </div>
 <footer class="page-footer">
   <div>Self-Insight — Powered by AI × 東洋占術 × 心理学</div>
-  <div style="margin-top:4px;font-size:10px">Generated 2026-07-20</div>
+  <div style="margin-top:4px;font-size:10px">Generated 2026-07-21</div>
 </footer>
 </div>
 <script>
